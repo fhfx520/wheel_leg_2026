@@ -223,6 +223,7 @@ ramp_t sky_ramp;
 ramp_t wz_ramp;
 pid_t pid_rescue[2];
 pid_t pid_leg_recover[2];
+pid_t pid_leg_sky_cover[2];	
 pid_t pid_leg_length[2];
 pid_t pid_leg_length_fast[2];
 pid_t pid_leg_length_fly[2];
@@ -311,8 +312,7 @@ void wlr_init(void)
         kal_fn[i].R_data[0] = 100;
         
 		//PID参数初始化      
-//      pid_init(&pid_leg_recover[i], NONE, 2000, 1.0f, 1000.0f, 0, 200);//起身专用pid
-		
+        pid_init(&pid_leg_sky_cover[i], NONE, 500, 3.0f, 1000.0f, 120, 150);//起身专用pid	
 		pid_init(&pid_leg_recover[i], NONE, 500, 2.0f, 35000.0f, 120, 150);//起身专用pid
         pid_init(&pid_leg_length[i], NONE, 1500, 1.0f,  0.0f, 50, 100);//500 0/2.5f 10000
         pid_init(&pid_leg_length_fast[i], NONE, 1000, 0,30000, 0, 80);
@@ -558,11 +558,11 @@ void wlr_control(void)
 				}	
 			}else if (wlr.sky_flag == 3){
 //				wlr.high_set =	ramp_calc(&sky_ramp,0.16f);
-				wlr.high_set = 0.16f;
+				wlr.high_set = 0.15f;
 	//			wlr.side[i].fly_cnt = 30;
 				x3_balance_zero = -0.2;
 	//			wlr.v_ref = -0.5;
-				if (fabs(0.16f - vmc[0].L_fdb) < 0.02f && fabs(0.16f - vmc[1].L_fdb) < 0.02f){
+				if (fabs(0.15f - vmc[0].L_fdb) < 0.02f && fabs(0.15f - vmc[1].L_fdb) < 0.02f){
 					wlr.sky_cnt ++;
 					if (wlr.sky_cnt > 1){
 						wlr.sky_cnt = 0;
@@ -572,9 +572,9 @@ void wlr_control(void)
 			}
 			else if (wlr.sky_flag == 4)
 			{
-				wlr.high_set =	ramp_calc(&sky_ramp,0.35f);
-//				wlr.high_set = 0.35f;
-	//			wlr.side[i].fly_cnt = 30;
+//				wlr.high_set =	ramp_calc(&sky_ramp,0.35f);
+				wlr.high_set = 0.15f;
+//			    wlr.side[i].fly_cnt = 30;
 				wlr.sky_cnt ++ ;
 				x3_balance_zero = -0.20;
 				if (wlr.sky_cnt > 10){
@@ -744,9 +744,9 @@ void wlr_control(void)
 		else if (wlr.sky_flag == 2 )
 			wlr.side[i].Fy = pid_calc(&pid_L_test[i],tlm.l_ref[i], vmc[i].L_fdb) + 0.0f  ;
 		else if (wlr.sky_flag == 3)
-			wlr.side[i].Fy = pid_calc(&pid_L_test[i],tlm.l_ref[i], vmc[i].L_fdb) - 0.0f   ;
+			wlr.side[i].Fy = pid_calc(&pid_leg_sky_cover[i],tlm.l_ref[i], vmc[i].L_fdb) - 0.0f   ;
 		else if (wlr.sky_over == 1)
-			wlr.side[i].Fy = pid_calc(&pid_L_test[i],tlm.l_ref[i], vmc[i].L_fdb) - 100.0f  + WLR_SIGN(i) * (wlr.roll_offs + wlr.inertial_offs) ;
+			wlr.side[i].Fy = pid_calc(&pid_leg_sky_cover[i],tlm.l_ref[i], vmc[i].L_fdb) - 0.0f  ;
 		else         
             wlr.side[i].Fy = pid_calc(&pid_L_test[i],tlm.l_ref[i], vmc[i].L_fdb) + 25.0f + WLR_SIGN(i) * (wlr.roll_offs + wlr.inertial_offs) + pid_calc(&pid_leg_vy[i], 0.0f, vmc[i].V_fdb.e.vy0_fdb);  
 		if(rotate_flag)
