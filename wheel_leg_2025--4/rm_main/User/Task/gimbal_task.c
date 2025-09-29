@@ -151,6 +151,7 @@ static void gimbal_stable_calc(void)
 	gimbal_stable.chassis_wx_fdb = -chassis_imu.wx;
 	gimbal_stable.chassis_wy_fdb = chassis_imu.wy;
 	gimbal_stable.chassis_wz_fdb = chassis_imu.wz;
+	
 	gimbal_stable.a_fdb =  circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, (float)yaw_motor.ecd / 8192 * 2 * PI, 2 * PI);
 	if(gimbal_stable.a_fdb < 0.0f)
 		gimbal_stable.a_fdb += 2 * PI;

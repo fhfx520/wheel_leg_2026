@@ -454,8 +454,9 @@ static void chassis_data_input(void)
             wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 *PI;	//-chassis_imu.yaw;
             wlr.wz_ref = 0;
 						
-            //此yaw_err用于底盘前后都可跟随
+            //此yaw_err用于底盘前后都可跟随 算哪边最短路径
             wlr.yaw_err = circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
+			
             if ( wlr.yaw_err > PI / 2 || wlr.yaw_err < - PI / 2) {
                 wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI ;
             }
@@ -542,7 +543,7 @@ static void chassis_data_input(void)
         default:break;
     }
 
-    //速度坐标系换
+    //速度坐标系换 限制 0~2PI
     if (wlr.yaw_ref < 0)
         wlr.yaw_ref += 2 * PI;
     else if (wlr.yaw_ref > 2 * PI)
@@ -640,7 +641,7 @@ static void chassis_data_input(void)
     wlr.wy_fdb = kal_wy.filter_vector[0];
     
 //    wlr.wy_fdb      = -chassis_imu.wy;//
-    wlr.wz_fdb      = -chassis_imu.wz;
+    wlr.wz_fdb      = -chassis_imu.wz;//加一下滤波
     wlr.az_fdb      =  chassis_imu.az;
     //电机数据输入joint_motor[1].position
      
