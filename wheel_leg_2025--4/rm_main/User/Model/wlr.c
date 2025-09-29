@@ -224,6 +224,7 @@ ramp_t wz_ramp;
 pid_t pid_rescue[2];
 pid_t pid_leg_recover[2];
 pid_t pid_leg_sky_cover[2];	
+pid_t pid_leg_sky_jump[2];	
 pid_t pid_leg_length[2];
 pid_t pid_leg_length_fast[2];
 pid_t pid_leg_length_fly[2];
@@ -312,7 +313,9 @@ void wlr_init(void)
         kal_fn[i].R_data[0] = 100;
         
 		//PID参数初始化      
-        pid_init(&pid_leg_sky_cover[i], NONE, 500, 3.0f, 1000.0f, 120, 150);//起身专用pid	
+        pid_init(&pid_leg_sky_cover[i], NONE, 500, 3.0f, 1000.0f, 120, 150);//跳跃 专用pid	
+		pid_init(&pid_leg_sky_jump[i],  NONE,1200, 2.0, 10000, 100, 250);//跳跃 专用pid	
+
 		pid_init(&pid_leg_recover[i], NONE, 500, 2.0f, 35000.0f, 120, 150);//起身专用pid
         pid_init(&pid_leg_length[i], NONE, 1500, 1.0f,  0.0f, 50, 100);//500 0/2.5f 10000
         pid_init(&pid_leg_length_fast[i], NONE, 1000, 0,30000, 0, 80);
@@ -550,9 +553,9 @@ void wlr_control(void)
 				wlr.high_set =	ramp_calc(&sky_ramp,0.5f);
 //				wlr.high_set = 0.50f;
 				x3_balance_zero = -0.0;
-				if (fabs(0.36f - vmc[0].L_fdb) < 0.02f && fabs(0.36f - vmc[1].L_fdb) < 0.02f)
+//				if (fabs(0.36f - vmc[0].L_fdb) < 0.02f && fabs(0.36f - vmc[1].L_fdb) < 0.02f)
 					wlr.sky_cnt ++;
-				if (wlr.sky_cnt > 50){
+				if (wlr.sky_cnt > 250){
 					wlr.sky_cnt = 0;
 					wlr.sky_flag = 3;
 				}	
@@ -742,7 +745,7 @@ void wlr_control(void)
 		else if (wlr.sky_flag == 1 )
 			wlr.side[i].Fy = pid_calc(&pid_L_test[i],tlm.l_ref[i], vmc[i].L_fdb) + 0.0f  ;
 		else if (wlr.sky_flag == 2 )
-			wlr.side[i].Fy = pid_calc(&pid_L_test[i],tlm.l_ref[i], vmc[i].L_fdb) + 0.0f  ;
+			wlr.side[i].Fy = pid_calc(&pid_leg_sky_jump[i],tlm.l_ref[i], vmc[i].L_fdb) + 0.0f  ;
 		else if (wlr.sky_flag == 3)
 			wlr.side[i].Fy = pid_calc(&pid_leg_sky_cover[i],tlm.l_ref[i], vmc[i].L_fdb) - 0.0f   ;
 		else if (wlr.sky_over == 1)
