@@ -238,9 +238,14 @@ void wlr_init(void)
         kal_fn[i].R_data[0] = 100;
         
 		//PID参数初始化      
-        pid_init(&pid_leg_sky_cover[i], NONE, 500, 3.0f, 1000.0f, 120, 150);//跳跃 专用pid	
-		pid_init(&pid_leg_sky_jump[i],  NONE,1200, 2.0, 10000, 100, 250);//跳跃 专用pid	
+//        pid_init(&pid_leg_sky_cover[i], NONE, 500, 3.0f, 10000.0f, 120, 150);//跳跃 专用pid	
+//		pid_init(&pid_leg_sky_jump[i],  NONE,2000, 2.0, 50000, 100, 250);//跳跃 专用pid	
 
+		
+		        pid_init(&pid_leg_sky_cover[i], NONE, 500, 3.0f, 1000.0f, 120, 150);//跳跃 专用pid	
+		pid_init(&pid_leg_sky_jump[i],  NONE,1200, 2.0, 10000, 100, 250);//跳跃 专用pid	
+		
+		
 		pid_init(&pid_leg_recover[i], NONE, 500, 2.0f, 35000.0f, 120, 150);//起身专用pid
         pid_init(&pid_leg_length[i], NONE, 1500, 1.0f,  0.0f, 50, 100);//500 0/2.5f 10000
         pid_init(&pid_leg_length_fast[i], NONE, 1000, 0,30000, 0, 80);
@@ -494,30 +499,31 @@ void wlr_control(void)
 	//			wlr.side[i].fly_cnt = 30;
 				x3_balance_zero = -0.3;
 	//			wlr.v_ref = -0.5;
-				if (fabs(0.15f - vmc[0].L_fdb) < 0.02f && fabs(0.15f - vmc[1].L_fdb) < 0.02f){
+//				if (fabs(0.15f - vmc[0].L_fdb) < 0.02f && fabs(0.15f - vmc[1].L_fdb) < 0.02f)
 					wlr.sky_cnt ++;
-					if (wlr.sky_cnt > 1){
+					
+					if (wlr.sky_cnt > 300){
 						wlr.sky_cnt = 0;
 						wlr.sky_flag = 4;
 					}
 				}			
-			}
+			
 			else if (wlr.sky_flag == 4)
 			{
 //				wlr.high_set =	ramp_calc(&sky_ramp,0.35f);
 				wlr.high_set = 0.15f;
 //			    wlr.side[i].fly_cnt = 30;
 				wlr.sky_cnt ++ ;
-				x3_balance_zero = -0.30;
 				if (wlr.sky_cnt > 10){
 					wlr.sky_cnt = 0;
 					wlr.sky_over = 1;
 					wlr.sky_flag = 0;
 				}	
 			}	
+			
 			 else if(wlr.sky_over){
 				wlr.high_set = 0.15f;
-				x3_balance_zero = -0.05;
+				x3_balance_zero = -0.2;
 			 }
 		}
 		
@@ -689,8 +695,10 @@ void wlr_control(void)
             wlr.side[i].T0 = lqr.U_ref[2+i];
 
 		//简而言之 在两条腿或机体偏离中心点太远时，0.4s后直接进入翻倒自起立
-        if( vmc[i].quadrant == 4 || vmc[i].quadrant == 3 || fabs(chassis_imu.pit) > 1.2f \
-			 || fabs(lqr.X_fdb[4] - lqr.X_fdb[6]) > 0.8f || fabs(lqr.X_diff[4]) > 1.2f || fabs(lqr.X_diff[6])  > 1.2f  ) {	//防止输出力矩过大
+        if( (vmc[i].quadrant == 4 || vmc[i].quadrant == 3 || fabs(chassis_imu.pit) > 1.2f \
+			 || fabs(lqr.X_fdb[4] - lqr.X_fdb[6]) > 0.8f || fabs(lqr.X_diff[4]) > 1.2f 
+			 || fabs(lqr.X_diff[6])  > 1.2f) 
+			&& ( wlr.sky_flag == 0 && wlr.sky_over == 0) ) {	//防止输出力矩过大
 			quadrant_cnt ++;		
 			if (quadrant_cnt > 200 ){
 				chassis.recover_flag = 1;	
@@ -703,6 +711,7 @@ void wlr_control(void)
 			chassis.recover_flag = 0;
 		if(vmc[i].quadrant == 4 || vmc[i].quadrant == 3 )		
 			wlr.side[i].T0 = -wlr.side[i].T0 ;  	//help!!! 这是为啥
+
 		
 		 vmc_inverse_solution(&vmc[i], wlr.high_set, PI / 2 + x3_balance_zero, wlr.side[i].T0, wlr.side[i].Fy);
 	}
@@ -719,7 +728,7 @@ void wlr_control(void)
 			lqr.U_ref[i] *= 0.0f;
 		else if ( (wlr.crash_flag || wlr.jump_flag == 2) && double_cnt > 0)				//(两条腿撞上台阶 或 完成上台阶) 与 当前在上100mm台阶
 			lqr.U_ref[i] *= 0.8f;
-		else if(chassis.recover_flag >= 1 || wlr.sky_flag == 3 ||wlr.sky_flag == 4 )	// 或 跳跃在空中收腿 或 落地伸腿缓冲
+		else if(chassis.recover_flag >= 1 || wlr.sky_flag == 3 ||wlr.sky_flag == 4 || wlr.sky_over )	// 或 跳跃在空中收腿 或 落地伸腿缓冲
 			lqr.U_ref[i] *= 0.0f;		
 		
         wlr.side[i].T1 =  vmc[i].T_ref.e.T1_ref ;
