@@ -128,12 +128,17 @@ void can_comm_init(void)
     tx_message.MessageMarker = 0;
     
     //各驱动初始化
-	//膝关节朝前，左腿：[0][1]，右腿[2][3]
+	//膝关节朝前，左腿：[0][1]，右腿[2][3] chuan
 	dm_motor_init(&joint_motor[0], CAN_CHANNEL_1, 0x03, 2.79840f, 0x13);//B 3.480
 	dm_motor_init(&joint_motor[1], CAN_CHANNEL_1, 0x04, 5.68684f, 0x14);//S 3.564
 	dm_motor_init(&joint_motor[2], CAN_CHANNEL_1, 0x02, 1.49280f, 0x12);//B 4.394 
 	dm_motor_init(&joint_motor[3], CAN_CHANNEL_1, 0x01, 1.96688f, 0x11);//S 3.770 
-		
+//	
+//	dm_motor_init(&joint_motor[0], CAN_CHANNEL_1, 0x03, 2.79840f, 0x13);//B 3.480
+//	dm_motor_init(&joint_motor[1], CAN_CHANNEL_1, 0x04, 2.5285f, 0x14);//S 3.564
+//	dm_motor_init(&joint_motor[2], CAN_CHANNEL_1, 0x02, 1.49280f, 0x12);//B 4.394 
+//	dm_motor_init(&joint_motor[3], CAN_CHANNEL_1, 0x01, 5.12156f, 0x11);//S 3.770 
+	
 
 //    dji_motor_init(&fric_motor[0], DJI_3508_MOTOR, CAN_CHANNEL_3, 0x201, 1.0f);
 //    dji_motor_init(&fric_motor[1], DJI_3508_MOTOR, CAN_CHANNEL_3, 0x202, 1.0f);

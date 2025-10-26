@@ -4,19 +4,20 @@
 typedef struct
 {
     float L_M[6];//中间变量——连杆长度,L[0]不用 小腿前两杆长度，用于解算q2——real
-    float L[3];//连杆长度int[1,3]，L[0]不用
+    float L[6];//连杆长度int[1,3]，L[0]不用
     //------------------------位置的正运动学解算------------------------//
     //Input:  q_fdb[1], q_fdb[2]
     //Output: q_fdb[0], L_fdb
     float L_fdb;//等效连杆长度
-    float q_fdb[3];//关节角度int[0,2]，q[0]为等效连杆角度
+    float q_fdb[5];//关节角度int[0,2]，q[0]为等效连杆角度
     float q_fdb_mid[5];//中间关节角度int[0,2]，q[0]为等效连杆角度，将小腿空间看作五连杆
     int quadrant;//对应足端象限
     //中间变量
     struct
     {
-        float xc, yc, xm, ym, xc_dot, yc_dot;
+        float xb, yb,xd, yd,xc, yc, xm, ym, xc_dot, yc_dot;
         float Lbd;
+		float A0, B0, C0;
     } mp_fdb;
     struct
     {
@@ -37,6 +38,7 @@ typedef struct
         {
             float w1_fdb;
             float w2_fdb;
+			float w4_fdb;
         } e;
     } W_fdb;//关节电机反馈角速度
     union
@@ -75,6 +77,8 @@ typedef struct
         {
             float T1_fdb;
             float T2_fdb;
+			float T4_fdb;
+			
         } e;
     } T_fdb;//关节电机反馈力矩
     union
@@ -101,13 +105,15 @@ typedef struct
     //Input:  L_ref, q_ref[0]
     //output: q_ref[1], q_ref[4]
     float L_ref;//腿长设定值
-    float q_ref[3];//关节角度设定值
+    float q_ref[5];//关节角度设定值
     //中间变量
     struct
     {
         float xc, yc, xm, ym;
-        float q01, q12;
+        float q01, q12, q34, q40;
         float tp1, tp2, tp3;
+		float A, B, C;
+		
     } mp_ref;
     //------------------------ 力的逆运动学解算 ------------------------//
     //Input:  T0_ref, Fy_ref
@@ -147,7 +153,10 @@ typedef struct
 extern vmc_t vmc[2];
 
 void vmc_init(vmc_t* vmc, const float legLength[5]);
+void vmc_init_five(vmc_t* v, const float legLength[5]);
 void vmc_forward_solution(vmc_t* v, float q1, float q2, float w1, float w2, float t1, float t2);
 void vmc_inverse_solution(vmc_t* v, float L_ref, float q0_ref, float T0, float Fy);
+void vmc_forward_solution_five(vmc_t* v, float q1, float q4, float w1, float w4, float t1, float t4);
+void vmc_inverse_solution_five(vmc_t* v, float L_ref, float q0_ref, float T0, float Fy);
 
 #endif

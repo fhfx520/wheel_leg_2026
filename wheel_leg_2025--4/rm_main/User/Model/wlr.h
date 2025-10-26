@@ -89,6 +89,7 @@ extern pid_t pid_leg_length_fast[2];
 extern pid_t pid_roll;
 extern pid_t pid_rescue[2];
 extern int32_t double_cnt;
+
 void wlr_init(void);
 void wlr_protest(void);
 void wlr_control(void);

@@ -28,7 +28,7 @@
 #define JOINT_MOTOR_RESET_ERROR 0.005f
 
 extern uint16_t quadrant_cnt;
-
+extern pid_t pid_leg_recover[2];
 //用于电机输入角度到q2的映�?
 const float Legtemp1 = 0.115f;
 const float Legtemp2 = 0.135f;
@@ -1034,6 +1034,7 @@ static void chassis_self_rescue(void)//翻车自救
 		chassis.rescue_inter_flag = 0;
 		wlr.high_flag = 0;
 		up_ready=0;
+
 	}
 }
 
@@ -1082,7 +1083,9 @@ static void chassis_data_output(void)
     if (wlr.ctrl_mode == 0) {//保护模式
         wlr_protest();
         dji_motor_set_torque(&driver_motor[0], 0);
-        dji_motor_set_torque(&driver_motor[1], 0);
+        dji_motor_set_torque(&driver_motor[1], 0);		
+		pid_leg_recover[0].i_out = 0;
+		pid_leg_recover[1].i_out = 0;
         for (int i = 0; i < 4; i++) {
 			dm_motor_set_control_para(&joint_motor[i], 0, 0, 0, 0, 0);
         }
