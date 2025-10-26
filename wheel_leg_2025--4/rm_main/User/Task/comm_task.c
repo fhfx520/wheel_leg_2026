@@ -37,7 +37,7 @@ void comm_task(void const* argument)
             if( joint_motor[i].state == 0){
                 dm_motor_set_control_cmd(&joint_motor[i], CMD_ENABLE_MODE);	 
             }else{
-            dm_motor_output_single_data(&joint_motor[i]);   
+				dm_motor_output_single_data(&joint_motor[i]);   
             } 
         }
 		board_send_cnt++;

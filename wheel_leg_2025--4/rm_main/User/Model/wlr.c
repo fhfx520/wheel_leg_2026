@@ -321,7 +321,7 @@ void wlr_control(void)
 		wlr.side[i].Fn_fdb = wlr_fn_calc(wlr.az_fdb, vmc[i].F_fdb.e.Fy_fdb, vmc[i].F_fdb.e.T0_fdb, L0_array, theta_array);
         kal_fn[i].measured_vector[0] = wlr.side[i].Fn_fdb;
         kalman_filter_update(&kal_fn[i]);
-		wlr.side[i].Fn_kal = kal_fn[i].filter_vector[0] - 150.0f * arm_sin_f32(0.1f) ;//加上气弹簧
+		wlr.side[i].Fn_kal = kal_fn[i].filter_vector[0] - 300.0f * arm_sin_f32(0.1f) ;//加上气弹簧
 
 		//离地检测
         yaw_err_see = circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, wlr.yaw_fdb, 2 * PI);

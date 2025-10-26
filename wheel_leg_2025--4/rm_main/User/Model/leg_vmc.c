@@ -61,7 +61,7 @@ void vmc_forward_solution(vmc_t* v, float q1, float q2, float w1, float w2, floa
     if(v->q_fdb_mid[3] < 0)
     v->q_fdb_mid[3]+=2*PI;
 
-	v->q_fdb[2] = v->q_fdb_mid[3];  //-10.0f 为机械固定偏差
+	v->q_fdb[2] = v->q_fdb_mid[3];  //
      
      
      
@@ -91,21 +91,8 @@ void vmc_forward_solution(vmc_t* v, float q1, float q2, float w1, float w2, floa
     //------------------------速度运动学正解算 ------------------------//
     //反馈关节角速度
     v->W_fdb.e.w1_fdb = w1;
-//    v->W_fdb.e.w2_fdb = w2*0.851f;
 		 v->W_fdb.e.w2_fdb = w2;//7.7
     //写出角速度正解算矩阵 [vw0 vy0] = Jwv [w1 w2]
-//    v->Jwv.e.x11 = (-v->L[1] * arm_sin_f32(v->q_fdb[1]) * arm_sin_f32(v->q_fdb[0]) \
-//                    +v->L[2] * arm_sin_f32(v->q_fdb[2]) * arm_cos_f32(v->q_fdb[0]));
-//    v->Jwv.e.x12 = (-v->L[1] * arm_sin_f32(v->q_fdb[1]) * arm_cos_f32(v->q_fdb[0]) \
-//                    -v->L[2] * arm_sin_f32(v->q_fdb[2]) * arm_sin_f32(v->q_fdb[0]));
-//    v->Jwv.e.x21 = ( v->L[1] * arm_cos_f32(v->q_fdb[1]) * arm_sin_f32(v->q_fdb[0]) \
-//                    -v->L[2] * arm_cos_f32(v->q_fdb[2]) * arm_cos_f32(v->q_fdb[0]));
-//    v->Jwv.e.x22 = ( v->L[1] * arm_cos_f32(v->q_fdb[1]) * arm_cos_f32(v->q_fdb[0]) \
-//                    +v->L[2] * arm_cos_f32(v->q_fdb[2]) * arm_sin_f32(v->q_fdb[0]));
-//      v->Jwv.e.x11 = (-v->L[1] * arm_sin_f32(v->q_fdb[1]));
-//      v->Jwv.e.x12 = (-v->L[2] * arm_sin_f32(v->q_fdb[2]));
-//      v->Jwv.e.x21 = ( v->L[1] * arm_cos_f32(v->q_fdb[1]));
-//      v->Jwv.e.x22 = ( v->L[2] * arm_cos_f32(v->q_fdb[2]));
       v->Jwv.e.x11 = (+v->L[1] * arm_sin_f32(v->q_fdb[1]) * arm_sin_f32(v->q_fdb[0]) \
                       +v->L[1] * arm_cos_f32(v->q_fdb[1]) * arm_cos_f32(v->q_fdb[0]));
       v->Jwv.e.x12 = (+v->L[2] * arm_sin_f32(v->q_fdb[2]) * arm_sin_f32(v->q_fdb[0]) \
