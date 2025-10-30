@@ -29,6 +29,7 @@
 
 extern uint16_t quadrant_cnt;
 extern pid_t pid_leg_recover[2];
+extern ramp_t recover_ramp;
 //用于电机输入角度到q2的映�?
 const float Legtemp1 = 0.115f;
 const float Legtemp2 = 0.135f;
@@ -986,15 +987,18 @@ static void chassis_self_rescue(void)//翻车自救
 			if(up_ready > 100)
 				chassis.rescue_inter_flag = 2;
 		}
+		
+
     } else if (chassis.rescue_inter_flag == 2) { //开始收腿
-        dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, 0.8f*wlr.side[0].T1);//0.03 0.5
+        dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, 2.0f*wlr.side[0].T1);//0.03 0.5
         dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 1.0f*wlr.side[0].T2); 
-        dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0,-0.8f*wlr.side[1].T1);
+        dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0,-2.0f*wlr.side[1].T1);
         dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0,-1.0f*wlr.side[1].T2);
 		dji_motor_set_torque(&driver_motor[0], 0);
 		dji_motor_set_torque(&driver_motor[1], 0);
-			
-        if (fabs(vmc[0].L_fdb - wlr.recover_length) < 0.1f && fabs(vmc[1].L_fdb - wlr.recover_length) < 0.1f ) {
+		wlr.recover_length = ramp_calc(&recover_ramp, 0.17f);	
+		
+        if (0 &&  fabs(vmc[0].L_fdb - wlr.recover_length) < 0.05f && fabs(vmc[1].L_fdb - wlr.recover_length) < 0.05f )  {
 			leg_length_cnt++;
 			if(leg_length_cnt > 50){
 				leg_length_cnt = 0;
@@ -1006,6 +1010,7 @@ static void chassis_self_rescue(void)//翻车自救
 				chassis.rescue_inter_flag = 0;
 				wlr.high_flag = 0;
 				up_ready=0;
+				
 			}
         }
     }    
@@ -1081,6 +1086,7 @@ static void chassis_data_output(void)
 	if (!wlr.prone_flag)
 		prone_cnt = 0;
     if (wlr.ctrl_mode == 0) {//保护模式
+		recover_ramp.out = 0.35f;
         wlr_protest();
         dji_motor_set_torque(&driver_motor[0], 0);
         dji_motor_set_torque(&driver_motor[1], 0);		
@@ -1120,17 +1126,21 @@ static void chassis_data_output(void)
 					dm_motor_set_control_para(&joint_motor[1], 0, 0,    0, 0, 0);	
 					dm_motor_set_control_para(&joint_motor[2], 0, 5.0,  0, 5, 0);//快哥
 					dm_motor_set_control_para(&joint_motor[3], 0, 0,    0, 0, 0);
-				}else{
-					dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, wlr.side[0].T1);//0.03 0.5
+				}
+					else if(wlr.joint_all_online){
+					dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, wlr.side[0].T1);
 					dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, wlr.side[0].T2);
 					dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0,-wlr.side[1].T1);
 					dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0,-wlr.side[1].T2);  
+
 				}
-            }
-//		dji_motor_set_torque(&driver_motor[0], temp_T);
-//      dji_motor_set_torque(&driver_motor[1], -temp_T);
-//      if (chassis.rescue_test)
-//      	chassis_rescue_test();
+				else{
+					dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, 0);
+					dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);
+					dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, 0);
+					dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);  
+				}
+            };
         }
     } else if (wlr.ctrl_mode == 1) {//位控
         dji_motor_set_torque(&driver_motor[0], -wlr.side[0].Tw);
@@ -1164,6 +1174,12 @@ static void chassis_data_output(void)
 		dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, 0);
 		dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);			
 	}
+	
+	
+	if(joint_motor[0].online && joint_motor[1].online && joint_motor[2].online && joint_motor[3].online )
+	wlr.joint_all_online = 1;
+	else
+	wlr.joint_all_online = 0;	
 }
 
 void chassis_task(void const *argu)

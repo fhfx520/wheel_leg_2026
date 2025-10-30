@@ -285,6 +285,21 @@
           <WinNumber>1</WinNumber>
           <ItemText>pid_L_test</ItemText>
         </Ww>
+        <Ww>
+          <count>26</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>chassis.rescue_inter_flag</ItemText>
+        </Ww>
+        <Ww>
+          <count>27</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>lqr.U_ref</ItemText>
+        </Ww>
+        <Ww>
+          <count>28</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>chassis.recover_flag</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
@@ -406,6 +421,26 @@
           <count>23</count>
           <WinNumber>2</WinNumber>
           <ItemText>yaw_err_see</ItemText>
+        </Ww>
+        <Ww>
+          <count>24</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>lqr.X_fdb</ItemText>
+        </Ww>
+        <Ww>
+          <count>25</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>lqr.X_ref[4]</ItemText>
+        </Ww>
+        <Ww>
+          <count>26</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>wlr.side</ItemText>
+        </Ww>
+        <Ww>
+          <count>27</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>cnt_init,0x0A</ItemText>
         </Ww>
       </WatchWindow2>
       <MemoryWindow1>

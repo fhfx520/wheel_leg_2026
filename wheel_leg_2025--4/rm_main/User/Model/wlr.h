@@ -36,7 +36,7 @@ typedef struct
     //期望限制系数
     float K_ref[2];
     //控制标志
-    uint8_t jump_flag, jump_pre, high_flag, power_flag, prone_flag, ctrl_mode, quarand_, crash_flag;
+    uint8_t jump_flag, jump_pre, high_flag, power_flag, prone_flag, ctrl_mode, quarand_, crash_flag ,joint_all_online;
 	/*	jump_flag 	=1开始上台阶 =2和=3成功上台阶		
 		jump_pre 	上台阶膝关节朝后完成标志位		
 		high_flag 	=0短腿 =1中腿 =2长腿
@@ -44,8 +44,10 @@ typedef struct
 		prone_flag  =0保护 =1趴下				
 		ctrl_mode 	=0 保护模式 =1位控 =2力控
 		quarand_ 	未使用			
-		crash_flag  =1两条腿磕到台阶 */
-
+		crash_flag  =1两条腿磕到台阶
+		joint_all_online = 1 所有关节电机都在线
+		*/
+		
 	uint16_t jump_cnt, jump_run;
 		//jump_cnt 用于软件延时变化腿长		jump_run 用于软件延时判断两条腿是否撞击台阶
 	
