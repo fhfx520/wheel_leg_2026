@@ -998,7 +998,7 @@ static void chassis_self_rescue(void)//翻车自救
 		dji_motor_set_torque(&driver_motor[1], 0);
 		wlr.recover_length = ramp_calc(&recover_ramp, 0.17f);	
 		
-        if (0 &&  fabs(vmc[0].L_fdb - wlr.recover_length) < 0.05f && fabs(vmc[1].L_fdb - wlr.recover_length) < 0.05f )  {
+        if (fabs(vmc[0].L_fdb - wlr.recover_length) < 0.05f && fabs(vmc[1].L_fdb - wlr.recover_length) < 0.05f )  {
 			leg_length_cnt++;
 			if(leg_length_cnt > 50){
 				leg_length_cnt = 0;
@@ -1086,7 +1086,6 @@ static void chassis_data_output(void)
 	if (!wlr.prone_flag)
 		prone_cnt = 0;
     if (wlr.ctrl_mode == 0) {//保护模式
-		recover_ramp.out = 0.35f;
         wlr_protest();
         dji_motor_set_torque(&driver_motor[0], 0);
         dji_motor_set_torque(&driver_motor[1], 0);		

@@ -153,8 +153,6 @@ void vision_output_data(void)
 		bias_time_temp_buf =  board_comm.rx_shoot_msg.data.vision_bias_time;
 		memcpy(&vision_tx_msg.bias_time, &bias_time_temp_buf, 4);
 		
-		
-
     vision_tx_msg.mode_msg.shooter_speed = 3;
     vision_tx_msg.mode_msg.vacancy = 0;
 		

@@ -216,9 +216,7 @@ void wlr_init(void)
 	wlr.high_set = LegLengthNormal;
 	wlr.crash_flag = 0;
 	wlr.K_adapt = 0.1f;
-//    wlr.recover_length = 0.20f;
     wlr.recover_length = 0.17f; 
-	recover_ramp.out = 0.35f;
 	twm_init(&twm, BodyWidth, WheelRadius);
 	tlm_init(&tlm, LegLengthMax, LegLengthMin, BodyWidth);
     
@@ -243,21 +241,14 @@ void wlr_init(void)
 
 
 		
-		pid_init(&pid_leg_sky_cover[i], NONE, 1000, 0.0f, 10000.0f, 0, 130);		//起身专用pid
-		pid_init(&pid_leg_sky_jump[i],  NONE, 1000, 0.0, 10000.0f, 0, 50);		//跳跃 专用pid	
+        pid_init(&pid_leg_sky_cover[i], NONE, 2000, 1.0f, 10000.0f, 50, 200);		//起身专用pid
+		pid_init(&pid_leg_sky_jump[i],  NONE,1200, 2.0, 10000, 100, 250);//跳跃 专用pid	
 		
-		pid_init(&pid_leg_recover[i], NONE, 1000, 1.0f, 10000.0f, 0, 130);		//起身专用pid
-        pid_init(&pid_leg_length[i], NONE, 1500, 1.0f,  0.0f, 50, 100);			//500 0/2.5f 10000
-        pid_init(&pid_leg_length_fast[i], NONE, 1000, 0,30000, 0, 80);
+		pid_init(&pid_leg_recover[i], NONE, 1500, 1.0f, 10000.0f, 50, 200);		//起身专用pid
         pid_init(&pid_leg_length_fly[i], NONE, 1000, 0.0, 15000, 0, 150);
         pid_init(&pid_leg_vy[i], NONE, 20, 0, 0, 0, 50);
-        pid_init(&pid_ph0[i], NONE, 30, 0, 1000, 0, 100);
-        pid_init(&pid_L_test[i], NONE, 1200, 1.0, 30000, 30, 250);
-        pid_init(&pid_L_rotate[i], NONE, 1500, 1.0, 10000, 20, 100);
+        pid_init(&pid_L_test[i], NONE, 1200, 1.0, 30000, 200, 250);
 		pid_init(&pid_rescue[i], NONE, 2.0f, 0.5f, 0, 45, 50);
-        pid_init(&pid_ph0_test_1, NONE, 40, 0, 5000, 0, 20); 
-        pid_init(&pid_L_test_1, NONE, 1000, 1.0, 10000, 20, 100);
-        pid_init(&pid_w0_test, NONE, 0, 0, 0, 0, 30);
 	}
 	//卡尔曼滤波器初始化
 
@@ -492,10 +483,10 @@ void wlr_control(void)
 			}else if (wlr.sky_flag == 2){
 				wlr.high_set =	ramp_calc(&sky_ramp,0.5f);
 //				wlr.high_set = 0.50f;
-				x3_balance_zero = 0.2;
-				if (fabs(0.36f - vmc[0].L_fdb) < 0.02f && fabs(0.36f - vmc[1].L_fdb) < 0.02f)
+				x3_balance_zero = 0.0;
+//				if (fabs(0.36f - vmc[0].L_fdb) < 0.02f && fabs(0.36f - vmc[1].L_fdb) < 0.02f)
 					wlr.sky_cnt ++;
-				if (wlr.sky_cnt > 1){
+				if (wlr.sky_cnt > 200){
 					wlr.sky_cnt = 0;
 					wlr.sky_flag = 3;
 					sky_ramp.out = 0.35;
@@ -507,7 +498,6 @@ void wlr_control(void)
 	//			wlr.v_ref = -0.5;
 //				if (fabs(0.15f - vmc[0].L_fdb) < 0.02f && fabs(0.15f - vmc[1].L_fdb) < 0.02f)
 					wlr.sky_cnt ++;
-					
 					if (wlr.sky_cnt > 200){
 						wlr.sky_cnt = 0;
 						wlr.sky_flag = 4;
@@ -525,11 +515,10 @@ void wlr_control(void)
 					wlr.sky_over = 1;
 					wlr.sky_flag = 0;
 				}	
-			}	
-			
+			}		
 			 else if(wlr.sky_over){
 				wlr.high_set = 0.15f;
-				x3_balance_zero = -0.2;
+				x3_balance_zero = -0.0;
 			 }
 		}
 		
@@ -644,7 +633,7 @@ void wlr_control(void)
     lqr.X_ref[2] = -wlr.yaw_ref;
     lqr.X_ref[3] = -wlr.wz_ref;
     
-	if( chassis.rescue_inter_flag == 2)
+	if( chassis.rescue_inter_flag == 2 &&0)
 	lqr.X_ref[4] = lqr.X_ref[6] = -1.1f;
 	else
 	lqr.X_ref[4] = lqr.X_ref[6] = -0.0f;
@@ -690,7 +679,7 @@ void wlr_control(void)
 			
 
 		
-		if( chassis.recover_flag == 1 && chassis.rescue_inter_flag != 2 ) // 进入翻倒自起立 或 进入收腿阶段
+		if( (chassis.recover_flag == 1 || chassis.rescue_inter_flag == 2 ) ) // 进入翻倒自起立 或 进入收腿阶段
             wlr.side[i].T0 = 0;  
 		else if (wlr.jump_flag == 3)
 			wlr.side[i].T0 = lqr.U_ref[2+i] * 1.0f; 
