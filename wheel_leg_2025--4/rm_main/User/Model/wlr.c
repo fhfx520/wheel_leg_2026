@@ -241,12 +241,12 @@ void wlr_init(void)
 
 
 		
-        pid_init(&pid_leg_sky_cover[i], NONE, 2000, 1.0f, 10000.0f, 50, 200);		//起身专用pid
+        pid_init(&pid_leg_sky_cover[i], NONE, 1500, 1.0f, 10000.0f, 150, 300);		//起身专用pid
 		pid_init(&pid_leg_sky_jump[i],  NONE,1200, 2.0, 10000, 100, 250);//跳跃 专用pid	
 		
-		pid_init(&pid_leg_recover[i], NONE, 1500, 1.0f, 10000.0f, 50, 200);		//起身专用pid
+		pid_init(&pid_leg_recover[i], NONE, 1500, 1.0f, 10000.0f, 150, 300);		//起身专用pid
         pid_init(&pid_leg_length_fly[i], NONE, 1000, 0.0, 15000, 0, 150);
-        pid_init(&pid_leg_vy[i], NONE, 20, 0, 0, 0, 50);
+        pid_init(&pid_leg_vy[i], NONE, 20, 0, 0, 0, 0);
         pid_init(&pid_L_test[i], NONE, 1200, 1.0, 30000, 200, 250);
 		pid_init(&pid_rescue[i], NONE, 2.0f, 0.5f, 0, 45, 50);
 	}
@@ -481,20 +481,22 @@ void wlr_control(void)
 					sky_ramp.out = 0.15f;
 				}
 			}else if (wlr.sky_flag == 2){
-				wlr.high_set =	ramp_calc(&sky_ramp,0.5f);
+//				wlr.high_set =	ramp_calc(&sky_ramp,0.5f);
+				wlr.high_set = 0.40f;
 //				wlr.high_set = 0.50f;
-				x3_balance_zero = 0.0;
+				x3_balance_zero = 0.2;
 //				if (fabs(0.36f - vmc[0].L_fdb) < 0.02f && fabs(0.36f - vmc[1].L_fdb) < 0.02f)
 					wlr.sky_cnt ++;
-				if (wlr.sky_cnt > 200){
+				if (wlr.sky_cnt > 300){
 					wlr.sky_cnt = 0;
 					wlr.sky_flag = 3;
 					sky_ramp.out = 0.35;
 				}	
 			}else if (wlr.sky_flag == 3){
-				wlr.high_set =	ramp_calc(&sky_ramp,0.16f);
+//				wlr.high_set =	ramp_calc(&sky_ramp,0.16f);
+				wlr.high_set = 0.16f;
 	//			wlr.side[i].fly_cnt = 30;
-				x3_balance_zero = -0.0;
+				x3_balance_zero = -0.5;
 	//			wlr.v_ref = -0.5;
 //				if (fabs(0.15f - vmc[0].L_fdb) < 0.02f && fabs(0.15f - vmc[1].L_fdb) < 0.02f)
 					wlr.sky_cnt ++;
@@ -508,9 +510,10 @@ void wlr_control(void)
 			{
 //				wlr.high_set =	ramp_calc(&sky_ramp,0.35f);
 				wlr.high_set = 0.15f;
+				x3_balance_zero = -0.5;
 //			    wlr.side[i].fly_cnt = 30;
 				wlr.sky_cnt ++ ;
-				if (wlr.sky_cnt > 1){
+				if (wlr.sky_cnt > 100){
 					wlr.sky_cnt = 0;
 					wlr.sky_over = 1;
 					wlr.sky_flag = 0;
@@ -523,7 +526,7 @@ void wlr_control(void)
 		}
 		
 		// pitch歪收腿
-		if (!wlr.jump_flag ) {
+		if (!wlr.jump_flag && !wlr.sky_over && !wlr.sky_flag) {
 			if (!wlr.jump_flag && !wlr.side[0].fly_flag && !wlr.side[1].fly_flag ) {
 				if (fabs(chassis_imu.pit) > 0.20f ||  fabs(lqr.X_diff[4]) > 0.7f ||  fabs(lqr.X_diff[6])  > 0.7f ) {
 		//		wlr.high_set = data_fusion(LegLengthHigh, LegLengthNormal+0.02f, 5 * fabs(chassis_imu.pit)-0.15);
@@ -552,7 +555,7 @@ void wlr_control(void)
 	
 /*****************************更新两腿模型***************************************/
 	tlm_gnd_roll_calc(&tlm, -wlr.roll_fdb, vmc[0].L_fdb, vmc[1].L_fdb);//计算地形倾角
-    if (wlr.jump_flag != 0 || (wlr.side[0].fly_flag && wlr.side[1].fly_flag) || chassis.recover_flag != 0)
+    if (wlr.sky_over != 0|| wlr.sky_flag != 0 ||wlr.jump_flag != 0 || (wlr.side[0].fly_flag && wlr.side[1].fly_flag) || chassis.recover_flag != 0)
 //  if ((wlr.side[0].fly_flag && wlr.side[1].fly_flag) )
 		tlm.l_ref[0] = tlm.l_ref[1] = wlr.high_set;
 	else       
@@ -581,7 +584,7 @@ void wlr_control(void)
         } 
  		else if (chassis.recover_flag > 1) {
 			aMartix_Cover(lqr.K, (float*)K_Array_Leg_recover, 4, 10);
-			if (fabs(lqr.X_fdb[4]) < 0.75 && fabs(lqr.X_fdb[6]) < 0.75 )
+			if (fabs(lqr.X_fdb[4]) < 0.85 && fabs(lqr.X_fdb[6]) < 0.85 )
 				chassis.recover_flag ++;			//help!!!  这是什么意思
 			if (chassis.recover_flag > 30)
 				chassis.recover_flag = 0; //起立完成	
@@ -656,26 +659,31 @@ void wlr_control(void)
 	//虚拟力映射
 	for (int i = 0; i < 2; i++) {
         if (wlr.side[0].fly_flag && wlr.side[1].fly_flag && wlr.jump_flag==0 && !chassis.recover_flag && wlr.sky_over == 0) {
-            wlr.side[i].Fy = pid_calc(&pid_leg_length_fly[i], tlm.l_ref[i], vmc[i].L_fdb) + 25.0f;
+            wlr.side[i].Fy = pid_calc(&pid_leg_length_fly[i], tlm.l_ref[i], vmc[i].L_fdb) + 0.0f;
 		} 
-		else if (chassis.recover_flag == 1)
-			wlr.side[i].Fy = pid_calc(&pid_leg_recover[i], wlr.recover_length, vmc[i].L_fdb) ; 
+		else if (chassis.recover_flag == 1 && chassis.rescue_inter_flag == 2)
+			wlr.side[i].Fy = pid_calc(&pid_leg_recover[i], wlr.recover_length, vmc[i].L_fdb) -50.0f; 
+		
 		else if (chassis.recover_flag > 1 && wlr.jump_flag !=0 && 0)
 			wlr.side[i].Fy = pid_calc(&pid_leg_recover[i], 0.05f, vmc[i].L_fdb);  
-		else if (wlr.high_flag == 0 || wlr.jump_flag == 4)
-			wlr.side[i].Fy = pid_calc(&pid_L_test[i],tlm.l_ref[i], vmc[i].L_fdb) + 20.0f + WLR_SIGN(i) * (wlr.roll_offs + wlr.inertial_offs);//- wlr.inertial_offs + wlr.inertial_offs
+		
 		else if (wlr.sky_flag == 1 )
 			wlr.side[i].Fy = pid_calc(&pid_L_test[i],tlm.l_ref[i], vmc[i].L_fdb) + 0.0f  ;
+		
 		else if (wlr.sky_flag == 2 )
 			wlr.side[i].Fy = pid_calc(&pid_leg_sky_jump[i],tlm.l_ref[i], vmc[i].L_fdb) + 0.0f  ;
+		
 		else if (wlr.sky_flag == 3 )
 			wlr.side[i].Fy = pid_calc(&pid_leg_sky_cover[i],tlm.l_ref[i], vmc[i].L_fdb) - 0.0f   ;
+		
 		else if (wlr.sky_over == 1)
 			wlr.side[i].Fy = pid_calc(&pid_leg_sky_cover[i],tlm.l_ref[i], vmc[i].L_fdb) - 0.0f  ;
+		
 		else         
-            wlr.side[i].Fy = pid_calc(&pid_L_test[i],tlm.l_ref[i], vmc[i].L_fdb) + 25.0f + WLR_SIGN(i) * (wlr.roll_offs + wlr.inertial_offs) + pid_calc(&pid_leg_vy[i], 0.0f, vmc[i].V_fdb.e.vy0_fdb);  
+            wlr.side[i].Fy = pid_calc(&pid_L_test[i],tlm.l_ref[i], vmc[i].L_fdb) + 0.0f + WLR_SIGN(i) * (wlr.roll_offs + wlr.inertial_offs) + pid_calc(&pid_leg_vy[i], 0.0f, vmc[i].V_fdb.e.vy0_fdb);  
+		
 		if(rotate_flag)
-			wlr.side[i].Fy = pid_calc(&pid_L_test[i],tlm.l_ref[i], vmc[i].L_fdb) + 25.0f + WLR_SIGN(i) * (wlr.roll_offs + wlr.inertial_offs);
+			wlr.side[i].Fy = pid_calc(&pid_L_test[i],tlm.l_ref[i], vmc[i].L_fdb) + 0.0f + WLR_SIGN(i) * (wlr.roll_offs + wlr.inertial_offs);
 			
 
 		
@@ -690,7 +698,9 @@ void wlr_control(void)
         if( (vmc[i].quadrant == 4 || vmc[i].quadrant == 3 || fabs(chassis_imu.pit) > 1.2f \
 			 || fabs(lqr.X_fdb[4] - lqr.X_fdb[6]) > 0.8f || fabs(lqr.X_diff[4]) > 1.2f 
 			 || fabs(lqr.X_diff[6])  > 1.2f) 
-			&& ( wlr.sky_flag == 0 && wlr.sky_over == 0) ) {	//防止输出力矩过大
+			&& ( wlr.sky_flag == 0 && wlr.sky_over == 0)
+			&& 0	//ZHANSHIIIIIIIIADIAGFIUAGFIAGFAGFUAGFAFAFSFAFAF		
+				) {	//防止输出力矩过大
 			quadrant_cnt ++;		
 			if (quadrant_cnt > 200 ){
 				chassis.recover_flag = 1;	

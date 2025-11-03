@@ -21,7 +21,7 @@ void comm_task(void const* argument)
         status.task.comm = 1;
         dji_motor_output_data();
         
-        for (int i = 0; i < 2; i++){
+        for (int i = 0; i < 3; i+=2){
 //            if( joint_motor[i].state ==0){
 //                dm_motor_set_control_cmd(&joint_motor[i], CMD_ENABLE_MODE);	  
             if(cnt_init > 0 && cnt_init--){
@@ -36,7 +36,7 @@ void comm_task(void const* argument)
         
         taskENTER_CRITICAL();
         
-         for (int i = 2; i < 4; i++){
+         for (int i = 1; i < 4; i+=2){
 //            if( joint_motor[i].state == 0){
 //                dm_motor_set_control_cmd(&joint_motor[i], CMD_ENABLE_MODE);	
 			            if(cnt_init > 0 && cnt_init--){

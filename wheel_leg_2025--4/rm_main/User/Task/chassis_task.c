@@ -990,13 +990,13 @@ static void chassis_self_rescue(void)//翻车自救
 		
 
     } else if (chassis.rescue_inter_flag == 2) { //开始收腿
-        dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, 2.0f*wlr.side[0].T1);//0.03 0.5
+        dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, 1.0f*wlr.side[0].T1);//0.03 0.5
         dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 1.0f*wlr.side[0].T2); 
-        dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0,-2.0f*wlr.side[1].T1);
+        dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0,-1.0f*wlr.side[1].T1);
         dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0,-1.0f*wlr.side[1].T2);
 		dji_motor_set_torque(&driver_motor[0], 0);
 		dji_motor_set_torque(&driver_motor[1], 0);
-		wlr.recover_length = ramp_calc(&recover_ramp, 0.17f);	
+			
 		
         if (fabs(vmc[0].L_fdb - wlr.recover_length) < 0.05f && fabs(vmc[1].L_fdb - wlr.recover_length) < 0.05f )  {
 			leg_length_cnt++;
@@ -1018,8 +1018,8 @@ static void chassis_self_rescue(void)//翻车自救
     dji_motor_set_torque(&driver_motor[0], 0);
     dji_motor_set_torque(&driver_motor[1], 0);
 	
-	//第四象限卡台阶
-	if (rescue_cnt > 5000 && (vmc[0].quadrant ==4 || vmc[1].quadrant == 4) && chassis.rescue_inter_flag != 2  ) {
+	//第四象限卡台阶 暂时注释
+	if (rescue_cnt > 5000 && (vmc[0].quadrant ==4 || vmc[1].quadrant == 4) && chassis.rescue_inter_flag != 2  && 0 ) {
 		if (chassis_imu.pit < -0.25f) { 
 			dji_motor_set_torque(&driver_motor[0], -2);
 			dji_motor_set_torque(&driver_motor[1], 2);			
@@ -1193,7 +1193,11 @@ void chassis_task(void const *argu)
         thread_wake_time = osKernelSysTick();
         chassis_mode_switch();
         chassis_data_input();
+		if(ctrl_mode != PROTECT_MODE)
         wlr_control();
+		else
+		wlr_init();
+		
         chassis_data_output();
             
         status.task.chassis = 1;

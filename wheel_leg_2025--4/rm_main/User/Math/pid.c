@@ -16,6 +16,7 @@ void pid_init(pid_t *pid, pid_mode_e mode, float kp, float ki, float kd, float i
     pid->kd = kd;
     pid->i_max = i_max;
     pid->out_max = out_max;
+	pid->i_out = 0;
 }
 
 static void f_changing_intergration_rate(pid_t *pid)
