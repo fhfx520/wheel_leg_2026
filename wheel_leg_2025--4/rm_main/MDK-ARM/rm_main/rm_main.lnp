@@ -35,6 +35,7 @@
 "rm_main\prot_judge.o"
 "rm_main\prot_power.o"
 "rm_main\prot_vision.o"
+"rm_main\prot_tfmini.o"
 "..\User\Math\DSP\arm_cortexM7lfdp_math.lib"
 "rm_main\crc.o"
 "rm_main\filter.o"

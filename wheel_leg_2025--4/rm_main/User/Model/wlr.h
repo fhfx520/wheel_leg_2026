@@ -26,7 +26,7 @@ typedef struct
     float high_set;
     //反馈数据
     float s_fdb, v_fdb, yaw_fdb, wz_fdb;
-    float roll_fdb, pit_fdb, wy_fdb, az_fdb;
+    float roll_fdb, pit_fdb, wy_fdb, az_fdb ,front_dis_fdb;
     //中间变量
     float yaw_err, s_adapt;
     //补偿

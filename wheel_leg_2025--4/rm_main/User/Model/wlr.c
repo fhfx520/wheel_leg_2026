@@ -469,7 +469,7 @@ void wlr_control(void)
 				x3_balance_zero = 0.00f;
 				x5_balance_zero = 0.10f;
 				Fy_ramp[0].out = Fy_ramp[1].out = 0;
-				if (wlr.sky_cnt > 700 && abs(rc.ch2) > 500){
+				if ( (wlr.sky_cnt > 700 && abs(rc.ch2) > 500) ||  wlr.front_dis_fdb < 850 ){
 					wlr.sky_cnt = 0;
 					wlr.sky_flag = 2;	
 					sky_ramp.out = 0.15f;

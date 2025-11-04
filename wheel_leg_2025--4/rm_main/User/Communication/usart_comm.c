@@ -3,14 +3,16 @@
 #include "prot_judge.h"
 #include "string.h"
 #include "data_log.h"
+#include "prot_tfmini.h"
 
 #define DEBUG_DATA_LEN 10
 #define JUDGE_DATA_LEN 150
+#define TFMINIPLUS_BUFF_SIZE 50
 
 uint8_t dr16_dma_rx_buf[DR16_DATA_LEN];
 uint8_t judge_data_rx_buf[JUDGE_DATA_LEN];
 uint8_t debug_dma_rx_buf[DEBUG_DATA_LEN];
-
+uint8_t TFminiPlusBuffArray_Front[TFMINIPLUS_BUFF_SIZE];
 /*
  * @brief  串口初始化，开启空闲中断并开始DMA接收数据
  * @retval void
@@ -30,6 +32,11 @@ void usart_comm_init(void)
     __HAL_UART_ENABLE_IT(&DEBUG_HUART, UART_IT_IDLE);
     HAL_UART_Receive_DMA(&DEBUG_HUART, debug_dma_rx_buf, DEBUG_DATA_LEN);
     log_init(&DEBUG_HUART);
+	
+	__HAL_UART_CLEAR_IDLEFLAG(&TFHEAD_HUART);
+    __HAL_UART_ENABLE_IT(&TFHEAD_HUART, UART_IT_IDLE);
+    HAL_UART_Receive_DMA(&TFHEAD_HUART, TFminiPlusBuffArray_Front, TFMINIPLUS_BUFF_SIZE);
+	
 }
 
 /*
@@ -50,7 +57,12 @@ void usart_user_handler(UART_HandleTypeDef *huart)
         } else if (huart == &DEBUG_HUART) {
 			dr16_get_data(&rc,debug_dma_rx_buf);
 			HAL_UART_Receive_DMA(huart, debug_dma_rx_buf, DEBUG_DATA_LEN);
-        }
+        } else if (huart == &TFHEAD_HUART){ 
+			vTfGetData(TFminiPlusBuffArray_Front, HEAD);
+			memset(TFminiPlusBuffArray_Front, 0, TFMINIPLUS_BUFF_SIZE);
+			HAL_UART_Receive_DMA(huart, (uint8_t *)TFminiPlusBuffArray_Front, TFMINIPLUS_BUFF_SIZE); 
+		}
+  
     }
 }
 

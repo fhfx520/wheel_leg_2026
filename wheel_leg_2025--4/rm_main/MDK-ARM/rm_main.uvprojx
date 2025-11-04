@@ -1127,6 +1127,11 @@
               <FileType>1</FileType>
               <FilePath>..\User\Protocol\prot_vision.c</FilePath>
             </File>
+            <File>
+              <FileName>prot_tfmini.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Protocol\prot_tfmini.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
