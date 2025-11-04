@@ -1,3 +1,4 @@
-/rm_main/MDK-ARM/rm_main
+rm_main/MDK-ARM/rm_main/*.o
+rm_main/MDK-ARM/rm_main/*.d
 
 
