@@ -231,8 +231,8 @@ void wlr_init(void)
 	ramp_init(&wz_ramp, 0.001f,  0,  3.0f);		//
 	ramp_init(&sky_ramp, 0.001f, 0,  1.0f);
 	ramp_init(&recover_ramp, 0.001f, 0,  1.0f);	
-	ramp_init(&Fy_ramp[0], 2.0f, -500.0f,  500.0f);
-	ramp_init(&Fy_ramp[1], 2.0f, -500.0f,  500.0f);
+	ramp_init(&Fy_ramp[0], 3.0f, -500.0f,  500.0f);
+	ramp_init(&Fy_ramp[1], 3.0f, -500.0f,  500.0f);
 	
 	for(int i = 0; i < 2; i++) {
 		//腿部长度初始化
@@ -668,7 +668,7 @@ void wlr_control(void)
 		else if (wlr.sky_flag == 3 ){
 //			wlr.side[i].Fy = pid_calc(&pid_leg_sky_cover[i],tlm.l_ref[i], vmc[i].L_fdb) -30.0f; 
 			Fy_temp = pid_calc(&pid_leg_sky_cover[i],tlm.l_ref[i], vmc[i].L_fdb);
-			wlr.side[i].Fy = ramp_calc(&Fy_ramp[i],Fy_temp)  - 40.0f;
+			wlr.side[i].Fy = ramp_calc(&Fy_ramp[i],Fy_temp)  - 75.0f;
 			
 		}
 		
