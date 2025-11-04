@@ -390,6 +390,16 @@
           <WinNumber>1</WinNumber>
           <ItemText>joint_motor[3].limit_t</ItemText>
         </Ww>
+        <Ww>
+          <count>47</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>tlm.l_ref[0]</ItemText>
+        </Ww>
+        <Ww>
+          <count>48</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>tlm.l_ref[1]</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>

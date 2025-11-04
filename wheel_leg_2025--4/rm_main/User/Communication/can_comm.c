@@ -21,18 +21,9 @@ uint8_t rx_fifo0_data[64], rx_fifo1_data[64];
  */
 void can_comm_init(void)
 {
-    FDCAN_FilterTypeDef can_filter;
-    
+    FDCAN_FilterTypeDef can_filter;    
     //can1过滤器设置
-//底盘imu数据接收
-//    can_filter.IdType = FDCAN_STANDARD_ID;//标准帧
-//    can_filter.FilterIndex = 0;
-//    can_filter.FilterType = FDCAN_FILTER_RANGE;//范围过滤
-//    can_filter.FilterID1 = 0x001;
-//    can_filter.FilterID2 = 0x005;
-//    can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;//通过过滤后给邮箱0
-//    HAL_FDCAN_ConfigFilter(&hfdcan1, &can_filter);
-//底盘关节电机接收
+	//底盘关节电机接收
     can_filter.IdType = FDCAN_STANDARD_ID;//标准帧
     can_filter.FilterIndex = 0;
     can_filter.FilterType = FDCAN_FILTER_RANGE;//范围过滤
@@ -189,7 +180,7 @@ void HAL_FDCAN_RxFifo1Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo1ITs)
 //            ht_motor_get_data(rx_fifo1_data[0], rx_fifo1_data);
 			dm_motor_get_data(rx_fifo1_message.Identifier, rx_fifo1_data);
         } else if (hfdcan->Instance == FDCAN2) {
-            dji_motor_get_data(CAN_CHANNEL_2, rx_fifo1_message.Identifier, rx_fifo1_data);
+           
         } else if (hfdcan->Instance == FDCAN3) {
             dji_motor_get_data(CAN_CHANNEL_3, rx_fifo1_message.Identifier, rx_fifo1_data);
         }
