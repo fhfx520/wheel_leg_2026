@@ -1142,7 +1142,6 @@ static void chassis_data_output(void)
             };
         }
     } else if (wlr.ctrl_mode == 1) {//位控
-		
         dji_motor_set_torque(&driver_motor[0], -wlr.side[0].Tw);
         dji_motor_set_torque(&driver_motor[1],  wlr.side[1].Tw);		
 		dm_motor_set_control_para(&joint_motor[0],  wlr.side[0].P2 + joint_motor[0].zero_point,      0, 10, 2,  2);
@@ -1194,7 +1193,7 @@ void chassis_task(void const *argu)
         thread_wake_time = osKernelSysTick();
         chassis_mode_switch();
         chassis_data_input();
-		if(ctrl_mode != PROTECT_MODE)
+		if(ctrl_mode != PROTECT_MODE || 1)
         wlr_control();
 		else
 		wlr_init();

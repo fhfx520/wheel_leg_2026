@@ -74,15 +74,13 @@ static void dm_motor_get_single_data(dm_motor_t *motor, uint8_t *data)
     if( motor->state > 1)
      motor->err_state = motor->state;
     
-    motor->encoder = tmp_value = (data[1] << 8) | data[2];
+    tmp_value = (data[1] << 8) | data[2];
     motor->position = uint_to_float(tmp_value, P_MIN, P_MAX, 16);
     tmp_value = (data[3] << 4) | (data[4] >> 4);
     motor->velocity = uint_to_float(tmp_value, V_MIN, V_MAX, 12);
     tmp_value = ((0x0f & data[4]) << 8) | data[5];
-    motor->torque = uint_to_float(tmp_value, T_MIN, T_MAX, 12);
-    
+    motor->torque = uint_to_float(tmp_value, T_MIN, T_MAX, 12);    
     motor->position = BranchlessNormalizeAngle(motor->position);
-//	motor->position = motor->position * 35.0f / 43.0f;
 }
 
 void dm_motor_get_data(uint8_t id, uint8_t *data)
@@ -124,12 +122,8 @@ void dm_motor_set_control_cmd(dm_motor_t *motor, uint8_t cmd)
         case CMD_RESET_MODE:
             buf[7] = 0xFB;
         break;
-		
         case CMD_ENABLE_MODE:
             buf[7] = 0xFC;
-		break;
-		case CMD_ZERO_MODE:
-            buf[7] = 0xFE;
         break;
         default:
         return; /* 直接退出函数 */

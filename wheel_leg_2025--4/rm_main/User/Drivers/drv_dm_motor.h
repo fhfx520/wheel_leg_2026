@@ -9,11 +9,9 @@
 #define CMD_MOTOR_MODE      0x01
 #define CMD_RESET_MODE      0x02
 #define CMD_ENABLE_MODE     0x03
-#define CMD_ZERO_MODE       0x04
-//#define P_MIN -25.13274f    // Radians
-//#define P_MAX 25.13274f
-#define P_MIN -3.85966f    // Radians
-#define P_MAX 3.85966f 
+
+#define P_MIN -25.13274f    // Radians
+#define P_MAX 25.13274f
 #define V_MIN -45.0f    // Rad/s
 #define V_MAX 45.0f
 #define KP_MIN 0.0f     // N*m/rad
@@ -40,7 +38,6 @@ typedef struct
     //·´À¡Êý¾Ý
 	uint8_t state;
     uint8_t err_state;
-	uint16_t encoder;
     float position, velocity, torque;   //rad rad/s N*m
 } dm_motor_t;
 

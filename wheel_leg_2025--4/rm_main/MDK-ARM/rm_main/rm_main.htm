@@ -3,7 +3,7 @@
 <title>Static Call Graph - [rm_main\rm_main.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image rm_main\rm_main.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Tue Nov  4 22:23:18 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Wed Nov  5 01:20:01 2025
 <BR><P>
 <H3>Maximum Stack Usage =        624 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -3013,7 +3013,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;status_task (via Veneer)
 </UL>
 
-<P><STRONG><a name="[f8]"></a>dm_motor_get_data</STRONG> (Thumb, 256 bytes, Stack size 80 bytes, drv_dm_motor.o(.text.dm_motor_get_data))
+<P><STRONG><a name="[f8]"></a>dm_motor_get_data</STRONG> (Thumb, 252 bytes, Stack size 80 bytes, drv_dm_motor.o(.text.dm_motor_get_data))
 <BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = dm_motor_get_data
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1dc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BranchlessNormalizeAngle
@@ -3040,7 +3040,7 @@ Global Symbols
 <LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;comm_task (via Veneer)
 </UL>
 
-<P><STRONG><a name="[1de]"></a>dm_motor_set_control_cmd</STRONG> (Thumb, 60 bytes, Stack size 16 bytes, drv_dm_motor.o(.text.dm_motor_set_control_cmd))
+<P><STRONG><a name="[1de]"></a>dm_motor_set_control_cmd</STRONG> (Thumb, 44 bytes, Stack size 16 bytes, drv_dm_motor.o(.text.dm_motor_set_control_cmd))
 <BR><BR>[Stack]<UL><LI>Max Depth = 52<LI>Call Chain = dm_motor_set_control_cmd &rArr; can_std_transmit &rArr; HAL_FDCAN_AddMessageToTxFifoQ &rArr; FDCAN_CopyMessageToRAM
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1da]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;can_std_transmit
@@ -4076,7 +4076,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[236]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_acosf
 </UL>
 
-<P><STRONG><a name="[b6]"></a>chassis_task</STRONG> (Thumb, 7712 bytes, Stack size 8 bytes, chassis_task.o(.text.chassis_task))
+<P><STRONG><a name="[b6]"></a>chassis_task</STRONG> (Thumb, 7692 bytes, Stack size 8 bytes, chassis_task.o(.text.chassis_task))
 <BR><BR>[Stack]<UL><LI>Max Depth = 296<LI>Call Chain = chassis_task &rArr; wlr_control &rArr; tlm_gnd_roll_calc &rArr; kalman_filter_update &rArr; kalman_filter_K_update &rArr; arm_mat_inverse_f32
 </UL>
 <BR>[Calls]<UL><LI><a href="#[254]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_calc (via Veneer)
@@ -4103,7 +4103,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(.text.MX_FREERTOS_Init)
 </UL>
-<P><STRONG><a name="[bf]"></a>comm_task</STRONG> (Thumb, 326 bytes, Stack size 8 bytes, comm_task.o(.text.comm_task))
+<P><STRONG><a name="[bf]"></a>comm_task</STRONG> (Thumb, 302 bytes, Stack size 8 bytes, comm_task.o(.text.comm_task))
 <BR><BR>[Stack]<UL><LI>Max Depth = 112<LI>Call Chain = comm_task &rArr; osDelayUntil &rArr; vTaskDelayUntil &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1e6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;judge_output_data (via Veneer)
@@ -4284,7 +4284,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[252]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[252]"></a>wlr_control</STRONG> (Thumb, 4824 bytes, Stack size 128 bytes, wlr.o(.text.wlr_control))
+<P><STRONG><a name="[252]"></a>wlr_control</STRONG> (Thumb, 5020 bytes, Stack size 128 bytes, wlr.o(.text.wlr_control))
 <BR><BR>[Stack]<UL><LI>Max Depth = 288<LI>Call Chain = wlr_control &rArr; tlm_gnd_roll_calc &rArr; kalman_filter_update &rArr; kalman_filter_K_update &rArr; arm_mat_inverse_f32
 </UL>
 <BR>[Calls]<UL><LI><a href="#[254]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_calc (via Veneer)
