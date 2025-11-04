@@ -400,6 +400,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>tlm.l_ref[1]</ItemText>
         </Ww>
+        <Ww>
+          <count>49</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Fy_ramp</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>

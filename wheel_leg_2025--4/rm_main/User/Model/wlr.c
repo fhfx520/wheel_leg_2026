@@ -149,6 +149,8 @@ ramp_t jump_ramp;
 ramp_t sky_ramp;
 ramp_t recover_ramp;
 ramp_t wz_ramp;
+ramp_t Fy_ramp[2];	
+	
 pid_t pid_rescue[2];
 pid_t pid_leg_recover[2];
 pid_t pid_leg_sky_cover[2];	
@@ -229,6 +231,9 @@ void wlr_init(void)
 	ramp_init(&wz_ramp, 0.001f,  0,  3.0f);		//
 	ramp_init(&sky_ramp, 0.001f, 0,  1.0f);
 	ramp_init(&recover_ramp, 0.001f, 0,  1.0f);	
+	ramp_init(&Fy_ramp[0], 2.0f, -500.0f,  500.0f);
+	ramp_init(&Fy_ramp[1], 2.0f, -500.0f,  500.0f);
+	
 	for(int i = 0; i < 2; i++) {
 		//腿部长度初始化
 //		vmc_init(&vmc[i], LegLengthParam);
@@ -479,6 +484,7 @@ void wlr_control(void)
 				wlr.sky_cnt ++;
 				x3_balance_zero = 0.00f;
 				x5_balance_zero = 0.10f;
+				Fy_ramp[0].out = Fy_ramp[1].out = 0;
 				if (wlr.sky_cnt > 700 && abs(rc.ch2) > 500){
 					wlr.sky_cnt = 0;
 					wlr.sky_flag = 2;	
@@ -663,27 +669,38 @@ void wlr_control(void)
     p_array_fit(P_Array, vmc[0].L_fdb, vmc[1].L_fdb);
     state_predict();
 	//虚拟力映射
+	
 	for (int i = 0; i < 2; i++) {
+		
+		float Fy_temp;
+		
+		
         if (wlr.side[0].fly_flag && wlr.side[1].fly_flag && wlr.jump_flag==0 && !chassis.recover_flag && wlr.sky_over == 0) {
             wlr.side[i].Fy = pid_calc(&pid_leg_length_fly[i], tlm.l_ref[i], vmc[i].L_fdb) + 0.0f;
 		} 
-		else if (chassis.recover_flag == 1 && chassis.rescue_inter_flag == 2)
-			wlr.side[i].Fy = pid_calc(&pid_leg_recover[i], wlr.recover_length, vmc[i].L_fdb) -75.0f; 
-		
+		else if (chassis.recover_flag == 1 && chassis.rescue_inter_flag == 2){
+			Fy_temp = pid_calc(&pid_leg_recover[i], wlr.recover_length, vmc[i].L_fdb) -75.0f; 	
+			wlr.side[i].Fy = ramp_calc(&Fy_ramp[i],Fy_temp);
+//			wlr.side[i].Fy = pid_calc(&pid_leg_recover[i], wlr.recover_length, vmc[i].L_fdb) -75.0f; 
+		}
 		else if (chassis.recover_flag > 1 && wlr.jump_flag !=0 && 0)
 			wlr.side[i].Fy = pid_calc(&pid_leg_recover[i], 0.05f, vmc[i].L_fdb);  
 		
 		else if (wlr.sky_flag == 1 )
-			wlr.side[i].Fy = pid_calc(&pid_leg_recover[i],tlm.l_ref[i], vmc[i].L_fdb) -75.0f;
+			wlr.side[i].Fy = pid_calc(&pid_leg_recover[i],tlm.l_ref[i], vmc[i].L_fdb) -30.0f;
 		
 		else if (wlr.sky_flag == 2 )
 			wlr.side[i].Fy = pid_calc(&pid_leg_sky_jump[i],tlm.l_ref[i], vmc[i].L_fdb) + 0.0f  ;
 		
-		else if (wlr.sky_flag == 3 )
-			wlr.side[i].Fy = pid_calc(&pid_leg_sky_cover[i],tlm.l_ref[i], vmc[i].L_fdb) -75.0f; 
+		else if (wlr.sky_flag == 3 ){
+//			wlr.side[i].Fy = pid_calc(&pid_leg_sky_cover[i],tlm.l_ref[i], vmc[i].L_fdb) -30.0f; 
+			Fy_temp = pid_calc(&pid_leg_sky_cover[i],tlm.l_ref[i], vmc[i].L_fdb) -30.0f; 	
+			wlr.side[i].Fy = ramp_calc(&Fy_ramp[i],Fy_temp);
+			
+		}
 		
 		else if (wlr.sky_over == 1)
-			wlr.side[i].Fy = pid_calc(&pid_leg_sky_cover[i],tlm.l_ref[i], vmc[i].L_fdb) - 0.0f  ;
+			wlr.side[i].Fy = pid_calc(&pid_leg_sky_cover[i],tlm.l_ref[i], vmc[i].L_fdb) - 30.0f  ;
 		
 		else         
             wlr.side[i].Fy = pid_calc(&pid_L_test[i],tlm.l_ref[i], vmc[i].L_fdb) - 70.0f + WLR_SIGN(i) * (wlr.roll_offs + wlr.inertial_offs) + pid_calc(&pid_leg_vy[i], 0.0f, vmc[i].V_fdb.e.vy0_fdb);  
@@ -691,7 +708,7 @@ void wlr_control(void)
 		if(rotate_flag)
 			wlr.side[i].Fy = pid_calc(&pid_L_test[i],tlm.l_ref[i], vmc[i].L_fdb) + 0.0f + WLR_SIGN(i) * (wlr.roll_offs + wlr.inertial_offs);
 			
-
+		
 		
 		if( (chassis.recover_flag == 1 || chassis.rescue_inter_flag == 2 ) ) // 进入翻倒自起立 或 进入收腿阶段
             wlr.side[i].T0 = 0;  
@@ -717,12 +734,10 @@ void wlr_control(void)
 		
 		if (wlr.prone_flag)		//防止一趴下就站起来
 			chassis.recover_flag = 0;
-		if(vmc[i].quadrant == 4 || vmc[i].quadrant == 3 )		
-			wlr.side[i].T0 = wlr.side[i].T0 ;  	//help!!! 这是为啥
+
 
 		
 //		 vmc_inverse_solution(&vmc[i], wlr.high_set, PI / 2 + x3_balance_zero, wlr.side[i].T0, wlr.side[i].Fy);
-		
 		vmc_inverse_solution_five(&vmc[i], wlr.high_set, PI / 2 + x3_balance_zero, wlr.side[i].T0, wlr.side[i].Fy);
 	}
 	

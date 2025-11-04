@@ -998,7 +998,7 @@ static void chassis_self_rescue(void)//翻车自救
 		dji_motor_set_torque(&driver_motor[1], 0);
 			
 		
-        if (fabs(vmc[0].L_fdb - wlr.recover_length) < 0.05f && fabs(vmc[1].L_fdb - wlr.recover_length) < 0.05f )  {
+        if ( fabs(vmc[0].L_fdb - wlr.recover_length) < 0.05f && fabs(vmc[1].L_fdb - wlr.recover_length) < 0.05f )  {
 			leg_length_cnt++;
 			if(leg_length_cnt > 50){
 				leg_length_cnt = 0;
