@@ -7,11 +7,12 @@
 
 
 typedef enum {
-    HEAD, 
+    LEFT, 
+	RIGHT,
 }TF_Distance_e;
 
 /*TFminiplus 处理后的数据*/
-extern uint16_t tfmin_distance[1];
+extern uint16_t tfmin_distance[2];
 
 void vTfGetData(uint8_t *buff,TF_Distance_e TF_Distance);
 #endif

@@ -143,7 +143,8 @@ wlr_t wlr;
 lqr_t lqr;
 
 kalman_filter_t kal_fn[2];
-    
+kalman_filter_t tfmini_fn[2];
+	
 ramp_t height_ramp;
 ramp_t jump_ramp;
 ramp_t sky_ramp;
@@ -246,6 +247,12 @@ void wlr_init(void)
         kal_fn[i].Q_data[0] = 1;
         kal_fn[i].R_data[0] = 100;
         
+		kalman_filter_init(&tfmini_fn[i], 1, 0, 1);
+	    tfmini_fn[i].A_data[0] = 1;
+        tfmini_fn[i].H_data[0] = 1;
+        tfmini_fn[i].Q_data[0] = 1;
+        tfmini_fn[i].R_data[0] = 100;
+		
 		//PID参数初始化      
 
 
@@ -317,6 +324,13 @@ void wlr_control(void)
     lqr.dot_leg_w[1] = (lqr.X_fdb[7] - lqr.last_leg_w[1]) / 0.002f;
     lqr.last_leg_w[1] = lqr.X_fdb[7];
     
+	//测距卡尔曼滤波
+	for(int i = 0; i < 2; i++) {
+	 tfmini_fn[i].measured_vector[0] = wlr.side[i].Front_dis_fdb;
+     kalman_filter_update(&tfmini_fn[i]);
+	 wlr.side[i].Front_dis_kal = tfmini_fn[i].filter_vector[0];
+		
+	}
     //支持力解算
     for(int i = 0; i < 2; i++) {
 		float L0_array[3] = {vmc[i].L_fdb, vmc[i].V_fdb.e.vy0_fdb, vmc[i].Acc_fdb.L0_ddot};
@@ -468,7 +482,7 @@ void wlr_control(void)
 				x3_balance_zero = 0.00f;
 				x5_balance_zero = 0.10f;
 				Fy_ramp[0].out = Fy_ramp[1].out = 0;
-				if ( (abs(rc.ch2) > 500)    ){
+				if ( (abs(rc.ch2) > 500)  /* wlr.side[i].Front_dis_kal */){
 					wlr.sky_cnt ++;
 					}
 					if (wlr.sky_cnt > 50){
@@ -492,7 +506,7 @@ void wlr_control(void)
 			}else if (wlr.sky_flag == 3){
 //				wlr.high_set =	ramp_calc(&sky_ramp,0.16f);
 				wlr.high_set = 0.16f;
-				x3_balance_zero = -0.1;
+				x3_balance_zero = 0.2;
 	//			wlr.v_ref = -0.5;
 //				if (fabs(0.15f - vmc[0].L_fdb) < 0.02f && fabs(0.15f - vmc[1].L_fdb) < 0.02f)
 					wlr.sky_cnt ++;
@@ -506,7 +520,7 @@ void wlr_control(void)
 			{
 //				wlr.high_set =	ramp_calc(&sky_ramp,0.35f);
 				wlr.high_set = 0.15f;
-				x3_balance_zero = -0.1;
+				x3_balance_zero = 0.0   ;
 				wlr.sky_cnt ++ ;
 				if (wlr.sky_cnt > 100){
 					wlr.sky_cnt = 0;
@@ -516,7 +530,7 @@ void wlr_control(void)
 			}		
 			 else if(wlr.sky_over){
 				wlr.high_set = 0.15f;
-				x3_balance_zero = -0.0;
+				x3_balance_zero = 0.0;
 			 }
 		}
 		
@@ -669,15 +683,14 @@ void wlr_control(void)
 		else if (wlr.sky_flag == 2 )
 			wlr.side[i].Fy = pid_calc(&pid_leg_sky_jump[i],tlm.l_ref[i], vmc[i].L_fdb) + 0.0f  ;
 		
-		else if (wlr.sky_flag == 3 ){
+		else if (wlr.sky_flag >= 3 || wlr.sky_over == 1 ){
 //			wlr.side[i].Fy = pid_calc(&pid_leg_sky_cover[i],tlm.l_ref[i], vmc[i].L_fdb) -30.0f; 
 			Fy_temp = pid_calc(&pid_leg_sky_cover[i],tlm.l_ref[i], vmc[i].L_fdb);
 			wlr.side[i].Fy = ramp_calc(&Fy_ramp[i],Fy_temp)  - 75.0f;
 			
 		}
 		
-		else if (wlr.sky_over == 1)
-			wlr.side[i].Fy = pid_calc(&pid_leg_sky_cover[i],tlm.l_ref[i], vmc[i].L_fdb) - 30.0f  ;
+		
 		
 		else         
             wlr.side[i].Fy = pid_calc(&pid_L_test[i],tlm.l_ref[i], vmc[i].L_fdb) - 70.0f + WLR_SIGN(i) * (wlr.roll_offs + wlr.inertial_offs) + pid_calc(&pid_leg_vy[i], 0.0f, vmc[i].V_fdb.e.vy0_fdb);  
@@ -687,7 +700,7 @@ void wlr_control(void)
 			
 		
 		
-		if( (chassis.recover_flag == 1 || chassis.rescue_inter_flag == 2 ) ) // 进入翻倒自起立 或 进入收腿阶段
+		if( (chassis.recover_flag == 1 || chassis.rescue_inter_flag == 2 || wlr.sky_flag >= 3 ) ) // 进入翻倒自起立 或 进入收腿阶段
             wlr.side[i].T0 = 0;  
 		else if (wlr.jump_flag == 3)
 			wlr.side[i].T0 = lqr.U_ref[2+i] * 1.0f; 

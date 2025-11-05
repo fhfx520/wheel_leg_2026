@@ -1,4 +1,6 @@
 rm_main/MDK-ARM/rm_main/*.o
 rm_main/MDK-ARM/rm_main/*.d
 
+rm_main_gimbal/MDK-ARM/rm_main/*.o
+rm_main_gimbal/MDK-ARM/rm_main/*.d
 

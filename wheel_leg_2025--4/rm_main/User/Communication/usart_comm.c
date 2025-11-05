@@ -58,7 +58,7 @@ void usart_user_handler(UART_HandleTypeDef *huart)
 			dr16_get_data(&rc,debug_dma_rx_buf);
 			HAL_UART_Receive_DMA(huart, debug_dma_rx_buf, DEBUG_DATA_LEN);
         } else if (huart == &TFHEAD_HUART){ 
-			vTfGetData(TFminiPlusBuffArray_Front, HEAD);
+			vTfGetData(TFminiPlusBuffArray_Front, LEFT);
 			memset(TFminiPlusBuffArray_Front, 0, TFMINIPLUS_BUFF_SIZE);
 			HAL_UART_Receive_DMA(huart, (uint8_t *)TFminiPlusBuffArray_Front, TFMINIPLUS_BUFF_SIZE); 
 		}

@@ -26,7 +26,7 @@ typedef struct
     float high_set;
     //反馈数据
     float s_fdb, v_fdb, yaw_fdb, wz_fdb;
-    float roll_fdb, pit_fdb, wy_fdb, az_fdb ,front_dis_fdb;
+    float roll_fdb, pit_fdb, wy_fdb, az_fdb;
     //中间变量
     float yaw_err, s_adapt;
     //补偿
@@ -77,7 +77,7 @@ typedef struct
         uint8_t  fly_adapt;
         int16_t  fly_cnt;
         uint16_t fly_flag_cnt;
-        float 	 Fn_kal, Fn_fdb;
+        float 	 Fn_kal, Fn_fdb,Front_dis_kal,Front_dis_fdb;
         float 	 T0, Fy;
         //状态预测
         float predict_wy, T_adapt;
