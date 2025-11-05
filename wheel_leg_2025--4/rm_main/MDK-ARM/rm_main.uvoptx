@@ -403,17 +403,27 @@
         <Ww>
           <count>49</count>
           <WinNumber>1</WinNumber>
-          <ItemText>wlr.front_dis_fdb</ItemText>
+          <ItemText>wlr.sky_cnt</ItemText>
         </Ww>
         <Ww>
           <count>50</count>
           <WinNumber>1</WinNumber>
-          <ItemText>wlr.sky_cnt</ItemText>
+          <ItemText>wlr.sky_flag</ItemText>
         </Ww>
         <Ww>
           <count>51</count>
           <WinNumber>1</WinNumber>
-          <ItemText>wlr.sky_flag</ItemText>
+          <ItemText>wlr.side[0].Front_dis_fdb</ItemText>
+        </Ww>
+        <Ww>
+          <count>52</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>tfmin_distance,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>53</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>wlr.side[0].Front_dis_kal</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>
@@ -561,6 +571,11 @@
           <count>28</count>
           <WinNumber>2</WinNumber>
           <ItemText>strength,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>29</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>tfmini_fn</ItemText>
         </Ww>
       </WatchWindow2>
       <MemoryWindow1>

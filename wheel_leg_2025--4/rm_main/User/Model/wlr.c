@@ -251,7 +251,7 @@ void wlr_init(void)
 	    tfmini_fn[i].A_data[0] = 1;
         tfmini_fn[i].H_data[0] = 1;
         tfmini_fn[i].Q_data[0] = 1;
-        tfmini_fn[i].R_data[0] = 100;
+        tfmini_fn[i].R_data[0] = 1000;
 		
 		//PID参数初始化      
 
@@ -284,7 +284,7 @@ void wlr_protest(void)
 
 float pid_p = 1000.0f, pid_i = 1.0f, pid_d = 10000.0f;
 float pid_p_fly = 3000.0f,pid_d_fly = 80000.0f;
-uint8_t shangjiao;
+
 //轮子：位移、速度   摆角：角度、角速度   机体俯仰：角度、角速度
 void wlr_control(void)
 {
@@ -482,7 +482,7 @@ void wlr_control(void)
 				x3_balance_zero = 0.00f;
 				x5_balance_zero = 0.10f;
 				Fy_ramp[0].out = Fy_ramp[1].out = 0;
-				if ( (abs(rc.ch2) > 500)  /* wlr.side[i].Front_dis_kal */){
+				if ( (abs(rc.ch2) > 500)  /*  &&  wlr.side[0].Front_dis_kal < 600*/){
 					wlr.sky_cnt ++;
 					}
 					if (wlr.sky_cnt > 50){
@@ -506,7 +506,7 @@ void wlr_control(void)
 			}else if (wlr.sky_flag == 3){
 //				wlr.high_set =	ramp_calc(&sky_ramp,0.16f);
 				wlr.high_set = 0.16f;
-				x3_balance_zero = 0.2;
+				x3_balance_zero = 0.0;
 	//			wlr.v_ref = -0.5;
 //				if (fabs(0.15f - vmc[0].L_fdb) < 0.02f && fabs(0.15f - vmc[1].L_fdb) < 0.02f)
 					wlr.sky_cnt ++;
