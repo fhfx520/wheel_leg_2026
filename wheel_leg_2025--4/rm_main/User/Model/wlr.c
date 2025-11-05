@@ -465,20 +465,24 @@ void wlr_control(void)
 		for (int i = 0; i < 2; i++) {
 			if(wlr.sky_flag == 1){
 				wlr.high_set = 0.15f;
-				wlr.sky_cnt ++;
 				x3_balance_zero = 0.00f;
 				x5_balance_zero = 0.10f;
 				Fy_ramp[0].out = Fy_ramp[1].out = 0;
-				if ( (wlr.sky_cnt > 700 && abs(rc.ch2) > 500) ||  wlr.front_dis_fdb < 850 ){
+				if ( (abs(rc.ch2) > 500)    ){
+					wlr.sky_cnt ++;
+					}
+					if (wlr.sky_cnt > 50){
 					wlr.sky_cnt = 0;
 					wlr.sky_flag = 2;	
 					sky_ramp.out = 0.15f;
 				}
+
+				
 			}else if (wlr.sky_flag == 2){
 //				wlr.high_set =	ramp_calc(&sky_ramp,0.5f);
 				wlr.high_set = 0.40f;
 				x3_balance_zero = 0.2;
-				if (fabs(0.35f - vmc[0].L_fdb) < 0.02f && fabs(0.35f - vmc[1].L_fdb) < 0.02f)
+				if (fabs(0.40f - vmc[0].L_fdb) < 0.02f && fabs(0.40f - vmc[1].L_fdb) < 0.02f)
 					wlr.sky_cnt ++;
 				if (wlr.sky_cnt > 5){
 					wlr.sky_cnt = 0;
@@ -488,7 +492,7 @@ void wlr_control(void)
 			}else if (wlr.sky_flag == 3){
 //				wlr.high_set =	ramp_calc(&sky_ramp,0.16f);
 				wlr.high_set = 0.16f;
-				x3_balance_zero = -0.5;
+				x3_balance_zero = -0.1;
 	//			wlr.v_ref = -0.5;
 //				if (fabs(0.15f - vmc[0].L_fdb) < 0.02f && fabs(0.15f - vmc[1].L_fdb) < 0.02f)
 					wlr.sky_cnt ++;
@@ -502,7 +506,7 @@ void wlr_control(void)
 			{
 //				wlr.high_set =	ramp_calc(&sky_ramp,0.35f);
 				wlr.high_set = 0.15f;
-				x3_balance_zero = -0.5;
+				x3_balance_zero = -0.1;
 				wlr.sky_cnt ++ ;
 				if (wlr.sky_cnt > 100){
 					wlr.sky_cnt = 0;
@@ -567,7 +571,7 @@ void wlr_control(void)
     if (wlr.ctrl_mode == 2) {//力控
         if (wlr.prone_flag) {
             aMartix_Cover(lqr.K, (float*)K_Array_Prone, 4, 10);
-        } else if (    wlr.sky_flag >= 3  || (wlr.side[0].fly_flag && wlr.side[1].fly_flag && wlr.jump_flag == 0 && !chassis.recover_flag) ){//腾空
+        } else if (  (wlr.side[0].fly_flag && wlr.side[1].fly_flag && wlr.jump_flag == 0 && !chassis.recover_flag) ){//腾空
             aMartix_Cover(lqr.K, (float*)K_Array_Fly, 4, 10);
         } 
  		else if (chassis.recover_flag > 1) {

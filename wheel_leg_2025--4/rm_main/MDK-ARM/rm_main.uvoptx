@@ -400,6 +400,21 @@
           <WinNumber>1</WinNumber>
           <ItemText>tfmin_distance,0x0A</ItemText>
         </Ww>
+        <Ww>
+          <count>49</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>wlr.front_dis_fdb</ItemText>
+        </Ww>
+        <Ww>
+          <count>50</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>wlr.sky_cnt</ItemText>
+        </Ww>
+        <Ww>
+          <count>51</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>wlr.sky_flag</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
@@ -541,6 +556,11 @@
           <count>27</count>
           <WinNumber>2</WinNumber>
           <ItemText>cnt_init,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>28</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>strength,0x0A</ItemText>
         </Ww>
       </WatchWindow2>
       <MemoryWindow1>
