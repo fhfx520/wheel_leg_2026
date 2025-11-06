@@ -56,9 +56,10 @@ float yaw_err_see;
 const float K_Array_Fly[4][10] = 
 {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
-{0, 0, 0, 0, 20.7564, 3.68025, -5.8243, -0.621304,0, 0}, 
-{0, 0, 0, 0, -5.8243, -0.621304, 20.7564, 3.68025,0, 0}, 
+{0, 0, 0, 0, 5.7564, 0.68025, -1.8243, -0.621304,0, 0}, 
+{0, 0, 0, 0, -1.8243, -0.621304, 5.7564, 0.68025,0, 0}, 
 };
+
 const float K_Array_Prone[4][10] =
 {{0, 0.7, -2.0, -1.0, 0, 0, 0, 0, 0, 0}, 
 {0, 0.7, 2.0, 1.0, 0, 0, 0, 0, 0, 0}, 
@@ -506,7 +507,7 @@ void wlr_control(void)
 			}else if (wlr.sky_flag == 3){
 //				wlr.high_set =	ramp_calc(&sky_ramp,0.16f);
 				wlr.high_set = 0.16f;
-				x3_balance_zero = 0.0;
+				x3_balance_zero = 0.2;
 	//			wlr.v_ref = -0.5;
 //				if (fabs(0.15f - vmc[0].L_fdb) < 0.02f && fabs(0.15f - vmc[1].L_fdb) < 0.02f)
 					wlr.sky_cnt ++;
@@ -520,9 +521,9 @@ void wlr_control(void)
 			{
 //				wlr.high_set =	ramp_calc(&sky_ramp,0.35f);
 				wlr.high_set = 0.15f;
-				x3_balance_zero = 0.0   ;
+				x3_balance_zero = 0.2;
 				wlr.sky_cnt ++ ;
-				if (wlr.sky_cnt > 100){
+				if (wlr.sky_cnt > 200){
 					wlr.sky_cnt = 0;
 					wlr.sky_over = 1;
 					wlr.sky_flag = 0;
@@ -585,7 +586,7 @@ void wlr_control(void)
     if (wlr.ctrl_mode == 2) {//力控
         if (wlr.prone_flag) {
             aMartix_Cover(lqr.K, (float*)K_Array_Prone, 4, 10);
-        } else if (  (wlr.side[0].fly_flag && wlr.side[1].fly_flag && wlr.jump_flag == 0 && !chassis.recover_flag) ){//腾空
+        } else if (  wlr.sky_over || wlr.sky_flag >= 3|| (wlr.side[0].fly_flag && wlr.side[1].fly_flag && wlr.jump_flag == 0 && !chassis.recover_flag) ){//腾空
             aMartix_Cover(lqr.K, (float*)K_Array_Fly, 4, 10);
         } 
  		else if (chassis.recover_flag > 1) {
@@ -700,10 +701,8 @@ void wlr_control(void)
 			
 		
 		
-		if( (chassis.recover_flag == 1 || chassis.rescue_inter_flag == 2 || wlr.sky_flag >= 3 ) ) // 进入翻倒自起立 或 进入收腿阶段
+		if( chassis.recover_flag == 1 || chassis.rescue_inter_flag == 2 ) // 进入翻倒自起立 或 进入收腿阶段
             wlr.side[i].T0 = 0;  
-		else if (wlr.jump_flag == 3)
-			wlr.side[i].T0 = lqr.U_ref[2+i] * 1.0f; 
 		else
             wlr.side[i].T0 = lqr.U_ref[2+i];
 		
