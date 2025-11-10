@@ -435,6 +435,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>x3_balance_zero</ItemText>
         </Ww>
+        <Ww>
+          <count>56</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>wlr.side[0].Front_dis_kal</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>

@@ -1139,7 +1139,7 @@ static void chassis_data_output(void)
 					dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, 0);
 					dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);  
 				}
-            };
+            }
         }
     } else if (wlr.ctrl_mode == 1) {//位控
         dji_motor_set_torque(&driver_motor[0], -wlr.side[0].Tw);
@@ -1175,7 +1175,7 @@ static void chassis_data_output(void)
 	}
 	
 	
-	if(joint_motor[0].online && joint_motor[1].online && joint_motor[2].online && joint_motor[3].online )
+	if(joint_motor[0].state == 1 && joint_motor[1].state == 1 && joint_motor[2].state == 1 && joint_motor[3].state == 1 )
 	wlr.joint_all_online = 1;
 	else
 	wlr.joint_all_online = 0;	
@@ -1194,9 +1194,9 @@ void chassis_task(void const *argu)
         chassis_mode_switch();
         chassis_data_input();
 		if(ctrl_mode != PROTECT_MODE || 1)
-        wlr_control();
+			wlr_control();
 		else
-		wlr_init();
+			wlr_init();
 		
         chassis_data_output();
             
