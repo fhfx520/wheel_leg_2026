@@ -22,7 +22,7 @@ void comm_task(void const *argument)
         status.task.comm = 1;
         dji_motor_output_data();
         board_comm_send_data();		//板间通信
-        if(vision_cnt++ % 2 == 0)
+        if(vision_cnt++ % 3 == 0)	//电控发数据频率是333帧
          vision_output_data();
 				
         taskEXIT_CRITICAL();
