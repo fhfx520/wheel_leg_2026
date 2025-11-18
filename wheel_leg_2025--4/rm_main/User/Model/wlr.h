@@ -5,6 +5,27 @@
 #include "pid.h"
 #include "kalman_filter.h"
 
+typedef enum {
+    WLR_JUMP_IDLE = 0,
+    WLR_JUMP_ASCEND = 1,
+    WLR_JUMP_RECOVER_SHORT = 2,
+    WLR_JUMP_RECOVER_LONG = 3,
+} wlr_jump_state_e;
+
+typedef enum {
+    WLR_SKY_IDLE = 0,
+    WLR_SKY_FOLDING = 1,
+    WLR_SKY_EXTENDING = 2,
+    WLR_SKY_AIR_FOLDING = 3,
+    WLR_SKY_LANDING = 4,
+} wlr_sky_state_e;
+
+typedef enum {
+    WLR_SIDE_LEFT = 0,
+    WLR_SIDE_RIGHT = 1,
+    WLR_SIDE_COUNT = 2,
+} wlr_side_index_e;
+
 typedef struct
 {
     float X_ref[10];
@@ -37,7 +58,7 @@ typedef struct
     float K_ref[2];
     //控制标志
     uint8_t jump_flag, jump_pre, high_flag, power_flag, prone_flag, ctrl_mode, quarand_, crash_flag ,joint_all_online;
-	/*	jump_flag 	=1开始上台阶 =2和=3成功上台阶		
+	/*	jump_flag 	参考 wlr_jump_state_e		
 		jump_pre 	上台阶膝关节朝后完成标志位		
 		high_flag 	=0短腿 =1中腿 =2长腿
 		power_flag  未使用		
@@ -52,7 +73,7 @@ typedef struct
 		//jump_cnt 用于软件延时变化腿长		jump_run 用于软件延时判断两条腿是否撞击台阶
 	
 	uint16_t sky_flag, sky_cnt, sky_over, jump2_over;
-	/*	sky_flag 	=1在地面收腿 =2伸腿 =3在空中收腿 =4伸腿准备落地缓冲
+	/*	sky_flag 	参考 wlr_sky_state_e
 		sky_cnt		跳跃计数变量
 		sky_over 	=1完成跳跃
 		jump2_over  =1机体已磕上第二级台阶 */
@@ -81,7 +102,7 @@ typedef struct
         float 	 T0, Fy;
         //状态预测
         float predict_wy, T_adapt;
-    } side[2];
+    } side[WLR_SIDE_COUNT];
 } wlr_t;
 
 extern wlr_t wlr;
