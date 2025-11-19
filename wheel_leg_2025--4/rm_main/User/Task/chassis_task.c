@@ -55,7 +55,7 @@ FGT_sin_t FGT_sin_chassis;
 chassis_t chassis;
 
 chassis_scale_t chassis_scale = {
-    .remote = 1.0f/660*3.0f,
+    .remote = 1.0f/660*2.5f,
     .keyboard = 3.0f
 };
 
@@ -137,6 +137,8 @@ static void chassis_mode_switch(void)
         chassis.rescue_cnt_R = 0;
         chassis.recover_flag = 0;
         chassis.rescue_inter_flag = 0;
+		pid_L_test[0].i_out = -100;
+		pid_L_test[1].i_out = -100;
         break;
     }
     case REMOTER_MODE: {
@@ -271,9 +273,9 @@ static void chassis_data_input(void)
         case CHASSIS_MODE_REMOTER_ROTATE1:
         case CHASSIS_MODE_REMOTER_ROTATE2: {
 			if( wlr.high_flag == 1 )
-				chassis_scale.remote =	1.0f/660*3.0f;
+				chassis_scale.remote =	1.0f/660*2.5f;
 			else
-				chassis_scale.remote =	1.0f/660*3.0f;	
+				chassis_scale.remote =	1.0f/660*2.5f;	
 			
             chassis.input.vx = -rc.ch4 * chassis_scale.remote;
             chassis.input.vy = rc.ch3 * chassis_scale.remote;

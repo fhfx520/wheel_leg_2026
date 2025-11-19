@@ -119,8 +119,8 @@ void can_comm_init(void)
     
     //各驱动初始化
 	//膝关节朝前，左腿：[0][1]，右腿[2][3] chuan
-	dm_motor_init(&joint_motor[0], CAN_CHANNEL_2, 0x03, 0.77380f, 0x13);//B 3.480
-	dm_motor_init(&joint_motor[1], CAN_CHANNEL_2, 0x04, 3.57043f, 0x14);//S 3.564
+	dm_motor_init(&joint_motor[0], CAN_CHANNEL_2, 0x03, 0.800f, 0x13);//B 3.480 4.22525692 -2.63006902
+	dm_motor_init(&joint_motor[1], CAN_CHANNEL_2, 0x04, 3.55999f, 0x14);//S 3.564 
 	dm_motor_init(&joint_motor[2], CAN_CHANNEL_2, 0x02, 0.78000f, 0x12);//B 4.394 
 	dm_motor_init(&joint_motor[3], CAN_CHANNEL_2, 0x01, 1.96687f, 0x11);//S 3.770 
 //	
@@ -135,8 +135,8 @@ void can_comm_init(void)
     dji_motor_init(&trigger_motor, DJI_2006_MOTOR, CAN_CHANNEL_2, 0x205, 36.0f);
 //    dji_motor_init(&driver_motor[0], DJI_3508_MOTOR, CAN_CHANNEL_2, 0x204, 19.0f);
 //    dji_motor_init(&driver_motor[1], DJI_3508_MOTOR, CAN_CHANNEL_2, 0x203, 19.0f);
-    dji_motor_init(&driver_motor[0], DJI_3508_MOTOR, CAN_CHANNEL_1, 0x204, 15.06f);
-    dji_motor_init(&driver_motor[1], DJI_3508_MOTOR, CAN_CHANNEL_1, 0x203, 15.06f);
+    dji_motor_init(&driver_motor[0], DJI_3508_MOTOR, CAN_CHANNEL_1, 0x204, 13.94f);
+    dji_motor_init(&driver_motor[1], DJI_3508_MOTOR, CAN_CHANNEL_1, 0x203, 13.94f);
     dji_motor_init(&yaw_motor, DJI_6020_MOTOR, CAN_CHANNEL_3, 0x206, 1.0f);
 //    dji_motor_init(&pit_motor, DJI_6020_MOTOR, CAN_CHANNEL_3, 0x206, 1.0f);
 }

@@ -21,7 +21,7 @@ extern uint8_t rppppp_flag;
 
 #define WLR_SIGN(x) ((x) > 0? (1): (-1))
 
-static inline uint8_t wlr_both_legs_flying(void)
+static inline uint8_t wlr_both_legs_flying(void)		//使用inline关键字修饰表示为内联函数，即 不是调用函数而是直接使用return后面的代码
 {
     return wlr.side[WLR_SIDE_LEFT].fly_flag && wlr.side[WLR_SIDE_RIGHT].fly_flag;
 }
@@ -98,10 +98,14 @@ float K_Array_Leg_030[4][10] =
 //原始参数
 float K_Array_Leg_018[4][10] = 
 
-{{-1.3427, -3.20476, -2.58975, -0.566537, -11.5309, -1.66055, -4.79565, -0.550766, -3.65671, -0.949741},
-{-1.3427, -3.20476, 2.58975, 0.566537, -4.79565, -0.550766, -11.5309, -1.66055, -3.65671, -0.949741},
-{1.65671, 3.86815, -6.50643, -1.76397, 23.2026, 2.89945, -8.64908, -0.365859, -12.6781, -2.97443},
-{1.65671, 3.86815, 6.50643, 1.76397, -8.64908, -0.365859, 23.2026, 2.89945, -12.6781, -2.97443}
+//{{-1.3427, -3.20476, -2.58975, -0.566537, -11.5309, -1.66055, -4.79565, -0.550766, -3.65671, -0.949741},
+//{-1.3427, -3.20476, 2.58975, 0.566537, -4.79565, -0.550766, -11.5309, -1.66055, -3.65671, -0.949741},
+//{1.65671, 3.86815, -6.50643, -1.76397, 23.2026, 2.89945, -8.64908, -0.365859, -12.6781, -2.97443},
+//{1.65671, 3.86815, 6.50643, 1.76397, -8.64908, -0.365859, 23.2026, 2.89945, -12.6781, -2.97443}
+{{-1.35341, -3.54142, -3.04494, -0.700139, -14.4837, -1.8229, -5.86629, -0.795988, -6.53944, -1.25311},
+{-1.35341, -3.54142, 3.04494, 0.700139, -5.86629, -0.795988, -14.4837, -1.8229, -6.53944, -1.25311},
+{1.63064, 4.14796, -5.28786, -1.36757, 31.035, 3.42981, -10.6902, -0.682514, -24.8718, -3.17674},
+{1.63064, 4.14796, 5.28786, 1.36757, -10.6902, -0.682514, 31.035, 3.42981, -24.8718, -3.17674}
 };
 float K_Array_Leg_recover[4][10] = 
 {{-1.4784, -3.38292, -2.12021, -0.59702, -14.1888, -1.61916, -5.47387, -0.753332, -3.54134, -1.03737},
@@ -238,7 +242,7 @@ static void update_leg_height_and_balance(float yaw_error)
         x3_balance_zero = 0.0f;
     }
 
-    x5_balance_zero = 0.020f;
+    x5_balance_zero = 0.060f;
 }
 
 static void reset_jump_state(void)
@@ -562,7 +566,7 @@ static void map_virtual_force(uint8_t index)
         Fy_temp = pid_calc(&pid_leg_sky_cover[index], tlm.l_ref[index], vmc[index].L_fdb);
         wlr.side[index].Fy = ramp_calc(&Fy_ramp[index], Fy_temp) - 75.0f;
     } else {
-        wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 70.0f
+        wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 30.0f
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs)
                               + pid_calc(&pid_leg_vy[index], 0.0f, vmc[index].V_fdb.e.vy0_fdb);
     }
@@ -652,7 +656,7 @@ void wlr_init(void)
 				pid_init(&pid_leg_recover[i], NONE, 1500, 1.5f, 10000.0f, 150, 300);		//起身专用pid
         pid_init(&pid_leg_length_fly[i], NONE, 1000, 0.0, 15000, 0, 150);
         pid_init(&pid_leg_vy[i], NONE, 20, 0, 0, 0, 0);
-        pid_init(&pid_L_test[i], NONE, 1200, 1.0, 30000, 200, 250);
+        pid_init(&pid_L_test[i], NONE, 1800, 6.0, 32000, 200, 250);
 				pid_init(&pid_rescue[i], NONE, 2.0f, 0.5f, 0, 45, 50);
 				
 	}
@@ -689,13 +693,16 @@ void wlr_control(void)
     lqr.X_fdb[1] = wlr.v_fdb;
     lqr.X_fdb[2] = -wlr.yaw_fdb;
     lqr.X_fdb[3] = -wlr.wz_fdb;
+	
     lqr.X_fdb[8] = x5_balance_zero + wlr.pit_fdb;
     lqr.X_fdb[9] = wlr.wy_fdb;
+	
     lqr.X_fdb[4] = x3_balance_zero + (-PI / 2 + lqr.X_fdb[8] + vmc[0].q_fdb[0]) + Rotate_balance_zero;
     lqr.X_fdb[5] = lqr.X_fdb[9] + vmc[0].V_fdb.e.vw0_fdb;
     lqr.dot_leg_w[0] = (lqr.X_fdb[5] - lqr.last_leg_w[0]) / 0.002f;
     lqr.last_leg_w[0] = lqr.X_fdb[5];
-    lqr.X_fdb[6] = x3_balance_zero + (-PI / 2 + lqr.X_fdb[8] + vmc[1].q_fdb[0]) + Rotate_balance_zero;
+    
+	lqr.X_fdb[6] = x3_balance_zero + (-PI / 2 + lqr.X_fdb[8] + vmc[1].q_fdb[0]) + Rotate_balance_zero;
     lqr.X_fdb[7] = lqr.X_fdb[9] + vmc[1].V_fdb.e.vw0_fdb;
     lqr.dot_leg_w[1] = (lqr.X_fdb[7] - lqr.last_leg_w[1]) / 0.002f;
     lqr.last_leg_w[1] = lqr.X_fdb[7];
