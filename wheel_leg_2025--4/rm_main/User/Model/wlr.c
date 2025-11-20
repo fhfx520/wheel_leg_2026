@@ -394,8 +394,8 @@ static void update_rotate_state(void)
         } else {
             Rotate_balance_zero = 0;
         }
-        K_Array_Leg_rotate[0][3] = -ramp_calc(&wz_ramp, 0.254976f);
-        K_Array_Leg_rotate[1][3] = ramp_calc(&wz_ramp, 0.254976f);
+        K_Array_Leg_rotate[0][3] = -ramp_calc(&wz_ramp, 0.254976f);		//K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
+        K_Array_Leg_rotate[1][3] = ramp_calc(&wz_ramp, 0.254976f);		//K_Array_Leg_rotate[1][3] 越大 小陀螺越不稳定
     } else {
         Rotate_balance_zero = 0;
         wz_ramp.out = 2.0f;
@@ -404,12 +404,12 @@ static void update_rotate_state(void)
 
 static void update_leg_references(void)
 {
-    tlm_gnd_roll_calc(&tlm, -wlr.roll_fdb, vmc[0].L_fdb, vmc[1].L_fdb);
+    tlm_gnd_roll_calc(&tlm, -wlr.roll_fdb, vmc[0].L_fdb, vmc[1].L_fdb);		//计算地形倾角
     if (wlr.sky_over != 0 || wlr.sky_flag != 0 || wlr.jump_flag != 0
         || wlr_both_legs_flying() || chassis.recover_flag != 0) {
         tlm.l_ref[0] = tlm.l_ref[1] = wlr.high_set;
     } else {
-        tlm_leg_length_calc(&tlm, wlr.high_set, 0);
+        tlm_leg_length_calc(&tlm, wlr.high_set, 0);							//根据地形倾角不断更新两腿腿长，调整到机身与地面平行
     }
 
     if (!rotate_flag) {
@@ -550,22 +550,28 @@ static void map_virtual_force(uint8_t index)
 {
     float Fy_temp;
 
-    if (wlr_both_legs_flying() && wlr.jump_flag == WLR_JUMP_IDLE
-        && !chassis.recover_flag && wlr.sky_over == 0) {
+    if (wlr_both_legs_flying() && wlr.jump_flag == WLR_JUMP_IDLE	//两条腿都在空中 && 
+        && !chassis.recover_flag && wlr.sky_over == 0) {			// && 未进入翻倒自起立 && 跳跃未完成
         wlr.side[index].Fy = pid_calc(&pid_leg_length_fly[index], tlm.l_ref[index], vmc[index].L_fdb);
-    } else if (chassis.recover_flag == 1 && chassis.rescue_inter_flag == 2) {
+    } 
+		else if (chassis.recover_flag == 1 && chassis.rescue_inter_flag == 2) {		//进入翻倒自起立 && 进入收腿阶段
         Fy_temp = pid_calc(&pid_leg_recover[index], wlr.recover_length, vmc[index].L_fdb) - 75.0f;
         wlr.side[index].Fy = ramp_calc(&Fy_ramp[index], Fy_temp);
-    } else if (chassis.recover_flag > 1 && wlr.jump_flag != 0 && 0) {
+    } 
+		else if (chassis.recover_flag > 1 && wlr.jump_flag != 0 && 0) {
         wlr.side[index].Fy = pid_calc(&pid_leg_recover[index], 0.05f, vmc[index].L_fdb);
-    } else if (wlr.sky_flag == WLR_SKY_FOLDING) {
+    } 
+		else if (wlr.sky_flag == WLR_SKY_FOLDING) {
         wlr.side[index].Fy = pid_calc(&pid_leg_recover[index], tlm.l_ref[index], vmc[index].L_fdb) - 30.0f;
-    } else if (wlr.sky_flag == WLR_SKY_EXTENDING) {
+    } 
+		else if (wlr.sky_flag == WLR_SKY_EXTENDING) {
         wlr.side[index].Fy = pid_calc(&pid_leg_sky_jump[index], tlm.l_ref[index], vmc[index].L_fdb);
-    } else if (wlr.sky_flag >= WLR_SKY_AIR_FOLDING || wlr.sky_over == 1) {
+    } 
+		else if (wlr.sky_flag >= WLR_SKY_AIR_FOLDING || wlr.sky_over == 1) {
         Fy_temp = pid_calc(&pid_leg_sky_cover[index], tlm.l_ref[index], vmc[index].L_fdb);
         wlr.side[index].Fy = ramp_calc(&Fy_ramp[index], Fy_temp) - 75.0f;
-    } else {
+    } 
+		else {
         wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 30.0f
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs)
                               + pid_calc(&pid_leg_vy[index], 0.0f, vmc[index].V_fdb.e.vy0_fdb);
@@ -621,8 +627,8 @@ void wlr_init(void)
 	twm_init(&twm, BodyWidth, WheelRadius);
 	tlm_init(&tlm, LegLengthMax, LegLengthMin, BodyWidth);
     
-  ramp_init(&height_ramp, 0.001f, LegLengthMin, LegLengthMax);
-  ramp_init(&jump_ramp, 0.007f, -1.5f, 1.5f);
+	ramp_init(&height_ramp, 0.001f, LegLengthMin, LegLengthMax);
+	ramp_init(&jump_ramp, 0.007f, -1.5f, 1.5f);
 	ramp_init(&wz_ramp, 0.001f,  0,  3.0f);		//
 	ramp_init(&sky_ramp, 0.001f, 0,  1.0f);
 	ramp_init(&recover_ramp, 0.001f, 0,  1.0f);	
@@ -641,23 +647,20 @@ void wlr_init(void)
         kal_fn[i].Q_data[0] = 1;
         kal_fn[i].R_data[0] = 100;
 						
-				kalman_filter_init(&tfmini_fn[i], 1, 0, 1);
-				tfmini_fn[i].A_data[0] = 1;
-				tfmini_fn[i].H_data[0] = 1;
-				tfmini_fn[i].Q_data[0] = 1;
-				tfmini_fn[i].R_data[0] = 1000;
+		kalman_filter_init(&tfmini_fn[i], 1, 0, 1);
+		tfmini_fn[i].A_data[0] = 1;
+		tfmini_fn[i].H_data[0] = 1;
+		tfmini_fn[i].Q_data[0] = 1;
+		tfmini_fn[i].R_data[0] = 1000;
 		
 		//PID参数初始化      
-
-
-		
         pid_init(&pid_leg_sky_cover[i], NONE, 1500, 1.5f, 10000.0f, 150, 300);		//起身专用pid
-				pid_init(&pid_leg_sky_jump[i],  NONE,1800, 2.0, 10000, 100, 300);//跳跃 专用pid	
-				pid_init(&pid_leg_recover[i], NONE, 1500, 1.5f, 10000.0f, 150, 300);		//起身专用pid
+		pid_init(&pid_leg_sky_jump[i],  NONE,1800, 2.0, 10000, 100, 300);			//跳跃 专用pid	
+		pid_init(&pid_leg_recover[i], NONE, 1500, 1.5f, 10000.0f, 150, 300);		//起身专用pid
         pid_init(&pid_leg_length_fly[i], NONE, 1000, 0.0, 15000, 0, 150);
         pid_init(&pid_leg_vy[i], NONE, 20, 0, 0, 0, 0);
         pid_init(&pid_L_test[i], NONE, 1800, 6.0, 32000, 200, 250);
-				pid_init(&pid_rescue[i], NONE, 2.0f, 0.5f, 0, 45, 50);
+		pid_init(&pid_rescue[i], NONE, 2.0f, 0.5f, 0, 45, 50);
 				
 	}
 	//卡尔曼滤波器初始化
@@ -728,14 +731,14 @@ void wlr_control(void)
         update_fly_state(i, yaw_err);
     }
 
-    update_leg_height_and_balance(yaw_err);
-    reset_jump_state();
-    handle_jump_state();
-    handle_sky_state();
-    update_rotate_state();
-    update_leg_references();
-    select_control_matrix();
-    update_motion_reference();
+    update_leg_height_and_balance(yaw_err);		//更新腿长与x3 x5偏置
+    reset_jump_state();							//上台阶 || 飞天标志位清零
+    handle_jump_state();						//磕上二级台阶
+    handle_sky_state();							//飞天全过程
+    update_rotate_state();						//更新在小陀螺下的K矩阵（K_Array_Leg_rotate[0][3]和K_Array_Leg_rotate[1][3]）
+    update_leg_references();					//更新不同倾角下两腿腿长
+    select_control_matrix();					//选择对应K矩阵
+    update_motion_reference();					//更新不同运动状态下，状态变量的值
 
     aMartix_Add(1, lqr.X_ref, -1, lqr.X_fdb, lqr.X_diff, 10, 1);
     if (chassis.mode == CHASSIS_MODE_REMOTER_ROTATE1
@@ -753,7 +756,7 @@ void wlr_control(void)
     state_predict();
 
     for (int i = 0; i < WLR_SIDE_COUNT; i++) {
-        map_virtual_force(i);
+        map_virtual_force(i);		//虚拟力映射（计算Fy和T0 + 五连杆逆解算）
     }
 
     apply_output_limits();

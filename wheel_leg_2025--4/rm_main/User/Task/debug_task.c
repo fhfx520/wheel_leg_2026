@@ -24,7 +24,6 @@
 #define row_debug 2 * 10
 uint8_t debug_wave = 1;
 float test_hex = 1;
-extern float ro_temp;
 extern FGT_sin_t FGT_sin_chassis;
 extern  uint16_t quadrant_cnt;
 extern ctrl_mode_e  ctrl_mode;

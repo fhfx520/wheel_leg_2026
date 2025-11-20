@@ -22,29 +22,13 @@
 #include "prot_judge.h"
 #include "prot_power.h"
 
-
-//未使用
-#define JOINT_MOTOR_RESET_TORQUE 2.0f
-#define JOINT_MOTOR_RESET_ERROR 0.005f
-
 extern uint16_t quadrant_cnt;
 extern pid_t pid_leg_recover[2];
 extern ramp_t recover_ramp;
-//用于电机输入角度到q2的映�?
-const float Legtemp1 = 0.115f;
-const float Legtemp2 = 0.135f;
 
-float rescue_speed;
-float test_t[2];
-float ro_temp;
 uint8_t rotate_flag;
 uint8_t rppppp_flag = 0;
-//uint8_t last_recover_flag;
-//uint8_t recover_flag;
-//uint32_t rescue_cnt_L;
-//uint32_t rescue_cnt_R;
-//uint32_t rescue_cnt_T;
-//float dm_p[2];
+
 ramp_t chassis_x_ramp;
 ramp_t chassis_y_ramp;
 ramp_t chassis_rotate_ramp;
@@ -143,7 +127,7 @@ static void chassis_mode_switch(void)
     }
     case REMOTER_MODE: {
         if (last_ctrl_mode == PROTECT_MODE )
-            chassis.recover_flag = 1;		//help!!! 这个变量什么意思
+            chassis.recover_flag = 1;		//进入翻倒自起立
         if (last_ctrl_mode != REMOTER_MODE || chassis.mode == CHASSIS_MODE_PROTECT) { //从非遥控模式 或 保护模式切入遥控模式，底盘切为遥控跟随模式
             chassis.mode = CHASSIS_MODE_REMOTER_FOLLOW;
         }
@@ -250,7 +234,6 @@ static void chassis_mode_switch(void)
         key_status_clear(KEY_CHASSIS_PRONE);	
 }
 
-//help!!! 这四个变量什么意思
 uint8_t rotate_ramp_flag; 
 chassis_mode_e rotate_chassis_mode = CHASSIS_MODE_PROTECT;
 uint16_t rotate_state_cnt;
@@ -266,6 +249,7 @@ static void chassis_data_input(void)
             chassis.input.vy = 0;
             wlr.ctrl_mode = 0;
 			wlr.high_flag = 0;
+			wlr.sky_flag = WLR_SKY_IDLE;
             key_status_clear(KEY_CHASSIS_HEIGHT);
             break;
         }
@@ -691,188 +675,7 @@ static void chassis_data_input(void)
 
 float left_speed=3, right_speed=3;
 float left_T, right_T;
-float fsjl;
 float up_ready;
-
-//原代码
-//static void chassis_self_rescue(void)//翻车自救
-//{
-//	static uint32_t leg_length_cnt;
-//	static float rescue_cnt = 0;	
-//	static float rescue_T = 4;//翻转力矩
-//	
-//	if (fabs(chassis_imu.pit) > 1.5f)
-//		rescue_T = 6.5;
-//	else 
-//		rescue_T = 4.5;
-//		
-//	left_T  = pid_calc(&pid_rescue[0], left_speed , (wlr.side[0].w1));
-//	right_T = pid_calc(&pid_rescue[1], right_speed, (wlr.side[1].w1));
-//		
-////		if (rescue_cnt > 4000) {//----------------10s等待
-////				if (fabs(chassis_imu.pit) > 1.5f)
-////						rescue_T = 9;
-////		}
-//	//第四象限卡台阶
-//	if ((vmc[0].quadrant ==4 || vmc[1].quadrant == 4) && chassis.rescue_inter_flag != 1)
-//		rescue_cnt ++;
-////	else
-////		rescue_cnt = 0;
-//		
-//	fsjl = rescue_cnt;
-////    if (!chassis.rescue_inter_flag && fabs(chassis_imu.pit) > 1.0f && fabs(chassis_imu.rol) < 0.1f)
-////        chassis.rescue_inter_flag = 3;//3阶段 ----整车翻倒且保护天鹅颈
-//		
-//	if (!chassis.rescue_inter_flag && fabs(chassis_imu.pit) < 0.6f && (vmc[0].quadrant == 2 || vmc[1].quadrant == 2))
-//		chassis.rescue_inter_flag = 4;//4阶段 ----第二象限启动卡墙
-//		
-//    if (!chassis.rescue_inter_flag)
-//        chassis.rescue_inter_flag = 1;//1阶段 ----代表车身正在归正
-//    
-//    if (chassis.rescue_inter_flag == 3) {
-//        dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, left_T);//0.03 0.5
-//        dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);	
-//        if (fabs(chassis_imu.rol) > 0.6f)
-//            chassis.rescue_inter_flag = 1;
-//    }    
-//		
-//	if (chassis.rescue_inter_flag == 4) {
-//		//左腿归正
-//		if (vmc[0].quadrant == 2 && chassis.rescue_cnt_L <= 100) {
-//			dm_motor_set_control_para(&joint_motor[0], 0, -rescue_T, 0, 5, 0);//0.03 0.5
-//            dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);	
-//		} else if (vmc[0].quadrant == 1) 
-//			chassis.rescue_cnt_L++;
-//		if (chassis.rescue_cnt_L > 100) {
-//			dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, 0);
-//			dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0); 		
-//		}
-//		//右腿归正
-//		if (vmc[1].quadrant == 2 && chassis.rescue_cnt_R <= 100 ) {
-//			dm_motor_set_control_para(&joint_motor[2], 0, rescue_T, 0, 5, 0);//0.03 0.5
-//            dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);	
-//		} else if (vmc[1].quadrant == 1) 
-//			chassis.rescue_cnt_R++;
-//		if (chassis.rescue_cnt_R > 100) {
-//            dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, 0);
-//            dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0); 
-//		}
-//		//进入收腿阶段
-//        if(chassis.rescue_cnt_L > 200 || chassis.rescue_cnt_R > 200) {
-//            chassis.rescue_cnt_L = 0;
-//            chassis.rescue_cnt_R = 0;
-////			pid_rescue[0].i_out = 0;
-////			pid_rescue[1].i_out = 0;
-//			chassis.rescue_inter_flag = 1;
-//		}
-//	}
-//    
-//    if (chassis.rescue_inter_flag == 1) {		
-//        //左腿归正
-////        if (vmc[0].quadrant == 3 || vmc[0].quadrant == 2 || vmc[0].quadrant == 4 || fabs(chassis_imu.pit) > 2.4f ||fabs(chassis_imu.rol )> 1.6f) {
-//		if  ( (vmc[0].quadrant == 1 || vmc[0].quadrant == 2 || vmc[0].quadrant == 3) &&  (fabs(chassis_imu.pit) > 0.3f ||fabs(chassis_imu.rol )> 0.3f) || chassis.rescue_cnt_L > 1250 ) {
-////      	dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, left_T);//0.03 0.5
-//			dm_motor_set_control_para(&joint_motor[0], 0, 8, 0, 5, 10);//快哥z
-//            dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);	
-//			if( chassis.rescue_cnt_L < 1000)
-//				chassis.rescue_cnt_L = 0;
-////				chassis.rescue_cnt_L -=5; 
-//        } else if (vmc[0].quadrant == 4 || fabs(chassis_imu.pit) < 0.2f ||fabs(chassis_imu.rol ) <  0.2f) {
-//            dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, 0);
-//            dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);        
-//            chassis.rescue_cnt_L++;       
-//        }
-//        //右腿归正        
-////        if (vmc[1].quadrant == 3 || vmc[1].quadrant == 2 || vmc[1].quadrant == 4 || fabs(chassis_imu.pit) > 2.4f || fabs(chassis_imu.rol) >1.6f) {
-//		if ((vmc[1].quadrant == 1 || vmc[1].quadrant == 2 || vmc[1].quadrant == 3) &&  (fabs(chassis_imu.pit) > 0.3f ||fabs(chassis_imu.rol )> 0.3f) || chassis.rescue_cnt_R > 1250 ) {
-////          dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, -right_T);//0.03 0.5
-//			dm_motor_set_control_para(&joint_motor[2], 0, -8, 0, 5, 10);//快哥
-//            dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
-//			if( chassis.rescue_cnt_R < 1000)
-//            chassis.rescue_cnt_R = 0; 
-////			chassis.rescue_cnt_R -=5; 
-//        } else if (vmc[1].quadrant == 4 || fabs(chassis_imu.pit) < 0.2f ||fabs(chassis_imu.rol ) <  0.2f) {
-//            dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, 0);//0.03 0.5
-//            dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);        
-//            chassis.rescue_cnt_R++;               
-//        }
-//        //进入收腿阶段
-//		if((chassis.rescue_cnt_L > 100 && chassis.rescue_cnt_R > 100) || up_ready ){
-//			if(!up_ready)
-//				up_ready = 1;
-//			/*shangjiao*/
-//			if(vmc[0].quadrant != 1 ){
-//				dm_motor_set_control_para(&joint_motor[0], 0, 6, 0, 5, 0);//快哥z
-//				dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);
-//			}else{
-//				dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, 0);//0.03 0.5
-//				dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);
-//			}
-//						
-//			if(vmc[1].quadrant != 1 ){
-//				dm_motor_set_control_para(&joint_motor[2], 0, -6, 0, 5, 0);//快哥
-//				dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
-//			}else{
-//				dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, 0);//0.03 0.5
-//				dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
-//			}
-//			
-//			if(vmc[0].quadrant == 1 && vmc[1].quadrant == 1)
-//				up_ready++;
-//			if(up_ready > 100)
-//				chassis.rescue_inter_flag = 2;
-//		}
-//    } else if (chassis.rescue_inter_flag == 2) { //开始收腿
-////		if (vmc[0].quadrant == 3 || vmc[1].quadrant == 3)
-////			wlr.side[0].T1 = wlr.side[0].T2 = wlr.side[1].T1 = wlr.side[1].T2 = 0;
-//        dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, 0.8f*wlr.side[0].T1);//0.03 0.5
-//        dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 1.0f*wlr.side[0].T2); 
-//        dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0,-0.8f*wlr.side[1].T1);
-//        dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0,-1.0f*wlr.side[1].T2); 
-//		dji_motor_set_torque(&driver_motor[0], 0);
-//		dji_motor_set_torque(&driver_motor[1], 0);	
-//			
-//        if (fabs(vmc[0].L_fdb - wlr.recover_length) < 0.1f && fabs(vmc[1].L_fdb - wlr.recover_length) < 0.1f ) {
-//			leg_length_cnt++;
-//			if(leg_length_cnt > 50){
-//				leg_length_cnt = 0;
-//				rescue_cnt = 0;
-//				quadrant_cnt = 0;
-//				chassis.rescue_cnt_L = 0;
-//				chassis.rescue_cnt_R = 0;
-//				chassis.recover_flag = 2; 
-//				chassis.rescue_inter_flag = 0;
-//				wlr.high_flag = 0;
-//				up_ready=0;
-//			}
-//        }
-//    }    
-//   
-//    dji_motor_set_torque(&driver_motor[0], 0);
-//    dji_motor_set_torque(&driver_motor[1], 0);
-//	//第四象限卡台阶
-//	if (rescue_cnt > 5000 && (vmc[0].quadrant ==4 || vmc[1].quadrant == 4) && chassis.rescue_inter_flag != 2  ) {
-//		if (chassis_imu.pit < -0.25f) { 
-//			dji_motor_set_torque(&driver_motor[0], -2);
-//			dji_motor_set_torque(&driver_motor[1], 2);			
-//		}else {			
-//			dji_motor_set_torque(&driver_motor[0], 2);
-//			dji_motor_set_torque(&driver_motor[1], -2);
-//		}
-//	}
-//	
-//	if(ctrl_mode == PROTECT_MODE){
-//		leg_length_cnt = 0;
-//		rescue_cnt = 0;
-//		quadrant_cnt = 0;
-//		chassis.rescue_cnt_L = 0;
-//		chassis.rescue_cnt_R = 0;
-//		chassis.recover_flag = 2; 
-//		chassis.rescue_inter_flag = 0;
-//		wlr.high_flag = 0;
-//		up_ready=0;
-//	}
-//}
 
 static void chassis_self_rescue(void)//翻车自救
 {
@@ -892,7 +695,6 @@ static void chassis_self_rescue(void)//翻车自救
 	if ((vmc[0].quadrant ==4 || vmc[1].quadrant == 4) && chassis.rescue_inter_flag != 1)
 		rescue_cnt ++;
 		
-	fsjl = rescue_cnt;
 //    if (!chassis.rescue_inter_flag && fabs(chassis_imu.pit) > 1.0f && fabs(chassis_imu.rol) < 0.1f)
 //        chassis.rescue_inter_flag = 3;//3阶段 ----整车翻倒且保护天鹅颈
 		
