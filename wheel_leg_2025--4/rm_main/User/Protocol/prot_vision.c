@@ -114,10 +114,9 @@ void vision_num(void)
 	
 	key_scan(KEY_VISION);
 	
-	if(kb_status[KEY_VISION] )
-	{index = (index + 1) % 4 ;
-	key_scan_clear(KEY_VISION);
+	if(kb_status[KEY_VISION] ){
+		index = (index + 1) % 4 ;
+		key_scan_clear(KEY_VISION);
 	}	
 	ID_judge = ids[index];
-
 }

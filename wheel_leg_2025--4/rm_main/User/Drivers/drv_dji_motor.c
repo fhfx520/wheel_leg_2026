@@ -102,7 +102,6 @@ void dji_motor_get_data(can_channel_e can_periph, uint32_t id, uint8_t *data)
         }
     }
 }
-float kankan;
 /*
  * @brief     大疆电机设置控制力矩，并转换成转矩电流
  * @param[in] motor: 电机数据结构体

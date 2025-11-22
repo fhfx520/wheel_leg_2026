@@ -74,7 +74,7 @@ void mode_switch_task(void const *argu)
             remote_reset();
             sw1_mode_handler();  //根据左拨杆切换系统模式
         }
-		vision_num();
+		vision_num();		//用于板间通信传输数据，但云台未使用
         status.task.mode_switch = 1;
         osDelay(10);
     }
