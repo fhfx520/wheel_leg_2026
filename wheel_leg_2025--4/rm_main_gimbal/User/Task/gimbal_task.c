@@ -132,7 +132,6 @@ static void gimbal_data_output(void)
     if(gimbal_imu.online == 0 || yaw_motor.online == 0){
     dji_motor_set_torque(&pit_motor, 0);
     dji_motor_set_torque(&yaw_motor, 0);     
-    
     }
         
     else{

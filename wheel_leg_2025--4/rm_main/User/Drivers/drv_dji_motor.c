@@ -137,12 +137,12 @@ static void dji_motor_fill_data(void)
         object = list_entry(node, dji_motor_t, list);
         if (object->motor_type == DJI_6020_MOTOR) {
             if (object->can_id < 0x209){
-                motor_msg[object->can_channel][2].id = 0xADC;//0x1FE
+                motor_msg[object->can_channel][2].id = 0x1FF;
                 motor_msg[object->can_channel][2].data[(object->can_id - 0x205) * 2] = object->tx_current >> 8;
                 motor_msg[object->can_channel][2].data[(object->can_id - 0x205) * 2 + 1] = object->tx_current;
                 motor_send_flag[object->can_channel][2] = 1;
             } else {
-                motor_msg[object->can_channel][3].id = 0xADC;//0x2FE
+                motor_msg[object->can_channel][3].id = 0x2FF;
                 motor_msg[object->can_channel][3].data[(object->can_id - 0x209) * 2] = object->tx_current >> 8;
                 motor_msg[object->can_channel][3].data[(object->can_id - 0x209) * 2 + 1] = object->tx_current;
                 motor_send_flag[object->can_channel][3] = 1;
@@ -171,7 +171,7 @@ static void dji_motor_fill_data(void)
 void dji_motor_output_data(void)
 {
     dji_motor_fill_data();
-    for (can_channel_e can_channel = CAN_CHANNEL_1; can_channel != (CAN_CHANNEL_NUM-1); can_channel++) {//排除can3电机
+    for (can_channel_e can_channel = CAN_CHANNEL_1; can_channel != (CAN_CHANNEL_NUM); can_channel++) {//排除can3电机
         for (int i = 0; i < 4; i++) {
             if (motor_send_flag[can_channel][i] == 1) {
 				if((status.dji_motor != 2 && status.dji_motor != 3) || trigger_motor.online)

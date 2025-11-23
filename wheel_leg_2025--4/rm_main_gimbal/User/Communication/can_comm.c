@@ -32,6 +32,7 @@ void can_comm_init(void)
     can_filter.FilterID2 = 0x014;
     can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;//通过过滤后给邮箱0
     HAL_FDCAN_ConfigFilter(&hfdcan1, &can_filter);
+	
     //pitch电机 拨盘电机
     can_filter.IdType = FDCAN_STANDARD_ID;//标准帧
     can_filter.FilterIndex = 1;
@@ -49,10 +50,10 @@ void can_comm_init(void)
     //摩擦轮电机
     can_filter.IdType = FDCAN_STANDARD_ID;//标准帧
     can_filter.FilterIndex = 0;
-    can_filter.FilterType = FDCAN_FILTER_RANGE;//等于过滤
+    can_filter.FilterType = FDCAN_FILTER_RANGE;//范围过滤
     can_filter.FilterID1 = 0x201;
     can_filter.FilterID2 = 0x208;
-    can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;//通过过滤后给邮箱1
+    can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;//通过过滤后给邮箱0
     HAL_FDCAN_ConfigFilter(&hfdcan2, &can_filter);
     HAL_FDCAN_ConfigGlobalFilter(&hfdcan2, FDCAN_REJECT, FDCAN_REJECT, FDCAN_REJECT_REMOTE, FDCAN_REJECT_REMOTE);
     HAL_FDCAN_ActivateNotification(&hfdcan2, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0);//使能邮箱0新消息中断
@@ -75,7 +76,7 @@ void can_comm_init(void)
     can_filter.FilterIndex = 1;
     can_filter.FilterType = FDCAN_FILTER_DUAL;//范围过滤
     can_filter.FilterID1 = 0x206;
-    can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO1;//通过过滤后给邮箱0
+    can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO1;//通过过滤后给邮箱1
     HAL_FDCAN_ConfigFilter(&hfdcan3, &can_filter);
 	
     HAL_FDCAN_ConfigGlobalFilter(&hfdcan3, FDCAN_REJECT, FDCAN_REJECT, FDCAN_REJECT_REMOTE, FDCAN_REJECT_REMOTE);

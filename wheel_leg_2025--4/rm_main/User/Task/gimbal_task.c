@@ -26,10 +26,10 @@ FGT_agl_t yaw_test = {
 };
 
 gimbal_scale_t gimbal_scale = {
-    .ecd_remote = 0.00001f,//待修改sensity
+    .ecd_remote = 0.000005f,//待修改sensity
     .ecd_keyboard = 1,
-    .angle_remote = 0.00002f,
-    .angle_keyboard = 0.00006f
+    .angle_remote = 0.000015f,
+    .angle_keyboard = 0.00003f
 };
 gimbal_t gimbal;
 gimbal_stable_t gimbal_stable;
@@ -43,9 +43,8 @@ static void gimbal_init(void)
     pid_init(&gimbal.pit_angle.pid, NONE, 2, 0, 0, 0, 7);//20 0 0 有测速模块
     pid_init(&gimbal.pit_spd.pid, NONE, -0.5, -0.001f, 0, 0.4f, 2.2f);//-1.0 -0.008
     
-    pid_init(&gimbal.yaw_angle.pid, NONE, 6, 0, 0, 0, 30);
-    pid_init(&gimbal.yaw_spd.pid, NONE, 3.0f, 0.02f, 0, 1.0f, 2.2f);
-    pid_init(&gimbal.yaw_ecd.pid, NONE, 0, 0, 0, 0, 0);
+    pid_init(&gimbal.yaw_angle.pid, NONE, 500, 0, 0, 0, 15000.0f);
+	pid_init(&gimbal.yaw_spd.pid, NONE, 0.05f, 0.00f, 0, 1000.0f, 25000.0f);
 
 }
 
@@ -111,7 +110,7 @@ static void gimbal_pid_calc(void)
 
 static void gimbal_data_output(void)
 {
-    dji_motor_set_torque(&pit_motor, gimbal.pit_output);
+//    dji_motor_set_torque(&pit_motor, gimbal.pit_output);
     dji_motor_set_torque(&yaw_motor, gimbal.yaw_output);   
 }
 
@@ -167,6 +166,35 @@ static void gimbal_stable_calc(void)
 		gimbal_stable.feedback_beta_speed = arm_sin_f32(gimbal_stable.a_fdb) * (-gimbal_stable.chassis_wx_fdb) - arm_cos_f32(gimbal_stable.a_fdb) * (-gimbal_stable.chassis_wy_fdb);
 }
 
+static void yaw_control(void)
+{
+	 float yaw_err;
+	if(ctrl_mode == PROTECT_MODE)
+	{
+		gimbal.yaw_angle.ref = CHASSIS_YAW_OFFSET / 8192.0f * 2.0f * PI;
+		gimbal.yaw_spd.pid.i_out = 0;
+		gimbal.yaw_ecd.pid.i_out = 0;
+		gimbal.yaw_output = 0;
+	}else{
+		yaw_err = circle_error(gimbal.yaw_angle.ref, gimbal.yaw_angle.fdb, 2*PI);
+		if (gimbal.start_up == 0 && yaw_err < 0.03f)
+			gimbal.start_up = 1;
+		
+		gimbal.yaw_angle.fdb = yaw_motor.ecd / 8192.0f * 2.0f * PI;
+		yaw_err = circle_error(gimbal.yaw_angle.ref, gimbal.yaw_angle.fdb, 2*PI);
+		
+		if (gimbal.yaw_angle.ref < 0) {
+			gimbal.yaw_angle.ref += 2 * PI;
+		} else if (gimbal.yaw_angle.ref > 2 * PI) {
+			gimbal.yaw_angle.ref -= 2 * PI;
+		}
+		
+		gimbal.yaw_spd.ref = pid_calc(&gimbal.yaw_angle.pid, gimbal.yaw_angle.fdb + yaw_err, gimbal.yaw_angle.fdb);    
+		gimbal.yaw_spd.fdb = yaw_motor.velocity;
+		gimbal.yaw_output = pid_calc(&gimbal.yaw_spd.pid, gimbal.yaw_spd.ref, gimbal.yaw_spd.fdb);
+	}
+}
+
 void gimbal_task(void const *argu)
 {
     uint32_t thread_wake_time = osKernelSysTick();
@@ -174,6 +202,11 @@ void gimbal_task(void const *argu)
     for(;;) {
         thread_wake_time = osKernelSysTick();
 		gimbal_stable_calc();
+		
+		//help 拆头 + 了下面两个函数     不拆头就不加
+		yaw_control();
+		gimbal_data_output();
+		
         osDelayUntil(&thread_wake_time, 2);
     }
 }

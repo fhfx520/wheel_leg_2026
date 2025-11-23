@@ -425,29 +425,61 @@ static void chassis_data_input(void)
 /******************************************** 旋转数据输入 ********************************************/
     switch (chassis.mode) {
         case CHASSIS_MODE_PROTECT: {
-            wlr.yaw_ref = (float)yaw_motor.ecd / 8192 * 2 * PI;
-            wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;
+						
+			//help拆头 start
+			wlr.yaw_ref = (float)chassis_imu.yaw;
+			wlr.yaw_fdb = (float)chassis_imu.yaw;
+			//help拆头 end
+			
+//******************************************************************************************************
+			
+			//help不拆头 start
+//            wlr.yaw_ref = (float)yaw_motor.ecd / 8192 * 2 * PI;
+//            wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;
+			//help不拆头 end
+			
+			//拆不拆头都有这行
             wlr.wz_ref = 0;
+			
             break;
         }
         case CHASSIS_MODE_REMOTER_FOLLOW:
         case CHASSIS_MODE_KEYBOARD_FOLLOW:
         case CHASSIS_MODE_KEYBOARD_PRONE: {
-            if (gimbal.start_up)	//完成起身，前方灯条
-                wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
-            else					//起身未完成，目标值等于反馈值
-                wlr.yaw_ref = (float)yaw_motor.ecd / 8192 * 2  * PI;     
-						
-            wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 *PI;	//-chassis_imu.yaw;
-            wlr.wz_ref = 0;
-						
-            //此yaw_err用于底盘前后都可跟随 算哪边最短路径
-            wlr.yaw_err = circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
 			
-            if ( wlr.yaw_err > PI / 2 || wlr.yaw_err < - PI / 2) {
-                wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI ;
-            }
+			//help拆头 start
+            if (gimbal.start_up)	//完成起身，前方灯条
+				wlr.yaw_ref = chassis_imu.yaw;
+            else					//起身未完成，目标值等于反馈值
+				wlr.yaw_ref = chassis_imu.yaw;
+			
+			wlr.yaw_fdb = chassis_imu.yaw;
+            wlr.wz_ref = rc.ch1 *  0.0075f;
+			//help拆头 end
+			
+//******************************************************************************************************
+			
+//			//help不拆头 start
+//			if (gimbal.start_up)	//完成起身，前方灯条
+//                wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
+//            else					//起身未完成，目标值等于反馈值
+//                wlr.yaw_ref = (float)yaw_motor.ecd / 8192 * 2  * PI;  
+
+//            wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 *PI;	//-chassis_imu.yaw;
+//            wlr.wz_ref =0.0f;
+//			
+//            //此yaw_err用于底盘前后都可跟随 算哪边最短路径
+//            wlr.yaw_err = circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
+//			
+//            if ( wlr.yaw_err > PI / 2 || wlr.yaw_err < - PI / 2) {
+//                wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI ;
+//            }
+//			//help不拆头 end
+			
+			
+			//拆不拆头都有这行
 			chassis_rotate_ramp.out =0;//斜坡清零
+			
             break;
         }
         case CHASSIS_MODE_KEYBOARD_FIGHT: {
@@ -759,7 +791,7 @@ static void chassis_self_rescue(void)//翻车自救
 			dm_motor_set_control_para(&joint_motor[2], 0, -8, 0, 5, 10);//快哥
             dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
 			if( chassis.rescue_cnt_R < 1000)
-            chassis.rescue_cnt_R = 0; 
+				chassis.rescue_cnt_R = 0; 
         } else if (vmc[1].quadrant == 4 || fabs(chassis_imu.pit) < 0.2f ||fabs(chassis_imu.rol ) <  0.2f) {
             dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, 0);//0.03 0.5
             dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
@@ -980,9 +1012,9 @@ static void chassis_data_output(void)
 	
 	
 	if(joint_motor[0].state == 1 && joint_motor[1].state == 1 && joint_motor[2].state == 1 && joint_motor[3].state == 1 )
-	wlr.joint_all_online = 1;
+		wlr.joint_all_online = 1;
 	else
-	wlr.joint_all_online = 0;	
+		wlr.joint_all_online = 0;	
 }
 
 void chassis_task(void const *argu)
