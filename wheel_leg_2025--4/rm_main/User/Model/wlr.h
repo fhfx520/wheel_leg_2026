@@ -14,10 +14,10 @@ typedef enum {
 
 typedef enum {
     WLR_SKY_IDLE = 0,
-    WLR_SKY_FOLDING = 1,
-    WLR_SKY_EXTENDING = 2,
-    WLR_SKY_AIR_FOLDING = 3,
-    WLR_SKY_LANDING = 4,
+    WLR_SKY_FOLDING = 1,		//平地收腿
+    WLR_SKY_EXTENDING = 2,		//空中伸腿
+    WLR_SKY_AIR_FOLDING = 3,	//空中收腿
+    WLR_SKY_LANDING = 4,		//落地
 } wlr_sky_state_e;
 
 typedef enum {

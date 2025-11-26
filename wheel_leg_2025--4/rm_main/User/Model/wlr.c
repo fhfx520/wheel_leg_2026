@@ -154,7 +154,6 @@ pid_t pid_leg_sky_jump[2];
 pid_t pid_leg_length[2];
 pid_t pid_leg_length_fast[2];
 pid_t pid_leg_length_fly[2];
-pid_t pid_leg_vy[2];
 pid_t pid_roll;
 pid_t pid_L_test[2];
 static float wlr_fn_calc(float az, float Fy_fdb, float T0_fdb, float L0[3], float theta[3])
@@ -430,11 +429,13 @@ static void select_control_matrix(void)
         return;
     }
 
-    if (wlr.prone_flag) {
+    if (wlr.prone_flag) {		//匍匐模式
         aMartix_Cover(lqr.K, (float*)K_Array_Prone, 4, 10);
-    } else if ((wlr_both_legs_flying() && wlr.jump_flag == WLR_JUMP_IDLE && !chassis.recover_flag)) {
+    } 
+	else if ((wlr_both_legs_flying() && wlr.jump_flag == WLR_JUMP_IDLE && !chassis.recover_flag)) {		//双腿离地 && ,,, && chassis.recover_flag == 0
         aMartix_Cover(lqr.K, (float*)K_Array_Fly, 4, 10);
-    } else if (chassis.recover_flag > 1) {
+    } 
+	else if (chassis.recover_flag > 1) {		//收腿起立时，先把车身以前导轮撑起，再收腿
         aMartix_Cover(lqr.K, (float*)K_Array_Leg_recover, 4, 10);
         if (fabs(lqr.X_fdb[4]) < 0.85f && fabs(lqr.X_fdb[6]) < 0.85f) {
             chassis.recover_flag++;
@@ -442,19 +443,26 @@ static void select_control_matrix(void)
         if (chassis.recover_flag > 30) {
             chassis.recover_flag = 0;
         }
-    } else if (rotate_flag == 1) {
+    } 
+	else if (rotate_flag == 1) {					//小陀螺
         aMartix_Cover(lqr.K, (float*)K_Array_Leg_rotate, 4, 10);
-    } else if (wlr.jump_flag == WLR_JUMP_ASCEND) {
+    } 
+	else if (wlr.jump_flag == WLR_JUMP_ASCEND) {
         aMartix_Cover(lqr.K, (float*)K_Array_Leg_030, 4, 10);
-    } else if (wlr.high_flag == 2) {
+    } 
+	else if (wlr.high_flag == 2) {					//最长腿
         aMartix_Cover(lqr.K, (float*)K_Array_Leg_030, 4, 10);
-    } else if (wlr.high_flag == 0) {
+    } 
+	else if (wlr.high_flag == 0) {					//短腿
         aMartix_Cover(lqr.K, (float*)K_Array_Leg_018, 4, 10);
-    } else if (wlr.sky_flag == WLR_SKY_FOLDING) {
+    } 
+	else if (wlr.sky_flag == WLR_SKY_FOLDING) {		//平地收腿
         aMartix_Cover(lqr.K, (float*)K_Array_Leg_018, 4, 10);
-    } else if (wlr.sky_flag == WLR_SKY_AIR_FOLDING || wlr.sky_flag == WLR_SKY_LANDING || wlr.sky_over == 1) {
+    } 
+	else if (wlr.sky_flag == WLR_SKY_AIR_FOLDING || wlr.sky_flag == WLR_SKY_LANDING || wlr.sky_over == 1) {		//空中收腿 || 落地 || 完成飞天
         aMartix_Cover(lqr.K, (float*)K_Array_Fly, 4, 10);
-    } else {
+    } 
+	else {
         aMartix_Cover(lqr.K, (float*)K_Array_Leg_020, 4, 10);
     }
 }
@@ -573,8 +581,7 @@ static void map_virtual_force(uint8_t index)
     } 
 		else {
         wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 30.0f
-                              + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs)
-                              + pid_calc(&pid_leg_vy[index], 0.0f, vmc[index].V_fdb.e.vy0_fdb);
+                              + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
     }
 
     if (rotate_flag) {
@@ -582,8 +589,9 @@ static void map_virtual_force(uint8_t index)
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
     }
 
-    if ((chassis.recover_flag == 1 || chassis.rescue_inter_flag == 2) && (wlr.sky_flag <= WLR_SKY_FOLDING)) {
-        wlr.side[index].T0 = 0;
+//    if ((chassis.recover_flag == 1 || chassis.rescue_inter_flag == 2) && (wlr.sky_flag <= WLR_SKY_FOLDING)) {
+    if ((chassis.recover_flag == 1 || chassis.rescue_inter_flag == 2)) {	//原先：进入跳跃平地收腿阶段车会向后溜很长一段距离，
+        wlr.side[index].T0 = 0;												//感觉是T0 = 0（腿旋转力矩=0），腿无法旋转而导致
     } else {
         wlr.side[index].T0 = lqr.U_ref[2 + index];
     }
@@ -658,7 +666,6 @@ void wlr_init(void)
 		pid_init(&pid_leg_sky_jump[i],  NONE,1800, 2.0, 10000, 100, 300);			//跳跃 专用pid	
 		pid_init(&pid_leg_recover[i], NONE, 1500, 1.5f, 10000.0f, 150, 300);		//起身专用pid
         pid_init(&pid_leg_length_fly[i], NONE, 1000, 0.0, 15000, 0, 150);
-        pid_init(&pid_leg_vy[i], NONE, 20, 0, 0, 0, 0);
         pid_init(&pid_L_test[i], NONE, 1800, 6.0, 32000, 200, 250);
 		pid_init(&pid_rescue[i], NONE, 2.0f, 0.5f, 0, 45, 50);
 				
