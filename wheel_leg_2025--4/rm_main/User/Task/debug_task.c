@@ -68,6 +68,9 @@ void log_scope_data_pkg(void)
 			log_scope_get_data(wlr.side[1].Fy);
 			log_scope_get_data(wlr.side[0].T0);
 			log_scope_get_data(wlr.side[1].T0);
+			
+			log_scope_get_data(driver_motor[0].speed_rpm);
+			log_scope_get_data(-driver_motor[1].speed_rpm);
 				
 //			log_scope_get_data(wlr.wz_ref);   
 //			log_scope_get_data(wlr.wz_fdb);
