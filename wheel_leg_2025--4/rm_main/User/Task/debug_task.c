@@ -58,19 +58,35 @@ void log_scope_data_pkg(void)
 //                log_scope_get_data(chassis.rescue_cnt_L);
 //                log_scope_get_data(chassis.rescue_cnt_R);            
 //                log_scope_get_data(chassis.recover_flag);
-			log_scope_get_data(wlr.sky_flag);
-            log_scope_get_data(wlr.side[0].t1);
-            log_scope_get_data(wlr.side[0].t2);
-            log_scope_get_data(wlr.side[1].t1);
-            log_scope_get_data(wlr.side[1].t2);   
-            
-			log_scope_get_data(wlr.side[0].Fy);
-			log_scope_get_data(wlr.side[1].Fy);
-			log_scope_get_data(wlr.side[0].T0);
-			log_scope_get_data(wlr.side[1].T0);
+//			log_scope_get_data(wlr.sky_flag);
+//            log_scope_get_data(wlr.side[0].t1);
+//            log_scope_get_data(wlr.side[0].t2);
+//            log_scope_get_data(wlr.side[1].t1);
+//            log_scope_get_data(wlr.side[1].t2);   
+//            
+//			log_scope_get_data(wlr.side[0].Fy);
+//			log_scope_get_data(wlr.side[1].Fy);
+//			log_scope_get_data(wlr.side[0].T0);
+//			log_scope_get_data(wlr.side[1].T0);
 			
-			log_scope_get_data(driver_motor[0].speed_rpm);
-			log_scope_get_data(-driver_motor[1].speed_rpm);
+//			log_scope_get_data(tlm.l_ref[0]);
+//			log_scope_get_data(tlm.l_ref[1]);
+//			log_scope_get_data(chassis_imu.rol);
+			
+			log_scope_get_data(wlr.side[0].Fn_kal);
+			log_scope_get_data(wlr.side[1].Fn_kal);
+//			
+			log_scope_get_data(wlr.side[0].fly_flag);
+			log_scope_get_data(wlr.side[1].fly_flag);
+//			
+//			log_scope_get_data(wlr.side[0].fly_cnt);
+//			log_scope_get_data(wlr.side[1].fly_cnt);
+//			
+			log_scope_get_data(wlr.high_set);
+			log_scope_get_data(wlr.v_limit_flag[0]);
+			log_scope_get_data(wlr.v_limit_flag[1]);
+			log_scope_get_data(wlr.high_set);
+//			log_scope_get_data(wlr.high_set);
 				
 //			log_scope_get_data(wlr.wz_ref);   
 //			log_scope_get_data(wlr.wz_fdb);

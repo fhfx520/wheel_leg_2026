@@ -257,9 +257,11 @@ static void chassis_data_input(void)
         case CHASSIS_MODE_REMOTER_ROTATE1:
         case CHASSIS_MODE_REMOTER_ROTATE2: {
 			if( wlr.high_flag == 1 )
-				chassis_scale.remote =	1.0f/660*2.5f;
-			else
+				chassis_scale.remote =	1.0f/660*1.8f;
+			else 
 				chassis_scale.remote =	1.0f/660*2.5f;	
+			if(wlr.v_limit_flag[0] && wlr.v_limit_flag[1])
+				chassis_scale.remote =	1.0f/660*0.5f;
 			
             chassis.input.vx = -rc.ch4 * chassis_scale.remote;
             chassis.input.vy = rc.ch3 * chassis_scale.remote;
@@ -453,8 +455,8 @@ static void chassis_data_input(void)
             else					//起身未完成，目标值等于反馈值
 				wlr.yaw_ref = chassis_imu.yaw;
 			
-			wlr.yaw_fdb = chassis_imu.yaw;
-            wlr.wz_ref = rc.ch1 *  0.0075f;
+			wlr.yaw_fdb = CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
+            wlr.wz_ref = rc.ch1 *  0.0035f;
 			//help拆头 end
 			
 //******************************************************************************************************

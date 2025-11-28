@@ -80,6 +80,8 @@ typedef struct
 	
 	int16_t s_wait;//定点wait
 		
+	uint8_t v_limit_flag[2];		//用于限制在空中的速度输入	
+	
     //单侧控制参数
     struct
     {

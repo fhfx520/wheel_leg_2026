@@ -135,8 +135,8 @@ void can_comm_init(void)
     dji_motor_init(&trigger_motor, DJI_2006_MOTOR, CAN_CHANNEL_2, 0x205, 36.0f);
 //    dji_motor_init(&driver_motor[0], DJI_3508_MOTOR, CAN_CHANNEL_2, 0x204, 19.0f);
 //    dji_motor_init(&driver_motor[1], DJI_3508_MOTOR, CAN_CHANNEL_2, 0x203, 19.0f);
-    dji_motor_init(&driver_motor[0], DJI_3508_MOTOR, CAN_CHANNEL_1, 0x204, 13.94f);
-    dji_motor_init(&driver_motor[1], DJI_3508_MOTOR, CAN_CHANNEL_1, 0x203, 13.94f);
+    dji_motor_init(&driver_motor[0], DJI_3508_MOTOR, CAN_CHANNEL_1, 0x204, DJI_3508_TAURUS_REDUCTION_RATIO);
+    dji_motor_init(&driver_motor[1], DJI_3508_MOTOR, CAN_CHANNEL_1, 0x203, DJI_3508_TAURUS_REDUCTION_RATIO);
     dji_motor_init(&yaw_motor, DJI_6020_MOTOR, CAN_CHANNEL_3, 0x206, 1.0f);
 //    dji_motor_init(&pit_motor, DJI_6020_MOTOR, CAN_CHANNEL_3, 0x206, 1.0f);
 }
