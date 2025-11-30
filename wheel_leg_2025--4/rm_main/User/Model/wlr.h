@@ -78,7 +78,7 @@ typedef struct
 		sky_over 	=1完成跳跃
 		jump2_over  =1机体已磕上第二级台阶 */
 	
-	int16_t s_wait;//定点wait
+	uint16_t s_wait;//定点wait
 		
 	uint8_t v_limit_flag[2];		//用于限制在空中的速度输入	
 	

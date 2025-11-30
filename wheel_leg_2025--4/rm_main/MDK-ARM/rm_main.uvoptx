@@ -188,7 +188,7 @@
         <Ww>
           <count>6</count>
           <WinNumber>1</WinNumber>
-          <ItemText>wlr</ItemText>
+          <ItemText>wlr,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>7</count>
@@ -273,7 +273,7 @@
         <Ww>
           <count>23</count>
           <WinNumber>1</WinNumber>
-          <ItemText>wlr</ItemText>
+          <ItemText>wlr,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>24</count>
@@ -294,6 +294,26 @@
           <count>27</count>
           <WinNumber>1</WinNumber>
           <ItemText>height_ramp</ItemText>
+        </Ww>
+        <Ww>
+          <count>28</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>wlr.side</ItemText>
+        </Ww>
+        <Ww>
+          <count>29</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>chassis.input.vx</ItemText>
+        </Ww>
+        <Ww>
+          <count>30</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>x3_balance_zero</ItemText>
+        </Ww>
+        <Ww>
+          <count>31</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Rotate_balance_zero</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>
@@ -462,7 +482,7 @@
       <DebugFlag>
         <trace>0</trace>
         <periodic>1</periodic>
-        <aLwin>0</aLwin>
+        <aLwin>1</aLwin>
         <aCover>0</aCover>
         <aSer1>0</aSer1>
         <aSer2>0</aSer2>
