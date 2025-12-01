@@ -119,8 +119,8 @@ void can_comm_init(void)
     
     //各驱动初始化
 	//膝关节朝前，左腿：大腿[0] 小腿[1]，右腿：大腿[2] 小腿[3] chuan
-	dm_motor_init(&joint_motor[0], CAN_CHANNEL_2, 0x03, 0.81283f, 0x13);//B 3.480 4.22525692 -2.63006902
-	dm_motor_init(&joint_motor[1], CAN_CHANNEL_2, 0x04, 3.58698f, 0x14);//S 3.564 
+	dm_motor_init(&joint_motor[0], CAN_CHANNEL_2, 0x03, 1.70082974f, 0x13);//B 3.480 4.22525692 -2.63006902
+	dm_motor_init(&joint_motor[1], CAN_CHANNEL_2, 0x04, 3.53698015f, 0x14);//S 3.564 
 	dm_motor_init(&joint_motor[2], CAN_CHANNEL_2, 0x02, 0.78000f, 0x12);//B 4.394 
 	dm_motor_init(&joint_motor[3], CAN_CHANNEL_2, 0x01, 1.96687f, 0x11);//S 3.770 
 //	

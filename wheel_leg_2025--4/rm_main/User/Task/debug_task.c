@@ -85,7 +85,11 @@ void log_scope_data_pkg(void)
 			log_scope_get_data(lqr.X_diff[7]);
 			log_scope_get_data(lqr.X_diff[8]);
 			log_scope_get_data(lqr.X_diff[9]);
-			log_scope_get_data(lqr.X_diff[0]);
+			log_scope_get_data(wlr.sky_flag);
+			log_scope_get_data(tlm.l_ref[0]);
+			log_scope_get_data(tlm.l_ref[1]);
+			log_scope_get_data(vmc[0].L_fdb);
+			log_scope_get_data(vmc[1].L_fdb);
 //			log_scope_get_data(wlr.side[0].fly_flag);
 //			log_scope_get_data(wlr.side[1].fly_flag);
 //			
