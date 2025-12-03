@@ -94,6 +94,8 @@ static void chassis_init()
 float spin_limit;
 float spin_check;
 float spin_zero;
+float wheel_diff;
+float gain_diff = 0.2f;
 static void chassis_mode_switch(void)
 {
     /* 系统历史状态 */
@@ -455,8 +457,11 @@ static void chassis_data_input(void)
             else					//起身未完成，目标值等于反馈值
 				wlr.yaw_ref = chassis_imu.yaw;
 			
-			wlr.yaw_fdb = CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
-            wlr.wz_ref = rc.ch1 *  0.0035f;
+//			wlr.yaw_fdb = CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
+			
+			wlr.yaw_fdb = -chassis_imu.yaw;
+//            wlr.wz_ref = rc.ch1 *  0.0035f;
+			wlr.wz_ref = 0.0f;
 			//help拆头 end
 			
 //******************************************************************************************************
@@ -640,7 +645,15 @@ static void chassis_data_input(void)
 			wlr.wz_ref = 8.0f;
 			wlr.yaw_err = 0;
 		}
-		wlr.yaw_ref = wlr.yaw_fdb + 1.0f * wlr.yaw_err;//同步带哥
+//		wlr.yaw_ref = wlr.yaw_fdb + 1.0f * wlr.yaw_err;//同步带哥 有头
+		
+		wheel_diff =  gain_diff * (wlr.side[0].wy  - wlr.side[1].wy );
+		
+		if (abs(rc.ch1) < 1 )
+		 wlr.yaw_ref = wlr.yaw_fdb + (rc.ch1/660)*(PI/2.0f) - wheel_diff; //wlr.yaw_fdb + wlr.yaw_err;
+		else
+		 wlr.yaw_ref = wlr.yaw_fdb + (rc.ch1/660)*(PI/2.0f); //wlr.yaw_fdb + wlr.yaw_err;
+		
 		wlr.v_ref = chassis.output.vx;
 		
 		if (wlr.jump_flag && !wlr.jump_pre && fabs(circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, wlr.yaw_fdb, 2 * PI)) < 0.2f)
@@ -655,7 +668,7 @@ static void chassis_data_input(void)
 			wlr.v_ref = 0.0f;
 		}
     //陀螺仪数据输入
-    wlr.roll_fdb    = -(chassis_imu.rol);
+    wlr.roll_fdb    = -(chassis_imu.rol - 0.0354254507f);
     wlr.pit_fdb     = -chassis_imu.pit;
     kal_wy.measured_vector[0] = -chassis_imu.wy;
     kalman_filter_update(&kal_wy);

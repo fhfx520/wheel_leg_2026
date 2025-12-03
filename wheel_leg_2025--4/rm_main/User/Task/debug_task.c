@@ -31,50 +31,7 @@ extern float x3_balance_zero;
 void log_scope_data_pkg(void)
 {
     switch(debug_wave) {
-        case 1: {//腿长PID调试
-//            log_scope_get_data(wlr.wz_ref);
-//            log_scope_get_data(wlr.wz_fdb);            
-//            log_scope_get_data(ro_temp);
-//			log_scope_get_data(chassis.output.vy);
-//            
-//            log_scope_get_data(wlr.side[0].T0);
-//			log_scope_get_data(wlr.side[1].T0);
-//			log_scope_get_data(vmc[0].L_fdb);
-//			log_scope_get_data((float)wlr.sky_cnt);
-//			log_scope_get_data((float)wlr.sky_flag);
-//			log_scope_get_data(vmc[0].L_fdb);
-//			log_scope_get_data(vmc[1].L_fdb);
-//			log_scope_get_data(joint_motor[0].online);
-//			log_scope_get_data(joint_motor[1].online);
-//			log_scope_get_data(joint_motor[2].online);
-//			log_scope_get_data(joint_motor[3].online);
-//			log_scope_get_data(vmc[0].quadrant);
-//			log_scope_get_data(vmc[1].quadrant);
-//			log_scope_get_data(wlr.side[1].T1);
-//			log_scope_get_data(wlr.side[1].T2);
-			
-//                log_scope_get_data(vmc[0].quadrant);
-//                log_scope_get_data(vmc[1].quadrant);
-//                log_scope_get_data(chassis.rescue_cnt_L);
-//                log_scope_get_data(chassis.rescue_cnt_R);            
-//                log_scope_get_data(chassis.recover_flag);
-//			log_scope_get_data(wlr.sky_flag);
-//            log_scope_get_data(wlr.side[0].t1);
-//            log_scope_get_data(wlr.side[0].t2);
-//            log_scope_get_data(wlr.side[1].t1);
-//            log_scope_get_data(wlr.side[1].t2);   
-//            
-//			log_scope_get_data(wlr.side[0].Fy);
-//			log_scope_get_data(wlr.side[1].Fy);
-//			log_scope_get_data(wlr.side[0].T0);
-//			log_scope_get_data(wlr.side[1].T0);
-			
-//			log_scope_get_data(tlm.l_ref[0]);
-//			log_scope_get_data(tlm.l_ref[1]);
-//			log_scope_get_data(chassis_imu.rol);
-			
-//			log_scope_get_data(wlr.side[0].Fn_kal);
-//			log_scope_get_data(wlr.side[1].Fn_kal);
+        case 1: {//LQR
 			log_scope_get_data(lqr.U_ref[0]);
 			log_scope_get_data(lqr.U_ref[1]);
 			log_scope_get_data(lqr.U_ref[2]);
@@ -85,37 +42,12 @@ void log_scope_data_pkg(void)
 			log_scope_get_data(lqr.X_diff[7]);
 			log_scope_get_data(lqr.X_diff[8]);
 			log_scope_get_data(lqr.X_diff[9]);
-			log_scope_get_data(wlr.sky_flag);
 			log_scope_get_data(tlm.l_ref[0]);
 			log_scope_get_data(tlm.l_ref[1]);
 			log_scope_get_data(vmc[0].L_fdb);
 			log_scope_get_data(vmc[1].L_fdb);
-//			log_scope_get_data(wlr.side[0].fly_flag);
-//			log_scope_get_data(wlr.side[1].fly_flag);
-//			
-//			log_scope_get_data(wlr.side[0].fly_cnt);
-//			log_scope_get_data(wlr.side[1].fly_cnt);
-//			
-//			log_scope_get_data(wlr.high_set);
-//			log_scope_get_data(wlr.v_limit_flag[0]);
-//			log_scope_get_data(wlr.v_limit_flag[1]);
-//			log_scope_get_data(wlr.high_set);
-//			log_scope_get_data(wlr.high_set);
-				
-//			log_scope_get_data(wlr.wz_ref);   
-//			log_scope_get_data(wlr.wz_fdb);
-//			log_scope_get_data(wlr.jump_flag );             
-//			log_scope_get_data(wlr.side[0].T0);  
-//			log_scope_get_data(lqr.U_ref[0]);  
-//			log_scope_get_data(tlm.l_ref[1]);
-//			log_scope_get_data(chassis_imu.rol);
-//          log_scope_get_data( vmc[0].L_fdb);
-//          log_scope_get_data( vmc[1].L_fdb);
-//		  	log_scope_get_data(wlr.high_set);
-//			log_scope_get_data(wlr.side[0].fly_flag);  
-//			log_scope_get_data(wlr.side[1].fly_flag);  
-//			log_scope_get_data(wlr.sky_flag);  
-					
+			log_scope_get_data(wlr.side[0].Fy * 0.01f);
+			log_scope_get_data(wlr.side[1].Fy * 0.01f);
             break;
         } case 2: {//拨盘pid调试
             log_scope_get_data(shoot.trigger_spd.ref);
