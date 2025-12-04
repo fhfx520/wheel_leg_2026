@@ -95,7 +95,7 @@ float spin_limit;
 float spin_check;
 float spin_zero;
 float wheel_diff;
-float gain_diff = 0.2f;
+float gain_diff = 0.25f;
 static void chassis_mode_switch(void)
 {
     /* 系统历史状态 */
@@ -650,9 +650,9 @@ static void chassis_data_input(void)
 		wheel_diff =  gain_diff * (wlr.side[0].wy  - wlr.side[1].wy );
 		
 		if (abs(rc.ch1) < 1 )
-		 wlr.yaw_ref = wlr.yaw_fdb + (rc.ch1/660)*(PI/2.0f) - wheel_diff; //wlr.yaw_fdb + wlr.yaw_err;
+			wlr.yaw_ref = wlr.yaw_fdb + (rc.ch1 / 660.0f)*(PI / 2.0f) - wheel_diff; //wlr.yaw_fdb + wlr.yaw_err;
 		else
-		 wlr.yaw_ref = wlr.yaw_fdb + (rc.ch1/660)*(PI/2.0f); //wlr.yaw_fdb + wlr.yaw_err;
+			wlr.yaw_ref = wlr.yaw_fdb + (rc.ch1 / 660.0f)*(PI / 2.0f); //wlr.yaw_fdb + wlr.yaw_err;
 		
 		wlr.v_ref = chassis.output.vx;
 		
