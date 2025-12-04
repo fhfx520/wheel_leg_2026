@@ -468,17 +468,22 @@ static void handle_sky_state(void)
         wlr.sky_cnt++;
 		lqr.X_fdb[4] -= x5_balance_zero;
 		lqr.X_fdb[6] -= x5_balance_zero;
-        if (wlr.sky_cnt > 200) {
+        if (wlr.sky_cnt > 150) {
             wlr.sky_cnt = 0;
             wlr.sky_flag = WLR_SKY_LANDING;
         }
     } else if (wlr.sky_flag == WLR_SKY_LANDING) {
-        wlr.high_set = 0.35f;
-        x3_balance_zero = 0.0f;
+        wlr.high_set = ramp_calc(&sky_height_ramp, 0.35f);
+        x3_balance_zero = 0.12f;
         x5_balance_zero = 0.1f;
-//        wlr.sky_cnt++;
+		wlr.sky_cnt++;
 		lqr.X_fdb[4] -= x5_balance_zero;
 		lqr.X_fdb[6] -= x5_balance_zero;
+		if(wlr.sky_cnt > 130)
+		{
+			wlr.sky_cnt = 0;
+			wlr.sky_flag = WLR_SKY_STAND;
+		}
 //        if (wlr.sky_cnt > 150) {
 //            wlr.sky_cnt = 0;
 //            wlr.sky_flag = WLR_SKY_STAND;
@@ -486,12 +491,14 @@ static void handle_sky_state(void)
     } 
 	else if(wlr.sky_flag == WLR_SKY_STAND)
 	{
-		wlr.high_set = 0.25f;
-		 wlr.sky_cnt++;
-		if (wlr.sky_cnt > 50) {
-            wlr.sky_cnt = 51;
-            wlr.high_set = 0.18f;
-        }
+		wlr.high_set = ramp_calc(&sky_height_ramp, 0.18f);
+		x3_balance_zero = 0.12f;
+        x5_balance_zero = 0.1f;
+//		 wlr.sky_cnt++;
+//		if (wlr.sky_cnt > 50) {
+//            wlr.sky_cnt = 51;
+//            wlr.high_set = 0.18f;
+//        }
 	}
 	else if(wlr.sky_flag == WLR_SKY_IDLE) {
 		sky_height_ramp.out = 0.23f;
@@ -594,6 +601,9 @@ static void select_control_matrix(void)
     }
 	else if (wlr.sky_flag == WLR_SKY_LANDING) {
         aMartix_Cover(lqr.K, (float*)K_Array_Leg_030, 4, 10);
+    }
+	else if (wlr.sky_flag == WLR_SKY_STAND) {
+        aMartix_Cover(lqr.K, (float*)K_Array_Leg_018, 4, 10);
     }
 	else {
         aMartix_Cover(lqr.K, (float*)K_Array_Leg_020, 4, 10);
@@ -725,6 +735,10 @@ static void map_virtual_force(uint8_t index)
     } 
 		else if (wlr.sky_flag == WLR_SKY_LANDING) {
          wlr.side[index].Fy = pid_calc(&pid_leg_length_fly[index], tlm.l_ref[index], vmc[index].L_fdb);
+    } 
+		else if (wlr.sky_flag == WLR_SKY_STAND) {
+         wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 50.0f
+                              + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
     } 
 		else if (wlr.high_flag == 1){
         wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 25.0f
