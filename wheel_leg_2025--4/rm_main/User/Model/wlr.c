@@ -91,10 +91,15 @@ const float K_Array_Prone[4][10] =
 
 // 0805 : 4000, 2000, 5000, 200, 20000, 500, 20000, 500, 20000, 800
 float K_Array_Leg_030[4][10] = 
-{{-1.08155, -2.6565, -2.22742, -0.667423, -17.6567, -1.49004, -4.91961, -0.724637, -4.75264, -0.56702},
-{-1.08155, -2.6565, 2.22742, 0.667423, -4.91961, -0.724637, -17.6567, -1.49004, -4.75264, -0.56702},
-{1.73901, 4.20512, -9.39727, -3.20106, 52.5307, 3.68537, -23.2778, -0.715762, -36.8817, -3.03256},
-{1.73901, 4.20512, 9.39727, 3.20106, -23.2778, -0.715762, 52.5307, 3.68537, -36.8817, -3.03256}
+//{{-1.08155, -2.6565, -2.22742, -0.667423, -17.6567, -1.49004, -4.91961, -0.724637, -4.75264, -0.56702},
+//{-1.08155, -2.6565, 2.22742, 0.667423, -4.91961, -0.724637, -17.6567, -1.49004, -4.75264, -0.56702},
+//{1.73901, 4.20512, -9.39727, -3.20106, 52.5307, 3.68537, -23.2778, -0.715762, -36.8817, -3.03256},
+//{1.73901, 4.20512, 9.39727, 3.20106, -23.2778, -0.715762, 52.5307, 3.68537, -36.8817, -3.03256}
+
+{{-1.51277, -3.09417, -1.86888, -1.34708, -17.002, -2.25729, -4.68966, -0.890387, -2.91762, -0.586027},
+{-1.51277, -3.09417, 1.86888, 1.34708, -4.68966, -0.890387, -17.002, -2.25729, -2.91762, -0.586027},
+{0.89471, 1.76186, -3.55387, -2.77928, 31.8954, 3.02506, -21.4194, -1.44492, -16.1417, -2.14062},
+{0.89471, 1.76186, 3.55387, 2.77928, -21.4194, -1.44492, 31.8954, 3.02506, -16.1417, -2.14062}
 };
 
 
@@ -456,27 +461,28 @@ static void handle_sky_state(void)
             sky_ramp.out = 0.35f;
         }
     } else if (wlr.sky_flag == WLR_SKY_AIR_FOLDING) {
-        wlr.high_set = 0.16f;
+        wlr.high_set = 0.15f;
+		sky_height_ramp.out = wlr.high_set;
         x3_balance_zero = 0.0f;
         x5_balance_zero = 0.4f;
         wlr.sky_cnt++;
 		lqr.X_fdb[4] -= x5_balance_zero;
 		lqr.X_fdb[6] -= x5_balance_zero;
-        if (wlr.sky_cnt > 100) {
+        if (wlr.sky_cnt > 200) {
             wlr.sky_cnt = 0;
             wlr.sky_flag = WLR_SKY_LANDING;
         }
     } else if (wlr.sky_flag == WLR_SKY_LANDING) {
-        wlr.high_set = 0.15f;
+        wlr.high_set = 0.35f;
         x3_balance_zero = 0.0f;
-        x5_balance_zero = 0.4f;
-        wlr.sky_cnt++;
+        x5_balance_zero = 0.1f;
+//        wlr.sky_cnt++;
 		lqr.X_fdb[4] -= x5_balance_zero;
 		lqr.X_fdb[6] -= x5_balance_zero;
-        if (wlr.sky_cnt > 150) {
-            wlr.sky_cnt = 0;
-            wlr.sky_flag = WLR_SKY_STAND;
-        }
+//        if (wlr.sky_cnt > 150) {
+//            wlr.sky_cnt = 0;
+//            wlr.sky_flag = WLR_SKY_STAND;
+//        }
     } 
 	else if(wlr.sky_flag == WLR_SKY_STAND)
 	{
@@ -498,8 +504,6 @@ static void handle_sky_state(void)
         wlr.sky_flag = WLR_SKY_FOLDING;
         wlr.sky_over = 0;
     } 
-	if(lqr.X_diff[8] < -0.2f && wlr.sky_flag >= WLR_SKY_AIR_FOLDING)
-		wlr.high_set = ramp_calc(&sky_height_ramp, 0.25f);
 	
     if (wlr.jump_flag == WLR_JUMP_IDLE && !wlr.sky_over && wlr.sky_flag == WLR_SKY_IDLE) {
         if (!wlr_either_leg_flying()) {
@@ -585,11 +589,11 @@ static void select_control_matrix(void)
 	else if (wlr.sky_flag == WLR_SKY_FOLDING) {		//平地收腿运动
         aMartix_Cover(lqr.K, (float*)K_Array_Leg_015, 4, 10);
     } 
-	else if (wlr.sky_flag == WLR_SKY_AIR_FOLDING || wlr.sky_flag == WLR_SKY_LANDING || wlr.sky_over == 1) {		//空中收腿 || 落地 || 完成飞天
+	else if (wlr.sky_flag == WLR_SKY_AIR_FOLDING) {		//空中收腿 || 落地 || 完成飞天
         aMartix_Cover(lqr.K, (float*)K_Array_Fly, 4, 10);
     }
-	else if (wlr.sky_flag == WLR_SKY_STAND) {		//空中收腿 || 落地 || 完成飞天
-        aMartix_Cover(lqr.K, (float*)K_Array_Leg_020, 4, 10);
+	else if (wlr.sky_flag == WLR_SKY_LANDING) {
+        aMartix_Cover(lqr.K, (float*)K_Array_Leg_030, 4, 10);
     }
 	else {
         aMartix_Cover(lqr.K, (float*)K_Array_Leg_020, 4, 10);
@@ -715,16 +719,19 @@ static void map_virtual_force(uint8_t index)
 		else if (wlr.sky_flag == WLR_SKY_EXTENDING) {
         wlr.side[index].Fy = pid_calc(&pid_leg_sky_jump[index], tlm.l_ref[index], vmc[index].L_fdb);
     } 
-		else if (wlr.sky_flag >= WLR_SKY_AIR_FOLDING || wlr.sky_over == 1) {
+		else if (wlr.sky_flag == WLR_SKY_AIR_FOLDING) {
         Fy_temp = pid_calc(&pid_leg_sky_cover[index], tlm.l_ref[index], vmc[index].L_fdb);
         wlr.side[index].Fy = ramp_calc(&Fy_ramp[index], Fy_temp) - 75.0f;
     } 
+		else if (wlr.sky_flag == WLR_SKY_LANDING) {
+         wlr.side[index].Fy = pid_calc(&pid_leg_length_fly[index], tlm.l_ref[index], vmc[index].L_fdb);
+    } 
 		else if (wlr.high_flag == 1){
-        wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb)
+        wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 25.0f
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
     }
 		else {
-        wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 30.0f
+        wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 50.0f
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
     }
 
@@ -755,7 +762,7 @@ static void apply_output_limits(void)
             lqr.U_ref[i] *= 0.0f;
         } else if ((wlr.crash_flag || wlr.jump_flag == WLR_JUMP_RECOVER_SHORT) && double_cnt > 0) {
             lqr.U_ref[i] *= 0.8f;
-        } else if (chassis.recover_flag >= 1 || wlr.sky_flag == WLR_SKY_AIR_FOLDING || wlr.sky_flag == WLR_SKY_LANDING) {
+        } else if (chassis.recover_flag >= 1 || wlr.sky_flag == WLR_SKY_AIR_FOLDING) {
             lqr.U_ref[i] *= 0.0f;
         }
 

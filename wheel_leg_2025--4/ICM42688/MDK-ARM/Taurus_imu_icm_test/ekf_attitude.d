@@ -1,0 +1,10 @@
+.\taurus_imu_icm_test\ekf_attitude.o: ..\mathlib\ekf_attitude.c
+.\taurus_imu_icm_test\ekf_attitude.o: ..\mathlib\ekf_attitude.h
+.\taurus_imu_icm_test\ekf_attitude.o: ../dsp/Include/arm_math.h
+.\taurus_imu_icm_test\ekf_attitude.o: ../Drivers/CMSIS/Include/core_cm4.h
+.\taurus_imu_icm_test\ekf_attitude.o: C:\Users\zzzwj\AppData\Local\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\taurus_imu_icm_test\ekf_attitude.o: ../Drivers/CMSIS/Include/cmsis_version.h
+.\taurus_imu_icm_test\ekf_attitude.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
+.\taurus_imu_icm_test\ekf_attitude.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
+.\taurus_imu_icm_test\ekf_attitude.o: C:\Users\zzzwj\AppData\Local\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\taurus_imu_icm_test\ekf_attitude.o: C:\Users\zzzwj\AppData\Local\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
