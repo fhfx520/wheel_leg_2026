@@ -73,7 +73,7 @@ typedef struct
 	uint16_t jump_cnt, jump_run;
 		//jump_cnt 用于软件延时变化腿长		jump_run 用于软件延时判断两条腿是否撞击台阶
 	
-	uint16_t sky_flag, sky_cnt, sky_over, jump2_over;
+	uint16_t sky_flag, sky_cnt, jump2_over;
 	/*	sky_flag 	参考 wlr_sky_state_e
 		sky_cnt		跳跃计数变量
 		sky_over 	=1完成跳跃

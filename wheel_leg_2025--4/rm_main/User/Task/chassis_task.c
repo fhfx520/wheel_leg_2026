@@ -275,14 +275,14 @@ static void chassis_data_input(void)
                    wlr.jump_flag = 0;
                    wlr.high_flag = 0;	//短腿
                    wlr.power_flag = 1;	//未使用
+				   wlr.sky_flag = WLR_SKY_IDLE;
 			   } 
                else if (rc.sw2 == RC_MI ) {
 				   wlr.jump_flag = 0;
                    wlr.high_flag = 1;		//中腿
                    wlr.power_flag = 1;
                    chassis.rescue_test = 0;
-				   wlr.sky_flag = 0;
-				   wlr.sky_over = 0;
+				   wlr.sky_flag = WLR_SKY_IDLE;
 				   wlr.jump2_over = 0;
 			   } 
 //               } else if (rc.sw2 == RC_DN && wlr.jump_flag == 0 && rc_fsm_check(RC_RIGHT_LU))  
@@ -293,7 +293,7 @@ static void chassis_data_input(void)
 //                    wlr.jump_flag = 1;
 //               else 
 //                    wlr.high_flag = 0; 
-			   else if (rc.sw2 == RC_DN && wlr.sky_flag == 0 && wlr.sky_over == 0 )
+			   else if (rc.sw2 == RC_DN && wlr.sky_flag == WLR_SKY_IDLE)
 					wlr.sky_flag = 1; 
 			   
 			   
@@ -316,8 +316,7 @@ static void chassis_data_input(void)
 				wlr.high_flag = 0;
                 wlr.power_flag = 1;
                 chassis.rescue_test = 0;
-				wlr.sky_flag = 0;
-				wlr.sky_over = 0;
+				wlr.sky_flag = WLR_SKY_IDLE;
 				wlr.jump2_over = 0;	
 			}
 			if (KEY_PRESS_POWER)
