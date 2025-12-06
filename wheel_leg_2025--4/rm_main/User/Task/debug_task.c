@@ -22,7 +22,7 @@
 #include "mode_switch_task.h"
 
 #define row_debug 2 * 10
-uint8_t debug_wave = 11;
+uint8_t debug_wave = 1;
 float test_hex = 1;
 extern FGT_sin_t FGT_sin_chassis;
 extern  uint16_t quadrant_cnt;
@@ -32,22 +32,28 @@ void log_scope_data_pkg(void)
 {
     switch(debug_wave) {
         case 1: {//LQR
+			
 			log_scope_get_data(lqr.U_ref[0]);
 			log_scope_get_data(lqr.U_ref[1]);
-			log_scope_get_data(lqr.U_ref[2]);
-			log_scope_get_data(lqr.U_ref[3]);
-			log_scope_get_data(lqr.X_diff[4]);
-			log_scope_get_data(lqr.X_diff[5]);
-			log_scope_get_data(lqr.X_diff[6]);
-			log_scope_get_data(lqr.X_diff[7]);
-			log_scope_get_data(lqr.X_diff[8]);
-			log_scope_get_data(lqr.X_diff[9]);
-			log_scope_get_data(tlm.l_ref[0]);
-			log_scope_get_data(tlm.l_ref[1]);
-			log_scope_get_data(vmc[0].L_fdb);
-			log_scope_get_data(vmc[1].L_fdb);
-			log_scope_get_data(wlr.side[0].Fy * 0.01f);
-			log_scope_get_data(wlr.side[1].Fy * 0.01f);
+//			log_scope_get_data(lqr.U_ref[2]);
+//			log_scope_get_data(lqr.U_ref[3]);
+			log_scope_get_data(lqr.X_diff[0] * -1.41378f);
+			log_scope_get_data(lqr.X_diff[1] * -2.99569);
+			log_scope_get_data(lqr.X_diff[2] * -2.14463);
+			log_scope_get_data(lqr.X_diff[3] * -1.56938);
+			log_scope_get_data(lqr.X_diff[4] * -12.8504);
+			log_scope_get_data(lqr.X_diff[5] * -1.61767);
+			log_scope_get_data(lqr.X_diff[6] * -5.38904);
+			log_scope_get_data(lqr.X_diff[7] * -0.708452);
+			log_scope_get_data(lqr.X_diff[8] * 0);
+			log_scope_get_data(lqr.X_diff[9] * 0);
+			log_scope_get_data(wlr.sky_flag);
+//			log_scope_get_data(lqr.X_diff[4]);
+//			log_scope_get_data(lqr.X_diff[5]);
+//			log_scope_get_data(lqr.X_diff[6]);
+//			log_scope_get_data(lqr.X_diff[7]);
+//			log_scope_get_data(lqr.X_diff[8]);
+//			log_scope_get_data(lqr.X_diff[9]);
             break;
         } case 2: {//拨盘pid调试
             log_scope_get_data(shoot.trigger_spd.ref);
@@ -140,10 +146,11 @@ void log_scope_data_pkg(void)
 			log_scope_get_data(wlr.side[1].Fn_kal);
 			log_scope_get_data(wlr.side[0].Fy);
 			log_scope_get_data(wlr.side[1].Fy);
-			log_scope_get_data(joint_motor[0].t);
-			log_scope_get_data(joint_motor[1].t);
-			log_scope_get_data(joint_motor[2].t);
-			log_scope_get_data(joint_motor[3].t);
+			log_scope_get_data(lqr.X_fdb[4]);
+			log_scope_get_data(lqr.X_fdb[6]);
+			log_scope_get_data(chassis_imu.pit);
+			log_scope_get_data(lqr.U_ref[0]);
+			log_scope_get_data(lqr.U_ref[1]);
             break;
         } case 12: {//底盘功率模型
             log_scope_get_data(power_heat_data.chassis_power);

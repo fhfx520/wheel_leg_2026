@@ -203,7 +203,12 @@ float K_Array_Leg_015[4][10] =
 {1.51179, 3.12108, 2.65765, 2.02589, -8.81469, -0.640446, 24.8172, 2.75763, -14.1018, -1.76041}
 };
 
-
+float K_Array_Land[4][10] = 
+{{0, -3.09417, 0,0, -17.002, -2.25729, -4.68966, -0.890387, 0, 0},
+{0, -3.09417, 0, 0, -4.68966, -0.890387, -17.002, -2.25729, 0, 0},
+{0, 1.76186, 0,0, 31.8954, 3.02506, -21.4194, -1.44492, 0, 0},
+{0, 1.76186, 0, 0, -21.4194, -1.44492, 31.8954, 3.02506, 0, 0}
+};
 
 
 
@@ -261,13 +266,28 @@ pid_t pid_roll;
 pid_t pid_L_test[2];
 static float wlr_fn_calc(float az, float Fy_fdb, float T0_fdb, float L0[3], float theta[3])
 {
+	
+//	
+//    float Fwy = Fy_fdb * cosf(theta[0]) + T0_fdb * sinf(theta[0]) / L0[0];//轮子受到腿部机构竖直方向的作用力
+//    float yw_ddot = az
+//                    - L0[2] * cosf(theta[0])
+//                    + 2 * L0[1] * theta[1] * sinf(theta[0])
+//                    + L0[0] * theta[2] * sinf(theta[0])
+//                    + L0[0] * powf(theta[1], 2) * cosf(theta[0]);//轮子竖直方向的加速度
+//    return Fwy + mw * GRAVITY + mw * yw_ddot;
+//	
+	
+	//	去除AZ
+	az = 0;
     float Fwy = Fy_fdb * cosf(theta[0]) + T0_fdb * sinf(theta[0]) / L0[0];//轮子受到腿部机构竖直方向的作用力
     float yw_ddot = az
                     - L0[2] * cosf(theta[0])
                     + 2 * L0[1] * theta[1] * sinf(theta[0])
                     + L0[0] * theta[2] * sinf(theta[0])
                     + L0[0] * powf(theta[1], 2) * cosf(theta[0]);//轮子竖直方向的加速度
+	
     return Fwy + mw * GRAVITY + mw * yw_ddot;
+	
     
 }
 
@@ -435,9 +455,9 @@ static void handle_sky_state(void)
         x3_balance_zero = 0.080f;
 //        x5_balance_zero = 0.10f;
         x5_balance_zero = 0.15f;		//0.2f这个参数可以极大的抑制车自己往后跑
-       pid_leg_sky_jump[0].i_out = pid_leg_sky_jump[1].i_out = \
-	   pid_leg_sky_cover[0].i_out = pid_leg_sky_cover[1].i_out = \
-	   Fy_ramp[0].out = Fy_ramp[1].out= 0;
+        pid_leg_sky_jump[0].i_out = pid_leg_sky_jump[1].i_out = \
+	    pid_leg_sky_cover[0].i_out = pid_leg_sky_cover[1].i_out = \
+	    Fy_ramp[0].out = Fy_ramp[1].out= 0;
 		
         if (abs(rc.ch2) > 500) {
             wlr.sky_cnt++;
@@ -454,7 +474,7 @@ static void handle_sky_state(void)
     } else if (wlr.sky_flag == WLR_SKY_EXTENDING) {
         wlr.high_set = 0.40f;
         x3_balance_zero = 0.0f;
-        x5_balance_zero = 0.5f;
+        x5_balance_zero = 0.4f;
         if (fabs(0.40f - vmc[0].L_fdb) < 0.02f && fabs(0.40f - vmc[1].L_fdb) < 0.02f) {
             wlr.sky_cnt++;
         }
@@ -468,17 +488,18 @@ static void handle_sky_state(void)
         x3_balance_zero = 0.0f;
         x5_balance_zero = 0.0f;
         wlr.sky_cnt++;
+		
         if (wlr.sky_cnt > 150) {
             wlr.sky_cnt = 0;
             wlr.sky_flag = WLR_SKY_LANDING;
         }
     } else if (wlr.sky_flag == WLR_SKY_LANDING) {
-        wlr.high_set = 0.35;
+        wlr.high_set = 0.35f;
 		sky_height_ramp.out = wlr.high_set;
-        x3_balance_zero = 0.2f;
+        x3_balance_zero = -0.1f;
         x5_balance_zero = 0.0f;
 		wlr.sky_cnt++;
-		if(wlr.sky_cnt > 50)
+		if(wlr.side[0].Fn_kal > -20.0f && wlr.side[1].Fn_kal > -20.0f)
 		{
 			wlr.sky_cnt = 0;
 			wlr.sky_flag = WLR_SKY_STAND;
@@ -582,7 +603,7 @@ static void select_control_matrix(void)
         aMartix_Cover(lqr.K, (float*)K_Array_Fly, 4, 10);
     }
 	else if (wlr.sky_flag == WLR_SKY_LANDING) {
-        aMartix_Cover(lqr.K, (float*)K_Array_Fly, 4, 10);
+        aMartix_Cover(lqr.K, (float*)K_Array_Land, 4, 10);
     }
 	else if (wlr.sky_flag == WLR_SKY_STAND) {
         aMartix_Cover(lqr.K, (float*)K_Array_Leg_018, 4, 10);
@@ -753,7 +774,7 @@ static void apply_output_limits(void)
 {
     for (int i = 0; i < WLR_SIDE_COUNT; i++) {
 
-        data_limit(&lqr.U_ref[i], -4.35f, 4.35f);
+        data_limit(&lqr.U_ref[i], -3.5f, 3.5f);
         
 
         if (wlr.crash_flag || wlr.jump_flag == WLR_JUMP_RECOVER_SHORT || wlr.jump_flag == WLR_JUMP_RECOVER_LONG) {
@@ -814,7 +835,7 @@ void wlr_init(void)
         pid_init(&pid_leg_sky_cover[i], NONE, 1500, 1.5f, 10000.0f, 150, 300);		//起身专用pid
 		pid_init(&pid_leg_sky_jump[i],  NONE,1800, 2.0, 10000, 100, 300);			//跳跃 专用pid	
 		pid_init(&pid_leg_recover[i], NONE, 1500, 1.5f, 10000.0f, 150, 300);		//起身专用pid
-        pid_init(&pid_leg_length_fly[i], NONE, 1000, 0.0, 15000, 0, 150);
+        pid_init(&pid_leg_length_fly[i], NONE, 800, 0.0, 10000, 0, 150);
         pid_init(&pid_L_test[i], NONE, 1200, 3.0, 32000, 200, 250);
 		pid_init(&pid_rescue[i], NONE, 2.0f, 0.5f, 0, 45, 50);
 				
