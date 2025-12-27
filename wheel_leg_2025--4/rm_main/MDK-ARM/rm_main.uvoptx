@@ -180,6 +180,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>supercap</ItemText>
         </Ww>
+        <Ww>
+          <count>5</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>tlm</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>

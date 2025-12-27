@@ -45,7 +45,7 @@ void tlm_gnd_roll_calc(tlm_t *tlm, float imu_roll, float Ll_fdb, float Lr_fdb)
 
     kal_gnd_roll.measured_vector[0] = tlm->gnd_roll_fdb;
     kalman_filter_update(&kal_gnd_roll);
-    tlm->gnd_roll_fdb = kal_gnd_roll.filter_vector[0]-0.02f;
+    tlm->gnd_roll_fdb = kal_gnd_roll.filter_vector[0]-0.037f;
 //	    tlm->gnd_roll_fdb = kal_gnd_roll.filter_vector[0];
 }
 

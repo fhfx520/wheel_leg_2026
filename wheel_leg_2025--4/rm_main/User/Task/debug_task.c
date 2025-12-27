@@ -22,7 +22,7 @@
 #include "mode_switch_task.h"
 
 #define row_debug 2 * 10
-uint8_t debug_wave = 1;
+uint8_t debug_wave = 11;
 float test_hex = 1;
 extern FGT_sin_t FGT_sin_chassis;
 extern  uint16_t quadrant_cnt;
@@ -146,11 +146,13 @@ void log_scope_data_pkg(void)
 			log_scope_get_data(wlr.side[1].Fn_kal);
 			log_scope_get_data(wlr.side[0].Fy);
 			log_scope_get_data(wlr.side[1].Fy);
-			log_scope_get_data(lqr.X_fdb[4]);
-			log_scope_get_data(lqr.X_fdb[6]);
-			log_scope_get_data(chassis_imu.pit);
-			log_scope_get_data(lqr.U_ref[0]);
-			log_scope_get_data(lqr.U_ref[1]);
+			log_scope_get_data(vmc[0].q_fdb[0]);
+			log_scope_get_data(vmc[1].q_fdb[0]);
+			log_scope_get_data(lqr.X_diff[9]);
+			log_scope_get_data(lqr.U_ref[2]);
+			log_scope_get_data(lqr.U_ref[3]);
+			log_scope_get_data(lqr.X_diff[4]);
+			log_scope_get_data(lqr.X_diff[5]);
             break;
         } case 12: {//底盘功率模型
             log_scope_get_data(power_heat_data.chassis_power);

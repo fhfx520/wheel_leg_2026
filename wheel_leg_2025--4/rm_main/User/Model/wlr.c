@@ -50,11 +50,9 @@ const float LegLengthNormal  = 0.18f; //正常
 
 float x3_balance_zero = 0.08f, x5_balance_zero = 0.040f;//腿摆角角度偏置   负值：腿摆角向膝关节方向偏	正值：腿摆角向膝关节反方向偏
 														//机体俯仰角度偏置 正值：越大越低头
-//help	拆头后会自转，左右腿给不同偏置以减少自转
-float left_x3_balance_zero = 0.08f,right_x3_balance_zero = 0.08f;
 
-float Normal_balance_zero 		 = 0.11f  ;
-float High_balance_zero 		 = 0.2f   ; 
+float Normal_balance_zero 		 = 0.08f  ;
+float High_balance_zero 		 = 0.08f   ; 
 float Rotate_balance_zero 		 =  0.17f ;
 float Rotate_balance_zero_adjust = -0.1f  ;		//两种腿长摆角偏置
 
@@ -79,8 +77,8 @@ const float K_Array_Fly[4][10] =
 //{0, 0, 0, 0, -8.64908, -0.365859, 23.2026, 2.89945,-36.8817, -3.03256}, 
 {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
-{0, 0, 0, 0, 23.2026, 0, -8.64908, 0,0, 0}, 
-{0, 0, 0, 0, -8.64908, 0, 23.2026, 0,0, 0}, 
+{0, 0, 0, 0, 31.8954, 0, -21.4194, 0,0, 0}, 
+{0, 0, 0, 0, -21.4194, 0, 31.8954, 0,0, 0}, 
 };
 
 const float K_Array_Prone[4][10] =
@@ -473,9 +471,9 @@ static void handle_sky_state(void)
 		
     } else if (wlr.sky_flag == WLR_SKY_EXTENDING) {
         wlr.high_set = 0.40f;
-        x3_balance_zero = 0.0f;
+        x3_balance_zero = 0.1f;
         x5_balance_zero = 0.4f;
-        if (fabs(0.40f - vmc[0].L_fdb) < 0.02f && fabs(0.40f - vmc[1].L_fdb) < 0.02f) {
+        if (fabs(0.4f - vmc[0].L_fdb) < 0.02f && fabs(0.4f - vmc[1].L_fdb) < 0.02f) {
             wlr.sky_cnt++;
         }
         if (wlr.sky_cnt > 5) {
@@ -483,20 +481,19 @@ static void handle_sky_state(void)
             wlr.sky_flag = WLR_SKY_AIR_FOLDING;
         }
     } else if (wlr.sky_flag == WLR_SKY_AIR_FOLDING) {
-        wlr.high_set = 0.18f;
+        wlr.high_set = 0.15f;
 		sky_height_ramp.out = wlr.high_set;
-        x3_balance_zero = 0.0f;
+        x3_balance_zero = 0.3f;
         x5_balance_zero = 0.0f;
         wlr.sky_cnt++;
-		
-        if (wlr.sky_cnt > 150) {
+        if (wlr.sky_cnt > 250) {
             wlr.sky_cnt = 0;
             wlr.sky_flag = WLR_SKY_LANDING;
         }
     } else if (wlr.sky_flag == WLR_SKY_LANDING) {
-        wlr.high_set = 0.35f;
+        wlr.high_set = ramp_calc(&sky_height_ramp, 0.35f);
 		sky_height_ramp.out = wlr.high_set;
-        x3_balance_zero = -0.1f;
+        x3_balance_zero = 0.0f;
         x5_balance_zero = 0.0f;
 		wlr.sky_cnt++;
 		if(wlr.side[0].Fn_kal > -20.0f && wlr.side[1].Fn_kal > -20.0f)
@@ -599,6 +596,9 @@ static void select_control_matrix(void)
 	else if (wlr.sky_flag == WLR_SKY_FOLDING) {		//平地收腿运动
         aMartix_Cover(lqr.K, (float*)K_Array_Leg_018, 4, 10);
     } 
+//	else if (wlr.sky_flag == WLR_SKY_EXTENDING) {		
+//        aMartix_Cover(lqr.K, (float*)K_Array_Leg_030, 4, 10);
+//    } 
 	else if (wlr.sky_flag == WLR_SKY_AIR_FOLDING) {		//空中收腿 || 落地 || 完成飞天
         aMartix_Cover(lqr.K, (float*)K_Array_Fly, 4, 10);
     }
@@ -877,12 +877,12 @@ void wlr_control(void)
     lqr.X_fdb[8] = x5_balance_zero + wlr.pit_fdb;		//wlr.pit_fdb = -chassis_imu.pit;
     lqr.X_fdb[9] = wlr.wy_fdb;
 	
-    lqr.X_fdb[4] = left_x3_balance_zero + (-PI / 2 + lqr.X_fdb[8] + vmc[0].q_fdb[0]) + Rotate_balance_zero;
+    lqr.X_fdb[4] = x3_balance_zero + (-PI / 2 + lqr.X_fdb[8] + vmc[0].q_fdb[0]) + Rotate_balance_zero;
     lqr.X_fdb[5] = lqr.X_fdb[9] + vmc[0].V_fdb.e.vw0_fdb;
     lqr.dot_leg_w[0] = (lqr.X_fdb[5] - lqr.last_leg_w[0]) / 0.002f;
     lqr.last_leg_w[0] = lqr.X_fdb[5];
     
-	lqr.X_fdb[6] = right_x3_balance_zero + (-PI / 2 + lqr.X_fdb[8] + vmc[1].q_fdb[0]) + Rotate_balance_zero;
+	lqr.X_fdb[6] = x3_balance_zero + (-PI / 2 + lqr.X_fdb[8] + vmc[1].q_fdb[0]) + Rotate_balance_zero;
     lqr.X_fdb[7] = lqr.X_fdb[9] + vmc[1].V_fdb.e.vw0_fdb;
     lqr.dot_leg_w[1] = (lqr.X_fdb[7] - lqr.last_leg_w[1]) / 0.002f;
     lqr.last_leg_w[1] = lqr.X_fdb[7];
