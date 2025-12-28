@@ -56,9 +56,6 @@ float High_balance_zero 		 = 0.08f   ;
 float Rotate_balance_zero 		 =  0.17f ;
 float Rotate_balance_zero_adjust = -0.1f  ;		//两种腿长摆角偏置
 
-
-float dgfc;
-
 uint16_t quadrant_cnt = 0;
 
 int32_t double_cnt;
@@ -207,10 +204,6 @@ float K_Array_Land[4][10] =
 {0, 1.76186, 0,0, 31.8954, 3.02506, -21.4194, -1.44492, 0, 0},
 {0, 1.76186, 0, 0, -21.4194, -1.44492, 31.8954, 3.02506, 0, 0}
 };
-
-
-
-
 
 float K_Array_Leg_recover[4][10] = 
 {{-1.4784, -3.38292, -2.12021, -0.59702, -14.1888, -1.61916, -5.47387, -0.753332, -3.54134, -1.03737},
@@ -471,8 +464,8 @@ static void handle_sky_state(void)
 		
     } else if (wlr.sky_flag == WLR_SKY_EXTENDING) {
         wlr.high_set = 0.40f;
-        x3_balance_zero = 0.1f;
-        x5_balance_zero = 0.4f;
+        x3_balance_zero = 0.0f;
+        x5_balance_zero = 0.5f;
         if (fabs(0.4f - vmc[0].L_fdb) < 0.02f && fabs(0.4f - vmc[1].L_fdb) < 0.02f) {
             wlr.sky_cnt++;
         }
@@ -486,12 +479,12 @@ static void handle_sky_state(void)
         x3_balance_zero = 0.3f;
         x5_balance_zero = 0.0f;
         wlr.sky_cnt++;
-        if (wlr.sky_cnt > 250) {
+        if (wlr.sky_cnt > 150) {
             wlr.sky_cnt = 0;
             wlr.sky_flag = WLR_SKY_LANDING;
         }
     } else if (wlr.sky_flag == WLR_SKY_LANDING) {
-        wlr.high_set = ramp_calc(&sky_height_ramp, 0.35f);
+        wlr.high_set = ramp_calc(&sky_height_ramp, 0.30f);
 		sky_height_ramp.out = wlr.high_set;
         x3_balance_zero = 0.0f;
         x5_balance_zero = 0.0f;
@@ -603,7 +596,7 @@ static void select_control_matrix(void)
         aMartix_Cover(lqr.K, (float*)K_Array_Fly, 4, 10);
     }
 	else if (wlr.sky_flag == WLR_SKY_LANDING) {
-        aMartix_Cover(lqr.K, (float*)K_Array_Land, 4, 10);
+        aMartix_Cover(lqr.K, (float*)K_Array_Leg_030, 4, 10);
     }
 	else if (wlr.sky_flag == WLR_SKY_STAND) {
         aMartix_Cover(lqr.K, (float*)K_Array_Leg_018, 4, 10);
@@ -664,9 +657,9 @@ static void update_fly_state(uint8_t index, float yaw_err)
 //    if (wlr.side[index].Fn_kal < 4.0f && rotate_flag == 0 && wlr.high_flag == 1
 //        && wlr.jump_flag == WLR_JUMP_IDLE && double_cnt <= 0 && chassis.recover_flag == 0
 //        && wlr.sky_over == 0 && wlr.sky_flag == WLR_SKY_IDLE && KEY_PRESS_POWER && yaw_err < 0.5f) {
-			
+			  
     if (wlr.side[index].Fn_kal < -70.0f && rotate_flag == 0 && wlr.high_flag == 1 && chassis.recover_flag == 0
-		&& (wlr.sky_flag == WLR_SKY_IDLE) && yaw_err < 0.5f)  {
+		&& (wlr.sky_flag == WLR_SKY_IDLE) && (yaw_err < 0.5f || 1))  {
         wlr.side[index].fly_cnt += 4;
     } else if (wlr.side[index].fly_cnt > 0) {
         wlr.side[index].fly_cnt -= 8;
@@ -736,7 +729,7 @@ static void map_virtual_force(uint8_t index)
     } 
 		else if (wlr.sky_flag == WLR_SKY_AIR_FOLDING) {
         Fy_temp = pid_calc(&pid_leg_sky_cover[index], tlm.l_ref[index], vmc[index].L_fdb);
-        wlr.side[index].Fy = ramp_calc(&Fy_ramp[index], Fy_temp) - 75.0f;
+        wlr.side[index].Fy = ramp_calc(&Fy_ramp[index], Fy_temp) - 100.0f;
     } 
 		else if (wlr.sky_flag == WLR_SKY_LANDING) {
          wlr.side[index].Fy = pid_calc(&pid_leg_length_fly[index], tlm.l_ref[index], vmc[index].L_fdb);
@@ -808,8 +801,8 @@ void wlr_init(void)
 	ramp_init(&wz_ramp, 0.001f,  0,  3.0f);		//
 	ramp_init(&sky_ramp, 0.001f, 0,  1.0f);
 	ramp_init(&recover_ramp, 0.001f, 0,  1.0f);	
-	ramp_init(&Fy_ramp[0], 3.0f, -500.0f,  500.0f);
-	ramp_init(&Fy_ramp[1], 3.0f, -500.0f,  500.0f);
+	ramp_init(&Fy_ramp[0], 4.0f, -500.0f,  500.0f);
+	ramp_init(&Fy_ramp[1], 4.0f, -500.0f,  500.0f);
 	
 	sky_height_ramp.out = 0.23f;
 	
@@ -851,6 +844,8 @@ void wlr_protest(void)
 {
 	pid_leg_length[0].i_out = 0;
 	pid_leg_length[1].i_out = 0;
+	pid_leg_recover[0].i_out = 0;
+	pid_leg_recover[1].i_out = 0;
     height_ramp.out = 0.1f;
     wlr.s_ref = wlr.s_fdb;
 	wlr.s_adapt = wlr.s_fdb;
@@ -905,8 +900,6 @@ void wlr_control(void)
     float yaw_err = circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, wlr.yaw_fdb, 2 * PI);
     yaw_err = fabsf(yaw_err);
 	
-	dgfc = yaw_err;
-	
     for (int i = 0; i < WLR_SIDE_COUNT; i++) {
         update_fly_state(i, yaw_err);			//更新fly_flag和fly_cnt
     }
@@ -921,8 +914,6 @@ void wlr_control(void)
     update_motion_reference();					//更新不同运动状态下，状态变量的值
 
     aMartix_Add(1, lqr.X_ref, -1, lqr.X_fdb, lqr.X_diff, 10, 1);
-	//help
-//	lqr.X_diff[2] = 0.0f;
 	
     if (chassis.mode == CHASSIS_MODE_REMOTER_ROTATE1
         || chassis.mode == CHASSIS_MODE_REMOTER_ROTATE2

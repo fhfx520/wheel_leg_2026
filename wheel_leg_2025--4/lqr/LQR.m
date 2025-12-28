@@ -27,7 +27,7 @@ Q = diag([3000, 4000 , 8000, 4000,    80000 , 1200, 80000 , 1200,    80000, 100]
 R = diag([600, 600, 150, 150]);
 
 
-[L.L, L.L_l, L.L_r] = deal(0.18);            % 0.20m 腿长
+[L.L, L.L_l, L.L_r] = deal(0.15);            % 0.20m 腿长
 [M, I, L] = data_init(M, I, L);              % 参数初始化
 [M, I, L] = VMC_inverse_resolve(M, L, I, 90);% VMC 逆解算
 
