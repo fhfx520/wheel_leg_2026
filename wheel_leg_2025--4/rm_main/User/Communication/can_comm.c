@@ -122,7 +122,7 @@ void can_comm_init(void)
 	dm_motor_init(&joint_motor[0], CAN_CHANNEL_2, 0x03, 1.73082f, 0x13);//B 3.480 4.22525692 -2.63006902
 	dm_motor_init(&joint_motor[1], CAN_CHANNEL_2, 0x04, 3.53698f, 0x14);//S 3.564 
 	dm_motor_init(&joint_motor[2], CAN_CHANNEL_2, 0x02, 0.76350f, 0x12);//B 4.394 
-	dm_motor_init(&joint_motor[3], CAN_CHANNEL_2, 0x01, 1.96687f, 0x11);//S 3.770 
+	dm_motor_init(&joint_motor[3], CAN_CHANNEL_2, 0x01, 1.96687f, 0x11);//S 3.770
 //	
 //	dm_motor_init(&joint_motor[0], CAN_CHANNEL_1, 0x03, 2.79840f, 0x13);//B 3.480
 //	dm_motor_init(&joint_motor[1], CAN_CHANNEL_1, 0x04, 2.5285f, 0x14);//S 3.564

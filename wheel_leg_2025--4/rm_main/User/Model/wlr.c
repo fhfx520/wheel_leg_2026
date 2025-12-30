@@ -57,7 +57,7 @@ float Rotate_balance_zero 		 =  0.17f ;
 float Rotate_balance_zero_adjust = -0.1f  ;		//两种腿长摆角偏置
 
 uint16_t quadrant_cnt = 0;
-
+static uint8_t kal_init = 0;
 int32_t double_cnt;
 //位移 速度 yaw wz 左腿摆角 左腿摆角速度 右腿摆角 右腿摆角速度 机体倾角 机体倾角速度 
 //左轮转矩 右轮转矩 左腿转矩 右腿转矩
@@ -230,7 +230,23 @@ float P_Array[2][8] =
 {15.3846, 3.6923, -0.6627, -0.5488, 0.1212, 0.2536, -0.0424, -0.0351}};
     
 const float P_Fit_Array[16][3][3] = 
-{{{15.3846,0,0},{0,0,0},{0,0,0}},{{-3.86154,0,0},{0,0,0},{0,0,0}},{{0.0133423,0.00586344,-0.000413327},{-0.316935,-0.00202615,0},{-0.025402,0,0}},{{0.050454,-0.990208,-0.0361836},{0.00192015,-0.000677019,0},{-0.00012967,0,0}},{{0.106136,0.0767992,-0.00588455},{0.0736214,0.00376196,0},{-0.0421193,0,0}},{{-0.0508608,0.241513,-0.155217},{0.0251495,0.00104189,0},{-0.00184647,0,0}},{{-0.00132327,0.00125407,-0.0000458756},{-0.0299709,-0.00317036,0},{0.0495896,0,0}},{{-0.00165051,-0.1033,0.169188},{0.000410662,-0.00103957,0},{-0.0000143599,0,0}},{{15.3846,0,0},{0,0,0},{0,0,0}},{{3.86154,0,0},{0,0,0},{0,0,0}},{{0.050454,0.00192015,-0.00012967},{-0.990208,-0.000677019,0},{-0.0361836,0,0}},{{0.0133423,-0.316935,-0.025402},{0.00586344,-0.00202615,0},{-0.000413327,0,0}},{{-0.0508608,0.0251495,-0.00184647},{0.241513,0.00104189,0},{-0.155217,0,0}},{{0.106136,0.0736214,-0.0421193},{0.0767992,0.00376196,0},{-0.00588455,0,0}},{{-0.00165051,0.000410662,-0.0000143599},{-0.1033,-0.00103957,0},{0.169188,0,0}},{{-0.00132327,-0.0299709,0.0495896},{0.00125407,-0.00317036,0},{-0.0000458756,0,0}}};
+{{{15.3846,0,0},{0,0,0},{0,0,0}},
+{{-3.86154,0,0},{0,0,0},{0,0,0}},
+{{0.0133423,0.00586344,-0.000413327},{-0.316935,-0.00202615,0},{-0.025402,0,0}},
+{{0.050454,-0.990208,-0.0361836},{0.00192015,-0.000677019,0},{-0.00012967,0,0}},
+{{0.106136,0.0767992,-0.00588455},{0.0736214,0.00376196,0},{-0.0421193,0,0}},
+{{-0.0508608,0.241513,-0.155217},{0.0251495,0.00104189,0},{-0.00184647,0,0}},
+{{-0.00132327,0.00125407,-0.0000458756},{-0.0299709,-0.00317036,0},{0.0495896,0,0}},
+{{-0.00165051,-0.1033,0.169188},{0.000410662,-0.00103957,0},{-0.0000143599,0,0}},
+{{15.3846,0,0},{0,0,0},{0,0,0}},
+{{3.86154,0,0},{0,0,0},{0,0,0}},
+{{0.050454,0.00192015,-0.00012967},{-0.990208,-0.000677019,0},{-0.0361836,0,0}},
+{{0.0133423,-0.316935,-0.025402},{0.00586344,-0.00202615,0},{-0.000413327,0,0}},
+{{-0.0508608,0.0251495,-0.00184647},{0.241513,0.00104189,0},{-0.155217,0,0}},
+{{0.106136,0.0736214,-0.0421193},{0.0767992,0.00376196,0},{-0.00588455,0,0}},
+{{-0.00165051,0.000410662,-0.0000143599},{-0.1033,-0.00103957,0},{0.169188,0,0}},
+{{-0.00132327,-0.0299709,0.0495896},{0.00125407,-0.00317036,0},{-0.0000458756,0,0}}
+};
 
 wlr_t wlr;
 lqr_t lqr;
@@ -312,11 +328,12 @@ static void state_predict(void)
 {
     for (int i = 0; i < WLR_SIDE_COUNT; i++) {
         wlr.side[i].predict_wy = 0;
-        wlr.side[i].predict_wy += (P_Array[i][0] * lqr.X_fdb[1] + P_Array[i][1] * lqr.X_fdb[3] + P_Array[i][2] * lqr.X_fdb[4] + P_Array[i][3] * lqr.X_fdb[6]);
+        wlr.side[i].predict_wy += (P_Array[i][0] * lqr.X_fdb[1] + P_Array[i][1] * lqr.X_fdb[3] 
+		+ P_Array[i][2] * lqr.X_fdb[4] + P_Array[i][3] * lqr.X_fdb[6]);
 //        for (int j = 0; j < 4; j++) {
 //            wlr.side[i].predic   t_wy -= (P_Array[i][j + 4] * wlr.side[i].Tw);
 //        }
-        wlr.side[i].predict_wy = P_Array[i][4] * wlr.side[0].Tw + P_Array[i][5] * wlr.side[1].Tw \
+        wlr.side[i].predict_wy += P_Array[i][4] * wlr.side[0].Tw + P_Array[i][5] * wlr.side[1].Tw \
                                + P_Array[i][6] * wlr.side[0].T0 + P_Array[i][7] * wlr.side[1].T0;//待校对极性
     }
 }
@@ -663,7 +680,7 @@ static void update_fly_state(uint8_t index, float yaw_err)
         wlr.side[index].fly_cnt += 4;
     } else if (wlr.side[index].fly_cnt > 0) {
         wlr.side[index].fly_cnt -= 8;
-        if (wlr.side[index].Fn_kal > 30) {
+        if (wlr.side[index].Fn_kal > 30.0f) {
             wlr.side[index].fly_cnt -= 30;
         }
         if (wlr.side[index].fly_cnt < 0) {
@@ -674,6 +691,7 @@ static void update_fly_state(uint8_t index, float yaw_err)
     if (wlr.side[index].fly_cnt > 30) {
         wlr.side[index].fly_cnt = 30;
         wlr.side[index].fly_flag = 1;
+		wlr.K_adapt = 0.0f;
 		
 		if(wlr.high_flag == 1)
 			wlr.v_limit_flag[index] = 1;
@@ -682,6 +700,7 @@ static void update_fly_state(uint8_t index, float yaw_err)
 		
     } else if (wlr.side[index].fly_cnt == 0) {
         wlr.side[index].fly_flag = 0;
+		wlr.K_adapt = -0.0f;
     }
 }
 
@@ -780,7 +799,7 @@ static void apply_output_limits(void)
 
         wlr.side[i].T1 = vmc[i].T_ref.e.T2_ref;
         wlr.side[i].T2 = vmc[i].T_ref.e.T1_ref;
-        wlr.side[i].Tw = lqr.U_ref[i];
+        wlr.side[i].Tw = lqr.U_ref[i] - wlr.side[i].T_adapt;
         wlr.side[i].P1 = vmc[i].q_ref[1];
         wlr.side[i].P2 = vmc[i].q_ref[2];
     }
@@ -790,10 +809,8 @@ void wlr_init(void)
 {
 	wlr.high_set = LegLengthNormal;
 	wlr.crash_flag = 0;
-	wlr.K_adapt = 0.1f;
-    wlr.recover_length = 0.17f; 
-	twm_init(&twm, BodyWidth, WheelRadius);
-	tlm_init(&tlm, LegLengthMax, LegLengthMin, BodyWidth);
+	wlr.K_adapt = -0.0f;
+    wlr.recover_length = 0.17f;
     
 	ramp_init(&height_ramp, 0.001f, LegLengthMin, LegLengthMax);
 	ramp_init(&sky_height_ramp, 0.002f, LegLengthMin, LegLengthMax);
@@ -811,19 +828,6 @@ void wlr_init(void)
 //		vmc_init(&vmc[i], LegLengthParam);
 		
 		vmc_init_five(&vmc[i], LegLengthParam_five);
-		//卡尔曼滤波器初始化
-        kalman_filter_init(&kal_fn[i], 1, 0, 1);
-        kal_fn[i].A_data[0] = 1;
-        kal_fn[i].H_data[0] = 1;
-        kal_fn[i].Q_data[0] = 1;
-        kal_fn[i].R_data[0] = 100;
-						
-		kalman_filter_init(&tfmini_fn[i], 1, 0, 1);
-		tfmini_fn[i].A_data[0] = 1;
-		tfmini_fn[i].H_data[0] = 1;
-		tfmini_fn[i].Q_data[0] = 1;
-		tfmini_fn[i].R_data[0] = 1000;
-		
 		//PID参数初始化      
         pid_init(&pid_leg_sky_cover[i], NONE, 1500, 1.5f, 10000.0f, 150, 300);		//起身专用pid
 		pid_init(&pid_leg_sky_jump[i],  NONE,1800, 2.0, 10000, 100, 300);			//跳跃 专用pid	
@@ -831,10 +835,27 @@ void wlr_init(void)
         pid_init(&pid_leg_length_fly[i], NONE, 800, 0.0, 10000, 0, 150);
         pid_init(&pid_L_test[i], NONE, 1200, 3.0, 32000, 200, 250);
 		pid_init(&pid_rescue[i], NONE, 2.0f, 0.5f, 0, 45, 50);
-				
 	}
 	//卡尔曼滤波器初始化
-
+	if(!kal_init)
+	{
+		twm_init(&twm, BodyWidth, WheelRadius);
+		tlm_init(&tlm, LegLengthMax, LegLengthMin, BodyWidth);
+		for(uint8_t i = 0;i < WLR_SIDE_COUNT; i++){
+			kalman_filter_init(&kal_fn[i], 1, 0, 1);
+			kal_fn[i].A_data[0] = 1;
+			kal_fn[i].H_data[0] = 1;
+			kal_fn[i].Q_data[0] = 1;
+			kal_fn[i].R_data[0] = 100;
+							
+			kalman_filter_init(&tfmini_fn[i], 1, 0, 1);
+			tfmini_fn[i].A_data[0] = 1;
+			tfmini_fn[i].H_data[0] = 1;
+			tfmini_fn[i].Q_data[0] = 1;
+			tfmini_fn[i].R_data[0] = 1000;
+		}
+		kal_init = 1;
+	}
 	//PID参数初始化
     pid_init(&pid_roll, NONE, 400, 0, 10000, 0, 50);
 	
@@ -861,7 +882,6 @@ void wlr_control(void)
     for (int i = 0; i < WLR_SIDE_COUNT; i++) {
         vmc_forward_solution_five(&vmc[i], wlr.side[i].q2, wlr.side[i].q1, wlr.side[i].w2,
                                   wlr.side[i].w1, wlr.side[i].t2, wlr.side[i].t1);
-        wlr.side[i].T_adapt = wlr.K_adapt * (wlr.side[i].predict_wy + wlr.side[i].wy);
     }
 
     lqr.X_fdb[0] = wlr.s_fdb;
@@ -926,9 +946,11 @@ void wlr_control(void)
     power_limit_current();
     aMartix_Mul(lqr.K, lqr.X_diff, lqr.U_ref, 4, 10, 1);
 
-    p_array_fit(P_Array, vmc[0].L_fdb, vmc[1].L_fdb);
+//    p_array_fit(P_Array, vmc[0].L_fdb, vmc[1].L_fdb);
     state_predict();
-
+	wlr.side[0].T_adapt = wlr.K_adapt * (wlr.side[0].predict_wy - wlr.side[0].wy);
+	wlr.side[1].T_adapt = wlr.K_adapt * (wlr.side[1].predict_wy - wlr.side[1].wy);
+	
     for (int i = 0; i < WLR_SIDE_COUNT; i++) {
         map_virtual_force(i);		//虚拟力映射（计算Fy和T0 + 五连杆逆解算）
     }

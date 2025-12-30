@@ -22,7 +22,7 @@
 #include "mode_switch_task.h"
 
 #define row_debug 2 * 10
-uint8_t debug_wave = 11;
+uint8_t debug_wave = 7;
 float test_hex = 1;
 extern FGT_sin_t FGT_sin_chassis;
 extern  uint16_t quadrant_cnt;
@@ -108,12 +108,17 @@ void log_scope_data_pkg(void)
 						log_scope_get_data(lqr.U_ref[1]);
             break;
         } case 7: {//离地检测测试
-            log_scope_get_data(wlr.jump_flag);
             log_scope_get_data(wlr.high_set);
             log_scope_get_data(wlr.side[0].fly_flag);
             log_scope_get_data(wlr.side[1].fly_flag);
-        	log_scope_get_data(vmc[0].L_fdb);
-			log_scope_get_data(vmc[1].L_fdb); 
+			log_scope_get_data(wlr.side[0].fly_cnt);
+            log_scope_get_data(wlr.side[1].fly_cnt);
+			log_scope_get_data(wlr.side[0].Fn_kal);
+            log_scope_get_data(wlr.side[1].Fn_kal);
+			log_scope_get_data(wlr.side[0].predict_wy);
+            log_scope_get_data(wlr.side[0].wy);
+            log_scope_get_data(wlr.side[1].predict_wy);
+            log_scope_get_data(wlr.side[1].wy);
             break;
         } case 8: {//腿部力
             log_scope_get_data(wlr.side[0].Fy);
@@ -132,9 +137,13 @@ void log_scope_data_pkg(void)
             break;
         } case 10: {//状态预测
             log_scope_get_data(wlr.side[0].predict_wy);
-            log_scope_get_data(-wlr.side[0].wy);
+            log_scope_get_data(wlr.side[0].wy);
             log_scope_get_data(wlr.side[1].predict_wy);
-            log_scope_get_data(-wlr.side[1].wy);
+            log_scope_get_data(wlr.side[1].wy);
+			log_scope_get_data(wlr.side[0].T_adapt);
+			log_scope_get_data(wlr.side[1].T_adapt);
+			log_scope_get_data(lqr.U_ref[0]);
+			log_scope_get_data(lqr.U_ref[1]);
             break;
         } case 11: {//飞天测试
 			log_scope_get_data(wlr.sky_flag);

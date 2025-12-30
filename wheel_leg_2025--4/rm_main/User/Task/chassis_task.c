@@ -28,6 +28,7 @@ extern ramp_t recover_ramp;
 
 uint8_t rotate_flag;
 uint8_t rppppp_flag = 0;
+static uint8_t kal_init = 0;
 
 ramp_t chassis_x_ramp;
 ramp_t chassis_y_ramp;
@@ -61,7 +62,7 @@ static void chassis_ramp(void)
     }
 }
 
-static void chassis_init()
+static void chassis_init(void)
 {
     memset(&chassis, 0, sizeof(chassis_t));
     memset(&chassis_x_ramp, 0, sizeof(ramp_t));
@@ -74,19 +75,23 @@ static void chassis_init()
     wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
     wlr.yaw_offset = 1.7f;
     
-    for(int i = 0; i < 2; i++) {
-        kalman_filter_init(&kal_3508_vel[i], 1, 0, 1);
-        kal_3508_vel[i].A_data[0] = 1;
-        kal_3508_vel[i].H_data[0] = 1;
-        kal_3508_vel[i].Q_data[0] = 1;
-        kal_3508_vel[i].R_data[0] = 200;
-    }
+	if(!kal_init)
+	{
+		for(int i = 0; i < 2; i++) {
+			kalman_filter_init(&kal_3508_vel[i], 1, 0, 1);
+			kal_3508_vel[i].A_data[0] = 1;
+			kal_3508_vel[i].H_data[0] = 1;
+			kal_3508_vel[i].Q_data[0] = 1;
+			kal_3508_vel[i].R_data[0] = 200;
+		}
     
-    kalman_filter_init(&kal_wy, 1, 0, 1);
-    kal_wy.A_data[0] = 1;
-    kal_wy.H_data[0] = 1;
-    kal_wy.Q_data[0] = 1;
-    kal_wy.R_data[0] = 100;
+		kalman_filter_init(&kal_wy, 1, 0, 1);
+		kal_wy.A_data[0] = 1;
+		kal_wy.H_data[0] = 1;
+		kal_wy.Q_data[0] = 1;
+		kal_wy.R_data[0] = 100;
+		kal_init = 1;
+	}
     FGT_sin_init (&FGT_sin_chassis,2,0,6000,7.0f,0,7.0f,-0.0f);
     chassis.init = 1;
 }
@@ -259,7 +264,7 @@ static void chassis_data_input(void)
         case CHASSIS_MODE_REMOTER_ROTATE1:
         case CHASSIS_MODE_REMOTER_ROTATE2: {
 			if( wlr.high_flag == 1 )
-				chassis_scale.remote =	1.0f/660*1.8f;
+				chassis_scale.remote =	1.0f/660*2.5f;
 			else 
 				chassis_scale.remote =	1.0f/660*2.5f;	
 			if(wlr.v_limit_flag[0] && wlr.v_limit_flag[1])
@@ -1035,18 +1040,16 @@ void chassis_task(void const *argu)
 {
     uint32_t thread_wake_time = osKernelSysTick();
     power_init();
+	chassis_init();
     for(;;)
     {	
-        if (chassis.init == 0) {
-            chassis_init();
-        }
         thread_wake_time = osKernelSysTick();
         chassis_mode_switch();
         chassis_data_input();
-		if(ctrl_mode != PROTECT_MODE || 1)
+		if(ctrl_mode != PROTECT_MODE)
 			wlr_control();
 		else
-			wlr_init();
+			chassis_init();
 		
         chassis_data_output();
             

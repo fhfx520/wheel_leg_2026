@@ -45,4 +45,4 @@ K = lqrd(A_numeric, B_numeric, Q, R, 0.0001);%腿长拟合见data_init
 fprintf('{%s\n};', strjoin(arrayfun(@(i) ...
 sprintf('{%s}', strjoin(string(K(i, :)), ', ')), 1:size(K, 1), 'UniformOutput', false), ',\n'));
 %state_predict
-% P = state_predict(A_numeric, B_numeric, L.Rw, L.Rl, 0.002);
+P = state_predict(A_numeric, B_numeric, L.Rw, L.Rl, 0.002)
