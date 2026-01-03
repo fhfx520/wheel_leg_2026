@@ -28,6 +28,7 @@ extern FGT_sin_t FGT_sin_chassis;
 extern  uint16_t quadrant_cnt;
 extern ctrl_mode_e  ctrl_mode;
 extern float x3_balance_zero;
+extern float real_vel;
 void log_scope_data_pkg(void)
 {
     switch(debug_wave) {
@@ -108,17 +109,22 @@ void log_scope_data_pkg(void)
 						log_scope_get_data(lqr.U_ref[1]);
             break;
         } case 7: {//离地检测测试
-            log_scope_get_data(wlr.high_set);
-            log_scope_get_data(wlr.side[0].fly_flag);
-            log_scope_get_data(wlr.side[1].fly_flag);
-			log_scope_get_data(wlr.side[0].fly_cnt);
-            log_scope_get_data(wlr.side[1].fly_cnt);
-			log_scope_get_data(wlr.side[0].Fn_kal);
-            log_scope_get_data(wlr.side[1].Fn_kal);
-			log_scope_get_data(wlr.side[0].predict_wy);
-            log_scope_get_data(wlr.side[0].wy);
-            log_scope_get_data(wlr.side[1].predict_wy);
-            log_scope_get_data(wlr.side[1].wy);
+//            log_scope_get_data(wlr.high_set);
+//            log_scope_get_data(wlr.side[0].fly_flag);
+//            log_scope_get_data(wlr.side[1].fly_flag);
+//			log_scope_get_data(wlr.side[0].fly_cnt);
+//            log_scope_get_data(wlr.side[1].fly_cnt);
+//			log_scope_get_data(wlr.side[0].Fn_kal);
+//            log_scope_get_data(wlr.side[1].Fn_kal);
+//			log_scope_get_data(wlr.side[0].predict_wy);
+//            log_scope_get_data(wlr.side[0].wy);
+//            log_scope_get_data(wlr.side[1].predict_wy);
+//            log_scope_get_data(wlr.side[1].wy);
+			log_scope_get_data(kal_fusion_vel.filter_vector[1]);
+			log_scope_get_data(real_vel);
+			log_scope_get_data(wlr.v_fdb);
+			log_scope_get_data(chassis_imu.ax);
+			log_scope_get_data(kal_fusion_vel.xhatminus_data[1]);
             break;
         } case 8: {//腿部力
             log_scope_get_data(wlr.side[0].Fy);

@@ -59,6 +59,7 @@ float Rotate_balance_zero_adjust = -0.1f  ;		//两种腿长摆角偏置
 uint16_t quadrant_cnt = 0;
 static uint8_t kal_init = 0;
 int32_t double_cnt;
+float real_vel;
 //位移 速度 yaw wz 左腿摆角 左腿摆角速度 右腿摆角 右腿摆角速度 机体倾角 机体倾角速度 
 //左轮转矩 右轮转矩 左腿转矩 右腿转矩
 
@@ -872,20 +873,34 @@ void wlr_protest(void)
 	wlr.s_adapt = wlr.s_fdb;
 }
 
+float get_real_vel(void)
+{
+	float vel;
+	float wheel_left = -driver_motor[0].velocity - vmc[0].V_fdb.e.vw0_fdb - wlr.wy_fdb;
+	float wheel_right = driver_motor[1].velocity - vmc[1].V_fdb.e.vw0_fdb - wlr.wy_fdb;
+	vel = (wheel_left * WheelRadius + vmc[0].V_fdb.e.vy0_fdb * arm_sin_f32(lqr.X_fdb[4]) + vmc[0].L_fdb * lqr.X_fdb[5] * arm_cos_f32(lqr.X_fdb[4])
+		+ wheel_right * WheelRadius + vmc[1].V_fdb.e.vy0_fdb * arm_sin_f32(lqr.X_fdb[6]) + vmc[1].L_fdb * lqr.X_fdb[7] * arm_cos_f32(lqr.X_fdb[6]))
+		/ 2.0f;
+	return vel;
+}
+
 //轮子：位移、速度   摆角：角度、角速度   机体俯仰：角度、角速度
 void wlr_control(void)
 {
     wlr.s_fdb = (wlr.side[0].qy * WheelRadius + wlr.side[1].qy * WheelRadius) / 2.0f;
     wlr.v_fdb = (wlr.side[0].wy * WheelRadius + wlr.side[1].wy * WheelRadius) / 2.0f;
 //    data_limit(&wlr.s_fdb, -3.2f, 3.2f);
-
+	real_vel = get_real_vel();
+	Fusion_Vel_Acc_Test();
     for (int i = 0; i < WLR_SIDE_COUNT; i++) {
         vmc_forward_solution_five(&vmc[i], wlr.side[i].q2, wlr.side[i].q1, wlr.side[i].w2,
                                   wlr.side[i].w1, wlr.side[i].t2, wlr.side[i].t1);
     }
 
     lqr.X_fdb[0] = wlr.s_fdb;
-    lqr.X_fdb[1] = wlr.v_fdb;
+//    lqr.X_fdb[1] = wlr.v_fdb;
+	lqr.X_fdb[1] = kal_fusion_vel.filter_vector[1];
+//	lqr.X_fdb[1] = kal_fusion_wheel[0].filter_vector[0];
     lqr.X_fdb[2] = -wlr.yaw_fdb;
     lqr.X_fdb[3] = -wlr.wz_fdb;
 	

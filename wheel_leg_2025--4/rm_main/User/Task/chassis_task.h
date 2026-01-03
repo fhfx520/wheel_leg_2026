@@ -2,7 +2,7 @@
 #define __CHASSIS_TASK_H
 
 #include "stdint.h"
-
+#include "kalman_filter.h"
 typedef enum
 {
     CHASSIS_MODE_PROTECT,
@@ -51,6 +51,8 @@ typedef struct
 
 extern chassis_t chassis;
 extern uint8_t rotate_flag;
+extern kalman_filter_t kal_fusion_vel;
+void Fusion_Vel_Acc_Test(void);
 //extern uint32_t rescue_cnt_T0;
 //extern uint8_t recover_flag;
 

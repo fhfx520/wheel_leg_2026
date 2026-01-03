@@ -25,6 +25,7 @@
 extern uint16_t quadrant_cnt;
 extern pid_t pid_leg_recover[2];
 extern ramp_t recover_ramp;
+extern float real_vel;
 
 uint8_t rotate_flag;
 uint8_t rppppp_flag = 0;
@@ -36,9 +37,13 @@ ramp_t chassis_rotate_ramp;
 
 kalman_filter_t kal_3508_vel[2];
 kalman_filter_t kal_wy;
+kalman_filter_t kal_fusion_vel;
 FGT_sin_t FGT_sin_chassis;
 chassis_t chassis;
-
+float sigma_qv = 1.0f;//速度过程噪声方差
+float sigma_qa = 1.0f;//加速度过程噪声方差
+float sigma_v = 1.0f;//速度测量噪声方差
+float sigma_a = 1.0f;//加速度测量噪声方差
 chassis_scale_t chassis_scale = {
     .remote = 1.0f/660*2.5f,
     .keyboard = 3.0f
@@ -60,6 +65,102 @@ static void chassis_ramp(void)
     } else {
         ramp_calc(&chassis_y_ramp, 0);
     }
+}
+
+static void Fusion_Vel_Acc_Init(void)
+{
+//	//初始化二阶卡尔曼滤波
+//	//状态向量维度2	x = [v a]
+//	//控制向量维度0	u = 0
+//	//测量向量维度2	z = [v a]
+//	kalman_filter_init(&kal_fusion_vel,2,0,2);
+//	//设置状态转移矩阵A = [1，dt；0，1]匀加速模型
+//	const static float dt = 0.002f;//计算周期
+////		float *A = kal_fusion_wheel[i].A_data;
+////		A[0] = 1;
+////		A[1] = dt;
+////		A[2] = 0;
+////		A[3] = 1;
+//	kal_fusion_vel.A_data[0] = 1;
+//	kal_fusion_vel.A_data[1] = dt;
+//	kal_fusion_vel.A_data[2] = 0;
+//	kal_fusion_vel.A_data[3] = 1;
+//	//设置测量转移矩阵H = [1,0;0,1]
+////		float *H = kal_fusion_wheel[i].H_data;
+////		H[0] = 1;
+////		H[1] = 0;
+////		H[2] = 0;
+////		H[3] = 1;
+//	kal_fusion_vel.H_data[0] = 1;
+//	kal_fusion_vel.H_data[1] = 0;
+//	kal_fusion_vel.H_data[2] = 0;
+//	kal_fusion_vel.H_data[3] = 1;
+//	//设置过程噪声协方差矩阵Q
+////		float *Q = kal_fusion_wheel[i].Q_data;
+//	
+//	static float gamma0 = 0.5f * dt * dt;
+//	static float gamma1 = dt;
+////		Q[0] = gamma0 * sigma_q * gamma0;
+////		Q[1] = gamma0 * sigma_q * gamma1;
+////		Q[2] = gamma1 * sigma_q * gamma0;
+////		Q[3] = gamma1 * sigma_q * gamma1;
+//	kal_fusion_vel.Q_data[0] = gamma0 * sigma_qa * gamma0;
+//	kal_fusion_vel.Q_data[1] = gamma0 * sigma_qa * gamma1;
+//	kal_fusion_vel.Q_data[2] = gamma1 * sigma_qa * gamma0;
+//	kal_fusion_vel.Q_data[3] = gamma1 * sigma_qa * gamma1;
+//	//设置测量噪声协方差矩阵R
+////		float *R = kal_fusion_wheel[i].R_data;
+//	
+////		R[0] = sigma_v;
+////		R[1] = 0;
+////		R[2] = 0;
+////		R[3] = sigma_a;
+//	kal_fusion_vel.R_data[0] = sigma_v;
+//	kal_fusion_vel.R_data[1] = 0;
+//	kal_fusion_vel.R_data[2] = 0;
+//	kal_fusion_vel.R_data[3] = sigma_a;
+	kalman_filter_init(&kal_fusion_vel,2,1,2);
+	const static float dt = 0.002f;//计算周期
+	
+	//x = x + vt + 0.5att
+	//v = v + at
+	kal_fusion_vel.A_data[0] = 1;
+	kal_fusion_vel.A_data[1] = dt;
+	kal_fusion_vel.A_data[2] = 0;
+	kal_fusion_vel.A_data[3] = 1;
+	
+	kal_fusion_vel.B_data[0] = 0.5f * dt * dt;
+	kal_fusion_vel.B_data[1] = dt;
+	
+	kal_fusion_vel.H_data[0] = 1;
+	kal_fusion_vel.H_data[1] = 0;
+	kal_fusion_vel.H_data[2] = 0;
+	kal_fusion_vel.H_data[3] = 1;
+	
+	kal_fusion_vel.Q_data[0] = 0.1;
+	kal_fusion_vel.Q_data[1] = 0;
+	kal_fusion_vel.Q_data[2] = 0;
+	kal_fusion_vel.Q_data[3] = 0.5;
+	
+	kal_fusion_vel.R_data[0] = 10;
+	kal_fusion_vel.R_data[1] = 0;
+	kal_fusion_vel.R_data[2] = 0;
+	kal_fusion_vel.R_data[3] = 2000;
+	
+}
+
+void Fusion_Vel_Acc_Test(void)
+{
+	//轮毂速度 or 轮子相对大地的平动速度？
+//		kal_fusion_wheel[i].measured_vector[0] = ((i == 0) ? -driver_motor[0].velocity : driver_motor[1].velocity);
+	kal_fusion_vel.measured_vector[0] = wlr.s_fdb;
+	//机身平动加速度
+	kal_fusion_vel.measured_vector[1] = (-driver_motor[0].velocity + driver_motor[1].velocity) * 0.050f / 2.0f;
+	
+	kal_fusion_vel.control_vector[0] = chassis_imu.ax;
+//	kal_fusion_vel.control_vector[0] = chassis_imu.ax;
+	//更新
+	kalman_filter_update(&kal_fusion_vel);
 }
 
 static void chassis_init(void)
@@ -714,6 +815,8 @@ static void chassis_data_input(void)
     kal_3508_vel[1].measured_vector[0] = driver_motor[1].velocity;
     kalman_filter_update(&kal_3508_vel[1]);
     wlr.side[1].wy = kal_3508_vel[1].filter_vector[0];
+//	wlr.side[0].wy = -driver_motor[0].velocity;
+//	wlr.side[1].wy = driver_motor[1].velocity;
     
     //KNN
     for (int i = 0; i < 10; i++)
@@ -1041,12 +1144,13 @@ void chassis_task(void const *argu)
     uint32_t thread_wake_time = osKernelSysTick();
     power_init();
 	chassis_init();
+	Fusion_Vel_Acc_Init();
     for(;;)
     {	
         thread_wake_time = osKernelSysTick();
         chassis_mode_switch();
         chassis_data_input();
-		if(ctrl_mode != PROTECT_MODE)
+		if(ctrl_mode != PROTECT_MODE || 1)
 			wlr_control();
 		else
 			chassis_init();

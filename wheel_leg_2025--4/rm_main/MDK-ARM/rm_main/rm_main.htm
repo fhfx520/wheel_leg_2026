@@ -3,7 +3,7 @@
 <title>Static Call Graph - [rm_main\rm_main.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image rm_main\rm_main.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Tue Dec 30 00:44:21 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Sat Jan  3 01:16:53 2026
 <BR><P>
 <H3>Maximum Stack Usage =        624 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -653,13 +653,13 @@ Global Symbols
 
 <P><STRONG><a name="[185]"></a>__aeabi_memclr4</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, memseta.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[1ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kalman_filter_init
-<LI><a href="#[1ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kalman_filter_update
 <LI><a href="#[207]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;power_init
-<LI><a href="#[245]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_init (via Veneer)
+<LI><a href="#[1ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kalman_filter_update
 <LI><a href="#[1db]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dji_motor_output_data
 <LI><a href="#[1a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;usart_user_handler
 <LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;shoot_task (via Veneer)
 <LI><a href="#[b7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gimbal_task (via Veneer)
+<LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_task (via Veneer)
 <LI><a href="#[184]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_SPI1_Init
 <LI><a href="#[19c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemClock_Config
 <LI><a href="#[1d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_mat_inverse_f32
@@ -843,7 +843,7 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32h723xx.o(RESET)
 </UL>
 <P><STRONG><a name="[248]"></a>FGT_sin_init</STRONG> (Thumb, 28 bytes, Stack size 0 bytes, func_generator.o(.text.FGT_sin_init))
-<BR><BR>[Called By]<UL><LI><a href="#[245]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_init (via Veneer)
+<BR><BR>[Called By]<UL><LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_task (via Veneer)
 </UL>
 
 <P><STRONG><a name="[d3]"></a>HAL_DMA_Abort</STRONG> (Thumb, 1248 bytes, Stack size 24 bytes, stm32h7xx_hal_dma.o(.text.HAL_DMA_Abort))
@@ -914,9 +914,9 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[f7]"></a>HAL_FDCAN_ActivateNotification</STRONG> (Thumb, 120 bytes, Stack size 0 bytes, stm32h7xx_hal_fdcan.o(.text.HAL_FDCAN_ActivateNotification))
-<BR><BR>[Called By]<UL><LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_RxFifo1Callback
-<LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_RxFifo0Callback
+<BR><BR>[Called By]<UL><LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_RxFifo0Callback
 <LI><a href="#[1d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;can_comm_init
+<LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_RxFifo1Callback
 </UL>
 
 <P><STRONG><a name="[da]"></a>HAL_FDCAN_AddMessageToTxFifoQ</STRONG> (Thumb, 106 bytes, Stack size 16 bytes, stm32h7xx_hal_fdcan.o(.text.HAL_FDCAN_AddMessageToTxFifoQ))
@@ -952,8 +952,8 @@ Global Symbols
 <P><STRONG><a name="[f2]"></a>HAL_FDCAN_GetRxMessage</STRONG> (Thumb, 392 bytes, Stack size 16 bytes, stm32h7xx_hal_fdcan.o(.text.HAL_FDCAN_GetRxMessage))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = HAL_FDCAN_GetRxMessage
 </UL>
-<BR>[Called By]<UL><LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_RxFifo1Callback
-<LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_RxFifo0Callback
+<BR>[Called By]<UL><LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_RxFifo0Callback
+<LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_RxFifo1Callback
 </UL>
 
 <P><STRONG><a name="[dc]"></a>HAL_FDCAN_HighPriorityMessageCallback</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, stm32h7xx_hal_fdcan.o(.text.HAL_FDCAN_HighPriorityMessageCallback))
@@ -963,8 +963,8 @@ Global Symbols
 <P><STRONG><a name="[d2]"></a>HAL_FDCAN_IRQHandler</STRONG> (Thumb, 806 bytes, Stack size 64 bytes, stm32h7xx_hal_fdcan.o(.text.HAL_FDCAN_IRQHandler))
 <BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = HAL_FDCAN_IRQHandler &rArr; HAL_FDCAN_RxFifo1Callback &rArr; dm_motor_get_data
 </UL>
-<BR>[Calls]<UL><LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_RxFifo1Callback
-<LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_RxFifo0Callback
+<BR>[Calls]<UL><LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_RxFifo0Callback
+<LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_RxFifo1Callback
 <LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_TT_GlobalTimeCallback
 <LI><a href="#[eb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_TT_StopWatchCallback
 <LI><a href="#[ea]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_TT_TimeMarkCallback
@@ -1014,12 +1014,12 @@ Global Symbols
 <P><STRONG><a name="[e0]"></a>HAL_FDCAN_RxFifo0Callback</STRONG> (Thumb, 162 bytes, Stack size 16 bytes, can_comm.o(.text.HAL_FDCAN_RxFifo0Callback))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = HAL_FDCAN_RxFifo0Callback &rArr; HAL_FDCAN_GetRxMessage
 </UL>
-<BR>[Calls]<UL><LI><a href="#[f6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vision_gimbal_get_data
-<LI><a href="#[f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;power_get_status
-<LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;power_get_data
-<LI><a href="#[f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;imu_get_data
+<BR>[Calls]<UL><LI><a href="#[f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;imu_get_data
 <LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_GetRxMessage
 <LI><a href="#[f7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_ActivateNotification
+<LI><a href="#[f6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vision_gimbal_get_data
+<LI><a href="#[f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;power_get_status
+<LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;power_get_data
 </UL>
 <BR>[Called By]<UL><LI><a href="#[d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_IRQHandler
 </UL>
@@ -1027,10 +1027,10 @@ Global Symbols
 <P><STRONG><a name="[e1]"></a>HAL_FDCAN_RxFifo1Callback</STRONG> (Thumb, 132 bytes, Stack size 16 bytes, can_comm.o(.text.HAL_FDCAN_RxFifo1Callback))
 <BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = HAL_FDCAN_RxFifo1Callback &rArr; dm_motor_get_data
 </UL>
-<BR>[Calls]<UL><LI><a href="#[f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dji_motor_get_data
-<LI><a href="#[f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dm_motor_get_data
-<LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_GetRxMessage
+<BR>[Calls]<UL><LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_GetRxMessage
 <LI><a href="#[f7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_ActivateNotification
+<LI><a href="#[f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dji_motor_get_data
+<LI><a href="#[f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dm_motor_get_data
 </UL>
 <BR>[Called By]<UL><LI><a href="#[d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_IRQHandler
 </UL>
@@ -2871,7 +2871,8 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[24e]"></a>arm_cos_f32</STRONG> (Thumb, 144 bytes, Stack size 0 bytes, arm_cos_f32.o(.text.arm_cos_f32))
-<BR><BR>[Called By]<UL><LI><a href="#[b7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gimbal_task (via Veneer)
+<BR><BR>[Called By]<UL><LI><a href="#[250]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control (via Veneer)
+<LI><a href="#[b7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gimbal_task (via Veneer)
 <LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_task (via Veneer)
 <LI><a href="#[26a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_inverse_solution_five (via Veneer)
 <LI><a href="#[268]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_forward_solution_five (via Veneer)
@@ -3020,9 +3021,9 @@ Global Symbols
 <P><STRONG><a name="[1d8]"></a>dm_motor_init</STRONG> (Thumb, 108 bytes, Stack size 40 bytes, drv_dm_motor.o(.text.dm_motor_init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 92<LI>Call Chain = dm_motor_init &rArr; dm_motor_output_single_data &rArr; can_std_transmit &rArr; HAL_FDCAN_AddMessageToTxFifoQ &rArr; FDCAN_CopyMessageToRAM
 </UL>
-<BR>[Calls]<UL><LI><a href="#[1da]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;can_std_transmit
-<LI><a href="#[1dd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dm_motor_output_single_data
+<BR>[Calls]<UL><LI><a href="#[1dd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dm_motor_output_single_data
 <LI><a href="#[d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_Delay
+<LI><a href="#[1da]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;can_std_transmit
 </UL>
 <BR>[Called By]<UL><LI><a href="#[1d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;can_comm_init
 </UL>
@@ -3148,7 +3149,7 @@ Global Symbols
 <LI><a href="#[185]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr4
 </UL>
 <BR>[Called By]<UL><LI><a href="#[246]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_init (via Veneer)
-<LI><a href="#[245]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_init (via Veneer)
+<LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_task (via Veneer)
 <LI><a href="#[265]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;twm_init (via Veneer)
 <LI><a href="#[263]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tlm_init (via Veneer)
 </UL>
@@ -3167,6 +3168,7 @@ Global Symbols
 <LI><a href="#[1f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy4
 </UL>
 <BR>[Called By]<UL><LI><a href="#[250]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control (via Veneer)
+<LI><a href="#[245]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Fusion_Vel_Acc_Test (via Veneer)
 <LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_task (via Veneer)
 <LI><a href="#[262]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tlm_gnd_roll_calc (via Veneer)
 </UL>
@@ -3393,7 +3395,7 @@ Global Symbols
 
 <P><STRONG><a name="[247]"></a>ramp_init</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, math_lib.o(.text.ramp_init))
 <BR><BR>[Called By]<UL><LI><a href="#[246]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_init (via Veneer)
-<LI><a href="#[245]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_init (via Veneer)
+<LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_task (via Veneer)
 </UL>
 
 <P><STRONG><a name="[25a]"></a>rc_check_offline</STRONG> (Thumb, 22 bytes, Stack size 0 bytes, prot_dr16.o(.text.rc_check_offline))
@@ -3534,9 +3536,9 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[210]"></a>vListInitialise</STRONG> (Thumb, 22 bytes, Stack size 0 bytes, list.o(.text.vListInitialise))
-<BR><BR>[Called By]<UL><LI><a href="#[20e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddNewTaskToReadyList
-<LI><a href="#[213]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericCreateStatic
+<BR><BR>[Called By]<UL><LI><a href="#[213]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericCreateStatic
 <LI><a href="#[212]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvCheckForValidListAndQueue
+<LI><a href="#[20e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddNewTaskToReadyList
 </UL>
 
 <P><STRONG><a name="[233]"></a>vListInitialiseItem</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, list.o(.text.vListInitialiseItem))
@@ -3556,18 +3558,17 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[20c]"></a>vListInsertEnd</STRONG> (Thumb, 28 bytes, Stack size 0 bytes, list.o(.text.vListInsertEnd))
-<BR><BR>[Called By]<UL><LI><a href="#[20e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddNewTaskToReadyList
-<LI><a href="#[227]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskPlaceOnEventListRestricted
+<BR><BR>[Called By]<UL><LI><a href="#[227]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskPlaceOnEventListRestricted
 <LI><a href="#[232]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskPriorityDisinherit
 <LI><a href="#[21e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskRemoveFromEventList
 <LI><a href="#[21a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskResumeAll
 <LI><a href="#[19b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskIncrementTick
 <LI><a href="#[20a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddCurrentTaskToDelayedList
+<LI><a href="#[20e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddNewTaskToReadyList
 </UL>
 
 <P><STRONG><a name="[20f]"></a>vPortEnterCritical</STRONG> (Thumb, 74 bytes, Stack size 0 bytes, port.o(.text.vPortEnterCritical))
 <BR><BR>[Called By]<UL><LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;comm_task (via Veneer)
-<LI><a href="#[20e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddNewTaskToReadyList
 <LI><a href="#[21b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vQueueWaitForMessageRestricted
 <LI><a href="#[21c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueReceive
 <LI><a href="#[231]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskCheckForTimeOut
@@ -3577,11 +3578,11 @@ Global Symbols
 <LI><a href="#[21a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskResumeAll
 <LI><a href="#[212]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvCheckForValidListAndQueue
 <LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvIdleTask
+<LI><a href="#[20e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddNewTaskToReadyList
 </UL>
 
 <P><STRONG><a name="[211]"></a>vPortExitCritical</STRONG> (Thumb, 46 bytes, Stack size 0 bytes, port.o(.text.vPortExitCritical))
 <BR><BR>[Called By]<UL><LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;comm_task (via Veneer)
-<LI><a href="#[20e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddNewTaskToReadyList
 <LI><a href="#[21b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vQueueWaitForMessageRestricted
 <LI><a href="#[21c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueReceive
 <LI><a href="#[231]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskCheckForTimeOut
@@ -3591,6 +3592,7 @@ Global Symbols
 <LI><a href="#[21a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskResumeAll
 <LI><a href="#[212]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvCheckForValidListAndQueue
 <LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvIdleTask
+<LI><a href="#[20e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddNewTaskToReadyList
 </UL>
 
 <P><STRONG><a name="[215]"></a>vPortFree</STRONG> (Thumb, 214 bytes, Stack size 16 bytes, heap_4.o(.text.vPortFree))
@@ -3800,11 +3802,11 @@ Global Symbols
 <P><STRONG><a name="[206]"></a>xTaskCreate</STRONG> (Thumb, 194 bytes, Stack size 32 bytes, tasks.o(.text.xTaskCreate))
 <BR><BR>[Stack]<UL><LI>Max Depth = 136<LI>Call Chain = xTaskCreate &rArr; pvPortMalloc &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
-<BR>[Calls]<UL><LI><a href="#[20e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddNewTaskToReadyList
-<LI><a href="#[233]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vListInitialiseItem
+<BR>[Calls]<UL><LI><a href="#[233]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vListInitialiseItem
 <LI><a href="#[215]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortFree
 <LI><a href="#[220]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pvPortMalloc
 <LI><a href="#[234]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pxPortInitialiseStack
+<LI><a href="#[20e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddNewTaskToReadyList
 </UL>
 <BR>[Called By]<UL><LI><a href="#[180]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osThreadCreate
 </UL>
@@ -3812,9 +3814,9 @@ Global Symbols
 <P><STRONG><a name="[205]"></a>xTaskCreateStatic</STRONG> (Thumb, 240 bytes, Stack size 40 bytes, tasks.o(.text.xTaskCreateStatic))
 <BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = xTaskCreateStatic &rArr; prvAddNewTaskToReadyList
 </UL>
-<BR>[Calls]<UL><LI><a href="#[20e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddNewTaskToReadyList
-<LI><a href="#[233]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vListInitialiseItem
+<BR>[Calls]<UL><LI><a href="#[233]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vListInitialiseItem
 <LI><a href="#[234]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pxPortInitialiseStack
+<LI><a href="#[20e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddNewTaskToReadyList
 </UL>
 <BR>[Called By]<UL><LI><a href="#[180]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osThreadCreate
 <LI><a href="#[22a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTimerCreateTimerTask
@@ -4049,18 +4051,29 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[237]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_acosf
 </UL>
 
-<P><STRONG><a name="[b6]"></a>chassis_task</STRONG> (Thumb, 7308 bytes, Stack size 8 bytes, chassis_task.o(.text.chassis_task))
+<P><STRONG><a name="[245]"></a>Fusion_Vel_Acc_Test</STRONG> (Thumb, 80 bytes, Stack size 0 bytes, chassis_task.o(.text.Fusion_Vel_Acc_Test))
+<BR><BR>[Stack]<UL><LI>Max Depth = 136<LI>Call Chain = Fusion_Vel_Acc_Test &rArr; kalman_filter_update &rArr; kalman_filter_K_update &rArr; arm_mat_inverse_f32
+</UL>
+<BR>[Calls]<UL><LI><a href="#[1ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kalman_filter_update (via Veneer)
+</UL>
+<BR>[Called By]<UL><LI><a href="#[250]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
+</UL>
+
+<P><STRONG><a name="[b6]"></a>chassis_task</STRONG> (Thumb, 8060 bytes, Stack size 8 bytes, chassis_task.o(.text.chassis_task))
 <BR><BR>[Stack]<UL><LI>Max Depth = 288<LI>Call Chain = chassis_task &rArr; wlr_control &rArr; tlm_gnd_roll_calc &rArr; kalman_filter_update &rArr; kalman_filter_K_update &rArr; arm_mat_inverse_f32
 </UL>
 <BR>[Calls]<UL><LI><a href="#[251]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_protest
 <LI><a href="#[250]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
-<LI><a href="#[1ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kalman_filter_update (via Veneer)
 <LI><a href="#[24d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_calc (via Veneer)
 <LI><a href="#[24c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;key_status_clear (via Veneer)
 <LI><a href="#[1f6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;key_scan (via Veneer)
 <LI><a href="#[24a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dm_motor_set_control_para (via Veneer)
+<LI><a href="#[248]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;FGT_sin_init (via Veneer)
+<LI><a href="#[1ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kalman_filter_init (via Veneer)
+<LI><a href="#[247]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_init (via Veneer)
+<LI><a href="#[246]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_init
 <LI><a href="#[207]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;power_init (via Veneer)
-<LI><a href="#[245]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_init
+<LI><a href="#[1ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kalman_filter_update (via Veneer)
 <LI><a href="#[252]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_calc (via Veneer)
 <LI><a href="#[24e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_cos_f32 (via Veneer)
 <LI><a href="#[24f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_sin_f32 (via Veneer)
@@ -4069,6 +4082,7 @@ Global Symbols
 <LI><a href="#[24b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rc_fsm_check (via Veneer)
 <LI><a href="#[1ff]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelayUntil (via Veneer)
 <LI><a href="#[202]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osKernelSysTick (via Veneer)
+<LI><a href="#[185]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr4 (via Veneer)
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(.text.MX_FREERTOS_Init)
 </UL>
@@ -4115,7 +4129,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(.text.MX_FREERTOS_Init)
 </UL>
-<P><STRONG><a name="[1f8]"></a>log_scope_data_pkg</STRONG> (Thumb, 1224 bytes, Stack size 24 bytes, debug_task.o(.text.log_scope_data_pkg))
+<P><STRONG><a name="[1f8]"></a>log_scope_data_pkg</STRONG> (Thumb, 1152 bytes, Stack size 24 bytes, debug_task.o(.text.log_scope_data_pkg))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = log_scope_data_pkg
 </UL>
 <BR>[Calls]<UL><LI><a href="#[254]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;log_scope_get_data (via Veneer)
@@ -4255,12 +4269,14 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[250]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[250]"></a>wlr_control</STRONG> (Thumb, 4968 bytes, Stack size 120 bytes, wlr.o(.text.wlr_control))
+<P><STRONG><a name="[250]"></a>wlr_control</STRONG> (Thumb, 5028 bytes, Stack size 120 bytes, wlr.o(.text.wlr_control))
 <BR><BR>[Stack]<UL><LI>Max Depth = 280<LI>Call Chain = wlr_control &rArr; tlm_gnd_roll_calc &rArr; kalman_filter_update &rArr; kalman_filter_K_update &rArr; arm_mat_inverse_f32
 </UL>
-<BR>[Calls]<UL><LI><a href="#[1ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kalman_filter_update (via Veneer)
-<LI><a href="#[24d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_calc (via Veneer)
+<BR>[Calls]<UL><LI><a href="#[24d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_calc (via Veneer)
+<LI><a href="#[1ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kalman_filter_update (via Veneer)
+<LI><a href="#[245]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Fusion_Vel_Acc_Test
 <LI><a href="#[252]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_calc (via Veneer)
+<LI><a href="#[24e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_cos_f32 (via Veneer)
 <LI><a href="#[24f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_sin_f32 (via Veneer)
 <LI><a href="#[1d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;circle_error (via Veneer)
 <LI><a href="#[264]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tlm_leg_length_calc
@@ -4288,7 +4304,7 @@ Global Symbols
 <LI><a href="#[263]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tlm_init
 <LI><a href="#[26e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_init_five
 </UL>
-<BR>[Called By]<UL><LI><a href="#[245]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_init
+<BR>[Called By]<UL><LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_task
 </UL>
 
 <P><STRONG><a name="[251]"></a>wlr_protest</STRONG> (Thumb, 66 bytes, Stack size 0 bytes, wlr.o(.text.wlr_protest))
@@ -4326,18 +4342,6 @@ Local Symbols
 </UL>
 <P><STRONG><a name="[255]"></a>__NVIC_SystemReset</STRONG> (Thumb, 36 bytes, Stack size 0 bytes, mode_switch_task.o(.text.__NVIC_SystemReset))
 <BR><BR>[Called By]<UL><LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mode_switch_task
-</UL>
-
-<P><STRONG><a name="[245]"></a>chassis_init</STRONG> (Thumb, 356 bytes, Stack size 40 bytes, chassis_task.o(.text.chassis_init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 220<LI>Call Chain = chassis_init &rArr; wlr_init &rArr; twm_init &rArr; kalman_filter_init &rArr; malloc
-</UL>
-<BR>[Calls]<UL><LI><a href="#[248]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;FGT_sin_init (via Veneer)
-<LI><a href="#[1ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kalman_filter_init (via Veneer)
-<LI><a href="#[247]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_init (via Veneer)
-<LI><a href="#[246]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_init
-<LI><a href="#[185]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr4 (via Veneer)
-</UL>
-<BR>[Called By]<UL><LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_task
 </UL>
 
 <P><STRONG><a name="[bb]"></a>compare_ints</STRONG> (Thumb, 24 bytes, Stack size 0 bytes, math_lib.o(.text.compare_ints))

@@ -123,7 +123,7 @@ void IMU_AHRS_Calcu_task(void){
 				imu_msg_send.gim_angle_msg.e.yaw = INS.Yaw;
 				
 				
-				imu_msg_send.cha_angle_msg.e.ay = -INS.Accel[X_axis];//
+				imu_msg_send.cha_angle_msg.e.ay = INS.MotionAccel_n[Y_axis];//
 				imu_msg_send.cha_angle_msg.e.az = INS.Accel[Z_axis];//
 				
 				
