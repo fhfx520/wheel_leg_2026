@@ -29,6 +29,7 @@ extern  uint16_t quadrant_cnt;
 extern ctrl_mode_e  ctrl_mode;
 extern float x3_balance_zero;
 extern float real_vel;
+extern float yw_ddot;
 void log_scope_data_pkg(void)
 {
     switch(debug_wave) {
@@ -105,26 +106,24 @@ void log_scope_data_pkg(void)
 //						log_scope_get_data(vmc[0].L_fdb);
 //						log_scope_get_data(vmc[1].L_fdb); 
 //						log_scope_get_data(chassis_imu.rol  * 180 / PI);
-						log_scope_get_data(lqr.U_ref[0]);
-						log_scope_get_data(lqr.U_ref[1]);
+			log_scope_get_data(lqr.U_ref[0]);
+			log_scope_get_data(lqr.U_ref[1]);
             break;
         } case 7: {//离地检测测试
 //            log_scope_get_data(wlr.high_set);
-//            log_scope_get_data(wlr.side[0].fly_flag);
-//            log_scope_get_data(wlr.side[1].fly_flag);
-//			log_scope_get_data(wlr.side[0].fly_cnt);
-//            log_scope_get_data(wlr.side[1].fly_cnt);
-//			log_scope_get_data(wlr.side[0].Fn_kal);
-//            log_scope_get_data(wlr.side[1].Fn_kal);
+            log_scope_get_data(wlr.side[0].fly_flag);
+            log_scope_get_data(wlr.side[1].fly_flag);
+			log_scope_get_data(wlr.side[0].fly_cnt);
+            log_scope_get_data(wlr.side[1].fly_cnt);
+			log_scope_get_data(wlr.side[0].Fn_kal);
+            log_scope_get_data(wlr.side[1].Fn_kal);
+			log_scope_get_data(chassis_imu.az);
+			log_scope_get_data(yw_ddot);
 //			log_scope_get_data(wlr.side[0].predict_wy);
 //            log_scope_get_data(wlr.side[0].wy);
 //            log_scope_get_data(wlr.side[1].predict_wy);
 //            log_scope_get_data(wlr.side[1].wy);
-			log_scope_get_data(kal_fusion_vel.filter_vector[1]);
-			log_scope_get_data(real_vel);
-			log_scope_get_data(wlr.v_fdb);
-			log_scope_get_data(chassis_imu.ax);
-			log_scope_get_data(kal_fusion_vel.xhatminus_data[1]);
+			
             break;
         } case 8: {//腿部力
             log_scope_get_data(wlr.side[0].Fy);
@@ -180,34 +179,33 @@ void log_scope_data_pkg(void)
             log_scope_get_data(supercap.volage);
             log_scope_get_data(supercap.current);
             break;
-            } case 14: {//大喵电机力矩
-                log_scope_get_data(joint_motor[0].t);
-                log_scope_get_data(joint_motor[0].torque);
-                log_scope_get_data(joint_motor[1].t);
-                log_scope_get_data(joint_motor[1].torque);
-                log_scope_get_data(joint_motor[2].t);
-                log_scope_get_data(joint_motor[2].torque);
-                log_scope_get_data(joint_motor[3].t);
-                log_scope_get_data(joint_motor[3].torque);
-                break;
-				} case 15: {// ------------------------------------观测6个电机力矩
-                log_scope_get_data(joint_motor[0].t);
-                log_scope_get_data(joint_motor[1].t);
-                log_scope_get_data(joint_motor[2].t);
-                log_scope_get_data(joint_motor[3].t);
-                
-                log_scope_get_data(driver_motor[0].t);
-                log_scope_get_data(driver_motor[1].t);
-                break;
-            } case 16: {	
-                log_scope_get_data(lqr.U_ref[0]);
-                log_scope_get_data(lqr.U_ref[1]);
-				log_scope_get_data( vmc[0].T_ref.e.T1_ref);
-                log_scope_get_data( vmc[0].T_ref.e.T2_ref);
-				log_scope_get_data( vmc[1].T_ref.e.T1_ref);
-				log_scope_get_data( vmc[1].T_ref.e.T2_ref);            
-                break;
-            }
+        } case 14: {//大喵电机力矩
+			log_scope_get_data(joint_motor[0].t);
+			log_scope_get_data(joint_motor[0].torque);
+			log_scope_get_data(joint_motor[1].t);
+			log_scope_get_data(joint_motor[1].torque);
+			log_scope_get_data(joint_motor[2].t);
+			log_scope_get_data(joint_motor[2].torque);
+			log_scope_get_data(joint_motor[3].t);
+			log_scope_get_data(joint_motor[3].torque);
+			break;
+		} case 15: {// ------------------------------------观测6个电机力矩
+			log_scope_get_data(joint_motor[0].t);
+			log_scope_get_data(joint_motor[1].t);
+			log_scope_get_data(joint_motor[2].t);
+			log_scope_get_data(joint_motor[3].t);
+			
+			log_scope_get_data(driver_motor[0].t);
+			log_scope_get_data(driver_motor[1].t);
+			break;
+		} case 16: {//二阶卡尔曼滤波器观测	
+			log_scope_get_data(kal_fusion_vel.filter_vector[1]);
+			log_scope_get_data(real_vel);
+			log_scope_get_data(wlr.v_fdb);
+			log_scope_get_data(chassis_imu.ax);
+			log_scope_get_data(kal_fusion_vel.xhatminus_data[1]); 
+			break;
+		}
         default:break;
     }
 }

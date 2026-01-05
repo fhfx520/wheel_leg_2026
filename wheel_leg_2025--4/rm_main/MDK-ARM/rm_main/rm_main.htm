@@ -3,7 +3,7 @@
 <title>Static Call Graph - [rm_main\rm_main.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image rm_main\rm_main.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Sat Jan  3 01:16:53 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Mon Jan  5 02:36:03 2026
 <BR><P>
 <H3>Maximum Stack Usage =        624 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -1014,12 +1014,12 @@ Global Symbols
 <P><STRONG><a name="[e0]"></a>HAL_FDCAN_RxFifo0Callback</STRONG> (Thumb, 162 bytes, Stack size 16 bytes, can_comm.o(.text.HAL_FDCAN_RxFifo0Callback))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = HAL_FDCAN_RxFifo0Callback &rArr; HAL_FDCAN_GetRxMessage
 </UL>
-<BR>[Calls]<UL><LI><a href="#[f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;imu_get_data
-<LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_GetRxMessage
+<BR>[Calls]<UL><LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_GetRxMessage
 <LI><a href="#[f7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_ActivateNotification
 <LI><a href="#[f6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vision_gimbal_get_data
 <LI><a href="#[f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;power_get_status
 <LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;power_get_data
+<LI><a href="#[f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;imu_get_data
 </UL>
 <BR>[Called By]<UL><LI><a href="#[d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_IRQHandler
 </UL>
@@ -3077,7 +3077,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;status_task (via Veneer)
 </UL>
 
-<P><STRONG><a name="[f3]"></a>imu_get_data</STRONG> (Thumb, 124 bytes, Stack size 0 bytes, prot_imu.o(.text.imu_get_data))
+<P><STRONG><a name="[f3]"></a>imu_get_data</STRONG> (Thumb, 128 bytes, Stack size 0 bytes, prot_imu.o(.text.imu_get_data))
 <BR><BR>[Called By]<UL><LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_RxFifo0Callback
 </UL>
 
@@ -3902,10 +3902,10 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[23d]"></a>__ARM_fpclassifyf</STRONG> (Thumb, 38 bytes, Stack size 0 bytes, fpclassifyf.o(i.__ARM_fpclassifyf))
-<BR><BR>[Called By]<UL><LI><a href="#[240]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atanf
-<LI><a href="#[23c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan2f
-<LI><a href="#[244]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_tanf
+<BR><BR>[Called By]<UL><LI><a href="#[244]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_tanf
 <LI><a href="#[243]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_sinf
+<LI><a href="#[240]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atanf
+<LI><a href="#[23c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan2f
 </UL>
 
 <P><STRONG><a name="[237]"></a>__hardfp_acosf</STRONG> (Thumb, 234 bytes, Stack size 16 bytes, acosf.o(i.__hardfp_acosf))
@@ -3927,7 +3927,8 @@ Global Symbols
 <LI><a href="#[23d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__ARM_fpclassifyf
 <LI><a href="#[23a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__set_errno
 </UL>
-<BR>[Called By]<UL><LI><a href="#[268]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_forward_solution_five (via Veneer)
+<BR>[Called By]<UL><LI><a href="#[250]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control (via Veneer)
+<LI><a href="#[268]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_forward_solution_five (via Veneer)
 </UL>
 
 <P><STRONG><a name="[240]"></a>__hardfp_atanf</STRONG> (Thumb, 296 bytes, Stack size 16 bytes, atanf.o(i.__hardfp_atanf))
@@ -3969,7 +3970,8 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[23a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__set_errno
 </UL>
-<BR>[Called By]<UL><LI><a href="#[26a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_inverse_solution_five (via Veneer)
+<BR>[Called By]<UL><LI><a href="#[250]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control (via Veneer)
+<LI><a href="#[26a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_inverse_solution_five (via Veneer)
 <LI><a href="#[268]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_forward_solution_five (via Veneer)
 <LI><a href="#[208]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;power_limit_current
 </UL>
@@ -3988,11 +3990,11 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[239]"></a>__mathlib_flt_infnan</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, funder.o(i.__mathlib_flt_infnan))
-<BR><BR>[Called By]<UL><LI><a href="#[240]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atanf
-<LI><a href="#[237]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_acosf
+<BR><BR>[Called By]<UL><LI><a href="#[237]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_acosf
 <LI><a href="#[244]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_tanf
 <LI><a href="#[243]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_sinf
 <LI><a href="#[241]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_cosf
+<LI><a href="#[240]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atanf
 </UL>
 
 <P><STRONG><a name="[23f]"></a>__mathlib_flt_infnan2</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, funder.o(i.__mathlib_flt_infnan2))
@@ -4007,10 +4009,10 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[23e]"></a>__mathlib_flt_underflow</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, funder.o(i.__mathlib_flt_underflow))
-<BR><BR>[Called By]<UL><LI><a href="#[240]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atanf
-<LI><a href="#[23c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan2f
-<LI><a href="#[244]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_tanf
+<BR><BR>[Called By]<UL><LI><a href="#[244]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_tanf
 <LI><a href="#[243]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_sinf
+<LI><a href="#[240]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atanf
+<LI><a href="#[23c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan2f
 </UL>
 
 <P><STRONG><a name="[242]"></a>__mathlib_rredf2</STRONG> (Thumb, 316 bytes, Stack size 20 bytes, rredf.o(i.__mathlib_rredf2))
@@ -4028,13 +4030,13 @@ Global Symbols
 <P><STRONG><a name="[282]"></a>__scatterload_zeroinit</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_zeroinit), UNUSED)
 
 <P><STRONG><a name="[23a]"></a>__set_errno</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, errno.o(i.__set_errno))
-<BR><BR>[Called By]<UL><LI><a href="#[23c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan2f
-<LI><a href="#[237]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_acosf
+<BR><BR>[Called By]<UL><LI><a href="#[237]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_acosf
 <LI><a href="#[244]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_tanf
 <LI><a href="#[238]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sqrtf
 <LI><a href="#[209]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_sqrtf
 <LI><a href="#[243]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_sinf
 <LI><a href="#[241]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_cosf
+<LI><a href="#[23c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan2f
 </UL>
 
 <P><STRONG><a name="[1ed]"></a>malloc</STRONG> (Thumb, 92 bytes, Stack size 20 bytes, malloc.o(i.malloc))
@@ -4129,7 +4131,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(.text.MX_FREERTOS_Init)
 </UL>
-<P><STRONG><a name="[1f8]"></a>log_scope_data_pkg</STRONG> (Thumb, 1152 bytes, Stack size 24 bytes, debug_task.o(.text.log_scope_data_pkg))
+<P><STRONG><a name="[1f8]"></a>log_scope_data_pkg</STRONG> (Thumb, 1232 bytes, Stack size 24 bytes, debug_task.o(.text.log_scope_data_pkg))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = log_scope_data_pkg
 </UL>
 <BR>[Calls]<UL><LI><a href="#[254]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;log_scope_get_data (via Veneer)
@@ -4247,8 +4249,8 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[24e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_cos_f32 (via Veneer)
 <LI><a href="#[24f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_sin_f32 (via Veneer)
 <LI><a href="#[269]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;aMartix_Mul (via Veneer)
-<LI><a href="#[23c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan2f (via Veneer)
 <LI><a href="#[209]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_sqrtf (via Veneer)
+<LI><a href="#[23c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan2f (via Veneer)
 </UL>
 <BR>[Called By]<UL><LI><a href="#[250]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
@@ -4269,7 +4271,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[250]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[250]"></a>wlr_control</STRONG> (Thumb, 5028 bytes, Stack size 120 bytes, wlr.o(.text.wlr_control))
+<P><STRONG><a name="[250]"></a>wlr_control</STRONG> (Thumb, 5384 bytes, Stack size 120 bytes, wlr.o(.text.wlr_control))
 <BR><BR>[Stack]<UL><LI>Max Depth = 280<LI>Call Chain = wlr_control &rArr; tlm_gnd_roll_calc &rArr; kalman_filter_update &rArr; kalman_filter_K_update &rArr; arm_mat_inverse_f32
 </UL>
 <BR>[Calls]<UL><LI><a href="#[24d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_calc (via Veneer)
@@ -4288,8 +4290,10 @@ Global Symbols
 <LI><a href="#[26b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;aMartix_Cover (via Veneer)
 <LI><a href="#[26d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;data_limit (via Veneer)
 <LI><a href="#[208]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;power_limit_current (via Veneer)
+<LI><a href="#[209]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_sqrtf (via Veneer)
 <LI><a href="#[243]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_sinf (via Veneer)
 <LI><a href="#[241]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_cosf (via Veneer)
+<LI><a href="#[23c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan2f (via Veneer)
 </UL>
 <BR>[Called By]<UL><LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_task
 </UL>

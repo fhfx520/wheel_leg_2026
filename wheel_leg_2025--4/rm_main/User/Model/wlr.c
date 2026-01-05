@@ -48,18 +48,33 @@ const float LegLengthHigh 	 = 0.23f;//长腿 0.23
 const float LegLengthRotate  = 0.05f; //正常
 const float LegLengthNormal  = 0.18f; //正常
 
+const float gas_spring_F = 300.0f;	//气弹簧行程为0时力	N
+const float gas_spring_S = 0.1f;    //气弹簧行程  m 
+const float gas_spring_D = 0.006f;	//气弹簧气缸直径  m
+const float gas_spring_P = 10.6105f;//气弹簧行程为0时压强	Mpa
+const float gas_spring_L = 0.245f;	//气弹簧初始长度  m
+const float gas_spring_V = 7.97f * 1e-6;//气弹簧容器初始体积  m^3
+const float Hinge_gas_Lengh = 0.0481f;//大小腿转轴到气弹簧固定支座距离
+	
+
 float x3_balance_zero = 0.08f, x5_balance_zero = 0.040f;//腿摆角角度偏置   负值：腿摆角向膝关节方向偏	正值：腿摆角向膝关节反方向偏
 														//机体俯仰角度偏置 正值：越大越低头
 
 float Normal_balance_zero 		 = 0.08f  ;
 float High_balance_zero 		 = 0.08f   ; 
-float Rotate_balance_zero 		 =  0.17f ;
+float Rotate_balance_zero 		 = 0.17f ;
 float Rotate_balance_zero_adjust = -0.1f  ;		//两种腿长摆角偏置
 
 uint16_t quadrant_cnt = 0;
 static uint8_t kal_init = 0;
 int32_t double_cnt;
 float real_vel;
+float F_test[2];
+float x_fdb;
+float theta;
+float F_fdb = 0.0f;
+float yw_ddot;
+float Fwy;
 //位移 速度 yaw wz 左腿摆角 左腿摆角速度 右腿摆角 右腿摆角速度 机体倾角 机体倾角速度 
 //左轮转矩 右轮转矩 左腿转矩 右腿转矩
 
@@ -275,28 +290,44 @@ pid_t pid_L_test[2];
 static float wlr_fn_calc(float az, float Fy_fdb, float T0_fdb, float L0[3], float theta[3])
 {
 	
-//	
+	
+    Fwy = Fy_fdb * cosf(theta[0]) + T0_fdb * sinf(theta[0]) / L0[0];//轮子受到腿部机构竖直方向的作用力
+		yw_ddot = az
+                    - L0[2] * cosf(theta[0])
+                    + 2 * L0[1] * theta[1] * sinf(theta[0])
+                    + L0[0] * theta[2] * sinf(theta[0])
+                    + L0[0] * powf(theta[1], 2) * cosf(theta[0]);//轮子竖直方向的加速度
+    return Fwy + mw * GRAVITY + mw * yw_ddot;
+	
+	
+	//	去除AZ
+//	az = 0;
 //    float Fwy = Fy_fdb * cosf(theta[0]) + T0_fdb * sinf(theta[0]) / L0[0];//轮子受到腿部机构竖直方向的作用力
 //    float yw_ddot = az
 //                    - L0[2] * cosf(theta[0])
 //                    + 2 * L0[1] * theta[1] * sinf(theta[0])
 //                    + L0[0] * theta[2] * sinf(theta[0])
 //                    + L0[0] * powf(theta[1], 2) * cosf(theta[0]);//轮子竖直方向的加速度
-//    return Fwy + mw * GRAVITY + mw * yw_ddot;
 //	
+//    return Fwy + mw * GRAVITY + mw * yw_ddot;
+}
+
+static float gas_spring_F_Calc(vmc_t v)
+{
+	//活塞有效面积计算
+	const float A = PI * powf(gas_spring_D,2) / 4.0f;
+	//当前行程获取(类VMC思路求解)
+	x_fdb = gas_spring_L - \
+		sqrtf(powf(v.mp_fdb.xd + Hinge_gas_Lengh * arm_cos_f32(v.q_fdb[3]),2) + powf(v.mp_fdb.yd + Hinge_gas_Lengh * arm_sin_f32(v.q_fdb[3]),2));
+	//通过当前行程计算当前力
+	F_fdb = gas_spring_P * 1e+6 * gas_spring_V * A / (gas_spring_V - A * x_fdb);
+	//计算气弹簧摆角
+	theta = atan2f(v.mp_fdb.yd + Hinge_gas_Lengh * arm_sin_f32(v.q_fdb[3]) - v.mp_fdb.ym, 
+			v.mp_fdb.xd + Hinge_gas_Lengh * arm_cos_f32(v.q_fdb[3]) - v.mp_fdb.xm);
+	//分解到竖直方向上
+	float Fn_fdb = F_fdb * arm_sin_f32(theta);
 	
-	//	去除AZ
-	az = 0;
-    float Fwy = Fy_fdb * cosf(theta[0]) + T0_fdb * sinf(theta[0]) / L0[0];//轮子受到腿部机构竖直方向的作用力
-    float yw_ddot = az
-                    - L0[2] * cosf(theta[0])
-                    + 2 * L0[1] * theta[1] * sinf(theta[0])
-                    + L0[0] * theta[2] * sinf(theta[0])
-                    + L0[0] * powf(theta[1], 2) * cosf(theta[0]);//轮子竖直方向的加速度
-	
-    return Fwy + mw * GRAVITY + mw * yw_ddot;
-	
-    
+	return Fn_fdb;
 }
 
 static void k_array_fit(float K[4][10], float Ll_fdb, float Lr_fdb)
@@ -451,7 +482,6 @@ static void handle_jump_state(void)
             wlr.high_set = 0.12f;
         }
     }
-
     if (double_cnt) {
         double_cnt--;
     }
@@ -576,7 +606,6 @@ static void select_control_matrix(void)
     if (wlr.ctrl_mode != 2) {
         return;
     }
-
     if (wlr.prone_flag) {		//匍匐模式
         aMartix_Cover(lqr.K, (float*)K_Array_Prone, 4, 10);
     } 
@@ -675,9 +704,9 @@ static void update_fly_state(uint8_t index, float yaw_err)
 //    if (wlr.side[index].Fn_kal < 4.0f && rotate_flag == 0 && wlr.high_flag == 1
 //        && wlr.jump_flag == WLR_JUMP_IDLE && double_cnt <= 0 && chassis.recover_flag == 0
 //        && wlr.sky_over == 0 && wlr.sky_flag == WLR_SKY_IDLE && KEY_PRESS_POWER && yaw_err < 0.5f) {
-			  
+
     if (wlr.side[index].Fn_kal < -70.0f && rotate_flag == 0 && wlr.high_flag == 1 && chassis.recover_flag == 0
-		&& (wlr.sky_flag == WLR_SKY_IDLE) && (yaw_err < 0.5f || 1))  {
+		&& (wlr.sky_flag == WLR_SKY_IDLE) && (yaw_err < 0.5f && 0))  {
         wlr.side[index].fly_cnt += 4;
     } else if (wlr.side[index].fly_cnt > 0) {
         wlr.side[index].fly_cnt -= 8;
@@ -759,7 +788,7 @@ static void map_virtual_force(uint8_t index)
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
     } 
 		else if (wlr.high_flag == 1){
-        wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 25.0f
+        wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb)
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
     }
 		else {
@@ -859,7 +888,6 @@ void wlr_init(void)
 	}
 	//PID参数初始化
     pid_init(&pid_roll, NONE, 400, 0, 10000, 0, 50);
-	
 }
 
 void wlr_protest(void)
@@ -873,13 +901,14 @@ void wlr_protest(void)
 	wlr.s_adapt = wlr.s_fdb;
 }
 
+//王工知乎开源 求得整车实际速度
 float get_real_vel(void)
 {
 	float vel;
 	float wheel_left = -driver_motor[0].velocity - vmc[0].V_fdb.e.vw0_fdb - wlr.wy_fdb;
 	float wheel_right = driver_motor[1].velocity - vmc[1].V_fdb.e.vw0_fdb - wlr.wy_fdb;
-	vel = (wheel_left * WheelRadius + vmc[0].V_fdb.e.vy0_fdb * arm_sin_f32(lqr.X_fdb[4]) + vmc[0].L_fdb * lqr.X_fdb[5] * arm_cos_f32(lqr.X_fdb[4])
-		+ wheel_right * WheelRadius + vmc[1].V_fdb.e.vy0_fdb * arm_sin_f32(lqr.X_fdb[6]) + vmc[1].L_fdb * lqr.X_fdb[7] * arm_cos_f32(lqr.X_fdb[6]))
+	vel = (wheel_left * WheelRadius + vmc[0].V_fdb.e.vy0_fdb * arm_sin_f32(lqr.X_fdb[4]) + vmc[0].L_fdb * lqr.X_fdb[5] * arm_cos_f32(lqr.X_fdb[4]) \
+		+ wheel_right * WheelRadius + vmc[1].V_fdb.e.vy0_fdb * arm_sin_f32(lqr.X_fdb[6]) + vmc[1].L_fdb * lqr.X_fdb[7] * arm_cos_f32(lqr.X_fdb[6])) \
 		/ 2.0f;
 	return vel;
 }
@@ -900,7 +929,6 @@ void wlr_control(void)
     lqr.X_fdb[0] = wlr.s_fdb;
 //    lqr.X_fdb[1] = wlr.v_fdb;
 	lqr.X_fdb[1] = kal_fusion_vel.filter_vector[1];
-//	lqr.X_fdb[1] = kal_fusion_wheel[0].filter_vector[0];
     lqr.X_fdb[2] = -wlr.yaw_fdb;
     lqr.X_fdb[3] = -wlr.wz_fdb;
 	
@@ -927,9 +955,11 @@ void wlr_control(void)
         float L0_array[3] = {vmc[i].L_fdb, vmc[i].V_fdb.e.vy0_fdb, vmc[i].Acc_fdb.L0_ddot};
         float theta_array[3] = {lqr.X_fdb[4 + 2 * i], lqr.X_fdb[5 + 2 * i], lqr.dot_leg_w[i]};
         wlr.side[i].Fn_fdb = wlr_fn_calc(wlr.az_fdb, vmc[i].F_fdb.e.Fy_fdb, vmc[i].F_fdb.e.T0_fdb, L0_array, theta_array);
+		F_test[i] = gas_spring_F_Calc(vmc[i]);//气弹簧力解算
         kal_fn[i].measured_vector[0] = wlr.side[i].Fn_fdb;
         kalman_filter_update(&kal_fn[i]);
-        wlr.side[i].Fn_kal = kal_fn[i].filter_vector[0] - 250.0f * arm_sin_f32(0.1f);
+//        wlr.side[i].Fn_kal = kal_fn[i].filter_vector[0] - 250.0f * arm_sin_f32(0.1f);
+		wlr.side[i].Fn_kal = kal_fn[i].filter_vector[0] + F_test[i];
     }
 
     float yaw_err = circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, wlr.yaw_fdb, 2 * PI);

@@ -69,97 +69,50 @@ static void chassis_ramp(void)
 
 static void Fusion_Vel_Acc_Init(void)
 {
-//	//初始化二阶卡尔曼滤波
-//	//状态向量维度2	x = [v a]
-//	//控制向量维度0	u = 0
-//	//测量向量维度2	z = [v a]
-//	kalman_filter_init(&kal_fusion_vel,2,0,2);
-//	//设置状态转移矩阵A = [1，dt；0，1]匀加速模型
-//	const static float dt = 0.002f;//计算周期
-////		float *A = kal_fusion_wheel[i].A_data;
-////		A[0] = 1;
-////		A[1] = dt;
-////		A[2] = 0;
-////		A[3] = 1;
-//	kal_fusion_vel.A_data[0] = 1;
-//	kal_fusion_vel.A_data[1] = dt;
-//	kal_fusion_vel.A_data[2] = 0;
-//	kal_fusion_vel.A_data[3] = 1;
-//	//设置测量转移矩阵H = [1,0;0,1]
-////		float *H = kal_fusion_wheel[i].H_data;
-////		H[0] = 1;
-////		H[1] = 0;
-////		H[2] = 0;
-////		H[3] = 1;
-//	kal_fusion_vel.H_data[0] = 1;
-//	kal_fusion_vel.H_data[1] = 0;
-//	kal_fusion_vel.H_data[2] = 0;
-//	kal_fusion_vel.H_data[3] = 1;
-//	//设置过程噪声协方差矩阵Q
-////		float *Q = kal_fusion_wheel[i].Q_data;
-//	
-//	static float gamma0 = 0.5f * dt * dt;
-//	static float gamma1 = dt;
-////		Q[0] = gamma0 * sigma_q * gamma0;
-////		Q[1] = gamma0 * sigma_q * gamma1;
-////		Q[2] = gamma1 * sigma_q * gamma0;
-////		Q[3] = gamma1 * sigma_q * gamma1;
-//	kal_fusion_vel.Q_data[0] = gamma0 * sigma_qa * gamma0;
-//	kal_fusion_vel.Q_data[1] = gamma0 * sigma_qa * gamma1;
-//	kal_fusion_vel.Q_data[2] = gamma1 * sigma_qa * gamma0;
-//	kal_fusion_vel.Q_data[3] = gamma1 * sigma_qa * gamma1;
-//	//设置测量噪声协方差矩阵R
-////		float *R = kal_fusion_wheel[i].R_data;
-//	
-////		R[0] = sigma_v;
-////		R[1] = 0;
-////		R[2] = 0;
-////		R[3] = sigma_a;
-//	kal_fusion_vel.R_data[0] = sigma_v;
-//	kal_fusion_vel.R_data[1] = 0;
-//	kal_fusion_vel.R_data[2] = 0;
-//	kal_fusion_vel.R_data[3] = sigma_a;
+	//二阶卡尔曼观测器
+	//状态变量 x = [x,x_dot]
+	//输入变量 u = [x_dot_dot]
+	//观测变量 z = [x,x_dot]
 	kalman_filter_init(&kal_fusion_vel,2,1,2);
 	const static float dt = 0.002f;//计算周期
-	
+	//运动方程如下
 	//x = x + vt + 0.5att
 	//v = v + at
+	//状态转移阵A = [1,dt;0,1]
 	kal_fusion_vel.A_data[0] = 1;
 	kal_fusion_vel.A_data[1] = dt;
 	kal_fusion_vel.A_data[2] = 0;
 	kal_fusion_vel.A_data[3] = 1;
-	
+	//输入转移阵B = [0.5dt^2,dt]
 	kal_fusion_vel.B_data[0] = 0.5f * dt * dt;
 	kal_fusion_vel.B_data[1] = dt;
-	
+	//测量转移阵H = [1,0;0,1]
 	kal_fusion_vel.H_data[0] = 1;
 	kal_fusion_vel.H_data[1] = 0;
 	kal_fusion_vel.H_data[2] = 0;
 	kal_fusion_vel.H_data[3] = 1;
-	
+	//过程噪声协方差矩阵
+	//此处认为过程稳定，故设测量噪声阵远大于过程噪声阵
 	kal_fusion_vel.Q_data[0] = 0.1;
 	kal_fusion_vel.Q_data[1] = 0;
 	kal_fusion_vel.Q_data[2] = 0;
 	kal_fusion_vel.Q_data[3] = 0.5;
-	
+	//测量噪声协方差矩阵
 	kal_fusion_vel.R_data[0] = 10;
 	kal_fusion_vel.R_data[1] = 0;
 	kal_fusion_vel.R_data[2] = 0;
 	kal_fusion_vel.R_data[3] = 2000;
-	
 }
 
 void Fusion_Vel_Acc_Test(void)
 {
-	//轮毂速度 or 轮子相对大地的平动速度？
-//		kal_fusion_wheel[i].measured_vector[0] = ((i == 0) ? -driver_motor[0].velocity : driver_motor[1].velocity);
+	//轮子平动位移
 	kal_fusion_vel.measured_vector[0] = wlr.s_fdb;
-	//机身平动加速度
+	//轮子平动速度
 	kal_fusion_vel.measured_vector[1] = (-driver_motor[0].velocity + driver_motor[1].velocity) * 0.050f / 2.0f;
-	
+	//加速计测得绝对系加速度
 	kal_fusion_vel.control_vector[0] = chassis_imu.ax;
-//	kal_fusion_vel.control_vector[0] = chassis_imu.ax;
-	//更新
+	//更新观测器
 	kalman_filter_update(&kal_fusion_vel);
 }
 

@@ -35,10 +35,10 @@ void imu_get_data(imu_t *imu, uint32_t id, uint8_t *data)
     }
     case IMU_ACC_ID: {
         imu->ax = 1.0f * buffer[0];
-        imu->az = 1.0f * buffer[1];
+        imu->az = -1.0f * buffer[1];
         break;
     }
-    default:break;
+	default:break;
     }
     imu->online = 1;
 }
