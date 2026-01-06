@@ -245,6 +245,31 @@
           <WinNumber>1</WinNumber>
           <ItemText>kal_fn[1].filter_vector[0]</ItemText>
         </Ww>
+        <Ww>
+          <count>18</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>\\rm_main\../User/Model/wheel_leg_model.c\tlm.l_ref[1]</ItemText>
+        </Ww>
+        <Ww>
+          <count>19</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>lqr</ItemText>
+        </Ww>
+        <Ww>
+          <count>20</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>pid_L_test</ItemText>
+        </Ww>
+        <Ww>
+          <count>21</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>wlr.roll_offs</ItemText>
+        </Ww>
+        <Ww>
+          <count>22</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>pid_leg_length_fly</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
@@ -371,6 +396,46 @@
           <count>24</count>
           <WinNumber>2</WinNumber>
           <ItemText>F_fdb</ItemText>
+        </Ww>
+        <Ww>
+          <count>25</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>\\rm_main\../User/Model/leg_vmc.c\vmc[0].F_fdb.e.Fy_fdb,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>26</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>\\rm_main\../User/Model/leg_vmc.c\vmc[1].F_fdb.e.Fy_fdb</ItemText>
+        </Ww>
+        <Ww>
+          <count>27</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>\\rm_main\../User/Model/leg_vmc.c\vmc[0].L_fdb</ItemText>
+        </Ww>
+        <Ww>
+          <count>28</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>\\rm_main\../User/Model/leg_vmc.c\vmc[1].L_fdb</ItemText>
+        </Ww>
+        <Ww>
+          <count>29</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>\\rm_main\../User/Model/wlr.c\lqr.X_diff[4]</ItemText>
+        </Ww>
+        <Ww>
+          <count>30</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>\\rm_main\../User/Model/wlr.c\lqr.X_diff[6]</ItemText>
+        </Ww>
+        <Ww>
+          <count>31</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>\\rm_main\../User/Model/leg_vmc.c\vmc[0].F_ref.e.Fy_ref</ItemText>
+        </Ww>
+        <Ww>
+          <count>32</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>\\rm_main\../User/Model/leg_vmc.c\vmc[1].F_ref.e.Fy_ref</ItemText>
         </Ww>
       </WatchWindow2>
       <MemoryWindow1>

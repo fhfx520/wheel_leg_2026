@@ -30,6 +30,9 @@ extern ctrl_mode_e  ctrl_mode;
 extern float x3_balance_zero;
 extern float real_vel;
 extern float yw_ddot;
+extern float Fwy;
+extern float F_test[2];
+extern float F_wy[2];
 void log_scope_data_pkg(void)
 {
     switch(debug_wave) {
@@ -118,7 +121,14 @@ void log_scope_data_pkg(void)
 			log_scope_get_data(wlr.side[0].Fn_kal);
             log_scope_get_data(wlr.side[1].Fn_kal);
 			log_scope_get_data(chassis_imu.az);
-			log_scope_get_data(yw_ddot);
+			log_scope_get_data(F_test[0]);
+			log_scope_get_data(F_test[1]);
+			log_scope_get_data(F_wy[0]);
+			log_scope_get_data(F_wy[1]);
+			log_scope_get_data(vmc[0].F_fdb.e.Fy_fdb);
+			log_scope_get_data(vmc[1].F_fdb.e.Fy_fdb);
+			log_scope_get_data(vmc[0].F_ref.e.Fy_ref);
+			log_scope_get_data(vmc[1].F_ref.e.Fy_ref);
 //			log_scope_get_data(wlr.side[0].predict_wy);
 //            log_scope_get_data(wlr.side[0].wy);
 //            log_scope_get_data(wlr.side[1].predict_wy);
@@ -204,6 +214,7 @@ void log_scope_data_pkg(void)
 			log_scope_get_data(wlr.v_fdb);
 			log_scope_get_data(chassis_imu.ax);
 			log_scope_get_data(kal_fusion_vel.xhatminus_data[1]); 
+			log_scope_get_data(wlr.v_ref); 
 			break;
 		}
         default:break;
