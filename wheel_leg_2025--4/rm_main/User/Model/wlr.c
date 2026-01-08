@@ -501,7 +501,7 @@ static void handle_sky_state(void)
         wlr.high_set = ramp_calc(&sky_height_ramp, 0.15f);
         x3_balance_zero = 0.080f;
 //        x5_balance_zero = 0.10f;
-        x5_balance_zero = 0.15f;		//0.2f这个参数可以极大的抑制车自己往后跑
+        x5_balance_zero = 0.06f;		//0.2f这个参数可以极大的抑制车自己往后跑
         pid_leg_sky_jump[0].i_out = pid_leg_sky_jump[1].i_out = \
 	    pid_leg_sky_cover[0].i_out = pid_leg_sky_cover[1].i_out = \
 	    Fy_ramp[0].out = Fy_ramp[1].out= 0;
@@ -520,8 +520,8 @@ static void handle_sky_state(void)
 		
     } else if (wlr.sky_flag == WLR_SKY_EXTENDING) {
         wlr.high_set = 0.40f;
-        x3_balance_zero = 0.0f;
-        x5_balance_zero = 0.5f;
+        x3_balance_zero = 0.5f;
+        x5_balance_zero = 0.1f;
         if (fabs(0.4f - vmc[0].L_fdb) < 0.02f && fabs(0.4f - vmc[1].L_fdb) < 0.02f) {
             wlr.sky_cnt++;
         }
@@ -532,7 +532,7 @@ static void handle_sky_state(void)
     } else if (wlr.sky_flag == WLR_SKY_AIR_FOLDING) {
         wlr.high_set = 0.15f;
 		sky_height_ramp.out = wlr.high_set;
-        x3_balance_zero = 0.3f;
+        x3_balance_zero = 0.5f;
         x5_balance_zero = 0.0f;
         wlr.sky_cnt++;
         if (wlr.sky_cnt > 150) {
@@ -777,14 +777,14 @@ static void map_virtual_force(uint8_t index)
         wlr.side[index].Fy = pid_calc(&pid_leg_recover[index], 0.05f, vmc[index].L_fdb);
     } 
 	else if (wlr.sky_flag == WLR_SKY_FOLDING) {
-        wlr.side[index].Fy = pid_calc(&pid_leg_recover[index], tlm.l_ref[index], vmc[index].L_fdb) - 30.0f;
+        wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 30.0f;
     } 
 	else if (wlr.sky_flag == WLR_SKY_EXTENDING) {
         wlr.side[index].Fy = pid_calc(&pid_leg_sky_jump[index], tlm.l_ref[index], vmc[index].L_fdb);
     } 
 	else if (wlr.sky_flag == WLR_SKY_AIR_FOLDING) {
         Fy_temp = pid_calc(&pid_leg_sky_cover[index], tlm.l_ref[index], vmc[index].L_fdb);
-        wlr.side[index].Fy = ramp_calc(&Fy_ramp[index], Fy_temp) - 100.0f;
+        wlr.side[index].Fy = ramp_calc(&Fy_ramp[index], Fy_temp) - 75.0f;
     } 
 	else if (wlr.sky_flag == WLR_SKY_LANDING) {
          wlr.side[index].Fy = pid_calc(&pid_leg_length_fly[index], tlm.l_ref[index], vmc[index].L_fdb);
@@ -807,7 +807,7 @@ static void map_virtual_force(uint8_t index)
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
     }
 
-    if ((chassis.recover_flag == 1 || chassis.rescue_inter_flag == 2) && (wlr.sky_flag <= WLR_SKY_FOLDING)) {
+    if ((chassis.recover_flag == 1 || chassis.rescue_inter_flag == 2)) {
         wlr.side[index].T0 = 0;												
     } else {																
         wlr.side[index].T0 = lqr.U_ref[2 + index];
@@ -865,8 +865,8 @@ void wlr_init(void)
 		
 		vmc_init_five(&vmc[i], LegLengthParam_five);
 		//PID参数初始化      
-        pid_init(&pid_leg_sky_cover[i], NONE, 1500, 1.5f, 10000.0f, 150, 300);		//起身专用pid
-		pid_init(&pid_leg_sky_jump[i],  NONE,1800, 2.0, 10000, 100, 300);			//跳跃 专用pid	
+        pid_init(&pid_leg_sky_cover[i], NONE, 1500, 1.5f, 100.0f,150,300);		//起身专用pid
+		pid_init(&pid_leg_sky_jump[i],  NONE,1200, 0.0, 100, 0, 200);			    //跳跃 专用pid
 		pid_init(&pid_leg_recover[i], NONE, 1500, 1.5f, 10000.0f, 150, 300);		//起身专用pid
         pid_init(&pid_leg_length_fly[i], NONE, 600, 0.0, 15000, 0, 150);
         pid_init(&pid_L_test[i], NONE, 800, 2.0, 20000, 200, 300);
