@@ -322,7 +322,7 @@ static void chassis_data_input(void)
 			else 
 				chassis_scale.remote =	1.0f/660*2.5f;	
 			if(wlr.v_limit_flag[0] && wlr.v_limit_flag[1])
-				chassis_scale.remote =	1.0f/660*0.5f;
+				chassis_scale.remote =	1.0f/660*2.5f;
 			
             chassis.input.vx = -rc.ch4 * chassis_scale.remote;
             chassis.input.vy = rc.ch3 * chassis_scale.remote;

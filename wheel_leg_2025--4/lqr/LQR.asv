@@ -23,11 +23,11 @@ L = struct( 'L_l', 0, 'L_r', 0, 'Lw_l', 0, 'Lw_r', 0, 'Lb_l', 0, 'Lb_r', 0, 'Lb'
 % R = diag([400, 400, 225, 225]);
 
 % 腿长：0.18m
-Q = diag([3000, 4000 , 1000, 4000,    80000 , 1000, 80000 , 1000,    60000, 1000]);
-R = diag([300, 300, 350, 350]);
+Q = diag([3000, 6000 , 8000, 4000,    80000 , 1200, 80000 , 1200,    80000, 100]);
+R = diag([600, 800, 150, 150]);
 
 
-[L.L, L.L_l, L.L_r] = deal(0.18);            % 0.20m 腿长
+[L.L, L.L_l, L.L_r] = deal(0.15);            % 0.20m 腿长
 [M, I, L] = data_init(M, I, L);              % 参数初始化
 [M, I, L] = VMC_inverse_resolve(M, L, I, 90);% VMC 逆解算
 
@@ -45,4 +45,4 @@ K = lqrd(A_numeric, B_numeric, Q, R, 0.0001);%腿长拟合见data_init
 fprintf('{%s\n};', strjoin(arrayfun(@(i) ...
 sprintf('{%s}', strjoin(string(K(i, :)), ', ')), 1:size(K, 1), 'UniformOutput', false), ',\n'));
 %state_predict
-% P = state_predict(A_numeric, B_numeric, L.Rw, L.Rl, 0.002);
+P = state_predict(A_numeric, B_numeric, L.Rw, L.Rl, 0.002)

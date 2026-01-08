@@ -3,7 +3,7 @@
 <title>Static Call Graph - [rm_main\rm_main.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image rm_main\rm_main.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Wed Jan  7 05:25:42 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Thu Jan  8 21:02:50 2026
 <BR><P>
 <H3>Maximum Stack Usage =        624 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -4061,7 +4061,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[250]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[b6]"></a>chassis_task</STRONG> (Thumb, 8060 bytes, Stack size 8 bytes, chassis_task.o(.text.chassis_task))
+<P><STRONG><a name="[b6]"></a>chassis_task</STRONG> (Thumb, 8028 bytes, Stack size 8 bytes, chassis_task.o(.text.chassis_task))
 <BR><BR>[Stack]<UL><LI>Max Depth = 288<LI>Call Chain = chassis_task &rArr; wlr_control &rArr; tlm_gnd_roll_calc &rArr; kalman_filter_update &rArr; kalman_filter_K_update &rArr; arm_mat_inverse_f32
 </UL>
 <BR>[Calls]<UL><LI><a href="#[251]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_protest
@@ -4192,7 +4192,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(.rodata..L__const.MX_FREERTOS_Init.os_thread_def_STATUSTask)
 </UL>
-<P><STRONG><a name="[262]"></a>tlm_gnd_roll_calc</STRONG> (Thumb, 104 bytes, Stack size 24 bytes, wheel_leg_model.o(.text.tlm_gnd_roll_calc))
+<P><STRONG><a name="[262]"></a>tlm_gnd_roll_calc</STRONG> (Thumb, 92 bytes, Stack size 24 bytes, wheel_leg_model.o(.text.tlm_gnd_roll_calc))
 <BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = tlm_gnd_roll_calc &rArr; kalman_filter_update &rArr; kalman_filter_K_update &rArr; arm_mat_inverse_f32
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kalman_filter_update (via Veneer)
@@ -4271,7 +4271,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[250]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[250]"></a>wlr_control</STRONG> (Thumb, 5396 bytes, Stack size 120 bytes, wlr.o(.text.wlr_control))
+<P><STRONG><a name="[250]"></a>wlr_control</STRONG> (Thumb, 5460 bytes, Stack size 120 bytes, wlr.o(.text.wlr_control))
 <BR><BR>[Stack]<UL><LI>Max Depth = 280<LI>Call Chain = wlr_control &rArr; tlm_gnd_roll_calc &rArr; kalman_filter_update &rArr; kalman_filter_K_update &rArr; arm_mat_inverse_f32
 </UL>
 <BR>[Calls]<UL><LI><a href="#[24d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_calc (via Veneer)
@@ -4298,7 +4298,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_task
 </UL>
 
-<P><STRONG><a name="[246]"></a>wlr_init</STRONG> (Thumb, 860 bytes, Stack size 104 bytes, wlr.o(.text.wlr_init))
+<P><STRONG><a name="[246]"></a>wlr_init</STRONG> (Thumb, 856 bytes, Stack size 104 bytes, wlr.o(.text.wlr_init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 180<LI>Call Chain = wlr_init &rArr; twm_init &rArr; kalman_filter_init &rArr; malloc
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kalman_filter_init (via Veneer)
