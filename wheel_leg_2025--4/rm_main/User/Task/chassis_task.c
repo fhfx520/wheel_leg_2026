@@ -24,7 +24,6 @@
 
 extern uint16_t quadrant_cnt;
 extern pid_t pid_leg_recover[2];
-extern ramp_t recover_ramp;
 extern float real_vel;
 
 uint8_t rotate_flag;
@@ -953,7 +952,6 @@ static void chassis_self_rescue(void)//翻车自救
 
 	}
 }
-
 
 static void chassis_rescue_test(void)
 {

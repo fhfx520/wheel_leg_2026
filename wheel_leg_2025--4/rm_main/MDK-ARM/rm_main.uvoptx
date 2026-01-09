@@ -158,7 +158,7 @@
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>vmc</ItemText>
+          <ItemText>vmc,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>1</count>
@@ -456,6 +456,16 @@
           <count>32</count>
           <WinNumber>2</WinNumber>
           <ItemText>\\rm_main\../User/Model/leg_vmc.c\vmc[1].F_ref.e.Fy_ref</ItemText>
+        </Ww>
+        <Ww>
+          <count>33</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>\\rm_main\../User/Model/leg_vmc.c\vmc[0].quadrant</ItemText>
+        </Ww>
+        <Ww>
+          <count>34</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>\\rm_main\../User/Model/leg_vmc.c\vmc[1].quadrant</ItemText>
         </Ww>
       </WatchWindow2>
       <MemoryWindow1>

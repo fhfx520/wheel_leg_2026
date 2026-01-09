@@ -245,6 +245,16 @@ void vmc_forward_solution_five(vmc_t* v, float q1, float q4, float w1, float w4,
 		else if (v->mp_fdb.xc > 0.0f && v->mp_fdb.yc < 0.0f)
 			v->quadrant = 4;
 		else v->quadrant = 0;
+		/*
+		象限如下示意图，膝关节朝后
+			     <-- v
+			      |
+			   3  |  4
+			______|______
+			      |
+			   2  |  1
+			      |
+		*/
 		
 	
     //------------------------速度运动学正解算 ------------------------//将关节角速度[w1, w4]映射到末端执行器的线速度vy0和角速度w0
