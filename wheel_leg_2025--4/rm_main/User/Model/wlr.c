@@ -14,14 +14,9 @@
 #include "control_def.h"
 #include "drv_dm_motor.h"
 
-extern uint32_t rescue_cnt_L;
-extern uint32_t rescue_cnt_R;
-extern uint8_t rotate_ramp_flag;
-extern uint8_t rppppp_flag;
-
 #define WLR_SIGN(x) ((x) > 0? (1): (-1))
 
-static inline uint8_t wlr_both_legs_flying(void)		//使用inline关键字修饰表示为内联函数，即 不是调用函数而是直接使用return后面的代码
+static inline uint8_t wlr_both_legs_flying(void)
 {
     return wlr.side[WLR_SIDE_LEFT].fly_flag && wlr.side[WLR_SIDE_RIGHT].fly_flag;
 }
@@ -31,31 +26,27 @@ static inline uint8_t wlr_either_leg_flying(void)
     return wlr.side[WLR_SIDE_LEFT].fly_flag || wlr.side[WLR_SIDE_RIGHT].fly_flag;
 }
 
-#define CHASSIS_PERIOD_DU 2
-
-const float LegLengthParam[2] = {0.215f, 0.258f};//大小腿长度
 const float LegLengthParam_five[5] = {0.215f, 0.258f, 0.258f, 0.215f, 0.0f};
 
-const float mb = 20.75f , ml = 2.09f, mw = 0.715f;//机体质量 腿部质量 轮子质量 
-const float BodyWidth = 0.48f;//两轮间距
-const float WheelRadius = 0.050f;//0.075f//轮子半径 气胎
+const float mb = 20.75f , ml = 2.09f, mw = 0.715f;	//机体质量 腿部质量 轮子质量 
+const float BodyWidth = 0.48f;						//两轮间距
+const float WheelRadius = 0.050f;					//0.075f//轮子半径 气胎
 float LegLengthMax = 0.40f, LegLengthMin = 0.15f;
 
 const float LegLengthHighFly = 0.28f; //长腿腿长腾空 0.28
 const float LegLengthFly 	 = 0.20f; //正常腿长腾空
 const float LegLengthHigh2 	 = 0.34f; //超长腿
-const float LegLengthHigh 	 = 0.23f;//长腿 0.23
+const float LegLengthHigh 	 = 0.23f; //长腿 0.23
 const float LegLengthRotate  = 0.05f; //正常
 const float LegLengthNormal  = 0.18f; //正常
 
-const float gas_spring_F = 300.0f;	//气弹簧行程为0时力	N
-const float gas_spring_S = 0.1f;    //气弹簧行程  m 
-const float gas_spring_D = 0.006f;	//气弹簧气缸直径  m
-const float gas_spring_P = 10.6105f;//气弹簧行程为0时压强	Mpa
-const float gas_spring_L = 0.245f;	//气弹簧初始长度  m
-const float gas_spring_V = 7.97f * 1e-6;//气弹簧容器初始体积  m^3
-const float Hinge_gas_Lengh = 0.0481f;//大小腿转轴到气弹簧固定支座距离
-	
+const float gas_spring_F = 300.0f;			//气弹簧行程为0时力	N
+const float gas_spring_S = 0.1f;    		//气弹簧行程  m 
+const float gas_spring_D = 0.006f;			//气弹簧气缸直径  m
+const float gas_spring_P = 10.6105f;		//气弹簧行程为0时压强	Mpa
+const float gas_spring_L = 0.245f;			//气弹簧初始长度  m
+const float gas_spring_V = 7.97f * 1e-6;	//气弹簧容器初始体积  m^3
+const float Hinge_gas_Lengh = 0.0481f;		//大小腿转轴到气弹簧固定支座距离
 
 float x3_balance_zero = 0.08f, x5_balance_zero = 0.040f;//腿摆角角度偏置   负值：腿摆角向膝关节方向偏	正值：腿摆角向膝关节反方向偏
 														//机体俯仰角度偏置 正值：越大越低头
@@ -67,16 +58,16 @@ float Rotate_balance_zero_adjust = -0.1f  ;		//两种腿长摆角偏置
 float IMU_Roll_balance_zero		 = 0.037f;		//陀螺仪roll偏置
 
 uint16_t quadrant_cnt = 0;
-static uint8_t kal_init = 0;
-int32_t double_cnt;
-float real_vel;
-float F_test[2];
-float x_fdb;
-float theta;
-float F_fdb = 0.0f;
-float yw_ddot;
-float Fwy;
-float F_wy[2];
+static uint8_t kal_init = 0;	//用于只初始化一次卡尔曼
+int32_t double_cnt;				//磕上台阶
+float F_test[2];				//获取气弹簧解算后的结果
+float x_fdb;					//气弹簧被压缩长度
+float theta;					//气弹簧摆角
+float F_fdb = 0.0f;				//气弹簧的力分解到竖直方向上
+float yw_ddot;					//轮子竖直方向的加速度
+float Fwy;						//轮子受到腿部机构竖直方向的作用力
+float F_wy[2];					//轮子受到腿部机构竖直方向的作用力
+
 //位移 速度 yaw wz 左腿摆角 左腿摆角速度 右腿摆角 右腿摆角速度 机体倾角 机体倾角速度 
 //左轮转矩 右轮转矩 左腿转矩 右腿转矩
 
@@ -280,7 +271,6 @@ kalman_filter_t tfmini_fn[2];
 ramp_t height_ramp;
 ramp_t jump_ramp;
 ramp_t sky_ramp;
-ramp_t recover_ramp;
 ramp_t wz_ramp;
 ramp_t Fy_ramp[2];	
 ramp_t sky_height_ramp;
@@ -289,8 +279,6 @@ pid_t pid_rescue[2];
 pid_t pid_leg_recover[2];
 pid_t pid_leg_sky_cover[2];	
 pid_t pid_leg_sky_jump[2];	
-pid_t pid_leg_length[2];
-pid_t pid_leg_length_fast[2];
 pid_t pid_leg_length_fly[2];
 pid_t pid_roll;
 pid_t pid_L_test[2];
@@ -501,7 +489,7 @@ static void handle_sky_state(void)
         wlr.high_set = ramp_calc(&sky_height_ramp, 0.15f);
         x3_balance_zero = 0.080f;
 //        x5_balance_zero = 0.10f;
-        x5_balance_zero = 0.06f;		//0.2f这个参数可以极大的抑制车自己往后跑
+        x5_balance_zero = 0.06f;
         pid_leg_sky_jump[0].i_out = pid_leg_sky_jump[1].i_out = \
 	    pid_leg_sky_cover[0].i_out = pid_leg_sky_cover[1].i_out = \
 	    Fy_ramp[0].out = Fy_ramp[1].out= 0;
@@ -647,7 +635,7 @@ static void select_control_matrix(void)
 //	else if (wlr.sky_flag == WLR_SKY_EXTENDING) {		
 //        aMartix_Cover(lqr.K, (float*)K_Array_Leg_030, 4, 10);
 //    } 
-	else if (wlr.sky_flag == WLR_SKY_AIR_FOLDING) {		//空中收腿 || 落地 || 完成飞天
+	else if (wlr.sky_flag == WLR_SKY_AIR_FOLDING) {		//空中收腿
         aMartix_Cover(lqr.K, (float*)K_Array_Fly, 4, 10);
     }
 	else if (wlr.sky_flag == WLR_SKY_LANDING) {
@@ -853,7 +841,6 @@ void wlr_init(void)
 	ramp_init(&jump_ramp, 0.007f, -1.5f, 1.5f);
 	ramp_init(&wz_ramp, 0.001f,  0,  3.0f);		//
 	ramp_init(&sky_ramp, 0.001f, 0,  1.0f);
-	ramp_init(&recover_ramp, 0.001f, 0,  1.0f);	
 	ramp_init(&Fy_ramp[0], 2.0f, -500.0f,  500.0f);
 	ramp_init(&Fy_ramp[1], 2.0f, -500.0f,  500.0f);
 	
@@ -861,9 +848,8 @@ void wlr_init(void)
 	
         for (int i = 0; i < WLR_SIDE_COUNT; i++) {
 		//腿部长度初始化
-//		vmc_init(&vmc[i], LegLengthParam);
-		
 		vmc_init_five(&vmc[i], LegLengthParam_five);
+			
 		//PID参数初始化      
         pid_init(&pid_leg_sky_cover[i], NONE, 1500, 1.5f, 100.0f,150,300);		//起身专用pid
 		pid_init(&pid_leg_sky_jump[i],  NONE,1200, 0.0, 100, 0, 200);			    //跳跃 专用pid
@@ -898,8 +884,6 @@ void wlr_init(void)
 
 void wlr_protest(void)
 {
-	pid_leg_length[0].i_out = 0;
-	pid_leg_length[1].i_out = 0;
 	pid_leg_recover[0].i_out = 0;
 	pid_leg_recover[1].i_out = 0;
     height_ramp.out = 0.1f;
@@ -925,7 +909,7 @@ void wlr_control(void)
     wlr.s_fdb = (wlr.side[0].qy * WheelRadius + wlr.side[1].qy * WheelRadius) / 2.0f;
     wlr.v_fdb = (wlr.side[0].wy * WheelRadius + wlr.side[1].wy * WheelRadius) / 2.0f;
 //    data_limit(&wlr.s_fdb, -3.2f, 3.2f);
-	real_vel = get_real_vel();
+	wlr.real_vel = get_real_vel();
 	Fusion_Vel_Acc_Test();
     for (int i = 0; i < WLR_SIDE_COUNT; i++) {
         vmc_forward_solution_five(&vmc[i], wlr.side[i].q2, wlr.side[i].q1, wlr.side[i].w2,

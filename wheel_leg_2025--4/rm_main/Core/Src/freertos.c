@@ -6,13 +6,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2024 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2025 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -61,17 +60,17 @@ osThreadId StatusTaskHandle;
 osThreadId ChassisTaskHandle;
 osThreadId GimbalTaskHandle;
 osThreadId ShootTaskHandle;
-osThreadId UITaskHandle;
+//osThreadId UITaskHandle;
 osThreadId DebugTaskHandle;
 /* USER CODE END Variables */
-osThreadId StartTaskHandle;
+osThreadId defaultTaskHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
 
 /* USER CODE END FunctionPrototypes */
 
-void start_task(void const * argument);
+void StartDefaultTask(void const * argument);
 
 extern void MX_USB_DEVICE_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
@@ -135,9 +134,9 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
-  /* definition and creation of StartTask */
-  osThreadDef(StartTask, start_task, osPriorityNormal, 0, 128);
-  StartTaskHandle = osThreadCreate(osThread(StartTask), NULL);
+  /* definition and creation of defaultTask */
+  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
+  defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -162,31 +161,31 @@ void MX_FREERTOS_Init(void) {
   osThreadDef(DebugTask, debug_task, osPriorityLow, 0, 128);
   DebugTaskHandle = osThreadCreate(osThread(DebugTask), NULL);
 	
-  osThreadDef(UITask, ui_task, osPriorityLow, 0, 512);
-  DebugTaskHandle = osThreadCreate(osThread(UITask), NULL);
+//  osThreadDef(UITask, ui_task, osPriorityLow, 0, 512);
+//  DebugTaskHandle = osThreadCreate(osThread(UITask), NULL);
+
   /* USER CODE END RTOS_THREADS */
 
 }
 
-/* USER CODE BEGIN Header_start_task */
+/* USER CODE BEGIN Header_StartDefaultTask */
 /**
-  * @brief  Function implementing the StartTask thread.
+  * @brief  Function implementing the defaultTask thread.
   * @param  argument: Not used
   * @retval None
   */
-/* USER CODE END Header_start_task */
-__weak void start_task(void const * argument)
+/* USER CODE END Header_StartDefaultTask */
+void StartDefaultTask(void const * argument)
 {
   /* init code for USB_DEVICE */
   MX_USB_DEVICE_Init();
-  /* USER CODE BEGIN start_task */
-
+  /* USER CODE BEGIN StartDefaultTask */
   /* Infinite loop */
   for(;;)
   {
-      osDelay(100);
+    osDelay(1);
   }
-  /* USER CODE END start_task */
+  /* USER CODE END StartDefaultTask */
 }
 
 /* Private application code --------------------------------------------------*/

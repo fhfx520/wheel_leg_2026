@@ -8,7 +8,6 @@
 #define	DBUS_HUART	 huart1
 #define JUDGE_HUART  huart2
 #define TFHEAD_HUART huart3
-
 #define DEBUG_HUART	 huart6
 
 void usart_comm_init(void);

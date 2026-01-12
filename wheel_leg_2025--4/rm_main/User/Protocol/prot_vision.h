@@ -124,7 +124,6 @@ extern vision_t vision;
 extern uint8_t ID_judge;
 
 void vision_get_data(uint8_t *data);
-void vision_output_data(void);
 uint8_t vision_check_offline(void);
 void vision_gimbal_get_data(vision_t * vision, uint32_t id, uint8_t *data);
 void vision_num(void);

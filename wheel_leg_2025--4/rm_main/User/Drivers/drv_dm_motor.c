@@ -46,9 +46,8 @@ void dm_motor_init(dm_motor_t *motor, can_channel_e can_channel, uint32_t id, fl
     motor->mst_id = mst_id;
 	
 	 for (int i = 0; i < 10; i++)
-	dm_motor_set_control_cmd(motor, CMD_RESET_MODE);
+		dm_motor_set_control_cmd(motor, CMD_RESET_MODE);
 		 
-//	dm_motor_set_control_cmd(motor, CMD_ENABLE_MODE);
 	HAL_Delay(100);
     dm_motor_set_control_para(motor, 0, 0, 0, 0, 0);
     dm_motor_output_single_data(motor);
@@ -91,8 +90,6 @@ void dm_motor_get_data(uint8_t id, uint8_t *data)
         object = list_entry(node, dm_motor_t, list);
         if (object->mst_id == id) {
             dm_motor_get_single_data(object, data);
-//        } else if (object->can_id >> 7 == 1){//ÓÐerror              
-//            dm_error_opetate(object, data);
         }
     }
 }

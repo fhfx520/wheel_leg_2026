@@ -10,14 +10,14 @@ typedef struct
     uint8_t volume_percent;         //电容电压百分比
     struct
     {
-            uint8_t cap_v_over : 1;
-            uint8_t cap_v_low : 1;
-            uint8_t bat_v_over : 1;
-            uint8_t bat_v_low : 1;
-            uint8_t cap_i_over : 1;
-            uint8_t chassis_i_over : 1;
-            uint8_t chassis_msg_miss : 1;
-            uint8_t judge_msg_miss : 1;	
+		uint8_t cap_v_over : 1;
+		uint8_t cap_v_low : 1;
+		uint8_t bat_v_over : 1;
+		uint8_t bat_v_low : 1;
+		uint8_t cap_i_over : 1;
+		uint8_t chassis_i_over : 1;
+		uint8_t chassis_msg_miss : 1;
+		uint8_t judge_msg_miss : 1;	
     }state;
 } supercap_t;
 
@@ -25,8 +25,8 @@ typedef struct
 
 typedef struct
 {
-		float rotate_add_power;
-		float normal_add_power;
+	float rotate_add_power;
+	float normal_add_power;
     float judge_chassis_power;              //裁判系统反馈的底盘实时功率
     float judge_power_buffer;               //裁判系统反馈的底盘缓冲能量
     float judge_max_power;                  //裁判系统反馈的底盘功率上限

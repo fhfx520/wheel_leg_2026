@@ -40,10 +40,4 @@
 #define CHASSIS_YAW_FIGHT   ((CHASSIS_YAW_OFFSET + 8192/4) % 8192)
 #define CHASSIS_ROTATE_SPEED  10.5f //rad/s --- 7.5
 
-/*-----------------------------gimbal----------------------------*/
-
-#define GIMBAL_PIT_CENTER_OFFSET    5400
-#define GIMBAL_PIT_MAX              6400
-#define GIMBAL_PIT_MIN              5000
-
 #endif

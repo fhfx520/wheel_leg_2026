@@ -1,4 +1,4 @@
-#include "us_time.h"
+#include "us_time.h"		//主要要用于ui_task
 
 prv_us_time_t prv_us_time;
 
@@ -46,7 +46,7 @@ void us_timer_end(void)
  * @param[in] us_time: 毫秒定时器实例
  * @retval    返回与上次运行此函数所距离的时间
  */
-float us_timer_period_test(us_time_t* us_time)
+float us_timer_fperiod_test(us_time_t* us_time)
 {
     us_time->now_tim_cnt = us_timer_get();
     us_time->now_overflow_cnt = prv_us_time.overflow_cnt;

@@ -9,7 +9,6 @@
 #include "status_task.h"
 
 uint32_t board_send_cnt;
-int8_t cnt_init = 20;
 void comm_task(void const* argument)
 {
     uint32_t thread_wake_time = osKernelSysTick();
@@ -24,8 +23,6 @@ void comm_task(void const* argument)
         for (int i = 0; i < 3; i+=2){
             if( joint_motor[i].state ==0){
                 dm_motor_set_control_cmd(&joint_motor[i], CMD_ENABLE_MODE);	  
-//            if(cnt_init > 0 && cnt_init--){
-//                dm_motor_set_control_cmd(&joint_motor[i], CMD_ENABLE_MODE);					
             }else {
 				dm_motor_output_single_data(&joint_motor[i]);   
             }        
@@ -39,8 +36,6 @@ void comm_task(void const* argument)
          for (int i = 1; i < 4; i+=2){
             if( joint_motor[i].state == 0){
                 dm_motor_set_control_cmd(&joint_motor[i], CMD_ENABLE_MODE);	
-//			            if(cnt_init > 0 && cnt_init--){
-//                dm_motor_set_control_cmd(&joint_motor[i], CMD_ENABLE_MODE);	
             }else{
 				dm_motor_output_single_data(&joint_motor[i]);   
             } 

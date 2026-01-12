@@ -25,8 +25,8 @@ void power_init(void)
     power_control.judge_max_power    = 55;
     power_control.min_buffer         = 30;
     power_control.limit_kp           = 0.4f;
-		power_control.rotate_add_power   = -10.0f;
-		power_control.normal_add_power   = 120.0f;
+	power_control.rotate_add_power   = -10.0f;
+	power_control.normal_add_power   = 120.0f;
 //    power_control.limit_power        = 170.0f;//170 250
     supercap.max_volage              = 23.6f;
     supercap.min_volage              = 10.0f;
@@ -36,17 +36,18 @@ void power_init(void)
 
 void power_judge_update(void)
 {
-    power_control.judge_chassis_power = power_heat_data.chassis_power;
-		if(robot_status.chassis_power_limit != 0)
-    power_control.judge_max_power     = robot_status.chassis_power_limit;
+    power_control.judge_chassis_power = power_heat_data.chassis_power;			//裁判系统反馈的底盘实时功率
+	if(robot_status.chassis_power_limit != 0)
+		power_control.judge_max_power     = robot_status.chassis_power_limit;	//裁判系统反馈的底盘功率上限
 		
-    power_control.judge_power_buffer  = power_heat_data.buffer_energy;
-		if (chassis.mode == CHASSIS_MODE_REMOTER_ROTATE1 ||
-        chassis.mode == CHASSIS_MODE_REMOTER_ROTATE2 ||
-        chassis.mode == CHASSIS_MODE_KEYBOARD_ROTATE){ 
-				power_control.limit_power = power_control.judge_max_power + power_control.rotate_add_power;
+    power_control.judge_power_buffer  = power_heat_data.buffer_energy;			//裁判系统反馈的底盘缓冲能量
+		
+	if (chassis.mode == CHASSIS_MODE_REMOTER_ROTATE1 ||
+		chassis.mode == CHASSIS_MODE_REMOTER_ROTATE2 ||
+		chassis.mode == CHASSIS_MODE_KEYBOARD_ROTATE){
+		power_control.limit_power = power_control.judge_max_power + power_control.rotate_add_power;
     } else 
-				power_control.limit_power = power_control.judge_max_power + power_control.normal_add_power;
+		power_control.limit_power = power_control.judge_max_power + power_control.normal_add_power;
 }
 
 float motor_power_calcu(float current, float wheel_speed_fdb)
@@ -137,7 +138,6 @@ float power_limit_speed(void)
 
 void power_get_data(uint8_t *data)
 {
-	
     //0x100
     float cap_voltage_buf;
     float chassis_current_buf;
@@ -148,28 +148,14 @@ void power_get_data(uint8_t *data)
     power_control.online = 1;
     supercap.volage = cap_voltage_buf;
     supercap.volume_percent = (supercap.volage - supercap.min_volage) / (supercap.max_volage - supercap.min_volage) * 100.0f;
-		if(power_control.online == 0)
-			 supercap.volume_percent = 0;
+	if(power_control.online == 0)
+		supercap.volume_percent = 0;
 		
     supercap.current = chassis_current_buf;
-    //0x101
-//    uint8_t cap_state_buf;
-//    memcpy(&cap_state_buf,data,1);
-//    supercap.state.cap_v_over = cap_state_buf  & 1;
-//    supercap.state.cap_v_low = cap_state_buf >> 1 & 1;
-//    supercap.state.bat_v_over = cap_state_buf >> 2 & 1;
-//    supercap.state.bat_v_low = cap_state_buf >> 3 & 1;
-//    supercap.state.cap_i_over = cap_state_buf >> 4 & 1;
-//    supercap.state.chassis_i_over = cap_state_buf >> 5 & 1;
-//    supercap.state.chassis_msg_miss = cap_state_buf >> 6 & 1;
-//    supercap.state.judge_msg_miss = cap_state_buf >> 7;
-//    memcpy(&supercap.POWER_MODE,data+1,sizeof(power_mode));
-
 }
 
 void power_get_status(uint8_t *data)
 {
-	
     //0x101
     uint8_t cap_state_buf;
     memcpy(&cap_state_buf,data,1);

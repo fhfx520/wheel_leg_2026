@@ -3,6 +3,7 @@
 
 #include "pid.h"
 #include "stdint.h"
+#include "string.h"
 
 #define SHOOT_PERIOD 2
 

@@ -17,8 +17,8 @@ typedef enum {
     WLR_SKY_FOLDING = 1,		//平地收腿
     WLR_SKY_EXTENDING = 2,		//空中伸腿
     WLR_SKY_AIR_FOLDING = 3,	//空中收腿
-    WLR_SKY_LANDING = 4,		//落地
-	WLR_SKY_STAND = 5,		
+    WLR_SKY_LANDING = 4,		//落地伸腿
+	WLR_SKY_STAND = 5,			//落地
 } wlr_sky_state_e;
 
 typedef enum {
@@ -58,14 +58,12 @@ typedef struct
     //期望限制系数
     float K_ref[2];
     //控制标志
-    uint8_t jump_flag, jump_pre, high_flag, power_flag, prone_flag, ctrl_mode, quarand_, crash_flag ,joint_all_online;
+    uint8_t jump_flag, jump_pre, high_flag, prone_flag, ctrl_mode, crash_flag ,joint_all_online;
 	/*	jump_flag 	参考 wlr_jump_state_e		
 		jump_pre 	上台阶膝关节朝后完成标志位		
 		high_flag 	=0短腿 =1中腿 =2长腿
-		power_flag  未使用		
 		prone_flag  =0保护 =1趴下				
 		ctrl_mode 	=0 保护模式 =1位控 =2力控
-		quarand_ 	未使用			
 		crash_flag  =1两条腿磕到台阶
 		joint_all_online = 1 所有关节电机都在线
 		*/
@@ -82,6 +80,7 @@ typedef struct
 	uint16_t s_wait;//定点wait
 		
 	uint8_t v_limit_flag[2];		//用于限制在空中的速度输入	
+	float real_vel;					//整车实际速度
 	
     //单侧控制参数
     struct
@@ -110,8 +109,6 @@ typedef struct
 
 extern wlr_t wlr;
 extern lqr_t lqr;
-extern pid_t pid_leg_length[2];
-extern pid_t pid_leg_length_fast[2];
 extern pid_t pid_roll;
 extern pid_t pid_rescue[2];
 extern pid_t pid_L_test[2];

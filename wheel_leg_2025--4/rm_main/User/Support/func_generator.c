@@ -1,4 +1,5 @@
 #include "func_generator.h"
+#include "math_lib.h"
 #include "stdlib.h"
 
 #define LIMIT_MIN_MAX(x,min,max) (x)=(((x)<=(min))?(min):(((x)>=(max))?(max):(x)))
@@ -32,7 +33,7 @@ float FGT_sin_calc(FGT_sin_t* sin)
     float ac = 0;
     ac = (sin->A) * sinf((2 * PI / sin->T) * (sin->time) + sin->phi); //计算交流量
     sin->time = fmodf(sin->time + sin->Td, sin->T);                   //迭代时间(先输出再计算，使从0开始)
-    if(sin->time > 0.9 * sin->T)
+    if(sin->time > 0.9f * sin->T)
         try_try++;
     
     sin->out = ac + sin->dc;                                          //计算交直流量，迭代输出记录
