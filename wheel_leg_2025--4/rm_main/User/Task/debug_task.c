@@ -22,7 +22,7 @@
 #include "mode_switch_task.h"
 
 #define row_debug 2 * 10
-uint8_t debug_wave = 11;
+uint8_t debug_wave = 7;
 float test_hex = 1;
 extern FGT_sin_t FGT_sin_chassis;
 extern  uint16_t quadrant_cnt;
@@ -116,19 +116,20 @@ void log_scope_data_pkg(void)
 //            log_scope_get_data(wlr.high_set);
             log_scope_get_data(wlr.side[0].fly_flag);
             log_scope_get_data(wlr.side[1].fly_flag);
-			log_scope_get_data(wlr.side[0].fly_cnt);
-            log_scope_get_data(wlr.side[1].fly_cnt);
 			log_scope_get_data(wlr.side[0].Fn_kal);
             log_scope_get_data(wlr.side[1].Fn_kal);
-			log_scope_get_data(chassis_imu.az);
-			log_scope_get_data(F_test[0]);
-			log_scope_get_data(F_test[1]);
-			log_scope_get_data(F_wy[0]);
-			log_scope_get_data(F_wy[1]);
-			log_scope_get_data(vmc[0].F_fdb.e.Fy_fdb);
-			log_scope_get_data(vmc[1].F_fdb.e.Fy_fdb);
-			log_scope_get_data(vmc[0].F_ref.e.Fy_ref);
-			log_scope_get_data(vmc[1].F_ref.e.Fy_ref);
+			log_scope_get_data(lqr.X_diff[8]);
+            log_scope_get_data(lqr.X_diff[9]);
+			log_scope_get_data(lqr.X_diff[4]);
+            log_scope_get_data(lqr.X_diff[5]);
+			log_scope_get_data(lqr.X_diff[6]);
+            log_scope_get_data(lqr.X_diff[7]);
+			log_scope_get_data(lqr.U_ref[2]);
+            log_scope_get_data(lqr.U_ref[3]);
+			log_scope_get_data(x3_balance_zero);
+            log_scope_get_data(x5_balance_zero);
+			log_scope_get_data(lqr.X_fdb[1]);
+			log_scope_get_data(lqr.U_ref[0]);
 //			log_scope_get_data(wlr.side[0].predict_wy);
 //            log_scope_get_data(wlr.side[0].wy);
 //            log_scope_get_data(wlr.side[1].predict_wy);

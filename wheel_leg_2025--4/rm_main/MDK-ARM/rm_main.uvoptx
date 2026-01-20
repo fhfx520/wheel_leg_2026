@@ -290,6 +290,21 @@
           <WinNumber>1</WinNumber>
           <ItemText>vmc[0].V_fdb.e.vw0_fdb</ItemText>
         </Ww>
+        <Ww>
+          <count>27</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>ff_Fy_1</ItemText>
+        </Ww>
+        <Ww>
+          <count>28</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>wlr.inertial_offs</ItemText>
+        </Ww>
+        <Ww>
+          <count>29</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>pid_leg_recover</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
@@ -466,6 +481,21 @@
           <count>34</count>
           <WinNumber>2</WinNumber>
           <ItemText>\\rm_main\../User/Model/leg_vmc.c\vmc[1].quadrant</ItemText>
+        </Ww>
+        <Ww>
+          <count>35</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>\\rm_main\../User/Model/wlr.c\pid_L_test[0]</ItemText>
+        </Ww>
+        <Ww>
+          <count>36</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>ff_Fy_0</ItemText>
+        </Ww>
+        <Ww>
+          <count>37</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>height_ramp</ItemText>
         </Ww>
       </WatchWindow2>
       <MemoryWindow1>

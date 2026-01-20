@@ -69,7 +69,7 @@ typedef struct
 		crash_flag  =1两条腿磕到台阶
 		joint_all_online = 1 所有关节电机都在线
 		*/
-		
+	uint8_t last_high_flag;
 	uint16_t jump_cnt, jump_run;
 		//jump_cnt 用于软件延时变化腿长		jump_run 用于软件延时判断两条腿是否撞击台阶
 	
@@ -116,7 +116,8 @@ extern pid_t pid_roll;
 extern pid_t pid_rescue[2];
 extern pid_t pid_L_test[2];
 extern int32_t double_cnt;
-
+extern float x3_balance_zero,x5_balance_zero;
+extern uint8_t off_land_flag;
 void wlr_init(void);
 void wlr_protest(void);
 void wlr_control(void);

@@ -39,7 +39,7 @@ const float LegLengthParam_five[5] = {0.215f, 0.258f, 0.258f, 0.215f, 0.0f};
 const float mb = 20.75f , ml = 2.09f, mw = 0.715f;//机体质量 腿部质量 轮子质量 
 const float BodyWidth = 0.48f;//两轮间距
 const float WheelRadius = 0.050f;//0.075f//轮子半径 气胎
-float LegLengthMax = 0.40f, LegLengthMin = 0.15f;
+float LegLengthMax = 0.37f, LegLengthMin = 0.11f;
 
 const float LegLengthHighFly = 0.28f; //长腿腿长腾空 0.28
 const float LegLengthFly 	 = 0.20f; //正常腿长腾空
@@ -64,7 +64,7 @@ float Normal_balance_zero 		 = 0.08f  ;
 float High_balance_zero 		 = 0.10f   ; 
 float Rotate_balance_zero 		 = 0.17f ;
 float Rotate_balance_zero_adjust = -0.1f  ;		//两种腿长摆角偏置
-float IMU_Roll_balance_zero		 = 0.037f;		//陀螺仪roll偏置
+float IMU_Roll_balance_zero		 = 0.0f;		//陀螺仪roll偏置
 
 uint16_t quadrant_cnt = 0;
 static uint8_t kal_init = 0;
@@ -77,6 +77,10 @@ float F_fdb = 0.0f;
 float yw_ddot;
 float Fwy;
 float F_wy[2];
+float ff_Fy_0 = -30.0f;
+float ff_Fy_1 = -30.0f;
+uint8_t off_land_flag;
+uint16_t off_land_cnt;
 //位移 速度 yaw wz 左腿摆角 左腿摆角速度 右腿摆角 右腿摆角速度 机体倾角 机体倾角速度 
 //左轮转矩 右轮转矩 左腿转矩 右腿转矩
 
@@ -90,6 +94,28 @@ const float K_Array_Fly[4][10] =
 //{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
 //{0, 0, 0, 0, 23.2026, 2.89945, -8.64908, -0.365859,-36.8817, -3.03256}, 
 //{0, 0, 0, 0, -8.64908, -0.365859, 23.2026, 2.89945,-36.8817, -3.03256}, 
+
+//{{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
+//{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
+//{0, 0, 0, 0, 31.8954, 0, -21.4194, 0,0, 0}, 
+//{0, 0, 0, 0, -21.4194, 0, 31.8954, 0,0, 0}, 
+{{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
+{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
+{0, 0, 0, 0, 37.36, 3.66385, -14.2073, -0.619041, -27.9992, -4.46608}, 
+{0, 0, 0, 0, -14.2073, -0.619041, 37.36, 3.66385, -27.9992, -4.46608}, 
+};
+
+const float K_Array_FOLDING[4][10] = 
+//{{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
+//{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
+//{0, 0, 0, 0, 5.7564, 0.68025, -1.8243, -0.621304,-12.6781, -2.97443}, 
+//{0, 0, 0, 0, -1.8243, -0.621304, 5.7564, 0.68025,-12.6781, -2.97443}, 
+//};
+//{{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
+//{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
+//{0, 0, 0, 0, 23.2026, 2.89945, -8.64908, -0.365859,-36.8817, -3.03256}, 
+//{0, 0, 0, 0, -8.64908, -0.365859, 23.2026, 2.89945,-36.8817, -3.03256}, 
+
 {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
 {0, 0, 0, 0, 31.8954, 0, -21.4194, 0,0, 0}, 
@@ -145,10 +171,15 @@ float K_Array_Leg_030[4][10] =
 //{1.21905, 2.43739, -3.13291, -2.41282, 27.2365, 2.76504, -13.8378, -0.914482, -15.2806, -1.98198},
 //{1.21905, 2.43739, 3.13291, 2.41282, -13.8378, -0.914482, 27.2365, 2.76504, -15.2806, -1.98198}
 
-{{-1.42419, -3.21198, -2.13063, -1.55978, -13.6705, -1.78006, -5.99789, -0.833831, -4.75473, -0.928567},
-{-1.42419, -3.21198, 2.13063, 1.55978, -5.99789, -0.833831, -13.6705, -1.78006, -4.75473, -0.928567},
-{1.65724, 3.61288, -3.55554, -2.70699, 31.8093, 3.39292, -13.7047, -0.822655, -20.2045, -2.59144},
-{1.65724, 3.61288, 3.55554, 2.70699, -13.7047, -0.822655, 31.8093, 3.39292, -20.2045, -2.59144}
+//{{-1.42419, -3.21198, -2.13063, -1.55978, -13.6705, -1.78006, -5.99789, -0.833831, -4.75473, -0.928567},
+//{-1.42419, -3.21198, 2.13063, 1.55978, -5.99789, -0.833831, -13.6705, -1.78006, -4.75473, -0.928567},
+//{1.65724, 3.61288, -3.55554, -2.70699, 31.8093, 3.39292, -13.7047, -0.822655, -20.2045, -2.59144},
+//{1.65724, 3.61288, 3.55554, 2.70699, -13.7047, -0.822655, 31.8093, 3.39292, -20.2045, -2.59144}
+
+{{-1.40871, -3.07905, -2.22979, -1.63681, -11.8394, -1.44462, -6.20316, -0.813799, -4.87433, -1.09255},
+{-1.40871, -3.07905, 2.22979, 1.63681, -6.20316, -0.813799, -11.8394, -1.44462, -4.87433, -1.09255},
+{2.45756, 5.17517, -4.4801, -3.35707, 37.36, 3.66385, -14.2073, -0.619041, -27.9992, -4.46608},
+{2.45756, 5.17517, 4.4801, 3.35707, -14.2073, -0.619041, 37.36, 3.66385, -27.9992, -4.46608}
 };
 
 
@@ -204,10 +235,10 @@ float K_Array_Leg_018[4][10] =
 //{1.35949, 2.52051, -2.86163, -2.18967, 25.342, 2.69143, -10.9911, -0.788216, -16.4878, -2.0033},
 //{1.35949, 2.52051, 2.86163, 2.18967, -10.9911, -0.788216, 25.342, 2.69143, -16.4878, -2.0033}
 
-{{-1.41378, -2.99569, -2.14463, -1.56938, -12.8504, -1.61767, -5.38904, -0.708452, -4.61788, -0.926493},
-{-1.41378, -2.99569, 2.14463, 1.56938, -5.38904, -0.708452, -12.8504, -1.61767, -4.61788, -0.926493},
-{1.39616, 2.83713, -2.86163, -2.18967, 25.6523, 2.74302, -10.6809, -0.736619, -14.6311, -1.86104},
-{1.39616, 2.83713, 2.86163, 2.18967, -10.6809, -0.736619, 25.6523, 2.74302, -14.6311, -1.86104}
+{{-1.75142, -3.54803, -2.39475, -1.74923, -12.431, -1.98163, -6.21236, -0.86396, -5.28833, -1.0808},
+{-1.75142, -3.54803, 2.39475, 1.74923, -6.21236, -0.86396, -12.431, -1.98163, -5.28833, -1.0808},
+{2.12527, 4.13949, -3.3452, -2.5312, 27.0092, 3.85543, -9.21801, -0.737769, -17.3919, -2.278},
+{2.12527, 4.13949, 3.3452, 2.5312, -9.21801, -0.737769, 27.0092, 3.85543, -17.3919, -2.278}
 };
 float K_Array_Leg_015[4][10] = 
 //{{-1.64547, -3.78988, -3.15575, -0.728416, -13.8598, -1.9045, -6.06882, -0.816828, -7.81789, -1.49325},
@@ -396,39 +427,45 @@ static void update_leg_height_and_balance(float yaw_error)
         x3_balance_zero = 0.08f;
     } else if (wlr.high_flag == 1) {
         if (wlr_both_legs_flying()) {
-            wlr.high_set = 0.35f;
-            height_ramp.out = 0.35f;
-            x3_balance_zero = High_balance_zero;
-			x5_balance_zero = 0.0f;
+            wlr.high_set = 0.27f;
+            height_ramp.out = 0.27f;
+            x3_balance_zero = 0.0f;
         } else if (wlr_either_leg_flying()) {
-            x3_balance_zero = (yaw_error < 0.5f) ? 0.05f : 0.25f;
+//            x3_balance_zero = (yaw_error < 0.5f) ? 0.05f : 0.25f;
+			x3_balance_zero = 0.1f;
         } else if (wlr.jump_flag == WLR_JUMP_IDLE && wlr.sky_flag == WLR_SKY_IDLE) {
-            wlr.high_set = ramp_calc(&height_ramp, LegLengthHigh);
-            x3_balance_zero = High_balance_zero;
+//            wlr.high_set = ramp_calc(&height_ramp, LegLengthHigh);
+			wlr.high_set = ramp_calc(&height_ramp, 0.23f);
+            x3_balance_zero = 0.0f;
         }
-		x5_balance_zero = 0.05f;
+		x5_balance_zero = 0.0f;
     } else {
         if (wlr_both_legs_flying()) {
             wlr.high_set = ramp_calc(&height_ramp, LegLengthFly);
             x3_balance_zero = 0.0f;
         } else if (wlr.jump_flag == WLR_JUMP_IDLE && wlr.sky_flag == WLR_SKY_IDLE) {
             wlr.high_set = ramp_calc(&height_ramp, LegLengthNormal);
-            x3_balance_zero = Normal_balance_zero;
+            x3_balance_zero = 0.0f;
 			wlr.v_limit_flag[0] = 0;
 			wlr.v_limit_flag[1] = 0;
         }
-		x5_balance_zero = 0.060f;
+		x5_balance_zero = 0.000f;
     }
 
     if (wlr.jump_flag == WLR_JUMP_ASCEND) {
-        x3_balance_zero = 0.1f;
+        x3_balance_zero = 0.0f;
     }
 
     if (rotate_flag) {
         x3_balance_zero = 0.0f;
     }
-
+	if(wlr.last_high_flag != wlr.high_flag && chassis.recover_flag == 0)
+	{
+		pid_L_test[0].i_out = 0;
+		pid_L_test[1].i_out = 0;
+	}
 //    x5_balance_zero = 0.120f;
+	wlr.last_high_flag = wlr.high_flag;
 }
 
 static void reset_jump_state(void)
@@ -551,7 +588,7 @@ static void handle_sky_state(void)
             wlr.sky_flag = WLR_SKY_LANDING;
         }
     } else if (wlr.sky_flag == WLR_SKY_LANDING) {
-        wlr.high_set = 0.35f;
+        wlr.high_set = 0.27f;
 		sky_height_ramp.out = wlr.high_set;
         x3_balance_zero = -0.2f;
         x5_balance_zero = 0.0f;
@@ -659,7 +696,7 @@ static void select_control_matrix(void)
 //        aMartix_Cover(lqr.K, (float*)K_Jump, 4, 10);
 //    } 
 	else if (wlr.sky_flag == WLR_SKY_AIR_FOLDING) {		//空中收腿 || 落地 || 完成飞天
-        aMartix_Cover(lqr.K, (float*)K_Array_Fly, 4, 10);
+        aMartix_Cover(lqr.K, (float*)K_Array_FOLDING, 4, 10);
     }
 	else if (wlr.sky_flag == WLR_SKY_LANDING) {
         aMartix_Cover(lqr.K, (float*)K_Land, 4, 10);
@@ -697,6 +734,7 @@ static void update_motion_reference(void)
 
     if (wlr_either_leg_flying() && !wlr.prone_flag) {
         wlr.v_ref = 0;
+		lqr.X_diff[1] = 0;
     }
 
     if (rotate_flag == 1) {
@@ -722,12 +760,12 @@ static void update_fly_state(uint8_t index, float yaw_err)
 //        && wlr.jump_flag == WLR_JUMP_IDLE && double_cnt <= 0 && chassis.recover_flag == 0
 //        && wlr.sky_over == 0 && wlr.sky_flag == WLR_SKY_IDLE && KEY_PRESS_POWER && yaw_err < 0.5f) {
 
-    if (wlr.side[index].Fn_kal < 105.0f && rotate_flag == 0 && wlr.high_flag == 1 && chassis.recover_flag == 0
-		&& (wlr.sky_flag == WLR_SKY_IDLE) && (yaw_err < 0.5f || 1))  {
-        wlr.side[index].fly_cnt += 4;
+    if (wlr.side[index].Fn_kal < 140.0f && rotate_flag == 0 && wlr.high_flag == 1 && chassis.recover_flag == 0
+		&& (wlr.sky_flag == WLR_SKY_IDLE) && (yaw_err < 0.5f && 0))  {
+        wlr.side[index].fly_cnt += 10;
     } else if (wlr.side[index].fly_cnt > 0) {
-        wlr.side[index].fly_cnt -= 8;
-        if (wlr.side[index].Fn_kal > 120.0f) {
+        wlr.side[index].fly_cnt -= 20;
+        if (wlr.side[index].Fn_kal > 150.0f) {
             wlr.side[index].fly_cnt -= 30;
         }
         if (wlr.side[index].fly_cnt < 0) {
@@ -749,6 +787,10 @@ static void update_fly_state(uint8_t index, float yaw_err)
         wlr.side[index].fly_flag = 0;
 		wlr.K_adapt = -0.0f;
     }
+//	if(lqr.X_diff[8] > 0.06f){
+//		wlr.side[index].fly_flag = 0;
+//		wlr.side[index].fly_cnt = 0;
+//	}
 }
 
 static void handle_quadrant_protection(uint8_t index)
@@ -759,7 +801,7 @@ static void handle_quadrant_protection(uint8_t index)
         && (wlr.sky_flag == WLR_SKY_IDLE)
         && chassis.recover_flag == 0) {
         quadrant_cnt++;
-        if (quadrant_cnt > 200) {
+        if (quadrant_cnt > 200 && 0) {
             chassis.recover_flag = 1;
             wlr.high_flag = 0;
         }
@@ -781,7 +823,7 @@ static void map_virtual_force(uint8_t index)
         wlr.side[index].Fy = pid_calc(&pid_leg_length_fly[index], tlm.l_ref[index], vmc[index].L_fdb) - 30.0f;
     } 
 	else if (chassis.recover_flag == 1 && chassis.rescue_inter_flag == 2) {		//进入翻倒自起立 && 进入收腿阶段
-        Fy_temp = pid_calc(&pid_leg_recover[index], wlr.recover_length, vmc[index].L_fdb) - 75.0f;
+        Fy_temp = pid_calc(&pid_leg_recover[index], wlr.recover_length, vmc[index].L_fdb) + 10.0f;
         wlr.side[index].Fy = ramp_calc(&Fy_ramp[index], Fy_temp);
     } 
 	else if (chassis.recover_flag > 1 && wlr.jump_flag != 0 && 0) {
@@ -805,14 +847,15 @@ static void map_virtual_force(uint8_t index)
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
     } 
 	else if (wlr.high_flag == 1){
-        wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 50.0f
+        wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - ff_Fy_1
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
     }
 	else {
-        wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 50.0f
+        wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - ff_Fy_0
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
     }
-
+	
+	
     if (rotate_flag) {
         wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb)
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
@@ -850,7 +893,7 @@ static void apply_output_limits(void)
 
         wlr.side[i].T1 = vmc[i].T_ref.e.T2_ref;
         wlr.side[i].T2 = vmc[i].T_ref.e.T1_ref;
-        wlr.side[i].Tw = lqr.U_ref[i] - wlr.side[i].T_adapt;
+        wlr.side[i].Tw = (lqr.U_ref[i] - wlr.side[i].T_adapt);
         wlr.side[i].P1 = vmc[i].q_ref[1];
         wlr.side[i].P2 = vmc[i].q_ref[2];
     }
@@ -861,7 +904,7 @@ void wlr_init(void)
 	wlr.high_set = LegLengthNormal;
 	wlr.crash_flag = 0;
 	wlr.K_adapt = -0.0f;
-    wlr.recover_length = 0.17f;
+    wlr.recover_length = 0.14f;
     
 	ramp_init(&height_ramp, 0.001f, LegLengthMin, LegLengthMax);			//日常腿长斜坡
 	ramp_init(&sky_height_ramp, 0.005f, LegLengthMin, LegLengthMax);		//空中腿长斜坡
@@ -881,9 +924,9 @@ void wlr_init(void)
 		//PID参数初始化      
         pid_init(&pid_leg_sky_cover[i], NONE, 1500, 1.5f, 0.0f,150,300);		    //空中收腿专用pid
 		pid_init(&pid_leg_sky_jump[i],  NONE,1500, 0.0, 0.0f, 0, 350);			    //跳跃专用pid
-		pid_init(&pid_leg_recover[i], NONE, 1500, 1.5f, 10000.0f, 150, 300);		//起身专用pid
-        pid_init(&pid_leg_length_fly[i], NONE, 600, 0.0, 15000, 0, 150);			//离地腿长/缓冲腿长pid
-        pid_init(&pid_L_test[i], NONE, 800, 2.0, 20000, 200, 300);					//日常腿长pid
+		pid_init(&pid_leg_recover[i], NONE, 1200, 1.5f, 15000.0f, 100, 300);		//起身专用pid
+        pid_init(&pid_leg_length_fly[i], NONE, 600, 0.0, 16000, 0, 150);			//离地腿长/缓冲腿长pid
+        pid_init(&pid_L_test[i], NONE, 700, 2.0, 28000, 200, 300);					//日常腿长pid
 		pid_init(&pid_rescue[i], NONE, 2.0f, 0.5f, 0, 45, 50);						//翻倒起身腿转速pid
 	}
 	pid_init(&pid_roll, NONE, 400, 0, 10000, 0, 50);								//roll偏移支持力补偿
@@ -974,10 +1017,10 @@ void wlr_control(void)
     for (int i = 0; i < WLR_SIDE_COUNT; i++) {
         float L0_array[3] = {vmc[i].L_fdb, vmc[i].V_fdb.e.vy0_fdb, vmc[i].Acc_fdb.L0_ddot};
         float theta_array[3] = {lqr.X_fdb[4 + 2 * i], lqr.X_fdb[5 + 2 * i], lqr.dot_leg_w[i]};
-//        wlr.side[i].Fn_fdb = wlr_fn_calc(wlr.az_fdb, vmc[i].F_fdb.e.Fy_fdb, vmc[i].F_fdb.e.T0_fdb, L0_array, theta_array);
+        wlr.side[i].Fn_fdb = wlr_fn_calc(wlr.az_fdb, vmc[i].F_fdb.e.Fy_fdb, vmc[i].F_fdb.e.T0_fdb, L0_array, theta_array);
 		//期望虚拟杆支持力，转矩
 		//大于0表示腿正在往外蹬，小于0表示正在往内收
-		wlr.side[i].Fn_fdb = wlr_fn_calc(wlr.az_fdb, vmc[i].F_ref.e.Fy_ref, vmc[i].F_ref.e.T0_ref, L0_array, theta_array);
+//		wlr.side[i].Fn_fdb = wlr_fn_calc(wlr.az_fdb, vmc[i].F_ref.e.Fy_ref, vmc[i].F_ref.e.T0_ref, L0_array, theta_array);
 		F_wy[i] = Fwy;
 		F_test[i] = gas_spring_F_Calc(vmc[i]);//气弹簧力解算
         kal_fn[i].measured_vector[0] = wlr.side[i].Fn_fdb;
@@ -993,7 +1036,16 @@ void wlr_control(void)
     for (int i = 0; i < WLR_SIDE_COUNT; i++) {
         update_fly_state(i, yaw_err);			//更新fly_flag和fly_cnt
     }
-
+	
+//	if(wlr_both_legs_flying()){
+//		off_land_flag = 1;
+//		off_land_cnt = 0;
+//	}
+//	if(!wlr_either_leg_flying() && off_land_flag == 1)
+//		off_land_flag = 2;
+//	if(off_land_flag == 2 && !wlr_either_leg_flying())
+//		off_land_cnt++;
+	
     update_leg_height_and_balance(yaw_err);		//更新腿长与x3 x5偏置
     reset_jump_state();							//上台阶 || 飞天标志位清零
     handle_jump_state();						//磕上二级台阶
@@ -1012,6 +1064,15 @@ void wlr_control(void)
     } else {
         data_limit(&lqr.X_diff[1], -2.0f, 2.0f);
     }
+//	if(off_land_cnt < 100 && off_land_flag == 2)
+//	{
+//		data_limit(&lqr.X_diff[1], -0.0f, 0.0f);
+//	}
+//	else if(off_land_cnt > 100)
+//	{
+//		off_land_cnt = 0;
+//		off_land_flag = 0;
+//	}
 	//功率限制
     power_limit_current();
 	//LQR的K增益带入计算
