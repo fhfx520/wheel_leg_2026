@@ -76,7 +76,7 @@ void USB_Reset(void);
   * @retval int
   */
 int main(void)
-{
+ {
 
   /* USER CODE BEGIN 1 */
 

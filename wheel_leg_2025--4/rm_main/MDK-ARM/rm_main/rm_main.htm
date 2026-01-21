@@ -3,7 +3,7 @@
 <title>Static Call Graph - [rm_main\rm_main.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image rm_main\rm_main.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Wed Jan 21 05:58:13 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Thu Jan 22 03:50:49 2026
 <BR><P>
 <H3>Maximum Stack Usage =        624 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -2930,8 +2930,8 @@ Global Symbols
 <LI><a href="#[268]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_forward_solution_five (via Veneer)
 </UL>
 
-<P><STRONG><a name="[1d4]"></a>can_comm_init</STRONG> (Thumb, 496 bytes, Stack size 88 bytes, can_comm.o(.text.can_comm_init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 180<LI>Call Chain = can_comm_init &rArr; dm_motor_init &rArr; dm_motor_output_single_data &rArr; can_std_transmit &rArr; HAL_FDCAN_AddMessageToTxFifoQ &rArr; FDCAN_CopyMessageToRAM
+<P><STRONG><a name="[1d4]"></a>can_comm_init</STRONG> (Thumb, 480 bytes, Stack size 72 bytes, can_comm.o(.text.can_comm_init))
+<BR><BR>[Stack]<UL><LI>Max Depth = 164<LI>Call Chain = can_comm_init &rArr; dm_motor_init &rArr; dm_motor_output_single_data &rArr; can_std_transmit &rArr; HAL_FDCAN_AddMessageToTxFifoQ &rArr; FDCAN_CopyMessageToRAM
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dji_motor_init
 <LI><a href="#[1d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dm_motor_init
@@ -4061,7 +4061,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[250]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[b6]"></a>chassis_task</STRONG> (Thumb, 8084 bytes, Stack size 8 bytes, chassis_task.o(.text.chassis_task))
+<P><STRONG><a name="[b6]"></a>chassis_task</STRONG> (Thumb, 8120 bytes, Stack size 8 bytes, chassis_task.o(.text.chassis_task))
 <BR><BR>[Stack]<UL><LI>Max Depth = 288<LI>Call Chain = chassis_task &rArr; wlr_control &rArr; tlm_gnd_roll_calc &rArr; kalman_filter_update &rArr; kalman_filter_K_update &rArr; arm_mat_inverse_f32
 </UL>
 <BR>[Calls]<UL><LI><a href="#[251]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_protest
@@ -4271,7 +4271,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[250]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[250]"></a>wlr_control</STRONG> (Thumb, 5376 bytes, Stack size 120 bytes, wlr.o(.text.wlr_control))
+<P><STRONG><a name="[250]"></a>wlr_control</STRONG> (Thumb, 5344 bytes, Stack size 120 bytes, wlr.o(.text.wlr_control))
 <BR><BR>[Stack]<UL><LI>Max Depth = 280<LI>Call Chain = wlr_control &rArr; tlm_gnd_roll_calc &rArr; kalman_filter_update &rArr; kalman_filter_K_update &rArr; arm_mat_inverse_f32
 </UL>
 <BR>[Calls]<UL><LI><a href="#[24d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_calc (via Veneer)
@@ -4298,7 +4298,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_task
 </UL>
 
-<P><STRONG><a name="[246]"></a>wlr_init</STRONG> (Thumb, 808 bytes, Stack size 104 bytes, wlr.o(.text.wlr_init))
+<P><STRONG><a name="[246]"></a>wlr_init</STRONG> (Thumb, 804 bytes, Stack size 104 bytes, wlr.o(.text.wlr_init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 180<LI>Call Chain = wlr_init &rArr; twm_init &rArr; kalman_filter_init &rArr; malloc
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kalman_filter_init (via Veneer)

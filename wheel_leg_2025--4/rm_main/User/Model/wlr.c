@@ -77,8 +77,8 @@ float F_fdb = 0.0f;
 float yw_ddot;
 float Fwy;
 float F_wy[2];
-float ff_Fy_0 = -30.0f;
-float ff_Fy_1 = -30.0f;
+float ff_Fy_0 = 10.0f;
+float ff_Fy_1 = -10.0f;
 uint8_t off_land_flag;
 uint16_t off_land_cnt;
 //位移 速度 yaw wz 左腿摆角 左腿摆角速度 右腿摆角 右腿摆角速度 机体倾角 机体倾角速度 
@@ -101,8 +101,8 @@ const float K_Array_Fly[4][10] =
 //{0, 0, 0, 0, -21.4194, 0, 31.8954, 0,0, 0}, 
 {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
-{0, 0, 0, 0, 37.36, 3.66385, -14.2073, -0.619041, -27.9992, -4.46608}, 
-{0, 0, 0, 0, -14.2073, -0.619041, 37.36, 3.66385, -27.9992, -4.46608}, 
+{0, 0, 0, 0, 25.3857, 2.26086, -15.6048, -1.08514, -20.4507, -2.3016}, 
+{0, 0, 0, 0, -15.6048, -1.08514, 25.3857, 2.26086, -20.4507, -2.3016}, 
 };
 
 const float K_Array_FOLDING[4][10] = 
@@ -176,10 +176,10 @@ float K_Array_Leg_030[4][10] =
 //{1.65724, 3.61288, -3.55554, -2.70699, 31.8093, 3.39292, -13.7047, -0.822655, -20.2045, -2.59144},
 //{1.65724, 3.61288, 3.55554, 2.70699, -13.7047, -0.822655, 31.8093, 3.39292, -20.2045, -2.59144}
 
-{{-1.40871, -3.07905, -2.22979, -1.63681, -11.8394, -1.44462, -6.20316, -0.813799, -4.87433, -1.09255},
-{-1.40871, -3.07905, 2.22979, 1.63681, -6.20316, -0.813799, -11.8394, -1.44462, -4.87433, -1.09255},
-{2.45756, 5.17517, -4.4801, -3.35707, 37.36, 3.66385, -14.2073, -0.619041, -27.9992, -4.46608},
-{2.45756, 5.17517, 4.4801, 3.35707, -14.2073, -0.619041, 37.36, 3.66385, -27.9992, -4.46608}
+{{-1.32872, -4.36648, -3.02998, -2.17577, -20.1887, -2.33973, -6.36559, -0.989954, -4.09894, -0.945981},
+{-1.32872, -4.36648, 3.02998, 2.17577, -6.36559, -0.989954, -20.1887, -2.33973, -4.09894, -0.945981},
+{0.520515, 1.65624, -3.37835, -2.58533, 25.3857, 2.26086, -15.6048, -1.08514, -14.4507, -2.3016},
+{0.520515, 1.65624, 3.37835, 2.58533, -15.6048, -1.08514, 25.3857, 2.26086, -14.4507, -2.3016}
 };
 
 
@@ -427,12 +427,12 @@ static void update_leg_height_and_balance(float yaw_error)
         x3_balance_zero = 0.08f;
     } else if (wlr.high_flag == 1) {
         if (wlr_both_legs_flying()) {
-            wlr.high_set = 0.27f;
-            height_ramp.out = 0.27f;
+            wlr.high_set = 0.35f;
+            height_ramp.out = 0.35f;
             x3_balance_zero = 0.0f;
         } else if (wlr_either_leg_flying()) {
 //            x3_balance_zero = (yaw_error < 0.5f) ? 0.05f : 0.25f;
-			x3_balance_zero = 0.1f;
+			x3_balance_zero = 0.0f;
         } else if (wlr.jump_flag == WLR_JUMP_IDLE && wlr.sky_flag == WLR_SKY_IDLE) {
 //            wlr.high_set = ramp_calc(&height_ramp, LegLengthHigh);
 			wlr.high_set = ramp_calc(&height_ramp, 0.23f);
@@ -760,12 +760,12 @@ static void update_fly_state(uint8_t index, float yaw_err)
 //        && wlr.jump_flag == WLR_JUMP_IDLE && double_cnt <= 0 && chassis.recover_flag == 0
 //        && wlr.sky_over == 0 && wlr.sky_flag == WLR_SKY_IDLE && KEY_PRESS_POWER && yaw_err < 0.5f) {
 
-    if (wlr.side[index].Fn_kal < 140.0f && rotate_flag == 0 && wlr.high_flag == 1 && chassis.recover_flag == 0
-		&& (wlr.sky_flag == WLR_SKY_IDLE) && (yaw_err < 0.5f && 0))  {
+    if (wlr.side[index].Fn_kal < 146.0f && rotate_flag == 0 && wlr.high_flag == 1 && chassis.recover_flag == 0
+		&& (wlr.sky_flag == WLR_SKY_IDLE) && (yaw_err < 0.5f || 1))  {
         wlr.side[index].fly_cnt += 10;
     } else if (wlr.side[index].fly_cnt > 0) {
         wlr.side[index].fly_cnt -= 20;
-        if (wlr.side[index].Fn_kal > 150.0f) {
+        if (wlr.side[index].Fn_kal > 155.0f) {
             wlr.side[index].fly_cnt -= 30;
         }
         if (wlr.side[index].fly_cnt < 0) {
@@ -777,7 +777,7 @@ static void update_fly_state(uint8_t index, float yaw_err)
         wlr.side[index].fly_cnt = 30;
         wlr.side[index].fly_flag = 1;
 		wlr.K_adapt = 0.0f;
-		
+		pid_L_test[index].i_out = 0.0f;
 		if(wlr.high_flag == 1)
 			wlr.v_limit_flag[index] = 1;
 		else 
@@ -823,7 +823,7 @@ static void map_virtual_force(uint8_t index)
         wlr.side[index].Fy = pid_calc(&pid_leg_length_fly[index], tlm.l_ref[index], vmc[index].L_fdb) - 30.0f;
     } 
 	else if (chassis.recover_flag == 1 && chassis.rescue_inter_flag == 2) {		//进入翻倒自起立 && 进入收腿阶段
-        Fy_temp = pid_calc(&pid_leg_recover[index], wlr.recover_length, vmc[index].L_fdb) + 10.0f;
+        Fy_temp = pid_calc(&pid_leg_recover[index], wlr.recover_length, vmc[index].L_fdb) -60.0f;
         wlr.side[index].Fy = ramp_calc(&Fy_ramp[index], Fy_temp);
     } 
 	else if (chassis.recover_flag > 1 && wlr.jump_flag != 0 && 0) {
@@ -910,8 +910,8 @@ void wlr_init(void)
 	ramp_init(&sky_height_ramp, 0.005f, LegLengthMin, LegLengthMax);		//空中腿长斜坡
 	ramp_init(&jump_ramp, 0.007f, -1.5f, 1.5f);
 	ramp_init(&wz_ramp, 0.001f,  0,  3.0f);		//
-	ramp_init(&Fy_ramp[0], 3.5f, -500.0f,  500.0f);							//收腿支持力斜坡
-	ramp_init(&Fy_ramp[1], 3.5f, -500.0f,  500.0f);							//收腿支持力斜坡
+	ramp_init(&Fy_ramp[0], 2.0f, -500.0f,  500.0f);							//收腿支持力斜坡
+	ramp_init(&Fy_ramp[1], 2.0f, -500.0f,  500.0f);							//收腿支持力斜坡
 	
 	sky_height_ramp.out = 0.23f;
 	
@@ -924,9 +924,9 @@ void wlr_init(void)
 		//PID参数初始化      
         pid_init(&pid_leg_sky_cover[i], NONE, 1500, 1.5f, 0.0f,150,300);		    //空中收腿专用pid
 		pid_init(&pid_leg_sky_jump[i],  NONE,1500, 0.0, 0.0f, 0, 350);			    //跳跃专用pid
-		pid_init(&pid_leg_recover[i], NONE, 1200, 1.5f, 15000.0f, 100, 300);		//起身专用pid
+		pid_init(&pid_leg_recover[i], NONE, 800, 1.5f, 20000.0f, 100, 300);		//起身专用pid
         pid_init(&pid_leg_length_fly[i], NONE, 600, 0.0, 16000, 0, 150);			//离地腿长/缓冲腿长pid
-        pid_init(&pid_L_test[i], NONE, 700, 2.0, 28000, 200, 300);					//日常腿长pid
+        pid_init(&pid_L_test[i], NONE, 800, 2.0, 50000, 200, 300);					//日常腿长pid
 		pid_init(&pid_rescue[i], NONE, 2.0f, 0.5f, 0, 45, 50);						//翻倒起身腿转速pid
 	}
 	pid_init(&pid_roll, NONE, 400, 0, 10000, 0, 50);								//roll偏移支持力补偿

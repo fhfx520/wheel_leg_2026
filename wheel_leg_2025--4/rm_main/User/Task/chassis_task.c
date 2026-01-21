@@ -920,7 +920,10 @@ static void chassis_self_rescue(void)//翻车自救
 				chassis.rescue_inter_flag = 0;
 				wlr.high_flag = 0;
 				up_ready=0;
-				
+				pid_leg_recover[0].i_out = 0;
+				pid_leg_recover[1].i_out = 0;
+				pid_L_test[0].i_out = 0.0f;
+				pid_L_test[1].i_out = 0.0f;
 			}
         }
     }    
