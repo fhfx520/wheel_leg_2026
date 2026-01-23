@@ -103,10 +103,10 @@ void can_comm_init(void)
     tx_message.FDFormat = FDCAN_CLASSIC_CAN;
     tx_message.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
     tx_message.MessageMarker = 0;
-    
+      
     //driver init
 	dm_motor_init(&joint_motor[0], CAN_CHANNEL_1, 0x03, -0.422233582f, 0x13);//B 3.480 -0.422233582
-	dm_motor_init(&joint_motor[1], CAN_CHANNEL_1, 0x04, 4.51793051f, 0x14);//S 3.564  4.51793051
+	dm_motor_init(&joint_motor[1], CAN_CHANNEL_1, 0x04, 5.03293037f, 0x14);//S 3.564  4.51793051
 	dm_motor_init(&joint_motor[2], CAN_CHANNEL_1, 0x02, 4.62540722f, 0x12);//B 4.394 4.62540722
 	dm_motor_init(&joint_motor[3], CAN_CHANNEL_1, 0x01, 3.35368752f, 0x11);//S 3.770  3.35368752
 
@@ -116,7 +116,7 @@ void can_comm_init(void)
 //    dji_motor_init(&driver_motor[0], DJI_3508_MOTOR, CAN_CHANNEL_2, 0x204, 19.0f);
 //    dji_motor_init(&driver_motor[1], DJI_3508_MOTOR, CAN_CHANNEL_2, 0x203, 19.0f);
     dji_motor_init(&driver_motor[0], DJI_3508_MOTOR, CAN_CHANNEL_3, 0x204, DJI_3508_TAURUS_REDUCTION_RATIO);
-    dji_motor_init(&driver_motor[1], DJI_3508_MOTOR, CAN_CHANNEL_3, 0x203, 16.428f);
+    dji_motor_init(&driver_motor[1], DJI_3508_MOTOR, CAN_CHANNEL_3, 0x203, DJI_3508_TAURUS_REDUCTION_RATIO);
 //    dji_motor_init(&yaw_motor, DJI_6020_MOTOR, CAN_CHANNEL_3, 0x206, 1.0f);
 //    dji_motor_init(&pit_motor, DJI_6020_MOTOR, CAN_CHANNEL_3, 0x206, 1.0f);
 }
