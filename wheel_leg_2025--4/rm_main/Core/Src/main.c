@@ -23,6 +23,7 @@
 #include "dma.h"
 #include "fdcan.h"
 #include "iwdg.h"
+#include "memorymap.h"
 #include "rng.h"
 #include "spi.h"
 #include "tim.h"
@@ -71,12 +72,12 @@ void USB_Reset(void);
 
 /* USER CODE END 0 */
 
-/**	
+/**
   * @brief  The application entry point.
   * @retval int
   */
 int main(void)
- {
+{
 
   /* USER CODE BEGIN 1 */
 
@@ -118,7 +119,8 @@ int main(void)
   MX_FDCAN2_Init();
   MX_TIM3_Init();
   MX_SPI1_Init();
-
+//  MX_IWDG1_Init();
+  MX_UART4_Init();
   /* USER CODE BEGIN 2 */
    HAL_Delay(300);
   us_timer_start();

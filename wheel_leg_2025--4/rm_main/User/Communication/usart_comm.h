@@ -7,7 +7,8 @@
 //串口定义
 #define	DBUS_HUART	 huart1
 #define JUDGE_HUART  huart2
-#define TFHEAD_HUART huart3
+#define TF_LEFT_HUART huart4
+#define TF_RIGHT_HUART huart3
 
 #define DEBUG_HUART	 huart6
 

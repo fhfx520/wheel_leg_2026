@@ -6,6 +6,7 @@
 "rm_main\dma.o"
 "rm_main\fdcan.o"
 "rm_main\iwdg.o"
+"rm_main\memorymap.o"
 "rm_main\rng.o"
 "rm_main\spi.o"
 "rm_main\tim.o"

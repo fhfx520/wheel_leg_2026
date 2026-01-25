@@ -12,19 +12,19 @@ uint16_t tfmin_distance[2];
 void vTfGetData(uint8_t *buff,TF_Distance_e TF_Distance)
 {
 	uint16_t distance,strength;
-	if(buff[0]==0x59&&buff[1]==0x59) //校验帧头
+	if(buff[0] == 0x59 && buff[1] == 0x59) //校验帧头
 	{
-		distance=buff[3]<<8 | buff[2];//合并高低八位
+		distance=buff[3]<<8 | buff[2];//合并高低八位 cm
 		strength=buff[5]<<8 | buff[4];//合并高低八位
 		if( strength>500 && strength!=65535) //在强度范围内才为有效数据
 		{
-			tfmin_distance[TF_Distance] = distance ;  //手动乘10，单位化为 mm，个位无意义
-			wlr.side[TF_Distance].Front_dis_fdb  = tfmin_distance[TF_Distance]  * 10.0f ;
+			tfmin_distance[TF_Distance] = distance ; 
+			wlr.side[TF_Distance].Front_dis_fdb  = tfmin_distance[TF_Distance]  * 0.01f ;//m
 		}
 		else
 		{
-			tfmin_distance[TF_Distance] = 0xfff ;  //手动乘10，单位化为 mm，个位无意义
-			wlr.side[TF_Distance].Front_dis_fdb  = tfmin_distance[TF_Distance]  * 10.0f ;
+			tfmin_distance[TF_Distance] = 0xfff ;
+			wlr.side[TF_Distance].Front_dis_fdb  = tfmin_distance[TF_Distance]  * 0.01f ;//m
 		
 		}	
 		

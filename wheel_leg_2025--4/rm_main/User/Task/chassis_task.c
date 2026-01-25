@@ -726,7 +726,7 @@ static void chassis_data_input(void)
 		}
     //陀螺仪数据输入
     wlr.roll_fdb    = -chassis_imu.rol;
-    wlr.pit_fdb     = -chassis_imu.pit;
+    wlr.pit_fdb     = -(chassis_imu.pit + 0.05f);
     kal_wy.measured_vector[0] = -chassis_imu.wy;
     kalman_filter_update(&kal_wy);
     wlr.wy_fdb = kal_wy.filter_vector[0];

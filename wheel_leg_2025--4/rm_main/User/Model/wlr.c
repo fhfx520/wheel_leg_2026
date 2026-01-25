@@ -120,6 +120,10 @@ const float K_Array_FOLDING[4][10] =
 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
 {0, 0, 0, 0, 31.8954, 0, -21.4194, 0,0, 0}, 
 {0, 0, 0, 0, -21.4194, 0, 31.8954, 0,0, 0}, 
+//{{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
+//{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
+//{0, 0, 0, 0, 25.3857, 2.26086, -15.6048, -1.08514, -20.4507, -2.3016}, 
+//{0, 0, 0, 0, -15.6048, -1.08514, 25.3857, 2.26086, -20.4507, -2.3016}, 
 };
 
 const float K_Array_Prone[4][10] =
@@ -176,10 +180,15 @@ float K_Array_Leg_030[4][10] =
 //{1.65724, 3.61288, -3.55554, -2.70699, 31.8093, 3.39292, -13.7047, -0.822655, -20.2045, -2.59144},
 //{1.65724, 3.61288, 3.55554, 2.70699, -13.7047, -0.822655, 31.8093, 3.39292, -20.2045, -2.59144}
 
-{{-1.32872, -4.36648, -3.02998, -2.17577, -20.1887, -2.33973, -6.36559, -0.989954, -4.09894, -0.945981},
-{-1.32872, -4.36648, 3.02998, 2.17577, -6.36559, -0.989954, -20.1887, -2.33973, -4.09894, -0.945981},
-{0.520515, 1.65624, -3.37835, -2.58533, 25.3857, 2.26086, -15.6048, -1.08514, -14.4507, -2.3016},
-{0.520515, 1.65624, 3.37835, 2.58533, -15.6048, -1.08514, 25.3857, 2.26086, -14.4507, -2.3016}
+//{{-1.32872, -4.36648, -3.02998, -2.17577, -20.1887, -2.33973, -6.36559, -0.989954, -4.09894, -0.945981},
+//{-1.32872, -4.36648, 3.02998, 2.17577, -6.36559, -0.989954, -20.1887, -2.33973, -4.09894, -0.945981},
+//{0.520515, 1.65624, -3.37835, -2.58533, 25.3857, 2.26086, -15.6048, -1.08514, -14.4507, -2.3016},
+//{0.520515, 1.65624, 3.37835, 2.58533, -15.6048, -1.08514, 25.3857, 2.26086, -14.4507, -2.3016}
+
+{{-0.934583, -2.97804, -2.24285, -1.62974, -15.7627, -1.56594, -5.33195, -0.705001, -4.03356, -0.828956},
+{-0.934583, -2.97804, 2.24285, 1.62974, -5.33195, -0.705001, -15.7627, -1.56594, -4.03356, -0.828956},
+{0.638386, 1.97727, -3.13352, -2.41166, 27.6856, 2.19171, -15.1371, -0.938377, -15.5574, -2.15953},
+{0.638386, 1.97727, 3.13352, 2.41166, -15.1371, -0.938377, 27.6856, 2.19171, -15.5574, -2.15953}
 };
 
 
@@ -246,10 +255,10 @@ float K_Array_Leg_015[4][10] =
 //{2.16543, 4.83383, -4.91029, -1.24817, 30.8447, 3.91051, -8.74821, -0.66373, -26.9583, -3.42004},
 //{2.16543, 4.83383, 4.91029, 1.24817, -8.74821, -0.66373, 30.8447, 3.91051, -26.9583, -3.42004}
 
-{{-1.03779, -3.18241, -2.82696, -2.05016, -11.1248, -1.25757, -5.12882, -0.646838, -4.31862, -1.09203},
-{-1.03779, -3.18241, 2.82696, 2.05016, -5.12882, -0.646838, -11.1248, -1.25757, -4.31862, -1.09203},
-{0.701645, 2.06136, -2.2949, -1.76855, 17.4358, 1.67744, -8.14614, -0.625552, -9.67944, -1.64274},
-{0.701645, 2.06136, 2.2949, 1.76855, -8.14614, -0.625552, 17.4358, 1.67744, -9.67944, -1.64274}
+{{-0.78697, -2.4387, -2.2739, -1.6629, -9.0937, -1.0312, -4.4812, -0.54591, -3.9627, -0.99556},
+{-0.78697, -2.4387, 2.2739, 1.6629, -4.4812, -0.54591, -9.0937, -1.0312, -3.9627, -0.99556},
+{0.838255, 2.49329, -2.21737, -1.7139, 18.4449, 1.79857, -7.29796, -0.520924, -9.08298, -1.50464},
+{0.838255, 2.49329, 2.21737, 1.7139, -7.29796, -0.520924, 18.4449, 1.79857, -9.08298, -1.50464}
 };
 
 float K_Array_Land[4][10] = 
@@ -280,10 +289,10 @@ float K_Jump[4][10] =
 };
 
 float K_Land[4][10] = 
-{{-1.50894, -3.45909, -1.79912, -1.29552, -16.8913, -2.56367, -4.65633, -0.813985, -3.27005, -0.78762},
-{-1.50894, -3.45909, 1.79912, 1.29552, -4.65633, -0.813985, -16.8913, -2.56367, -3.27005, -0.78762},
-{0.641604, 1.41212, -2.61299, -2.04486, 21.4115, 2.42169, -13.3676, -1.04995, -11.5082, -1.96479},
-{0.641604, 1.41212, 2.61299, 2.04486, -13.3676, -1.04995, 21.4115, 2.42169, -11.5082, -1.96479}
+{{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+{0, 0, 0, 0, 21.4115, 2.42169, -13.3676, -1.04995, -11.5082, -1.96479},
+{0, 0, 0, 0, -13.3676, -1.04995, 21.4115, 2.42169, -11.5082, -1.96479}
 };
 
 const float K_Fit_Array[40][3][3] = 
@@ -548,7 +557,7 @@ static void handle_jump_state(void)
 static void handle_sky_state(void)
 {
     if (wlr.sky_flag == WLR_SKY_FOLDING) {
-        wlr.high_set = ramp_calc(&sky_height_ramp, 0.12f);
+//        wlr.high_set = ramp_calc(&sky_height_ramp, 0.18f);
         x3_balance_zero = 0.0f;
 //        x5_balance_zero = 0.10f;
         x5_balance_zero = 0.0f;		//0.2f这个参数可以极大的抑制车自己往后跑
@@ -557,10 +566,21 @@ static void handle_sky_state(void)
 	    Fy_ramp[0].out = Fy_ramp[1].out= 0;
 		sky_ramp[0].out = sky_ramp[1].out= 0;
 		
-        if (abs(rc.ch2) > 500) {
+//        if (abs(rc.ch2) > 500) {
+//            wlr.sky_cnt++;
+//        }
+		if ((wlr.side[0].Front_dis_kal + wlr.side[1].Front_dis_kal) / 2.0f > 1.3f) {
+            wlr.high_set = ramp_calc(&sky_height_ramp, 0.18f);
+        }
+		if (((wlr.side[0].Front_dis_kal + wlr.side[1].Front_dis_kal) / 2.0f < 1.3f) && ((wlr.side[0].Front_dis_kal + wlr.side[1].Front_dis_kal) / 2.0f > 0.5f)) {
+            wlr.high_set = ramp_calc(&sky_height_ramp, 0.12f);
+        }
+		if ((wlr.side[0].Front_dis_kal + wlr.side[1].Front_dis_kal) / 2.0f < 0.5f) {
             wlr.sky_cnt++;
         }
-        if (wlr.sky_cnt > 50) {
+		else 
+			wlr.sky_cnt = 0;
+        if (wlr.sky_cnt > 5) {
             wlr.sky_cnt = 0;
             wlr.sky_flag = WLR_SKY_EXTENDING;
         }
@@ -570,7 +590,7 @@ static void handle_sky_state(void)
 		
     } else if (wlr.sky_flag == WLR_SKY_EXTENDING) {
         wlr.high_set = 0.35f;
-        x3_balance_zero = 0.2f;
+        x3_balance_zero = 0.3f;
         x5_balance_zero = 0.05f;
         if (fabs(0.30f - vmc[0].L_fdb) < 0.02f && fabs(0.30f - vmc[1].L_fdb) < 0.02f) {
             wlr.sky_cnt++;
@@ -582,20 +602,20 @@ static void handle_sky_state(void)
     } else if (wlr.sky_flag == WLR_SKY_AIR_FOLDING) {
         wlr.high_set = 0.13f;
 		sky_height_ramp.out = wlr.high_set;
-        x3_balance_zero = -0.2f;
+        x3_balance_zero = -0.1f;
         x5_balance_zero = 0.0f;
         wlr.sky_cnt++;
-        if (wlr.sky_cnt > 130) {
+        if (wlr.sky_cnt > 100) {
             wlr.sky_cnt = 0;
             wlr.sky_flag = WLR_SKY_LANDING;
         }
     } else if (wlr.sky_flag == WLR_SKY_LANDING) {
-        wlr.high_set = 0.27f;
+        wlr.high_set = 0.30f;
 		sky_height_ramp.out = wlr.high_set;
         x3_balance_zero = 0.0f;
         x5_balance_zero = 0.0f;
 		wlr.sky_cnt++;
-		if((wlr.side[0].Fn_kal > 150.0f && wlr.side[1].Fn_kal > 150.0f) || (wlr.sky_cnt > 200))
+		if((wlr.side[0].Fn_kal > 150.0f && wlr.side[1].Fn_kal > 150.0f) || (wlr.sky_cnt > 300))
 		{
 			wlr.sky_cnt = 0;
 			wlr.sky_flag = WLR_SKY_STAND;
@@ -604,8 +624,8 @@ static void handle_sky_state(void)
 	else if(wlr.sky_flag == WLR_SKY_STAND)
 	{
 		wlr.high_set = ramp_calc(&sky_height_ramp, 0.18f);
-		x3_balance_zero = 0.08f;
-        x5_balance_zero = 0.1f;
+		x3_balance_zero = 0.0f;
+        x5_balance_zero = 0.0f;
 	}
 	else if(wlr.sky_flag == WLR_SKY_IDLE) {
 		sky_height_ramp.out = 0.23f;
@@ -762,12 +782,12 @@ static void update_fly_state(uint8_t index, float yaw_err)
 //        && wlr.jump_flag == WLR_JUMP_IDLE && double_cnt <= 0 && chassis.recover_flag == 0
 //        && wlr.sky_over == 0 && wlr.sky_flag == WLR_SKY_IDLE && KEY_PRESS_POWER && yaw_err < 0.5f) {
 
-    if (wlr.side[index].Fn_kal < 146.0f && rotate_flag == 0 && wlr.high_flag == 1 && chassis.recover_flag == 0
-		&& (wlr.sky_flag == WLR_SKY_IDLE) && (yaw_err < 0.5f || 1))  {
+    if (wlr.side[index].Fn_kal < 145.0f && rotate_flag == 0 && wlr.high_flag == 1 && chassis.recover_flag == 0
+		&& (wlr.sky_flag == WLR_SKY_IDLE) && (yaw_err < 0.5f && 0))  {
         wlr.side[index].fly_cnt += 10;
     } else if (wlr.side[index].fly_cnt > 0) {
         wlr.side[index].fly_cnt -= 20;
-        if (wlr.side[index].Fn_kal > 155.0f) {
+        if (wlr.side[index].Fn_kal > 150.0f) {
             wlr.side[index].fly_cnt -= 30;
         }
         if (wlr.side[index].fly_cnt < 0) {
@@ -845,7 +865,8 @@ static void map_virtual_force(uint8_t index)
         wlr.side[index].Fy = ramp_calc(&Fy_ramp[index], Fy_temp);
     } 
 	else if (wlr.sky_flag == WLR_SKY_LANDING) {
-         wlr.side[index].Fy = pid_calc(&pid_leg_length_fly[index], tlm.l_ref[index], vmc[index].L_fdb);
+//         wlr.side[index].Fy = pid_calc(&pid_leg_length_fly[index], tlm.l_ref[index], vmc[index].L_fdb);
+		wlr.side[index].Fy = 100.0f;
     } 
 	else if (wlr.sky_flag == WLR_SKY_STAND) {
          wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 10.0f
@@ -871,10 +892,10 @@ static void map_virtual_force(uint8_t index)
     } else {																
         wlr.side[index].T0 = lqr.U_ref[2 + index];
     }
-	if(wlr.sky_flag == WLR_SKY_AIR_FOLDING)
-	{
-		wlr.side[index].T0 -= 4.0f;
-	}
+//	if(wlr.sky_flag == WLR_SKY_AIR_FOLDING)
+//	{
+//		wlr.side[index].T0 -= 4.0f;
+//	}
 
     handle_quadrant_protection(index);
 
@@ -912,11 +933,11 @@ void wlr_init(void)
     wlr.recover_length = 0.14f;
     
 	ramp_init(&height_ramp, 0.001f, LegLengthMin, LegLengthMax);			//日常腿长斜坡
-	ramp_init(&sky_height_ramp, 0.005f, LegLengthMin, LegLengthMax);		//空中腿长斜坡
+	ramp_init(&sky_height_ramp, 0.002f, LegLengthMin, LegLengthMax);		//空中腿长斜坡
 	ramp_init(&jump_ramp, 0.007f, -1.5f, 1.5f);
 	ramp_init(&wz_ramp, 0.001f,  0,  3.0f);		//
-	ramp_init(&sky_ramp[0], 40.0f, -500.0f,  500.0f);							//伸腿支持力斜坡
-	ramp_init(&sky_ramp[1], 40.0f, -500.0f,  500.0f);							//伸腿支持力斜坡
+	ramp_init(&sky_ramp[0], 60.0f, -500.0f,  500.0f);							//伸腿支持力斜坡
+	ramp_init(&sky_ramp[1], 60.0f, -500.0f,  500.0f);							//伸腿支持力斜坡
 	ramp_init(&Fy_ramp[0], 4.0f, -500.0f,  500.0f);							//收腿支持力斜坡
 	ramp_init(&Fy_ramp[1], 4.0f, -500.0f,  500.0f);							//收腿支持力斜坡
 	
