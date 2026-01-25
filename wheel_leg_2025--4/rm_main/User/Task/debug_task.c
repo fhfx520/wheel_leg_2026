@@ -22,7 +22,7 @@
 #include "mode_switch_task.h"
 
 #define row_debug 2 * 10
-uint8_t debug_wave = 7;
+uint8_t debug_wave = 17;
 float test_hex = 1;
 extern FGT_sin_t FGT_sin_chassis;
 extern  uint16_t quadrant_cnt;
@@ -33,6 +33,7 @@ extern float yw_ddot;
 extern float Fwy;
 extern float F_test[2];
 extern float F_wy[2];
+extern float variable_rotate_vw;
 void log_scope_data_pkg(void)
 {
     switch(debug_wave) {
@@ -216,6 +217,15 @@ void log_scope_data_pkg(void)
 			log_scope_get_data(chassis_imu.ax);
 			log_scope_get_data(kal_fusion_vel.xhatminus_data[1]); 
 			log_scope_get_data(wlr.v_ref); 
+			break;
+		} case 17: {//小陀螺
+			log_scope_get_data(wlr.wz_fdb);
+			log_scope_get_data(wlr.wz_ref);
+			log_scope_get_data(wlr.yaw_fdb);
+			log_scope_get_data(wlr.yaw_ref);
+			log_scope_get_data(chassis_imu.pit);
+			log_scope_get_data(variable_rotate_vw);
+			log_scope_get_data(lqr.U_ref[0]);
 			break;
 		}
         default:break;

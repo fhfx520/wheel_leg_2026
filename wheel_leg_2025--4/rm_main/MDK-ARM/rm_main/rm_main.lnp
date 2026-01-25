@@ -46,6 +46,7 @@
 "rm_main\pid.o"
 "rm_main\knn.o"
 "rm_main\smc.o"
+"rm_main\dwt.o"
 "rm_main\ui_interface.o"
 "rm_main\ui_default_group1_0.o"
 "rm_main\ui_default_group2_0.o"

@@ -1238,6 +1238,11 @@
               <FileType>1</FileType>
               <FilePath>..\User\Math\SMC.c</FilePath>
             </File>
+            <File>
+              <FileName>dwt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Math\dwt.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

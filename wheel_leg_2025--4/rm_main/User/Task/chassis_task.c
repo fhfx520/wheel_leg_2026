@@ -21,6 +21,7 @@
 #include "leg_vmc.h"
 #include "prot_judge.h"
 #include "prot_power.h"
+#include "dwt.h"
 
 extern uint16_t quadrant_cnt;
 extern pid_t pid_leg_recover[2];
@@ -43,6 +44,9 @@ float sigma_qv = 1.0f;//速度过程噪声方差
 float sigma_qa = 1.0f;//加速度过程噪声方差
 float sigma_v = 1.0f;//速度测量噪声方差
 float sigma_a = 1.0f;//加速度测量噪声方差
+
+float variable_rotate_vw;
+float base,freq_mod,wave;
 chassis_scale_t chassis_scale = {
     .remote = 1.0f/660*2.5f,
     .keyboard = 3.0f
@@ -65,7 +69,21 @@ static void chassis_ramp(void)
         ramp_calc(&chassis_y_ramp, 0);
     }
 }
-
+static void variable_vw_generate(float target_speed)
+{
+	static uint32_t dwt_count;
+	static float t;
+	t += DWT_GetDeltaT(&dwt_count);
+	// 1. 基波分量（主周期2秒）
+	base = 0.6f * sinf(2 * PI * t + PI / 3.0f);
+	// 2. 高频调制分量
+	freq_mod = 0.15f * sinf(2 * PI * t - PI/4.0F) * sinf(8 * PI * t + PI / 5.0f);
+	// 3. 合成基础波形
+	wave = 0.7f + base + freq_mod;
+	// 4. 非线性压缩函数确保值域[0.5, 1]
+//	variable_rotate_vw = target_speed * (0.75f / (1 + expf(-2 * (wave - 0.75f))) + 0.5f);
+	variable_rotate_vw = target_speed * fabsf(sinf(1.5f * PI * t + PI / 3.0f));
+}
 static void Fusion_Vel_Acc_Init(void)
 {
 	//二阶卡尔曼观测器
@@ -127,6 +145,7 @@ static void chassis_init(void)
 
     wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
     wlr.yaw_offset = 1.7f;
+	DWT_Init(550);
     
 	if(!kal_init)
 	{
@@ -320,8 +339,6 @@ static void chassis_data_input(void)
 				chassis_scale.remote =	1.0f/660*2.4f;
 			else 
 				chassis_scale.remote =	1.0f/660*2.5f;	
-			if(wlr.v_limit_flag[0] && wlr.v_limit_flag[1])
-				chassis_scale.remote =	1.0f/660*2.5f;
 			
             chassis.input.vx = -rc.ch4 * chassis_scale.remote;
             chassis.input.vy = rc.ch3 * chassis_scale.remote;
@@ -516,7 +533,7 @@ static void chassis_data_input(void)
 			
 //			wlr.yaw_fdb = CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
 			
-			wlr.yaw_fdb = -chassis_imu.yaw;
+			wlr.yaw_fdb = chassis_imu.yaw;
 //            wlr.wz_ref = rc.ch1 *  0.0035f;
 			wlr.wz_ref = 0.0f;
 			//help拆头 end
@@ -565,53 +582,63 @@ static void chassis_data_input(void)
 				if(power_control.judge_max_power > 40.0f)
 					chassis_rotate_ramp.min = -(CHASSIS_ROTATE_SPEED + (power_control.judge_max_power - 40.0f/25.0f));
 				else
-					chassis_rotate_ramp.min = -CHASSIS_ROTATE_SPEED ;
-				wlr.wz_ref = ramp_calc(&chassis_rotate_ramp , -(CHASSIS_ROTATE_SPEED + (power_control.judge_max_power - 40.0f)/25.0f));
+					chassis_rotate_ramp.min = -CHASSIS_ROTATE_SPEED;
+				variable_vw_generate(ramp_calc(&chassis_rotate_ramp , -(CHASSIS_ROTATE_SPEED + (power_control.judge_max_power - 40.0f)/25.0f)));
+				wlr.wz_ref = variable_rotate_vw;
             } else {	//也就是 当前 chassis.mode == CHASSIS_MODE_REMOTER_ROTATE1
-				if (rotate_flag) {
-					wlr.yaw_ref = wlr.yaw_fdb;
+				wlr.yaw_ref = wlr.yaw_fdb;
 				if(power_control.judge_max_power > 40.0f)
-					chassis_rotate_ramp.max = CHASSIS_ROTATE_SPEED + (power_control.judge_max_power - 40.0f)/25.0f;
+					chassis_rotate_ramp.min = -(CHASSIS_ROTATE_SPEED + (power_control.judge_max_power - 40.0f/25.0f));
 				else
-					chassis_rotate_ramp.max = CHASSIS_ROTATE_SPEED;
-				wlr.wz_ref = ramp_calc(&chassis_rotate_ramp,CHASSIS_ROTATE_SPEED + (power_control.judge_max_power - 40.0f)/25.0f);
+					chassis_rotate_ramp.min = -CHASSIS_ROTATE_SPEED;
+//				variable_vw_generate(ramp_calc(&chassis_rotate_ramp , -(CHASSIS_ROTATE_SPEED + (power_control.judge_max_power - 40.0f)/25.0f)));
+				wlr.wz_ref = ramp_calc(&chassis_rotate_ramp , -(CHASSIS_ROTATE_SPEED + (power_control.judge_max_power - 40.0f)/25.0f));
 				
-				if (supercap.volume_percent < 35.0f)
-					wlr.wz_ref -= 3.5f;
-				else if (supercap.volume_percent < 40.0f)
-					wlr.wz_ref -= 3.0f;
-				else if (supercap.volume_percent < 45.0f)
-					wlr.wz_ref -= 2.5f;
-				else if (supercap.volume_percent < 50.0f)
-					wlr.wz_ref -= 2.0f;
-				else if (supercap.volume_percent < 55.0f)
-					wlr.wz_ref -= 1.5f;
-				else if (supercap.volume_percent < 60.0f)
-					wlr.wz_ref -= 1.0f;		
-				//pitch歪小陀螺减速
-				if (fabs(chassis_imu.pit) > 0.55f)
-					wlr.wz_ref -= 5.0f;
-				else if (fabs(chassis_imu.pit) > 0.50f)
-					wlr.wz_ref -= 4.5f;
-				else if (fabs(chassis_imu.pit) > 0.45f)
-					wlr.wz_ref -= 4.0f;
-				else if (fabs(chassis_imu.pit) > 0.40f)
-					wlr.wz_ref -= 3.5f;
-				else if (fabs(chassis_imu.pit) > 0.35f)
-					wlr.wz_ref -= 3.0f;
-				else if (fabs(chassis_imu.pit) > 0.30f)
-					wlr.wz_ref -= 2.5f;	
-				else if (fabs(chassis_imu.pit) > 0.25f)
-					wlr.wz_ref -= 2.0f;	
-				else if (fabs(chassis_imu.pit) > 0.20f)
-					wlr.wz_ref -= 1.5f;								
-				else if (fabs(chassis_imu.pit) > 0.15f)
-					wlr.wz_ref -= 1.0f;	
-				else if (fabs(chassis_imu.pit) > 0.10f)
-					wlr.wz_ref -= 0.5f;	
-				if (wlr.wz_ref < 0.0f)
-					wlr.wz_ref = 0.0f;
-			}
+//				if (rotate_flag) {
+//					wlr.yaw_ref = wlr.yaw_fdb;
+//				if(power_control.judge_max_power > 40.0f)
+//					chassis_rotate_ramp.max = CHASSIS_ROTATE_SPEED + (power_control.judge_max_power - 40.0f)/25.0f;
+//				else
+//					chassis_rotate_ramp.max = CHASSIS_ROTATE_SPEED;
+//				wlr.wz_ref = ramp_calc(&chassis_rotate_ramp,CHASSIS_ROTATE_SPEED + (power_control.judge_max_power - 40.0f)/25.0f);
+//				
+//				if (supercap.volume_percent < 35.0f)
+//					wlr.wz_ref -= 3.5f;
+//				else if (supercap.volume_percent < 40.0f)
+//					wlr.wz_ref -= 3.0f;
+//				else if (supercap.volume_percent < 45.0f)
+//					wlr.wz_ref -= 2.5f;
+//				else if (supercap.volume_percent < 50.0f)
+//					wlr.wz_ref -= 2.0f;
+//				else if (supercap.volume_percent < 55.0f)
+//					wlr.wz_ref -= 1.5f;
+//				else if (supercap.volume_percent < 60.0f)
+//					wlr.wz_ref -= 1.0f;		
+//				//pitch歪小陀螺减速
+//				if (fabs(chassis_imu.pit) > 0.55f)
+//					wlr.wz_ref -= 5.0f;
+//				else if (fabs(chassis_imu.pit) > 0.50f)
+//					wlr.wz_ref -= 4.5f;
+//				else if (fabs(chassis_imu.pit) > 0.45f)
+//					wlr.wz_ref -= 4.0f;
+//				else if (fabs(chassis_imu.pit) > 0.40f)
+//					wlr.wz_ref -= 3.5f;
+//				else if (fabs(chassis_imu.pit) > 0.35f)
+//					wlr.wz_ref -= 3.0f;
+//				else if (fabs(chassis_imu.pit) > 0.30f)
+//					wlr.wz_ref -= 2.5f;	
+//				else if (fabs(chassis_imu.pit) > 0.25f)
+//					wlr.wz_ref -= 2.0f;	
+//				else if (fabs(chassis_imu.pit) > 0.20f)
+//					wlr.wz_ref -= 1.5f;								
+//				else if (fabs(chassis_imu.pit) > 0.15f)
+//					wlr.wz_ref -= 1.0f;	
+//				else if (fabs(chassis_imu.pit) > 0.10f)
+//					wlr.wz_ref -= 0.5f;	
+//				if (wlr.wz_ref < 0.0f)
+//					wlr.wz_ref = 0.0f;
+//			}
+//		}
 		}
             break;
         }
@@ -668,7 +695,7 @@ static void chassis_data_input(void)
         if(spin_zero == 0)
             spin_zero =  spin_limit;
 		rotate_state_cnt++;
-		if(fabs(spin_zero) < PI/2.0f  )//谁大听谁
+		if(fabs(spin_zero) < PI / 2.0f  )//谁大听谁
 		{					
 			if( fabs(circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, wlr.yaw_fdb, 2 * PI)) < 1.0f && rotate_state_cnt > 100){
 				rotate_ramp_flag = 0;
@@ -684,16 +711,21 @@ static void chassis_data_input(void)
 			}
 		}
 					
-		if (last_chassis_mode == CHASSIS_MODE_REMOTER_ROTATE2 || last_chassis_mode == CHASSIS_MODE_REMOTER_ROTATE1 ||last_chassis_mode == CHASSIS_MODE_KEYBOARD_ROTATE ) 
+		if (last_chassis_mode == CHASSIS_MODE_REMOTER_ROTATE2 || last_chassis_mode == CHASSIS_MODE_REMOTER_ROTATE1 
+				||last_chassis_mode == CHASSIS_MODE_KEYBOARD_ROTATE ) 
 			rotate_chassis_mode = last_chassis_mode;
 		
-			if(rotate_chassis_mode == CHASSIS_MODE_REMOTER_ROTATE2 ||rotate_chassis_mode == CHASSIS_MODE_KEYBOARD_ROTATE  )
-				wlr.wz_ref = -12.0f/1.0f;  
-			else if (rotate_chassis_mode == CHASSIS_MODE_REMOTER_ROTATE1 ) 
-				wlr.wz_ref = 12.0f/1.0f;    
-			
-			wlr.yaw_ref	= wlr.yaw_fdb;
-		}
+		if(rotate_chassis_mode == CHASSIS_MODE_REMOTER_ROTATE2 ||rotate_chassis_mode == CHASSIS_MODE_KEYBOARD_ROTATE  )
+			wlr.wz_ref = -12.0f/1.0f;  
+//			wlr.wz_ref = ramp_calc(&chassis_rotate_ramp,0.0f);
+		else if (rotate_chassis_mode == CHASSIS_MODE_REMOTER_ROTATE1 )
+//			wlr.wz_ref = 12.0f/1.0f;			
+			wlr.wz_ref = -12.0f/1.0f;   
+//			wlr.wz_ref = ramp_calc(&chassis_rotate_ramp,0.0f);		
+
+		
+		wlr.yaw_ref	= wlr.yaw_fdb;
+	}
 	
 		
 		wlr.yaw_err = circle_error(wlr.yaw_ref,wlr.yaw_fdb, 2 * PI);//补
@@ -703,8 +735,8 @@ static void chassis_data_input(void)
 			wlr.yaw_err = 0;
 		}
 //		wlr.yaw_ref = wlr.yaw_fdb + 1.0f * wlr.yaw_err;//同步带哥 有头
-		
-		wheel_diff =  gain_diff * (wlr.side[0].wy  - wlr.side[1].wy );
+		wheel_diff = 0.0f;
+//		wheel_diff =  gain_diff * (wlr.side[0].wy  - wlr.side[1].wy );
 		
 		if (abs(rc.ch1) < 1 )
 			wlr.yaw_ref = wlr.yaw_fdb + (rc.ch1 / 660.0f)*(PI / 2.0f) - wheel_diff; //wlr.yaw_fdb + wlr.yaw_err;
