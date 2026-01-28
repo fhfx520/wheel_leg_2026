@@ -28,7 +28,7 @@ extern pid_t pid_leg_recover[2];
 extern float real_vel;
 
 uint8_t rotate_flag;
-uint8_t rppppp_flag = 0;
+uint8_t rotate_stop_flag;
 static uint8_t kal_init = 0;
 
 ramp_t chassis_x_ramp;
@@ -40,13 +40,9 @@ kalman_filter_t kal_wy;
 kalman_filter_t kal_fusion_vel;
 FGT_sin_t FGT_sin_chassis;
 chassis_t chassis;
-float sigma_qv = 1.0f;//速度过程噪声方差
-float sigma_qa = 1.0f;//加速度过程噪声方差
-float sigma_v = 1.0f;//速度测量噪声方差
-float sigma_a = 1.0f;//加速度测量噪声方差
 
 float variable_rotate_vw;
-float base,freq_mod,wave;
+
 chassis_scale_t chassis_scale = {
     .remote = 1.0f/660*2.5f,
     .keyboard = 3.0f
@@ -74,14 +70,6 @@ static void variable_vw_generate(float target_speed)
 	static uint32_t dwt_count;
 	static float t;
 	t += DWT_GetDeltaT(&dwt_count);
-	// 1. 基波分量（主周期2秒）
-	base = 0.6f * sinf(2 * PI * t + PI / 3.0f);
-	// 2. 高频调制分量
-	freq_mod = 0.15f * sinf(2 * PI * t - PI/4.0F) * sinf(8 * PI * t + PI / 5.0f);
-	// 3. 合成基础波形
-	wave = 0.7f + base + freq_mod;
-	// 4. 非线性压缩函数确保值域[0.5, 1]
-//	variable_rotate_vw = target_speed * (0.75f / (1 + expf(-2 * (wave - 0.75f))) + 0.5f);
 	variable_rotate_vw = target_speed * fabsf(sinf(1.5f * PI * t + PI / 3.0f));
 }
 static void Fusion_Vel_Acc_Init(void)
@@ -169,10 +157,11 @@ static void chassis_init(void)
 }
 
 float spin_limit;
-float spin_check;
+float spin_check;//用watch来看局部变量spin_flag
 float spin_zero;
 float wheel_diff;
 float gain_diff = 0.25f;
+
 static void chassis_mode_switch(void)
 {
     /* 系统历史状态 */
@@ -192,112 +181,112 @@ static void chassis_mode_switch(void)
 
     /* 底盘状态切换 */
     spin_limit = circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, (float)yaw_motor.ecd / 8192 * 2 * PI, 2 * PI);
-    switch (ctrl_mode) {
-    case PROTECT_MODE: { //能量模式和保护模式下，底盘行为相同
-        chassis.mode = CHASSIS_MODE_PROTECT;
-        wlr.prone_flag = 0;
-        chassis.rescue_cnt_L = 0;
-        chassis.rescue_cnt_R = 0;
-        chassis.recover_flag = 0;
-        chassis.rescue_inter_flag = 0;
-		pid_L_test[0].i_out = -100;
-		pid_L_test[1].i_out = -100;
-        break;
-    }
-    case REMOTER_MODE: {
-        if (last_ctrl_mode == PROTECT_MODE )
-            chassis.recover_flag = 1;		//进入翻倒自起立
-        if (last_ctrl_mode != REMOTER_MODE || chassis.mode == CHASSIS_MODE_PROTECT) { //从非遥控模式 或 保护模式切入遥控模式，底盘切为遥控跟随模式
-            chassis.mode = CHASSIS_MODE_REMOTER_FOLLOW;
-        }
-		
-        /* 底盘小陀螺模式 */
-        static uint8_t spin_flag; 					//单次触发使能标志
-        if (spin_flag == 0 && ABS(rc.ch3) < 10) { 	//使能底盘模式切换
-            spin_flag = 1;
-        }
-				
-        if (rc.ch3 == 660 && spin_flag == 1 && wlr.high_flag == 0) {
-            if( (chassis.mode == CHASSIS_MODE_REMOTER_ROTATE1 || chassis.mode == CHASSIS_MODE_REMOTER_ROTATE2)	
-			/*&& 0 < spin_limit && spin_limit < 1.7f*/  )				
-            {//---------------------------为了测试注释 && 0 < spin_limit && spin_limit < 1.7f  
-                chassis.mode = CHASSIS_MODE_REMOTER_FOLLOW;
-                spin_flag = 0;
-            } else if (chassis.mode == CHASSIS_MODE_REMOTER_FOLLOW) {
-                chassis.mode = CHASSIS_MODE_REMOTER_ROTATE1;
-                spin_flag = 0;
-            }
-        }
-        if (rc.ch3 == -660 && spin_flag == 1 && wlr.high_flag == 0) {
-            if( (chassis.mode == CHASSIS_MODE_REMOTER_ROTATE1 || chassis.mode == CHASSIS_MODE_REMOTER_ROTATE2)
-			/*	&& -3.0f < spin_limit && spin_limit < -1.5f */ )				
-			{// && -3.0f < spin_limit && spin_limit < -1.5f) {
-                chassis.mode = CHASSIS_MODE_REMOTER_FOLLOW;
-                spin_flag = 0;
-            } else if (chassis.mode == CHASSIS_MODE_REMOTER_FOLLOW) {
-                chassis.mode = CHASSIS_MODE_REMOTER_ROTATE2;
-                spin_flag = 0;
-            }
-        }
-        spin_check = spin_flag;				
+    switch (ctrl_mode) 
+	{
+		case PROTECT_MODE: { //能量模式和保护模式下，底盘行为相同
+			chassis.mode = CHASSIS_MODE_PROTECT;
+			wlr.prone_flag = 0;
+			chassis.rescue_cnt_L = 0;
+			chassis.rescue_cnt_R = 0;
+			chassis.recover_flag = 0;
+			chassis.rescue_inter_flag = 0;
+			break;
+		}
+		case REMOTER_MODE: {
+			if (last_ctrl_mode == PROTECT_MODE )
+				chassis.recover_flag = 1;		//进入翻倒自起立
+			if (last_ctrl_mode != REMOTER_MODE || chassis.mode == CHASSIS_MODE_PROTECT) { //从非遥控模式 或 保护模式切入遥控模式，底盘切为遥控跟随模式
+				chassis.mode = CHASSIS_MODE_REMOTER_FOLLOW;
+			}
+			
+			/* 底盘小陀螺模式 */
+			static uint8_t spin_flag; 					//单次触发使能标志
+			if (spin_flag == 0 && ABS(rc.ch3) < 10) { 	//使能底盘模式切换
+				spin_flag = 1;
+			}
+					
+			if (rc.ch3 == 660 && spin_flag == 1 && wlr.high_flag == 0) {
+				if( (chassis.mode == CHASSIS_MODE_REMOTER_ROTATE1 || chassis.mode == CHASSIS_MODE_REMOTER_ROTATE2)	
+				/*&& 0 < spin_limit && spin_limit < 1.7f*/  )				
+				{//---------------------------为了测试注释 && 0 < spin_limit && spin_limit < 1.7f  
+					chassis.mode = CHASSIS_MODE_REMOTER_FOLLOW;
+					spin_flag = 0;
+				} else if (chassis.mode == CHASSIS_MODE_REMOTER_FOLLOW) {
+					chassis.mode = CHASSIS_MODE_REMOTER_ROTATE1;
+					spin_flag = 0;
+				}
+			}
+			if (rc.ch3 == -660 && spin_flag == 1 && wlr.high_flag == 0) {
+				if( (chassis.mode == CHASSIS_MODE_REMOTER_ROTATE1 || chassis.mode == CHASSIS_MODE_REMOTER_ROTATE2)
+				/*	&& -3.0f < spin_limit && spin_limit < -1.5f */ )				
+				{// && -3.0f < spin_limit && spin_limit < -1.5f) {
+					chassis.mode = CHASSIS_MODE_REMOTER_FOLLOW;
+					spin_flag = 0;
+				} else if (chassis.mode == CHASSIS_MODE_REMOTER_FOLLOW) {
+					chassis.mode = CHASSIS_MODE_REMOTER_ROTATE2;
+					spin_flag = 0;
+				}
+			}
+			spin_check = spin_flag;				
 
-        /* 遥控器注释底盘 */
-        if (rc_fsm_check(RC_LEFT_RU) || rc_fsm_check(RC_RIGHT_RU)) { //遥控器注释底盘
-            chassis.mode = CHASSIS_MODE_PROTECT;
-        }
-        break;
-    }
-    case KEYBOARD_MODE: { //键盘模式下(跟随，陀螺，迎敌三种模式相互切换),(跟随与补给模式相互切换)  KB_R
-        /* 底盘模式切换 */
-        if (last_ctrl_mode == PROTECT_MODE )
-            chassis.recover_flag = 1;
-		
-        switch (chassis.mode) {
-        case CHASSIS_MODE_KEYBOARD_FOLLOW: { //底盘跟随模式下
-			if(kb_status[KEY_CHASSIS_PRONE]) { //趴倒模式
-                chassis.mode = CHASSIS_MODE_KEYBOARD_PRONE;
-            } else if (kb_status[KEY_CHASSIS_ROTATE]) { //进入�?盘陀螺模�?
-                chassis.mode = CHASSIS_MODE_KEYBOARD_ROTATE;
-            } else if (kb_status[KEY_CHASSIS_FIGHT] || kb_status[KEY_CHASSIS_FIGHT_A] || kb_status[KEY_CHASSIS_FIGHT_D] ) { //进入迎敌模式
-                chassis.mode = CHASSIS_MODE_KEYBOARD_FIGHT;							
-			} 
-            break;
-        }
-        case CHASSIS_MODE_KEYBOARD_ROTATE: { //键盘陀螺模式下
-            if ((!kb_status[KEY_CHASSIS_ROTATE]) && -1.7f < spin_limit && spin_limit < 0) { //恢复跟随模式
-                chassis.mode = CHASSIS_MODE_KEYBOARD_FOLLOW;
-            } else if (kb_status[KEY_CHASSIS_FIGHT]) { //进入迎敌模式
-                chassis.mode = CHASSIS_MODE_KEYBOARD_FIGHT;
-            }
-			//2025.3.23
-			if (fabs(chassis_imu.pit) > 0.5f)
-				chassis.mode = CHASSIS_MODE_KEYBOARD_FOLLOW;
-            break;
-        }
-        case CHASSIS_MODE_KEYBOARD_FIGHT: { //键盘迎敌模式下
-            if (rc.kb.bit.W || rc.kb.bit.S) { //恢复跟随模式
-                chassis.mode = CHASSIS_MODE_KEYBOARD_FOLLOW;
-            } else if (kb_status[KEY_CHASSIS_ROTATE]) { //进入小陀螺模式
-                chassis.mode = CHASSIS_MODE_KEYBOARD_ROTATE;
-            } 
-            break;
-        }
-        case CHASSIS_MODE_KEYBOARD_PRONE: {
-            if(!kb_status[KEY_CHASSIS_PRONE]) { //趴倒模式
-                wlr.prone_flag = 0;
-                wlr.high_flag = 0;
-                chassis.mode = CHASSIS_MODE_KEYBOARD_FOLLOW;
-            }
-            break;
-        }		
-        default: {
-            chassis.mode = CHASSIS_MODE_KEYBOARD_FOLLOW;
-            break;
-        }
-        }
-        break;
-    }
-    default: break;
+			/* 遥控器注释底盘 */
+			if (rc_fsm_check(RC_LEFT_RU) || rc_fsm_check(RC_RIGHT_RU)) { //遥控器注释底盘
+				chassis.mode = CHASSIS_MODE_PROTECT;
+			}
+			break;
+		}
+		case KEYBOARD_MODE: { //键盘模式下(跟随，陀螺，迎敌三种模式相互切换),(跟随与补给模式相互切换)  KB_R
+			/* 底盘模式切换 */
+			if (last_ctrl_mode == PROTECT_MODE )
+				chassis.recover_flag = 1;
+			
+			switch (chassis.mode) 
+			{
+				case CHASSIS_MODE_KEYBOARD_FOLLOW: { //底盘跟随模式下
+					if(kb_status[KEY_CHASSIS_PRONE]) { //趴倒模式
+						chassis.mode = CHASSIS_MODE_KEYBOARD_PRONE;
+					} else if (kb_status[KEY_CHASSIS_ROTATE]) { //进入�?盘陀螺模�?
+						chassis.mode = CHASSIS_MODE_KEYBOARD_ROTATE;
+					} else if (kb_status[KEY_CHASSIS_FIGHT] || kb_status[KEY_CHASSIS_FIGHT_A] || kb_status[KEY_CHASSIS_FIGHT_D] ) { //进入迎敌模式
+						chassis.mode = CHASSIS_MODE_KEYBOARD_FIGHT;							
+					} 
+					break;
+				}
+				case CHASSIS_MODE_KEYBOARD_ROTATE: { //键盘陀螺模式下
+					if ((!kb_status[KEY_CHASSIS_ROTATE]) && -1.7f < spin_limit && spin_limit < 0) { //恢复跟随模式
+						chassis.mode = CHASSIS_MODE_KEYBOARD_FOLLOW;
+					} else if (kb_status[KEY_CHASSIS_FIGHT]) { //进入迎敌模式
+						chassis.mode = CHASSIS_MODE_KEYBOARD_FIGHT;
+					}
+					//2025.3.23
+					if (fabs(chassis_imu.pit) > 0.5f)
+						chassis.mode = CHASSIS_MODE_KEYBOARD_FOLLOW;
+					break;
+				}
+				case CHASSIS_MODE_KEYBOARD_FIGHT: { //键盘迎敌模式下
+					if (rc.kb.bit.W || rc.kb.bit.S) { //恢复跟随模式
+						chassis.mode = CHASSIS_MODE_KEYBOARD_FOLLOW;
+					} else if (kb_status[KEY_CHASSIS_ROTATE]) { //进入小陀螺模式
+						chassis.mode = CHASSIS_MODE_KEYBOARD_ROTATE;
+					} 
+					break;
+				}
+				case CHASSIS_MODE_KEYBOARD_PRONE: {
+					if(!kb_status[KEY_CHASSIS_PRONE]) { //趴倒模式
+						wlr.prone_flag = 0;
+						wlr.high_flag = 0;
+						chassis.mode = CHASSIS_MODE_KEYBOARD_FOLLOW;
+					}
+					break;
+				}		
+				default: {
+					chassis.mode = CHASSIS_MODE_KEYBOARD_FOLLOW;
+					break;
+				}
+			}
+			break;
+		}
+		default: break;
     }
     /* 系统历史状态更�? */
     last_ctrl_mode = ctrl_mode;
@@ -349,14 +338,12 @@ static void chassis_data_input(void)
 			   if (rc.sw2 == RC_UP) {
                    wlr.jump_flag = 0;
                    wlr.high_flag = 0;	//短腿
-                   wlr.power_flag = 1;	//未使用
 				   wlr.sky_flag = WLR_SKY_IDLE;
+				   wlr.jump2_over = 0;
 			   } 
                else if (rc.sw2 == RC_MI ) {
 				   wlr.jump_flag = 0;
                    wlr.high_flag = 1;		//中腿
-                   wlr.power_flag = 1;
-                   chassis.rescue_test = 0;
 				   wlr.sky_flag = WLR_SKY_IDLE;
 				   wlr.jump2_over = 0;
 			   } 
@@ -364,19 +351,22 @@ static void chassis_data_input(void)
 //                   wlr.high_flag = 2;
 //                 } else if (rc.sw2 == RC_DN && 0)//发射器
 //                      chassis.rescue_test = 1;
-//               else if (rc.sw2 == RC_DN && wlr.jump_flag == 0 && wlr.jump2_over == 0)//&& !rc_fsm_check(RC_RIGHT_LU))
-//                    wlr.jump_flag = 1;
-//               else 
-//                    wlr.high_flag = 0; 
-			   else if (rc.sw2 == RC_DN && wlr.sky_flag == WLR_SKY_IDLE)
-					wlr.sky_flag = 1; 
-			   
-			   
+               else if (rc.sw2 == RC_DN && wlr.jump_flag == 0 && wlr.jump2_over == 0)//&& !rc_fsm_check(RC_RIGHT_LU))
+                    wlr.jump_flag = 1;
+               else 
+                    wlr.high_flag = 0; 
+//			   else if (rc.sw2 == RC_DN && wlr.sky_flag == WLR_SKY_IDLE)
+//			   { 
+//				   wlr.jump_flag = 0;
+//                   wlr.high_flag = 0;		//短腿
+//				   wlr.sky_flag = WLR_SKY_FOLDING;
+//				   wlr.jump2_over = 0;
+//			   }
 			   if (rotate_flag == 1) {//小陀螺不能改变腿长
-					wlr.jump_flag = 0;
-					wlr.high_flag = 0;
-					wlr.power_flag = 1;
-				    chassis.rescue_test = 0;
+				   wlr.jump_flag = 0;
+				   wlr.high_flag = 0;
+				   wlr.sky_flag = WLR_SKY_IDLE;
+				   wlr.jump2_over = 0;
 			   }
            }
            break;
@@ -389,8 +379,6 @@ static void chassis_data_input(void)
 			}else if (!KEY_PRESS_JUMP &&  wlr.jump_flag != 0){
                 wlr.jump_flag = 0;
 				wlr.high_flag = 0;
-                wlr.power_flag = 1;
-                chassis.rescue_test = 0;
 				wlr.sky_flag = WLR_SKY_IDLE;
 				wlr.jump2_over = 0;	
 			}
@@ -415,7 +403,6 @@ static void chassis_data_input(void)
 //						 chassis_scale.keyboard = 2.5f; 							
 //            }
 			if(wlr.high_flag == 2) {
-                wlr.power_flag = 0;
                 chassis_scale.keyboard = 1.0f;  //迎敌模式
 			}
 			else if(wlr.high_flag == 1){
@@ -473,7 +460,6 @@ static void chassis_data_input(void)
 					}
 				} else if (wlr.high_flag == 2) {
 					chassis_scale.keyboard = 1.0f;
-					wlr.power_flag = 0;
 					if (kb_status[KEY_CHASSIS_HEIGHT] == KEY_RUN && 
 						chassis.mode != CHASSIS_MODE_KEYBOARD_PRONE) {
 						wlr.high_flag = 1;
@@ -490,9 +476,7 @@ static void chassis_data_input(void)
 				}
 				if (rotate_flag == 1) {//小陀螺不能改变腿长
 					wlr.jump_flag = 0;
-					wlr.high_flag = 0;
-					wlr.power_flag = 1;
-					chassis.rescue_test = 0;							
+					wlr.high_flag = 0;							
 				}	
 			}
             break;
@@ -572,11 +556,6 @@ static void chassis_data_input(void)
         case CHASSIS_MODE_REMOTER_ROTATE1:
         case CHASSIS_MODE_REMOTER_ROTATE2:
         case CHASSIS_MODE_KEYBOARD_ROTATE: {						
-            if (last_chassis_mode != CHASSIS_MODE_REMOTER_ROTATE1 && \
-				last_chassis_mode != CHASSIS_MODE_REMOTER_ROTATE2 && \
-				last_chassis_mode != CHASSIS_MODE_KEYBOARD_ROTATE)
-				wlr.yaw_ref = -chassis_imu.yaw;
-			
 			if (chassis.mode == CHASSIS_MODE_REMOTER_ROTATE2 || chassis.mode == CHASSIS_MODE_KEYBOARD_ROTATE ) {//检录进
 				wlr.yaw_ref = wlr.yaw_fdb;
 				if(power_control.judge_max_power > 40.0f)
@@ -596,56 +575,54 @@ static void chassis_data_input(void)
 				
 //				if (rotate_flag) {
 //					wlr.yaw_ref = wlr.yaw_fdb;
-//				if(power_control.judge_max_power > 40.0f)
-//					chassis_rotate_ramp.max = CHASSIS_ROTATE_SPEED + (power_control.judge_max_power - 40.0f)/25.0f;
-//				else
-//					chassis_rotate_ramp.max = CHASSIS_ROTATE_SPEED;
-//				wlr.wz_ref = ramp_calc(&chassis_rotate_ramp,CHASSIS_ROTATE_SPEED + (power_control.judge_max_power - 40.0f)/25.0f);
-//				
-//				if (supercap.volume_percent < 35.0f)
-//					wlr.wz_ref -= 3.5f;
-//				else if (supercap.volume_percent < 40.0f)
-//					wlr.wz_ref -= 3.0f;
-//				else if (supercap.volume_percent < 45.0f)
-//					wlr.wz_ref -= 2.5f;
-//				else if (supercap.volume_percent < 50.0f)
-//					wlr.wz_ref -= 2.0f;
-//				else if (supercap.volume_percent < 55.0f)
-//					wlr.wz_ref -= 1.5f;
-//				else if (supercap.volume_percent < 60.0f)
-//					wlr.wz_ref -= 1.0f;		
-//				//pitch歪小陀螺减速
-//				if (fabs(chassis_imu.pit) > 0.55f)
-//					wlr.wz_ref -= 5.0f;
-//				else if (fabs(chassis_imu.pit) > 0.50f)
-//					wlr.wz_ref -= 4.5f;
-//				else if (fabs(chassis_imu.pit) > 0.45f)
-//					wlr.wz_ref -= 4.0f;
-//				else if (fabs(chassis_imu.pit) > 0.40f)
-//					wlr.wz_ref -= 3.5f;
-//				else if (fabs(chassis_imu.pit) > 0.35f)
-//					wlr.wz_ref -= 3.0f;
-//				else if (fabs(chassis_imu.pit) > 0.30f)
-//					wlr.wz_ref -= 2.5f;	
-//				else if (fabs(chassis_imu.pit) > 0.25f)
-//					wlr.wz_ref -= 2.0f;	
-//				else if (fabs(chassis_imu.pit) > 0.20f)
-//					wlr.wz_ref -= 1.5f;								
-//				else if (fabs(chassis_imu.pit) > 0.15f)
-//					wlr.wz_ref -= 1.0f;	
-//				else if (fabs(chassis_imu.pit) > 0.10f)
-//					wlr.wz_ref -= 0.5f;	
-//				if (wlr.wz_ref < 0.0f)
-//					wlr.wz_ref = 0.0f;
-//			}
-//		}
-		}
+//					if(power_control.judge_max_power > 40.0f)
+//						chassis_rotate_ramp.max = CHASSIS_ROTATE_SPEED + (power_control.judge_max_power - 40.0f)/25.0f;
+//					else
+//						chassis_rotate_ramp.max = CHASSIS_ROTATE_SPEED;
+//					wlr.wz_ref = ramp_calc(&chassis_rotate_ramp,CHASSIS_ROTATE_SPEED + (power_control.judge_max_power - 40.0f)/25.0f);
+//					
+//					if (supercap.volume_percent < 35.0f)
+//						wlr.wz_ref -= 3.5f;
+//					else if (supercap.volume_percent < 40.0f)
+//						wlr.wz_ref -= 3.0f;
+//					else if (supercap.volume_percent < 45.0f)
+//						wlr.wz_ref -= 2.5f;
+//					else if (supercap.volume_percent < 50.0f)
+//						wlr.wz_ref -= 2.0f;
+//					else if (supercap.volume_percent < 55.0f)
+//						wlr.wz_ref -= 1.5f;
+//					else if (supercap.volume_percent < 60.0f)
+//						wlr.wz_ref -= 1.0f;		
+//					//pitch歪小陀螺减速
+//					if (fabs(chassis_imu.pit) > 0.55f)
+//						wlr.wz_ref -= 5.0f;
+//					else if (fabs(chassis_imu.pit) > 0.50f)
+//						wlr.wz_ref -= 4.5f;
+//					else if (fabs(chassis_imu.pit) > 0.45f)
+//						wlr.wz_ref -= 4.0f;
+//					else if (fabs(chassis_imu.pit) > 0.40f)
+//						wlr.wz_ref -= 3.5f;
+//					else if (fabs(chassis_imu.pit) > 0.35f)
+//						wlr.wz_ref -= 3.0f;
+//					else if (fabs(chassis_imu.pit) > 0.30f)
+//						wlr.wz_ref -= 2.5f;	
+//					else if (fabs(chassis_imu.pit) > 0.25f)
+//						wlr.wz_ref -= 2.0f;	
+//					else if (fabs(chassis_imu.pit) > 0.20f)
+//						wlr.wz_ref -= 1.5f;								
+//					else if (fabs(chassis_imu.pit) > 0.15f)
+//						wlr.wz_ref -= 1.0f;	
+//					else if (fabs(chassis_imu.pit) > 0.10f)
+//						wlr.wz_ref -= 0.5f;	
+//					if (wlr.wz_ref < 0.0f)
+//						wlr.wz_ref = 0.0f;
+//				}
+			}
             break;
         }
         case CHASSIS_MODE_KEYBOARD_UNFOLLOW: {
             if (last_chassis_mode != CHASSIS_MODE_KEYBOARD_UNFOLLOW)
                 wlr.yaw_ref = -chassis_imu.yaw;
-			
 				wlr.yaw_fdb = -chassis_imu.yaw;
 				wlr.wz_ref = 0;
             break;
@@ -685,11 +662,11 @@ static void chassis_data_input(void)
          chassis.mode == CHASSIS_MODE_KEYBOARD_FOLLOW       || 
          chassis.mode == CHASSIS_MODE_REMOTER_FOLLOW)) {
 			rotate_ramp_flag = 1;  		 
-			rppppp_flag = 1;
+			rotate_stop_flag = 1;
 		 }
-	if (rppppp_flag) {
+	if (rotate_stop_flag) {
 		if (fabs(wlr.wz_fdb) < 2.0f)
-			rppppp_flag = 0;
+			rotate_stop_flag = 0;
 		}
     if(rotate_ramp_flag) {
         if(spin_zero == 0)
@@ -709,67 +686,57 @@ static void chassis_data_input(void)
 				spin_zero = 0;
 				rotate_state_cnt = 0;
 			}
-		}
-					
+		}		
 		if (last_chassis_mode == CHASSIS_MODE_REMOTER_ROTATE2 || last_chassis_mode == CHASSIS_MODE_REMOTER_ROTATE1 
 				||last_chassis_mode == CHASSIS_MODE_KEYBOARD_ROTATE ) 
 			rotate_chassis_mode = last_chassis_mode;
-		
 		if(rotate_chassis_mode == CHASSIS_MODE_REMOTER_ROTATE2 ||rotate_chassis_mode == CHASSIS_MODE_KEYBOARD_ROTATE  )
 			wlr.wz_ref = -12.0f/1.0f;  
-//			wlr.wz_ref = ramp_calc(&chassis_rotate_ramp,0.0f);
-		else if (rotate_chassis_mode == CHASSIS_MODE_REMOTER_ROTATE1 )
-//			wlr.wz_ref = 12.0f/1.0f;			
-			wlr.wz_ref = -12.0f/1.0f;   
-//			wlr.wz_ref = ramp_calc(&chassis_rotate_ramp,0.0f);		
-
-		
+		else if (rotate_chassis_mode == CHASSIS_MODE_REMOTER_ROTATE1 )		
+			wlr.wz_ref = -12.0f/1.0f;   	
 		wlr.yaw_ref	= wlr.yaw_fdb;
 	}
 	
-		
-		wlr.yaw_err = circle_error(wlr.yaw_ref,wlr.yaw_fdb, 2 * PI);//补
-		/**********上台阶前让车身转至正对**********/
-		if (wlr.jump_flag && !wlr.jump_pre) {
-			wlr.wz_ref = 8.0f;
-			wlr.yaw_err = 0;
-		}
+	wlr.yaw_err = circle_error(wlr.yaw_ref,wlr.yaw_fdb, 2 * PI);//补
+	/**********上台阶前让车身转至正对**********/
+//	if (wlr.jump_flag && !wlr.jump_pre) {
+//		wlr.wz_ref = 8.0f;
+//		wlr.yaw_err = 0;
+//	}
 //		wlr.yaw_ref = wlr.yaw_fdb + 1.0f * wlr.yaw_err;//同步带哥 有头
-		wheel_diff = 0.0f;
+	wheel_diff = 0.0f;
 //		wheel_diff =  gain_diff * (wlr.side[0].wy  - wlr.side[1].wy );
+	
+	if (abs(rc.ch1) < 1 )
+		wlr.yaw_ref = wlr.yaw_fdb + (rc.ch1 / 660.0f)*(PI / 2.0f) - wheel_diff; //wlr.yaw_fdb + wlr.yaw_err;
+	else
+		wlr.yaw_ref = wlr.yaw_fdb + (rc.ch1 / 660.0f)*(PI / 2.0f); //wlr.yaw_fdb + wlr.yaw_err;
+	
+	wlr.v_ref = chassis.output.vx;
+	
+	if (wlr.jump_flag && !wlr.jump_pre && ((fabs(circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, wlr.yaw_fdb, 2 * PI)) < 0.2f) || 1))
+		wlr.jump_pre = 1;
+	
+	
+	
+	if (chassis.mode == CHASSIS_MODE_KEYBOARD_FIGHT)
+		wlr.v_ref = -chassis.output.vy;
+		wlr.s_ref += (wlr.v_ref * 0.001f * 2);
+	if(rotate_stop_flag) {
+		wlr.v_ref = 0.0f;
+	}
 		
-		if (abs(rc.ch1) < 1 )
-			wlr.yaw_ref = wlr.yaw_fdb + (rc.ch1 / 660.0f)*(PI / 2.0f) - wheel_diff; //wlr.yaw_fdb + wlr.yaw_err;
-		else
-			wlr.yaw_ref = wlr.yaw_fdb + (rc.ch1 / 660.0f)*(PI / 2.0f); //wlr.yaw_fdb + wlr.yaw_err;
-		
-		wlr.v_ref = chassis.output.vx;
-		
-		if (wlr.jump_flag && !wlr.jump_pre && fabs(circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, wlr.yaw_fdb, 2 * PI)) < 0.2f)
-			wlr.jump_pre = 1;
-		
-		
-		
-		if (chassis.mode == CHASSIS_MODE_KEYBOARD_FIGHT)
-			wlr.v_ref = -chassis.output.vy;
-			wlr.s_ref += (wlr.v_ref * 0.001f * 2);
-		if(rppppp_flag) {
-			wlr.v_ref = 0.0f;
-		}
     //陀螺仪数据输入
     wlr.roll_fdb    = -chassis_imu.rol;
     wlr.pit_fdb     = -(chassis_imu.pit + 0.05f);
     kal_wy.measured_vector[0] = -chassis_imu.wy;
     kalman_filter_update(&kal_wy);
     wlr.wy_fdb = kal_wy.filter_vector[0];
-    
-//    wlr.wy_fdb      = -chassis_imu.wy;//
-    wlr.wz_fdb      = -chassis_imu.wz;//加一下滤波
+    wlr.wz_fdb      = -chassis_imu.wz;//过一下滤波
     wlr.az_fdb      =  chassis_imu.az;
-    //电机数据输入joint_motor[1].position
-     
-     
-    wlr.side[0].q2 =  joint_motor[1].position - joint_motor[1].zero_point;//电机原�?�数�?
+		
+    //电机数据输入
+    wlr.side[0].q2 =  joint_motor[1].position - joint_motor[1].zero_point;
     wlr.side[0].q1 =  joint_motor[0].position - joint_motor[0].zero_point;
     if (wlr.side[0].q2 < 0)
         wlr.side[0].q2 += 2 * PI;
@@ -783,6 +750,7 @@ static void chassis_data_input(void)
     kal_3508_vel[0].measured_vector[0] = -driver_motor[0].velocity;
     kalman_filter_update(&kal_3508_vel[0]);
     wlr.side[0].wy = kal_3508_vel[0].filter_vector[0];
+//	wlr.side[0].wy = -driver_motor[0].velocity;
 
 	
     wlr.side[1].q2 =  -(joint_motor[3].position - joint_motor[3].zero_point);//电机原�?�数�?
@@ -799,12 +767,11 @@ static void chassis_data_input(void)
     kal_3508_vel[1].measured_vector[0] = driver_motor[1].velocity;
     kalman_filter_update(&kal_3508_vel[1]);
     wlr.side[1].wy = kal_3508_vel[1].filter_vector[0];
-//	wlr.side[0].wy = -driver_motor[0].velocity;
 //	wlr.side[1].wy = driver_motor[1].velocity;
     
     //KNN
     for (int i = 0; i < 10; i++)
-    input_data[i] = lqr.X_fdb[i];
+		input_data[i] = lqr.X_fdb[i];
     input_data[10] =  wlr.side[0].Fn_kal;
     input_data[11] =  wlr.side[1].Fn_kal;
     
@@ -842,8 +809,6 @@ static void chassis_self_rescue(void)//翻车自救
     if (!chassis.rescue_inter_flag)
         chassis.rescue_inter_flag = 1;//1阶段 ----代表车身正在归正
     
-	
-	
     if (chassis.rescue_inter_flag == 3) {
         dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, left_T);//0.03 0.5
         dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);	
@@ -938,8 +903,8 @@ static void chassis_self_rescue(void)//翻车自救
         dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0,-1.0f*wlr.side[1].T2);
 		dji_motor_set_torque(&driver_motor[0], 0);
 		dji_motor_set_torque(&driver_motor[1], 0);
-			
-		
+				
+		//认为腿长已收到可以起身的长度
         if ( fabs(vmc[0].L_fdb - wlr.recover_length) < 0.05f && fabs(vmc[1].L_fdb - wlr.recover_length) < 0.05f )  {
 			leg_length_cnt++;
 			if(leg_length_cnt > 50){
@@ -952,6 +917,7 @@ static void chassis_self_rescue(void)//翻车自救
 				chassis.rescue_inter_flag = 0;
 				wlr.high_flag = 0;
 				up_ready=0;
+				//清掉收腿pid积分和腿长pid积分
 				pid_leg_recover[0].i_out = 0;
 				pid_leg_recover[1].i_out = 0;
 				pid_L_test[0].i_out = 0.0f;
@@ -959,7 +925,7 @@ static void chassis_self_rescue(void)//翻车自救
 			}
         }
     }    
-   
+    //收腿阶段不允许轮子出力
     dji_motor_set_torque(&driver_motor[0], 0);
     dji_motor_set_torque(&driver_motor[1], 0);
 	
@@ -984,10 +950,10 @@ static void chassis_self_rescue(void)//翻车自救
 		chassis.rescue_inter_flag = 0;
 		wlr.high_flag = 0;
 		up_ready=0;
-
 	}
 }
 
+//翻倒自起测试
 static void chassis_rescue_test(void)
 {
     if (RC_LEFT_LU_CH_VALUE) {
@@ -1033,10 +999,6 @@ static void chassis_data_output(void)
         wlr_protest();
         dji_motor_set_torque(&driver_motor[0], 0);
         dji_motor_set_torque(&driver_motor[1], 0);		
-		pid_leg_recover[0].i_out = 0;
-		pid_leg_recover[1].i_out = 0;
-		pid_L_test[0].i_out = 0.0f;
-		pid_L_test[1].i_out = 0.0f;
         for (int i = 0; i < 4; i++) {
 			dm_motor_set_control_para(&joint_motor[i], 0, 0, 0, 0, 0);
         }
@@ -1072,7 +1034,7 @@ static void chassis_data_output(void)
 					dm_motor_set_control_para(&joint_motor[2], 0, 5.0,  0, 5, 0);//快哥
 					dm_motor_set_control_para(&joint_motor[3], 0, 0,    0, 0, 0);
 				}
-					else if(wlr.joint_all_online){
+				else if(wlr.joint_all_online){
 					dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, wlr.side[0].T1);
 					dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, wlr.side[0].T2);
 					dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0,-wlr.side[1].T1);

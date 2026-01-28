@@ -3,6 +3,9 @@
 
 #include "stdint.h"
 
+#define SUPERCAP_DATA_ID  0x100
+#define SUPERCAP_STATE_ID 0x101
+
 typedef struct
 {
     float volage, current;          //接收的信息 电容电压 底盘电流

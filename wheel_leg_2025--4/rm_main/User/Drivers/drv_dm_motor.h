@@ -4,7 +4,16 @@
 #include "can_comm.h"
 #include "data_list.h"
 
-#define DM_MOTOR_ID         0x00
+//膝关节超前定义左右腿
+#define JOINT_LB_CMD_ID 0x003
+#define JOINT_LS_CMD_ID 0x004
+#define JOINT_RB_CMD_ID 0x002
+#define JOINT_RS_CMD_ID 0x001
+
+#define JOINT_LB_REC_ID 0x013
+#define JOINT_LS_REC_ID 0x014
+#define JOINT_RB_REC_ID 0x012
+#define JOINT_RS_REC_ID 0x011
 
 #define CMD_MOTOR_MODE      0x01
 #define CMD_RESET_MODE      0x02

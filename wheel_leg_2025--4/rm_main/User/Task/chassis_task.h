@@ -37,9 +37,8 @@ typedef struct
 
 typedef struct
 {
-    uint32_t rescue_test;			//未使用 用于测试翻倒自起
-    uint32_t recover_flag;			// =0保护模式 或 已经把车身撑起(详细请看该变量==2)  =1进入翻倒自起   =2（也可以说是 > 1）收腿起立时，先把车身以前导轮撑起，再收腿 
-    uint32_t rescue_inter_flag;		// =1车身正在归正  =2进入收腿  =3整车翻倒且保护天鹅颈  =4第二象限启动卡墙
+    uint8_t recover_flag;			// =0保护模式 或 已经把车身撑起(详细请看该变量==2)  =1进入翻倒自起   =2（也可以说是 > 1）收腿起立时，先把车身以前导轮撑起，再收腿 
+    uint8_t rescue_inter_flag;		// =1车身正在归正  =2进入收腿  =3整车翻倒且保护天鹅颈  =4第二象限启动卡墙
     uint32_t rescue_cnt_L;
     uint32_t rescue_cnt_R;
     uint8_t init;					// = 0底盘未初始化  =1底盘完成初始化

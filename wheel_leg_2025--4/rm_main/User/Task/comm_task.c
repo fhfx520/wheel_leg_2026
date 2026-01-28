@@ -23,9 +23,7 @@ void comm_task(void const* argument)
         
         for (int i = 0; i < 3; i+=2){
             if( joint_motor[i].state ==0){
-                dm_motor_set_control_cmd(&joint_motor[i], CMD_ENABLE_MODE);	  
-//            if(cnt_init > 0 && cnt_init--){
-//                dm_motor_set_control_cmd(&joint_motor[i], CMD_ENABLE_MODE);					
+                dm_motor_set_control_cmd(&joint_motor[i], CMD_ENABLE_MODE);	  					
             }else {
 				dm_motor_output_single_data(&joint_motor[i]);   
             }        
@@ -38,9 +36,7 @@ void comm_task(void const* argument)
         
          for (int i = 1; i < 4; i+=2){
             if( joint_motor[i].state == 0){
-                dm_motor_set_control_cmd(&joint_motor[i], CMD_ENABLE_MODE);	
-//			            if(cnt_init > 0 && cnt_init--){
-//                dm_motor_set_control_cmd(&joint_motor[i], CMD_ENABLE_MODE);	
+                dm_motor_set_control_cmd(&joint_motor[i], CMD_ENABLE_MODE);		
             }else{
 				dm_motor_output_single_data(&joint_motor[i]);   
             } 
@@ -48,8 +44,7 @@ void comm_task(void const* argument)
 		board_send_cnt++;
 				
 		if(board_send_cnt % 2 == 0)
-			gimbal_stable_output_data();
-				
+			gimbal_stable_output_data();	
         if(board_send_cnt % 17 == 0){
 			if (ctrl_mode == REMOTER_MODE || ctrl_mode == PROTECT_MODE)
 				dr16_output_data();

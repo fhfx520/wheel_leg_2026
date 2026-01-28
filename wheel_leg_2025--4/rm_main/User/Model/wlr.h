@@ -58,7 +58,7 @@ typedef struct
     //期望限制系数
     float K_ref[2];
     //控制标志
-    uint8_t jump_flag, jump_pre, high_flag, power_flag, prone_flag, ctrl_mode, quarand_, crash_flag ,joint_all_online;
+    uint8_t jump_flag, jump_pre, high_flag, prone_flag, ctrl_mode, quarand_, crash_flag ,joint_all_online;
 	/*	jump_flag 	参考 wlr_jump_state_e		
 		jump_pre 	上台阶膝关节朝后完成标志位		
 		high_flag 	=0短腿 =1中腿 =2长腿
@@ -108,14 +108,11 @@ typedef struct
 
 extern wlr_t wlr;
 extern lqr_t lqr;
-extern pid_t pid_leg_length[2];
-extern pid_t pid_leg_length_fast[2];
 extern pid_t pid_roll;
 extern pid_t pid_rescue[2];
 extern pid_t pid_L_test[2];
 extern int32_t double_cnt;
 extern float x3_balance_zero,x5_balance_zero;
-extern uint8_t off_land_flag;
 void wlr_init(void);
 void wlr_protest(void);
 void wlr_control(void);
