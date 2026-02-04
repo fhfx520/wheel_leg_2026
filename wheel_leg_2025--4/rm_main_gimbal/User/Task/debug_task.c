@@ -21,7 +21,7 @@
 #include "mode_switch_task.h"
 
 #define row_debug 2 * 10
-uint8_t debug_wave = 1;
+uint8_t debug_wave = 2;
 uint32_t aqdihakdhakjhdaukd;
 uint32_t no_online_imu;
 
@@ -31,12 +31,12 @@ void log_scope_data_pkg(void)
 {
     switch(debug_wave) {
         case 1: {//云台pid调试
-//            log_scope_get_data(gimbal.yaw_spd.ref);
-//            log_scope_get_data(gimbal.yaw_spd.fdb);
-   
-            log_scope_get_data(gimbal.yaw_angle.ref);
-            log_scope_get_data(gimbal.yaw_angle.fdb);
-					  log_scope_get_data(gimbal.pit_angle.ref);
+            log_scope_get_data(gimbal.pit_spd.ref);
+            log_scope_get_data(gimbal.pit_spd.fdb);
+//   
+//            log_scope_get_data(gimbal.yaw_angle.ref);
+//            log_scope_get_data(gimbal.yaw_angle.fdb);
+			log_scope_get_data(gimbal.pit_angle.ref);
             log_scope_get_data(gimbal.pit_angle.fdb);
 //						log_scope_get_data(fabs( circle_error(vision.target_yaw_angle,gimbal.yaw_angle.fdb, 2*PI));
 //            log_scope_get_data(yaw_motor.online);
@@ -46,12 +46,20 @@ void log_scope_data_pkg(void)
             
             break;
         } case 2: {//拨盘pid调试
-
+//            log_scope_get_data(shoot.trigger_ecd.ref);           
+//            log_scope_get_data(shoot.trigger_ecd.fdb);
+            log_scope_get_data(shoot.trigger_spd.ref);
+            log_scope_get_data(shoot.trigger_spd.fdb);
+//            log_scope_get_data(trigger_motor.rx_current);
+//            log_scope_get_data(trigger_motor.tx_current);
+			log_scope_get_data(shoot.trigger_ecd.ref);
+            log_scope_get_data(shoot.trigger_ecd.fdb);
+ 
             break;
         }
-				case 3: {//发射器调试
-						log_scope_get_data(shoot.fric_spd[0].fdb);
-						log_scope_get_data(shoot.fric_spd[1].fdb);
+		case 3: {//发射器调试
+			log_scope_get_data(shoot.fric_spd[0].fdb);
+			log_scope_get_data(-shoot.fric_spd[1].fdb);
             log_scope_get_data(shoot.fric_output[0]);
             log_scope_get_data(shoot.fric_output[1]);
             log_scope_get_data(feed_torque);

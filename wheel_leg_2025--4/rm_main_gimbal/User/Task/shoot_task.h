@@ -26,6 +26,15 @@ typedef enum
     FRIC_MODE_STOP,
     FRIC_MODE_RUN
 } shoot_fric_mode_e;
+//新拨盘 电机选型
+
+typedef enum
+{
+    MOTOR_DJI2006,
+    MOTOR_MG4005,
+    MOTOR_DM2325,
+	MOTOR_DJI3508
+} shoot_motor_type_e;
 
 typedef struct
 {

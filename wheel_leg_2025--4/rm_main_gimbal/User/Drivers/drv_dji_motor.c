@@ -1,5 +1,6 @@
 #include "drv_dji_motor.h"
 #include "string.h"
+#include "status_task.h"
 
 #ifndef PI
 #define PI 3.14159265358979323846f
@@ -16,8 +17,10 @@ can_std_msg_t motor_msg[CAN_CHANNEL_NUM][4];
 
 dji_motor_t fric_motor[2];
 dji_motor_t driver_motor[2];
-dji_motor_t pit_motor, yaw_motor;
+dji_motor_t yaw_motor;
 dji_motor_t trigger_motor;
+
+
 
 static const float motor_para_table[3][4] =
 {
@@ -99,7 +102,6 @@ void dji_motor_get_data(can_channel_e can_periph, uint32_t id, uint8_t *data)
         }
     }
 }
-
 /*
  * @brief     大疆电机设置控制力矩，并转换成转矩电流
  * @param[in] motor: 电机数据结构体
@@ -109,23 +111,18 @@ void dji_motor_get_data(can_channel_e can_periph, uint32_t id, uint8_t *data)
 void dji_motor_set_torque(dji_motor_t *motor, float t)
 {
     motor->t = t;
-
-	if(motor->motor_type == DJI_6020_MOTOR)//6020暂时直接发电流
-    motor->tx_current = (int16_t)(motor->t );
-           
-		else{
     LIMIT(motor->t,   motor->reduction_ratio \
                     * motor_para_table[motor->motor_type][CURRENT_RANGE] \
                     * motor_para_table[motor->motor_type][TORQUE_CONSTANT] \
                     / motor_para_table[motor->motor_type][REDUCTION_RATIO]);
-    
+	
     motor->tx_current = (int16_t)(motor->t \
                         / motor->reduction_ratio \
                         * motor_para_table[motor->motor_type][DATA_RANGE] \
                         / motor_para_table[motor->motor_type][CURRENT_RANGE] \
                         / motor_para_table[motor->motor_type][TORQUE_CONSTANT] \
                         * motor_para_table[motor->motor_type][REDUCTION_RATIO]);
-		}
+
 }
 
 /*
@@ -178,9 +175,10 @@ void dji_motor_output_data(void)
     for (can_channel_e can_channel = CAN_CHANNEL_1; can_channel != (CAN_CHANNEL_NUM); can_channel++) {//排除can3电机
         for (int i = 0; i < 4; i++) {
             if (motor_send_flag[can_channel][i] == 1) {
+				if((status.dji_motor != 2 && status.dji_motor != 3) || trigger_motor.online)
                     can_std_transmit(can_channel, motor_msg[can_channel][i].id, motor_msg[can_channel][i].data);
                     motor_send_flag[can_channel][i] = 0;
-                }
+            }
         }
     }
 }
@@ -200,7 +198,7 @@ uint8_t dji_motor_check_offline(void)
         if (object->online == 1) {
             object->online = 0;
         } else {
-//            return index;
+            return index;
         }
     }
     return 0;

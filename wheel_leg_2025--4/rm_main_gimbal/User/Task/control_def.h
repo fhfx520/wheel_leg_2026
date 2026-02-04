@@ -24,15 +24,15 @@
 
 /*-----------------------------shoot-----------------------------*/
 //拨盘频率
-#define TRIGGER_PERIOD      90//ms 90->11Hz 40->25Hz 33->30Hz
-#define TRIGGER_PERIOD2     40//40 55->18Hz                   
+#define TRIGGER_PERIOD      40//ms 90->11Hz 40->25Hz 33->30Hz
+#define TRIGGER_PERIOD2     90//40 55->18Hz                   
 
 /*-----------------------------chassis---------------------------*/
 
 #define SUPERCAP_CHAGER_VOLAGE    23.6f
 #define SUPERCAP_DISCHAGER_VOLAGE	13.5f //超级电容放电电压下限
 
-#define CHASSIS_YAW_OFFSET  7427
+#define CHASSIS_YAW_OFFSET  1424
 #define CHASSIS_YAW_FIGHT   ((CHASSIS_YAW_OFFSET + 8192/4) % 8192)
 #define CHASSIS_ROTATE_SPEED 8.5f //rad/s
 

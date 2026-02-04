@@ -1,9 +1,7 @@
 rm_main/comm_task.o: ..\User\Task\comm_task.c ..\User\Task\comm_task.h \
   ..\User\Task\mode_switch_task.h \
-  D:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdint.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS\cmsis_os.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\FreeRTOS.h \
-  D:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stddef.h \
   ..\Core\Inc\FreeRTOSConfig.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\projdefs.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\portable.h \
@@ -13,25 +11,14 @@ rm_main/comm_task.o: ..\User\Task\comm_task.c ..\User\Task\comm_task.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\task.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\list.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\timers.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\include\task.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\queue.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\semphr.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\include\queue.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\event_groups.h \
-  ..\Middlewares\Third_Party\FreeRTOS\Source\include\timers.h \
-  ..\User\Protocol\prot_vision.h \
-  D:\Keil_v5\ARM\ARMCLANG\Bin\..\include\math.h \
-  ..\User\Protocol\prot_power.h ..\User\Drivers\drv_dji_motor.h \
-  ..\User\Communication\can_comm.h \
+  ..\User\Protocol\prot_vision.h ..\User\Protocol\prot_power.h \
+  ..\User\Drivers\drv_dji_motor.h ..\User\Communication\can_comm.h \
   ..\Drivers\CMSIS\Device\ST\STM32H7xx\Include\stm32h7xx.h \
   ..\Drivers\CMSIS\Device\ST\STM32H7xx\Include\stm32h723xx.h \
   ..\Drivers\CMSIS\Include\core_cm7.h \
-  ..\Drivers\CMSIS\Include\cmsis_version.h \
-  ..\Drivers\CMSIS\Include\cmsis_compiler.h \
-  ..\Drivers\CMSIS\Include\cmsis_armclang.h \
-  D:\Keil_v5\ARM\ARMCLANG\Bin\..\include\arm_compat.h \
-  D:\Keil_v5\ARM\ARMCLANG\Bin\..\include\arm_acle.h \
-  ..\Drivers\CMSIS\Include\mpu_armv7.h \
   ..\Drivers\CMSIS\Device\ST\STM32H7xx\Include\system_stm32h7xx.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal.h \
   ..\Core\Inc\stm32h7xx_hal_conf.h \
@@ -68,4 +55,8 @@ rm_main/comm_task.o: ..\User\Task\comm_task.c ..\User\Task\comm_task.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_pcd_ex.h \
   ..\User\Support\data_list.h ..\User\Drivers\drv_dm_motor.h \
   ..\User\Protocol\prot_dr16.h ..\User\Task\status_task.h \
-  ..\User\Communication\board_comm.h
+  ..\User\Communication\board_comm.h \
+  ..\User\Drivers\bsp_LK_Motor_MG4005.h ..\Core\Inc\fdcan.h \
+  ..\Core\Inc\main.h ..\User\Math\DSP\Include\arm_math.h \
+  ..\Drivers\CMSIS\Include\cmsis_compiler.h ..\User\Task\shoot_task.h \
+  ..\User\Math\pid.h

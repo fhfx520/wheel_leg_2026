@@ -13,6 +13,11 @@ uint8_t Data_Enable[8]={0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFC};		//电机
 
 
 dm_motor_t joint_motor[4];
+dm_motor_t trigger_motor_2325;					//新拨盘电机dm2325
+
+dm_motor_t pit_motor;					//新云台dm4310
+
+float ppoo = 0;
 
 //根据协议，对float参数进行转换，用于数据发送
 static uint16_t float_to_uint(float x, float x_min, float x_max, uint8_t bits)
@@ -54,13 +59,23 @@ void dm_motor_init(dm_motor_t *motor, can_channel_e can_channel, uint32_t id, fl
 }
 
 
+
+float BranchlessNormalizeAngle(float angle) {
+    // 单行代码实现，避免分支预测
+		//+ 0.5f / (2*PI)，这个东西导致他会偏移0.5导致，是不是调零点用
+    return angle - (2*PI) * floorf(angle / (2*PI) );
+
+    // 将 [-12.5, 12.5] 映射到 [0, 2π]
+//    return (angle + 12.5f) * (2.0f * PI) / 25.0f;
+}	
+
 /*
  * @brief     接收达妙电机数据，并化为国际单位
  * @param[in] motor: 电机数据结构体
  * @param[in] data : 数据指针
  * @retval    void
  */
-static void dm_motor_get_single_data(dm_motor_t *motor, uint8_t *data)
+void dm_motor_get_single_data(dm_motor_t *motor, uint8_t *data)
 {
     uint16_t tmp_value;
     motor->receive_cnt++;
@@ -73,22 +88,29 @@ static void dm_motor_get_single_data(dm_motor_t *motor, uint8_t *data)
      motor->err_state = motor->state;
     
     tmp_value = (data[1] << 8) | data[2];
+	ppoo = tmp_value;
+	
+	
     motor->position = uint_to_float(tmp_value, P_MIN, P_MAX, 16);
+
     tmp_value = (data[3] << 4) | (data[4] >> 4);
     motor->velocity = uint_to_float(tmp_value, V_MIN, V_MAX, 12);
     tmp_value = ((0x0f & data[4]) << 8) | data[5];
     motor->torque = uint_to_float(tmp_value, T_MIN, T_MAX, 12);    
-            
-    if(motor->position >=8.0f*PI)
-        motor->position-=2.0f*PI;
-    if(motor->position >=6.0f*PI)
-        motor->position-=2.0f*PI;
-    if(motor->position > 4.0f*PI)
-        motor->position-=2.0f*PI;
-    if(motor->position > 2.0f*PI)
-        motor->position-=2.0f*PI;
+//新添加的用于2325拨盘的换算到0到2pi    
+    motor->position = BranchlessNormalizeAngle(motor->position);
+
+//    if(motor->position >=8.0f*PI)
+//        motor->position-=2.0f*PI;
+//    if(motor->position >=6.0f*PI)
+//        motor->position-=2.0f*PI;
+//    if(motor->position > 4.0f*PI)
+//        motor->position-=2.0f*PI;
+//    if(motor->position > 2.0f*PI)
+//        motor->position-=2.0f*PI;
     
 }
+
 
 void dm_motor_get_data(uint8_t id, uint8_t *data)
 {
@@ -149,7 +171,7 @@ void dm_motor_output_single_data(dm_motor_t *motor)
     LIMIT_MIN_MAX(motor->v, V_MIN, V_MAX);
     LIMIT_MIN_MAX(motor->kp, KP_MIN, KP_MAX);
     LIMIT_MIN_MAX(motor->kd, KD_MIN, KD_MAX);
-    LIMIT_MIN_MAX(motor->t, -50, 50);
+    LIMIT_MIN_MAX(motor->t, -11, 11);
     //根据协议，对float参数进行转换
     p = float_to_uint(motor->p, P_MIN, P_MAX, 16);
     v = float_to_uint(motor->v, V_MIN, V_MAX, 12);

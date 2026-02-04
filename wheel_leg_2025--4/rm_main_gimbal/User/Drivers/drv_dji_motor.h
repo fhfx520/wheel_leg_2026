@@ -66,13 +66,14 @@ typedef struct
     uint8_t	 temperature;               //电机温度           单位：摄氏度
     uint16_t offset_ecd;                //刚上电时的编码值
     uint16_t last_ecd;                  //上次接收的编码值
-    int32_t  total_ecd;                 //上电到现在转动的总编码值
+    int32_t  total_ecd;                 //上电到现在转动的总编码值,在拨盘那里3508电机为了预制弹位暂时变成了先加目前的编码值
     int32_t	 round_cnt;                 //已转圈数
 } dji_motor_t;
 
 extern dji_motor_t fric_motor[2];
 extern dji_motor_t driver_motor[2];
-extern dji_motor_t pit_motor, yaw_motor;
+//extern dji_motor_t pit_motor, yaw_motor;
+extern dji_motor_t yaw_motor;
 extern dji_motor_t trigger_motor;
 
 void dji_motor_init(dji_motor_t *motor, uint8_t motor_type, can_channel_e can_periph, uint32_t id, float reduction_ratio);

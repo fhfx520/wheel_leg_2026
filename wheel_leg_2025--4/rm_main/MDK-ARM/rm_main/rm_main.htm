@@ -3,7 +3,7 @@
 <title>Static Call Graph - [rm_main\rm_main.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image rm_main\rm_main.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Thu Jan 29 00:23:52 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Thu Feb  5 05:24:14 2026
 <BR><P>
 <H3>Maximum Stack Usage =        624 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -2973,15 +2973,15 @@ Global Symbols
 <LI><a href="#[26b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_forward_solution_five (via Veneer)
 </UL>
 
-<P><STRONG><a name="[1d5]"></a>can_comm_init</STRONG> (Thumb, 544 bytes, Stack size 80 bytes, can_comm.o(.text.can_comm_init))
+<P><STRONG><a name="[1d5]"></a>can_comm_init</STRONG> (Thumb, 520 bytes, Stack size 80 bytes, can_comm.o(.text.can_comm_init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 172<LI>Call Chain = can_comm_init &rArr; dm_motor_init &rArr; dm_motor_output_single_data &rArr; can_std_transmit &rArr; HAL_FDCAN_AddMessageToTxFifoQ &rArr; FDCAN_CopyMessageToRAM
 </UL>
-<BR>[Calls]<UL><LI><a href="#[1da]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dji_motor_init
+<BR>[Calls]<UL><LI><a href="#[1d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_ConfigFilter
+<LI><a href="#[1da]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dji_motor_init
 <LI><a href="#[1d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dm_motor_init
 <LI><a href="#[1d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_Start
 <LI><a href="#[f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_ActivateNotification
 <LI><a href="#[1d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_ConfigGlobalFilter
-<LI><a href="#[1d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_ConfigFilter
 </UL>
 <BR>[Called By]<UL><LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
@@ -3034,7 +3034,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[1d5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;can_comm_init
 </UL>
 
-<P><STRONG><a name="[1dc]"></a>dji_motor_output_data</STRONG> (Thumb, 482 bytes, Stack size 40 bytes, drv_dji_motor.o(.text.dji_motor_output_data))
+<P><STRONG><a name="[1dc]"></a>dji_motor_output_data</STRONG> (Thumb, 464 bytes, Stack size 40 bytes, drv_dji_motor.o(.text.dji_motor_output_data))
 <BR><BR>[Stack]<UL><LI>Max Depth = 76<LI>Call Chain = dji_motor_output_data &rArr; can_std_transmit &rArr; HAL_FDCAN_AddMessageToTxFifoQ &rArr; FDCAN_CopyMessageToRAM
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1db]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;can_std_transmit
@@ -3045,7 +3045,6 @@ Global Symbols
 
 <P><STRONG><a name="[24b]"></a>dji_motor_set_torque</STRONG> (Thumb, 112 bytes, Stack size 0 bytes, drv_dji_motor.o(.text.dji_motor_set_torque))
 <BR><BR>[Called By]<UL><LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;shoot_task (via Veneer)
-<LI><a href="#[b7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gimbal_task (via Veneer)
 <LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_task (via Veneer)
 </UL>
 
@@ -3380,7 +3379,6 @@ Global Symbols
 <P><STRONG><a name="[255]"></a>pid_calc</STRONG> (Thumb, 244 bytes, Stack size 0 bytes, pid.o(.text.pid_calc))
 <BR><BR>[Called By]<UL><LI><a href="#[253]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control (via Veneer)
 <LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;shoot_task (via Veneer)
-<LI><a href="#[b7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gimbal_task (via Veneer)
 <LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_task (via Veneer)
 </UL>
 
@@ -4110,13 +4108,15 @@ Global Symbols
 <P><STRONG><a name="[b6]"></a>chassis_task</STRONG> (Thumb, 7428 bytes, Stack size 8 bytes, chassis_task.o(.text.chassis_task))
 <BR><BR>[Stack]<UL><LI>Max Depth = 288<LI>Call Chain = chassis_task &rArr; wlr_control &rArr; tlm_gnd_roll_calc &rArr; kalman_filter_update &rArr; kalman_filter_K_update &rArr; arm_mat_inverse_f32
 </UL>
-<BR>[Calls]<UL><LI><a href="#[254]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_protest
+<BR>[Calls]<UL><LI><a href="#[255]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_calc (via Veneer)
+<LI><a href="#[254]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_protest
 <LI><a href="#[253]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 <LI><a href="#[250]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DWT_GetDeltaT (via Veneer)
 <LI><a href="#[24f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_calc (via Veneer)
 <LI><a href="#[24e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;key_status_clear (via Veneer)
 <LI><a href="#[1f7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;key_scan (via Veneer)
 <LI><a href="#[24c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dm_motor_set_control_para (via Veneer)
+<LI><a href="#[24b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dji_motor_set_torque (via Veneer)
 <LI><a href="#[24a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;FGT_sin_init (via Veneer)
 <LI><a href="#[1ed]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kalman_filter_init (via Veneer)
 <LI><a href="#[249]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DWT_Init (via Veneer)
@@ -4124,11 +4124,9 @@ Global Symbols
 <LI><a href="#[247]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_init
 <LI><a href="#[208]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;power_init (via Veneer)
 <LI><a href="#[1f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kalman_filter_update (via Veneer)
-<LI><a href="#[255]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_calc (via Veneer)
-<LI><a href="#[251]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_cos_f32 (via Veneer)
 <LI><a href="#[252]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_sin_f32 (via Veneer)
 <LI><a href="#[1d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;circle_error (via Veneer)
-<LI><a href="#[24b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dji_motor_set_torque (via Veneer)
+<LI><a href="#[251]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_cos_f32 (via Veneer)
 <LI><a href="#[24d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rc_fsm_check (via Veneer)
 <LI><a href="#[200]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelayUntil (via Veneer)
 <LI><a href="#[203]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osKernelSysTick (via Veneer)
@@ -4165,14 +4163,12 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(.text.MX_FREERTOS_Init)
 </UL>
-<P><STRONG><a name="[b7]"></a>gimbal_task</STRONG> (Thumb, 648 bytes, Stack size 8 bytes, gimbal_task.o(.text.gimbal_task))
+<P><STRONG><a name="[b7]"></a>gimbal_task</STRONG> (Thumb, 424 bytes, Stack size 8 bytes, gimbal_task.o(.text.gimbal_task))
 <BR><BR>[Stack]<UL><LI>Max Depth = 112<LI>Call Chain = gimbal_task &rArr; osDelayUntil &rArr; vTaskDelayUntil &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
-<BR>[Calls]<UL><LI><a href="#[255]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_calc (via Veneer)
-<LI><a href="#[251]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_cos_f32 (via Veneer)
-<LI><a href="#[252]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_sin_f32 (via Veneer)
+<BR>[Calls]<UL><LI><a href="#[252]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_sin_f32 (via Veneer)
 <LI><a href="#[1d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;circle_error (via Veneer)
-<LI><a href="#[24b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dji_motor_set_torque (via Veneer)
+<LI><a href="#[251]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_cos_f32 (via Veneer)
 <LI><a href="#[256]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_init (via Veneer)
 <LI><a href="#[200]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelayUntil (via Veneer)
 <LI><a href="#[203]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osKernelSysTick (via Veneer)
@@ -4180,7 +4176,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(.text.MX_FREERTOS_Init)
 </UL>
-<P><STRONG><a name="[1f9]"></a>log_scope_data_pkg</STRONG> (Thumb, 1400 bytes, Stack size 24 bytes, debug_task.o(.text.log_scope_data_pkg))
+<P><STRONG><a name="[1f9]"></a>log_scope_data_pkg</STRONG> (Thumb, 1392 bytes, Stack size 24 bytes, debug_task.o(.text.log_scope_data_pkg))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = log_scope_data_pkg
 </UL>
 <BR>[Calls]<UL><LI><a href="#[257]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;log_scope_get_data (via Veneer)
@@ -4207,7 +4203,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;status_task
 </UL>
 
-<P><STRONG><a name="[b8]"></a>shoot_task</STRONG> (Thumb, 1982 bytes, Stack size 16 bytes, shoot_task.o(.text.shoot_task))
+<P><STRONG><a name="[b8]"></a>shoot_task</STRONG> (Thumb, 1750 bytes, Stack size 16 bytes, shoot_task.o(.text.shoot_task))
 <BR><BR>[Stack]<UL><LI>Max Depth = 120<LI>Call Chain = shoot_task &rArr; median_filter &rArr; qsort &rArr;  qsort (Cycle)
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;median_filter (via Veneer)
@@ -4295,8 +4291,8 @@ Global Symbols
 <P><STRONG><a name="[26b]"></a>vmc_forward_solution_five</STRONG> (Thumb, 1380 bytes, Stack size 96 bytes, leg_vmc.o(.text.vmc_forward_solution_five))
 <BR><BR>[Stack]<UL><LI>Max Depth = 136<LI>Call Chain = vmc_forward_solution_five &rArr; aMartix_Mul
 </UL>
-<BR>[Calls]<UL><LI><a href="#[251]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_cos_f32 (via Veneer)
-<LI><a href="#[252]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_sin_f32 (via Veneer)
+<BR>[Calls]<UL><LI><a href="#[252]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_sin_f32 (via Veneer)
+<LI><a href="#[251]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_cos_f32 (via Veneer)
 <LI><a href="#[26c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;aMartix_Mul (via Veneer)
 <LI><a href="#[20a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_sqrtf (via Veneer)
 <LI><a href="#[23d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan2f (via Veneer)
@@ -4311,8 +4307,8 @@ Global Symbols
 <P><STRONG><a name="[26d]"></a>vmc_inverse_solution_five</STRONG> (Thumb, 880 bytes, Stack size 80 bytes, leg_vmc.o(.text.vmc_inverse_solution_five))
 <BR><BR>[Stack]<UL><LI>Max Depth = 120<LI>Call Chain = vmc_inverse_solution_five &rArr; aMartix_Mul
 </UL>
-<BR>[Calls]<UL><LI><a href="#[251]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_cos_f32 (via Veneer)
-<LI><a href="#[252]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_sin_f32 (via Veneer)
+<BR>[Calls]<UL><LI><a href="#[252]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_sin_f32 (via Veneer)
+<LI><a href="#[251]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_cos_f32 (via Veneer)
 <LI><a href="#[26c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;aMartix_Mul (via Veneer)
 <LI><a href="#[20a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_sqrtf (via Veneer)
 <LI><a href="#[238]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_acosf (via Veneer)
@@ -4320,16 +4316,16 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[253]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[253]"></a>wlr_control</STRONG> (Thumb, 5352 bytes, Stack size 120 bytes, wlr.o(.text.wlr_control))
+<P><STRONG><a name="[253]"></a>wlr_control</STRONG> (Thumb, 5440 bytes, Stack size 120 bytes, wlr.o(.text.wlr_control))
 <BR><BR>[Stack]<UL><LI>Max Depth = 280<LI>Call Chain = wlr_control &rArr; tlm_gnd_roll_calc &rArr; kalman_filter_update &rArr; kalman_filter_K_update &rArr; arm_mat_inverse_f32
 </UL>
-<BR>[Calls]<UL><LI><a href="#[24f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_calc (via Veneer)
+<BR>[Calls]<UL><LI><a href="#[255]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_calc (via Veneer)
+<LI><a href="#[24f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_calc (via Veneer)
 <LI><a href="#[1f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kalman_filter_update (via Veneer)
 <LI><a href="#[246]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Fusion_Vel_Acc_Test
-<LI><a href="#[255]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_calc (via Veneer)
-<LI><a href="#[251]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_cos_f32 (via Veneer)
 <LI><a href="#[252]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_sin_f32 (via Veneer)
 <LI><a href="#[1d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;circle_error (via Veneer)
+<LI><a href="#[251]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_cos_f32 (via Veneer)
 <LI><a href="#[267]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tlm_leg_length_calc
 <LI><a href="#[265]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tlm_gnd_roll_calc
 <LI><a href="#[26d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_inverse_solution_five

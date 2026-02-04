@@ -75,8 +75,8 @@ void can_comm_init(void)
 	can_filter.IdType = FDCAN_STANDARD_ID;//标准帧
     can_filter.FilterIndex = 0;
     can_filter.FilterType = FDCAN_FILTER_DUAL;//等于过滤
-    can_filter.FilterID1 = TRIGGER_MOTOR_ID;
-    can_filter.FilterID2 = YAW_MOTOR_ID;
+    can_filter.FilterID1 = YAW_MOTOR_ID;
+    can_filter.FilterID2 = TRIGGER_MOTOR_ID;
     can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;//通过过滤后给邮箱0
 	HAL_FDCAN_ConfigFilter(&hfdcan3, &can_filter);
 	//vision_shoot_enable
@@ -87,7 +87,7 @@ void can_comm_init(void)
 	can_filter.FilterID2 = 0x006;
     can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO1;//通过过滤后给邮箱1
     HAL_FDCAN_ConfigFilter(&hfdcan3, &can_filter);  
-		
+//		
     HAL_FDCAN_ConfigGlobalFilter(&hfdcan3, FDCAN_REJECT, FDCAN_REJECT, FDCAN_REJECT_REMOTE, FDCAN_REJECT_REMOTE);
     HAL_FDCAN_ActivateNotification(&hfdcan3, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0);//使能邮箱0新消息中断
     HAL_FDCAN_ActivateNotification(&hfdcan3, FDCAN_IT_RX_FIFO1_NEW_MESSAGE, 0);//使能邮箱1新消息中断
@@ -103,17 +103,19 @@ void can_comm_init(void)
     tx_message.FDFormat = FDCAN_CLASSIC_CAN;
     tx_message.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
     tx_message.MessageMarker = 0;
+	
       
     //driver init
-	dm_motor_init(&joint_motor[0], CAN_CHANNEL_1, JOINT_LB_CMD_ID, -0.4222336f, JOINT_LB_REC_ID);//LB
-	dm_motor_init(&joint_motor[1], CAN_CHANNEL_1, JOINT_LS_CMD_ID, 5.03293037f, JOINT_LS_REC_ID);//LS
-	dm_motor_init(&joint_motor[2], CAN_CHANNEL_1, JOINT_RB_CMD_ID, 4.62540722f, JOINT_RB_REC_ID);//RB
-	dm_motor_init(&joint_motor[3], CAN_CHANNEL_1, JOINT_RS_CMD_ID, 3.35368752f, JOINT_RS_REC_ID);//RS
+	dm_motor_init(&joint_motor[0], CAN_CHANNEL_1, JOINT_LB_CMD_ID, -0.370364666f, JOINT_LB_REC_ID);//LB -0.27579996
+	dm_motor_init(&joint_motor[1], CAN_CHANNEL_1, JOINT_LS_CMD_ID, 0.387432575f, JOINT_LS_REC_ID);//LS 0.564670026
+	dm_motor_init(&joint_motor[2], CAN_CHANNEL_1, JOINT_RB_CMD_ID, 4.57420731f, JOINT_RB_REC_ID);//RB 4.47119999
+	dm_motor_init(&joint_motor[3], CAN_CHANNEL_1, JOINT_RS_CMD_ID, 2.7925601f, JOINT_RS_REC_ID);//RS 2.62299991
 	
 	dji_motor_init(&driver_motor[0], DJI_3508_MOTOR, CAN_CHANNEL_2, DRIVER_MOTOR_LEFT_ID , DJI_3508_TAURUS_REDUCTION_RATIO);
     dji_motor_init(&driver_motor[1], DJI_3508_MOTOR, CAN_CHANNEL_2, DRIVER_MOTOR_RIGHT_ID, DJI_3508_TAURUS_REDUCTION_RATIO);
+//	dji_motor_init(&yaw_motor, 		 DJI_6020_MOTOR, CAN_CHANNEL_3, YAW_MOTOR_ID    , DJI_6020_ORIGINAL_REDUCTION_RATIO);
     dji_motor_init(&trigger_motor,   DJI_2006_MOTOR, CAN_CHANNEL_3, TRIGGER_MOTOR_ID, DJI_2006_ORIGINAL_REDUCTION_RATIO);
-	dji_motor_init(&yaw_motor, 		 DJI_6020_MOTOR, CAN_CHANNEL_3, YAW_MOTOR_ID    , DJI_6020_ORIGINAL_REDUCTION_RATIO);
+	
    
 }
 

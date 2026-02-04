@@ -54,7 +54,7 @@ void comm_task(void const* argument)
 		
 		if(board_send_cnt % 19 == 0)
 			shoot_output_data();
-		
+//		
 		if(board_send_cnt % 32 == 0)
 			imu_output_data();
 		

@@ -114,7 +114,7 @@ void Fusion_Vel_Acc_Test(void)
 	//轮子平动位移
 	kal_fusion_vel.measured_vector[0] = wlr.s_fdb;
 	//轮子平动速度
-	kal_fusion_vel.measured_vector[1] = (-driver_motor[0].velocity + driver_motor[1].velocity) * 0.050f / 2.0f;
+	kal_fusion_vel.measured_vector[1] = (-driver_motor[0].velocity + driver_motor[1].velocity) * 0.055f / 2.0f;
 	//加速计测得绝对系加速度
 	kal_fusion_vel.control_vector[0] = chassis_imu.ax;
 	//更新观测器
@@ -728,7 +728,7 @@ static void chassis_data_input(void)
 		
     //陀螺仪数据输入
     wlr.roll_fdb    = -chassis_imu.rol;
-    wlr.pit_fdb     = -(chassis_imu.pit + 0.05f);
+    wlr.pit_fdb     = -(chassis_imu.pit + 0.067f);
     kal_wy.measured_vector[0] = -chassis_imu.wy;
     kalman_filter_update(&kal_wy);
     wlr.wy_fdb = kal_wy.filter_vector[0];

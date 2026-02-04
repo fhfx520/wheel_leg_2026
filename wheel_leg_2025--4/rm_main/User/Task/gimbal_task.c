@@ -204,8 +204,8 @@ void gimbal_task(void const *argu)
 		gimbal_stable_calc();
 		
 		//help 拆头 + 了下面两个函数     不拆头就不加
-		yaw_control();
-		gimbal_data_output();
+//		yaw_control();
+//		gimbal_data_output();
 		
         osDelayUntil(&thread_wake_time, 2);
     }

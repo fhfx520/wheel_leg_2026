@@ -48,17 +48,17 @@ void mode_switch_task(void const *argu)
     ctrl_mode = PROTECT_MODE;
     lock_flag = 0;
     for (;;) {
-//        if (!lock_flag) {
-//            if (game_status.game_progress == 4) {//比赛中直接解锁
-//                lock_flag = 1;
-//            } else {
-//                unlock_init();  //解锁操作
-//            }
-//        }
-//        else {
+        if (!lock_flag) {
+            if (game_status.game_progress == 4) {//比赛中直接解锁
+                lock_flag = 1;
+            } else {
+                unlock_init();  //解锁操作
+            }
+        }
+        else {
             remote_reset();
-//            sw1_mode_handler();  //根据左拨杆切换系统模式
-//        }
+            sw1_mode_handler();  //根据左拨杆切换系统模式
+        }
         status.task.mode_switch = 1;
         osDelay(10);
     }

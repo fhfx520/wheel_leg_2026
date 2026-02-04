@@ -10,13 +10,13 @@
       <TargetName>rm_main</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>6160000::V6.16::ARMCLANG</pCCUsed>
+      <pCCUsed>6240000::V6.24::ARMCLANG</pCCUsed>
       <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>STM32H723VGTx</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32H7xx_DFP.2.7.0</PackID>
+          <PackID>Keil.STM32H7xx_DFP.3.1.1</PackID>
           <PackURL>https://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x20000000-0x2001FFFF) IRAM2(0x24000000-0x2404FFFF) IROM(0x8000000-0x80FFFFF) CLOCK(12000000) FPU3(DFPU) CPUTYPE("Cortex-M7") ELITTLE TZ</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -81,7 +81,7 @@
           </BeforeMake>
           <AfterMake>
             <RunUserProg1>0</RunUserProg1>
-            <RunUserProg2>1</RunUserProg2>
+            <RunUserProg2>0</RunUserProg2>
             <UserProg1Name></UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
@@ -186,6 +186,7 @@
             <RvdsVP>3</RvdsVP>
             <RvdsMve>0</RvdsMve>
             <RvdsCdeCp>0</RvdsCdeCp>
+            <nBranchProt>0</nBranchProt>
             <hadIRAM2>1</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -1008,25 +1009,30 @@
           <GroupName>User/Drivers</GroupName>
           <Files>
             <File>
-              <FileName>drv_ws2812b.c</FileName>
+              <FileName>drv_dji_motor.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\User\Drivers\drv_ws2812b.c</FilePath>
+              <FilePath>..\User\Drivers\drv_dji_motor.c</FilePath>
             </File>
             <File>
               <FileName>drv_dm_motor.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\Drivers\drv_dm_motor.c</FilePath>
             </File>
+            <File>
+              <FileName>bsp_LK_Motor_MG4005.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Drivers\bsp_LK_Motor_MG4005.c</FilePath>
+            </File>
+            <File>
+              <FileName>drv_ws2812b.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Drivers\drv_ws2812b.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>User/Protocol</GroupName>
           <Files>
-            <File>
-              <FileName>drv_dji_motor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\User\Drivers\drv_dji_motor.c</FilePath>
-            </File>
             <File>
               <FileName>prot_dr16.c</FileName>
               <FileType>1</FileType>
@@ -4008,5 +4014,14 @@
     </components>
     <files/>
   </RTE>
+
+  <LayerInfo>
+    <Layers>
+      <Layer>
+        <LayName>rm_main</LayName>
+        <LayPrjMark>1</LayPrjMark>
+      </Layer>
+    </Layers>
+  </LayerInfo>
 
 </Project>

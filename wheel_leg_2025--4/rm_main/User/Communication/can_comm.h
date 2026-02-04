@@ -6,9 +6,9 @@
 typedef enum
 {
     CAN_CHANNEL_1 = 0,
-    CAN_CHANNEL_2,
-    CAN_CHANNEL_3,
-    CAN_CHANNEL_NUM
+    CAN_CHANNEL_2 = 1,
+    CAN_CHANNEL_3 = 2,
+    CAN_CHANNEL_NUM = 3
 } can_channel_e;
 
 void can_comm_init(void);

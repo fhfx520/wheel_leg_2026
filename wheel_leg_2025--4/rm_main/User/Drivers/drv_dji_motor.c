@@ -155,7 +155,13 @@ static void dji_motor_fill_data(void)
                 motor_msg[object->can_channel][0].data[(object->can_id - 0x201) * 2 + 1] = object->tx_current;
                 motor_send_flag[object->can_channel][0] = 1;
             } else {
-                motor_msg[object->can_channel][1].id = 0x1FF;
+//				//这里拨盘电机和云台电机挂同一路作此处理
+//                motor_msg[object->can_channel][2].id = 0x1FF;
+//                motor_msg[object->can_channel][2].data[(object->can_id - 0x205) * 2] = object->tx_current >> 8;
+//                motor_msg[object->can_channel][2].data[(object->can_id - 0x205) * 2 + 1] = object->tx_current;
+//                motor_send_flag[object->can_channel][2] = 1;
+				//否则用这里
+				motor_msg[object->can_channel][1].id = 0x1FF;
                 motor_msg[object->can_channel][1].data[(object->can_id - 0x205) * 2] = object->tx_current >> 8;
                 motor_msg[object->can_channel][1].data[(object->can_id - 0x205) * 2 + 1] = object->tx_current;
                 motor_send_flag[object->can_channel][1] = 1;
@@ -172,10 +178,10 @@ static void dji_motor_fill_data(void)
 void dji_motor_output_data(void)
 {
     dji_motor_fill_data();
-    for (can_channel_e can_channel = CAN_CHANNEL_1; can_channel != (CAN_CHANNEL_NUM); can_channel++) {//排除can3电机
+    for (can_channel_e can_channel = CAN_CHANNEL_1; can_channel != CAN_CHANNEL_NUM; can_channel++) {//排除can3电机
         for (int i = 0; i < 4; i++) {
             if (motor_send_flag[can_channel][i] == 1) {
-				if((status.dji_motor != 2 && status.dji_motor != 3) || trigger_motor.online)
+				if(status.dji_motor != 2 && status.dji_motor != 3)
                     can_std_transmit(can_channel, motor_msg[can_channel][i].id, motor_msg[can_channel][i].data);
                     motor_send_flag[can_channel][i] = 0;
             }

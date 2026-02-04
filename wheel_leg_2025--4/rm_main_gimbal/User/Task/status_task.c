@@ -78,12 +78,12 @@ void normal_status(void)
 int iwdg_test = 1;
 void status_task(void const* argument)
 {
-	MX_IWDG1_Init();
+//	MX_IWDG1_Init();
     for(;;)
     {
         if (status.task.comm == 1 &&
             status.task.gimbal == 1 &&
-			status.task.board == 1 &&
+						//status.task.board == 1 &&				\测试架没有板间通信了，直接不要
             status.task.shoot == 1 &&
             status.task.mode_switch == 1) {
             status.task.comm = 0;
@@ -94,11 +94,15 @@ void status_task(void const* argument)
             HAL_IWDG_Refresh(&hiwdg1);
         }
 
-//        rc_fsm_init(rc.online); //板间通信
+        rc_fsm_init(rc.online); //板间通信
+				
+				
         status.remote = rc_check_offline();
         status.vision = vision_check_offline();
         status.judge = judge_check_offline();
         status.power = power_check_offline();
+				
+				
 //        status.imu = imu_check_offline();
 //        status.dji_motor = dji_motor_check_offline();
         status.dm_motor = dm_motor_check_offline();

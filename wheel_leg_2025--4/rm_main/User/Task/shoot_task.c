@@ -15,8 +15,8 @@
 #ifndef ABS
 #define ABS(x) ((x>0)? (x): (-(x)))//32818
 #endif
-#define TRIGGER_MOTOR_ECD_SINGLE   (68027.0f)  //拨盘一颗子弹转过的编码值 8191 * 36 / 8 = 36859.5f
-#define TRIGGER_MOTOR_ECD_SERIES   (68027.0f)  //拨盘一颗子弹转过的编码值 8191 * 36 / 8 = 36859.5f
+#define TRIGGER_MOTOR_ECD_SINGLE   (58982.0f)  //拨盘一颗子弹转过的编码值 8191 * 36 / 8 = 36859.5f
+#define TRIGGER_MOTOR_ECD_SERIES   (58982.4f)  //拨盘一颗子弹转过的编码值 8191 * 36 / 8 = 36859.5f
 
 float MIN_HEAT = 50;        //热量控制裕量
 
@@ -108,7 +108,7 @@ static void shoot_control(void)
         case TRIGGER_MODE_SERIES: { //拨盘连发模式，连续开枪请求，连续响应
             frequency_cnt++;
             trigger_ecd_error = shoot.trigger_ecd.ref - shoot.trigger_ecd.fdb;
-           if (series_shoot_enable() && !back_flag) { //一个周期打一颗
+           if ((series_shoot_enable() || 1) && !back_flag) { //一个周期打一颗
                 frequency_cnt = 0;
 				shoot.trigger_ecd.ref += 1 * TRIGGER_MOTOR_ECD_SERIES;
                 shoot.barrel.heat += 10;

@@ -7,12 +7,11 @@
 #include "drv_dm_motor.h"
 #include "prot_vision.h"
 #include "board_comm.h"
-
+#include "bsp_LK_Motor_MG4005.h"
 FDCAN_TxHeaderTypeDef tx_message;
 FDCAN_RxHeaderTypeDef rx_fifo0_message, rx_fifo1_message;
 //注意FDCAN只能设置64个字节给用，设置8个会数组越界进硬件错误中断
 uint8_t rx_fifo0_data[64], rx_fifo1_data[64];
-
 
 /*
  * @brief  can总线初始化
@@ -30,37 +29,36 @@ void can_comm_init(void)
     can_filter.FilterType = FDCAN_FILTER_RANGE;//范围过滤
     can_filter.FilterID1 = 0x011;
     can_filter.FilterID2 = 0x014;
-    can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;//通过过滤后给邮箱0
+    can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO1;//通过过滤后给邮箱1
     HAL_FDCAN_ConfigFilter(&hfdcan1, &can_filter);
-	
-    //pitch电机 拨盘电机
+    //4310P pitch电机
     can_filter.IdType = FDCAN_STANDARD_ID;//标准帧
     can_filter.FilterIndex = 1;
     can_filter.FilterType = FDCAN_FILTER_DUAL;//等于过滤
-    can_filter.FilterID1 = 0x206;
-    can_filter.FilterID2 = 0x203;
-    can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO1;//通过过滤后给邮箱1
+    can_filter.FilterID1 = 0x015; 
+    can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;//通过过滤后给邮箱0
     HAL_FDCAN_ConfigFilter(&hfdcan1, &can_filter);
+	
     HAL_FDCAN_ConfigGlobalFilter(&hfdcan1, FDCAN_REJECT, FDCAN_REJECT, FDCAN_REJECT_REMOTE, FDCAN_REJECT_REMOTE);
     HAL_FDCAN_ActivateNotification(&hfdcan1, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0);//使能邮箱0新消息中断
     HAL_FDCAN_ActivateNotification(&hfdcan1, FDCAN_IT_RX_FIFO1_NEW_MESSAGE, 0);//使能邮箱1新消息中断
     HAL_FDCAN_Start(&hfdcan1);
-	
-    //can2过滤器设置
+
+	//can2过滤器设置		
     //摩擦轮电机
     can_filter.IdType = FDCAN_STANDARD_ID;//标准帧
     can_filter.FilterIndex = 0;
-    can_filter.FilterType = FDCAN_FILTER_RANGE;//范围过滤
+    can_filter.FilterType = FDCAN_FILTER_DUAL;//等于过滤
     can_filter.FilterID1 = 0x201;
-    can_filter.FilterID2 = 0x208;
-    can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;//通过过滤后给邮箱0
+    can_filter.FilterID2 = 0x203;
+    can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;//通过过滤后给邮箱1
     HAL_FDCAN_ConfigFilter(&hfdcan2, &can_filter);
+	
     HAL_FDCAN_ConfigGlobalFilter(&hfdcan2, FDCAN_REJECT, FDCAN_REJECT, FDCAN_REJECT_REMOTE, FDCAN_REJECT_REMOTE);
     HAL_FDCAN_ActivateNotification(&hfdcan2, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0);//使能邮箱0新消息中断
     HAL_FDCAN_ActivateNotification(&hfdcan2, FDCAN_IT_RX_FIFO1_NEW_MESSAGE, 0);//使能邮箱1新消息中断
     HAL_FDCAN_Start(&hfdcan2);
     
-
     //can3过滤器设置
     //板间通信
     can_filter.IdType = FDCAN_STANDARD_ID;//标准帧
@@ -68,15 +66,15 @@ void can_comm_init(void)
     can_filter.FilterType = FDCAN_FILTER_RANGE;//范围过滤
     can_filter.FilterID1 = 0x001;
     can_filter.FilterID2 = 0x008;
-    can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;//通过过滤后给邮箱0
+    can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO1;//通过过滤后给邮箱0
     HAL_FDCAN_ConfigFilter(&hfdcan3, &can_filter);
 
-		
+	//6020 yaw
 	can_filter.IdType = FDCAN_STANDARD_ID;//标准帧
     can_filter.FilterIndex = 1;
-    can_filter.FilterType = FDCAN_FILTER_DUAL;//范围过滤
-    can_filter.FilterID1 = 0x206;
-    can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO1;//通过过滤后给邮箱1
+    can_filter.FilterType = FDCAN_FILTER_DUAL;//等于过滤
+	can_filter.FilterID1 = 0x205;//6020yaw
+    can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;//通过过滤后给邮箱1
     HAL_FDCAN_ConfigFilter(&hfdcan3, &can_filter);
 	
     HAL_FDCAN_ConfigGlobalFilter(&hfdcan3, FDCAN_REJECT, FDCAN_REJECT, FDCAN_REJECT_REMOTE, FDCAN_REJECT_REMOTE);
@@ -96,11 +94,12 @@ void can_comm_init(void)
     tx_message.MessageMarker = 0;
     
     //各驱动初始化
+	dm_motor_init(&pit_motor, CAN_CHANNEL_1, 0x05, 0.0f, 0x15);
+	
     dji_motor_init(&fric_motor[0], DJI_3508_MOTOR, CAN_CHANNEL_2, 0x203, 1.0f);
-    dji_motor_init(&fric_motor[1], DJI_3508_MOTOR, CAN_CHANNEL_2, 0x204, 1.0f);
-//   dji_motor_init(&trigger_motor, DJI_2006_MOTOR, CAN_CHANNEL_2, 0x205, 82.8);
-    dji_motor_init(&yaw_motor, DJI_6020_MOTOR, CAN_CHANNEL_3, 0x206, 1.0f);
-    dji_motor_init(&pit_motor, DJI_6020_MOTOR, CAN_CHANNEL_2, 0x205, 1.0f);
+    dji_motor_init(&fric_motor[1], DJI_3508_MOTOR, CAN_CHANNEL_2, 0x201, 1.0f);
+	
+    dji_motor_init(&yaw_motor, DJI_6020_MOTOR, CAN_CHANNEL_3, 0x205, 1.0f);
 }
 
 
@@ -114,12 +113,11 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
     if((RxFifo0ITs & FDCAN_IT_RX_FIFO0_NEW_MESSAGE) != RESET) {
         HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO0, &rx_fifo0_message, rx_fifo0_data);
         if (hfdcan->Instance == FDCAN1) {
-            imu_get_data(&gimbal_imu, rx_fifo0_message.Identifier, rx_fifo0_data);
-//			dji_motor_get_data(CAN_CHANNEL_1, rx_fifo0_message.Identifier, rx_fifo0_data);
+			dm_motor_get_data(rx_fifo0_message.Identifier, rx_fifo0_data);
         } else if (hfdcan->Instance == FDCAN2) {
 			dji_motor_get_data(CAN_CHANNEL_2, rx_fifo0_message.Identifier, rx_fifo0_data);
         } else if (hfdcan->Instance == FDCAN3) {
-			board_comm_get_data(rx_fifo0_message.Identifier, rx_fifo0_data);//板间通信解析函数
+			dji_motor_get_data(CAN_CHANNEL_3, rx_fifo0_message.Identifier, rx_fifo0_data);		
         }
         HAL_FDCAN_ActivateNotification(hfdcan, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0);
     }
@@ -135,11 +133,11 @@ void HAL_FDCAN_RxFifo1Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo1ITs)
     if((RxFifo1ITs & FDCAN_IT_RX_FIFO1_NEW_MESSAGE) != RESET) {
         HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO1, &rx_fifo1_message, rx_fifo1_data);
         if (hfdcan->Instance == FDCAN1) {
-			dji_motor_get_data(CAN_CHANNEL_1, rx_fifo1_message.Identifier, rx_fifo1_data);
+			imu_get_data(&gimbal_imu, rx_fifo1_message.Identifier, rx_fifo1_data);
         } else if (hfdcan->Instance == FDCAN2) {
-           dji_motor_get_data(CAN_CHANNEL_2, rx_fifo1_message.Identifier, rx_fifo1_data);
+//			dji_motor_get_data(CAN_CHANNEL_2, rx_fifo1_message.Identifier, rx_fifo1_data);
         } else if (hfdcan->Instance == FDCAN3) {
-			dji_motor_get_data(CAN_CHANNEL_3, rx_fifo1_message.Identifier, rx_fifo1_data);
+				board_comm_get_data(rx_fifo1_message.Identifier, rx_fifo1_data);//板间通信解析函数
         }
         HAL_FDCAN_ActivateNotification(hfdcan, FDCAN_IT_RX_FIFO1_NEW_MESSAGE, 0);
     }
