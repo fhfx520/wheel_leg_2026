@@ -489,15 +489,15 @@ static void chassis_data_input(void)
         case CHASSIS_MODE_PROTECT: {
 						
 			//help拆头 start
-			wlr.yaw_ref = (float)chassis_imu.yaw;
-			wlr.yaw_fdb = (float)chassis_imu.yaw;
+//			wlr.yaw_ref = (float)chassis_imu.yaw;
+//			wlr.yaw_fdb = (float)chassis_imu.yaw;
 			//help拆头 end
 			
 //******************************************************************************************************
 			
 			//help不拆头 start
-//            wlr.yaw_ref = (float)yaw_motor.ecd / 8192 * 2 * PI;
-//            wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;
+            wlr.yaw_ref = (float)yaw_motor.ecd / 8192 * 2 * PI;
+            wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;
 			//help不拆头 end
 			
 			//拆不拆头都有这行
@@ -510,35 +510,35 @@ static void chassis_data_input(void)
         case CHASSIS_MODE_KEYBOARD_PRONE: {
 			
 			//help拆头 start
-            if (gimbal.start_up)	//完成起身，前方灯条
-				wlr.yaw_ref = chassis_imu.yaw;
-            else					//起身未完成，目标值等于反馈值
-				wlr.yaw_ref = chassis_imu.yaw;
-			
-//			wlr.yaw_fdb = CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
-			
-			wlr.yaw_fdb = chassis_imu.yaw;
-//            wlr.wz_ref = rc.ch1 *  0.0035f;
-			wlr.wz_ref = 0.0f;
+//            if (gimbal.start_up)	//完成起身，前方灯条
+//				wlr.yaw_ref = chassis_imu.yaw;
+//            else					//起身未完成，目标值等于反馈值
+//				wlr.yaw_ref = chassis_imu.yaw;
+//			
+////			wlr.yaw_fdb = CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
+//			
+//			wlr.yaw_fdb = chassis_imu.yaw;
+////            wlr.wz_ref = rc.ch1 *  0.0035f;
+//			wlr.wz_ref = 0.0f;
 			//help拆头 end
 			
 //******************************************************************************************************
 			
 //			//help不拆头 start
-//			if (gimbal.start_up)	//完成起身，前方灯条
-//                wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
-//            else					//起身未完成，目标值等于反馈值
-//                wlr.yaw_ref = (float)yaw_motor.ecd / 8192 * 2  * PI;  
+			if (gimbal.start_up)	//完成起身，前方灯条
+                wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
+            else					//起身未完成，目标值等于反馈值
+                wlr.yaw_ref = (float)yaw_motor.ecd / 8192 * 2  * PI;  
 
-//            wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 *PI;	//-chassis_imu.yaw;
-//            wlr.wz_ref =0.0f;
-//			
-//            //此yaw_err用于底盘前后都可跟随 算哪边最短路径
-//            wlr.yaw_err = circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
-//			
-//            if ( wlr.yaw_err > PI / 2 || wlr.yaw_err < - PI / 2) {
-//                wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI ;
-//            }
+            wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 *PI;	//-chassis_imu.yaw;
+            wlr.wz_ref = 0.0f;
+			
+            //此yaw_err用于底盘前后都可跟随 算哪边最短路径
+            wlr.yaw_err = circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
+			
+            if ( wlr.yaw_err > PI / 2 || wlr.yaw_err < - PI / 2) {
+                wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI ;
+            }
 //			//help不拆头 end
 			
 			
@@ -691,30 +691,30 @@ static void chassis_data_input(void)
 				||last_chassis_mode == CHASSIS_MODE_KEYBOARD_ROTATE ) 
 			rotate_chassis_mode = last_chassis_mode;
 		if(rotate_chassis_mode == CHASSIS_MODE_REMOTER_ROTATE2 ||rotate_chassis_mode == CHASSIS_MODE_KEYBOARD_ROTATE  )
-			wlr.wz_ref = -12.0f/1.0f;  
+			wlr.wz_ref = -12.0f/2.0f;  
 		else if (rotate_chassis_mode == CHASSIS_MODE_REMOTER_ROTATE1 )		
-			wlr.wz_ref = -12.0f/1.0f;   	
+			wlr.wz_ref = -12.0f/2.0f;   	
 		wlr.yaw_ref	= wlr.yaw_fdb;
 	}
 	
 	wlr.yaw_err = circle_error(wlr.yaw_ref,wlr.yaw_fdb, 2 * PI);//补
 	/**********上台阶前让车身转至正对**********/
-//	if (wlr.jump_flag && !wlr.jump_pre) {
-//		wlr.wz_ref = 8.0f;
-//		wlr.yaw_err = 0;
-//	}
-//		wlr.yaw_ref = wlr.yaw_fdb + 1.0f * wlr.yaw_err;//同步带哥 有头
-	wheel_diff = 0.0f;
+	if (wlr.jump_flag && !wlr.jump_pre) {
+		wlr.wz_ref = 8.0f;
+		wlr.yaw_err = 0;
+	}
+	wlr.yaw_ref = wlr.yaw_fdb + 1.0f * wlr.yaw_err;//同步带哥 有头
+//	wheel_diff = 0.0f;
 //		wheel_diff =  gain_diff * (wlr.side[0].wy  - wlr.side[1].wy );
 	
-	if (abs(rc.ch1) < 1 )
-		wlr.yaw_ref = wlr.yaw_fdb + (rc.ch1 / 660.0f)*(PI / 2.0f) - wheel_diff; //wlr.yaw_fdb + wlr.yaw_err;
-	else
-		wlr.yaw_ref = wlr.yaw_fdb + (rc.ch1 / 660.0f)*(PI / 2.0f); //wlr.yaw_fdb + wlr.yaw_err;
+//	if (abs(rc.ch1) < 1 )
+//		wlr.yaw_ref = wlr.yaw_fdb + (rc.ch1 / 660.0f)*(PI / 2.0f) - wheel_diff; //wlr.yaw_fdb + wlr.yaw_err;
+//	else
+//		wlr.yaw_ref = wlr.yaw_fdb + (rc.ch1 / 660.0f)*(PI / 2.0f); //wlr.yaw_fdb + wlr.yaw_err;
 	
 	wlr.v_ref = chassis.output.vx;
 	
-	if (wlr.jump_flag && !wlr.jump_pre && ((fabs(circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, wlr.yaw_fdb, 2 * PI)) < 0.2f) || 1))
+	if (wlr.jump_flag && !wlr.jump_pre && ((fabs(circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, wlr.yaw_fdb, 2 * PI)) < 0.2f)))
 		wlr.jump_pre = 1;
 	
 	

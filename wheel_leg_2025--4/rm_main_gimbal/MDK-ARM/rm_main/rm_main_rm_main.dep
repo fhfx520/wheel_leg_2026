@@ -171,7 +171,7 @@ I (..\Middlewares\Third_Party\FreeRTOS\Source\include\event_groups.h)(0x68B5ADB6
 I (..\User\Task\comm_task.h)(0x68B5ADB6)
 I (..\User\Task\mode_switch_task.h)(0x68B5ADB6)
 I (..\User\Task\status_task.h)(0x68B5ADB6)
-I (..\User\Task\gimbal_task.h)(0x68B5ADB6)
+I (..\User\Task\gimbal_task.h)(0x69846547)
 I (..\User\Math\pid.h)(0x68B5ADB6)
 I (..\User\Task\chassis_task.h)(0x68B5ADB6)
 I (..\User\Task\shoot_task.h)(0x694E97F8)
@@ -865,7 +865,7 @@ I (..\Core\Inc\rng.h)(0x68B5ADB4)
 I (..\User\Protocol\prot_dr16.h)(0x68B5ADB6)
 I (..\User\Support\us_time.h)(0x68B5ADB6)
 I (..\Core\Inc\tim.h)(0x68B5ADB4)
-I (..\User\Task\gimbal_task.h)(0x68B5ADB6)
+I (..\User\Task\gimbal_task.h)(0x69846547)
 I (..\User\Task\mode_switch_task.h)(0x68B5ADB6)
 F (..\User\Task\comm_task.c)(0x69829DFE)(-xc -std=gnu11 --target=arm-arm-none-eabi -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-4 -O0 -fno-function-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Drivers/CMSIS/Include -I ../Core/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../User/Communication -I ../User/Drivers -I ../User/Protocol -I ../User/Math/DSP/Include -I ../User/Math -I ../User/Model -I ../User/Support -I ../User/Middle -I ../User/Task -I ../User/UI -I ../User/Math/OSQP/include/public -I ../User/Math/OSQP/configure -I ../User/Math/OSQP/algebra -I ../User/Math/OSQP/algebra/_common -I ../User/Math/OSQP/algebra/builtin -I ../User/Math/OSQP/algebra/cuda/include -I ../User/Math/OSQP/algebra/mkl -I ../User/Math/OSQP/include/private -D__weak="__attribute__((weak))" -D__packed="__attribute__((__packed__))"  -D__NOINLINE="__attribute__ ( (noinline) )"  -Wno-error=armcc-pragma-import -Wno-error=armcc-pragma-arm-I./RTE/_rm_main-ID:/KEIL5/keli_pkg/ARM/CMSIS/6.2.0/CMSIS/Core/Include-ID:/KEIL5/keli_pkg/Keil/STM32H7xx_DFP/3.1.1/Drivers/CMSIS/Device/ST/STM32H7xx/Include-D__UVISION_VERSION="543" -DSTM32H723xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32H723xx -DARM_MATH_CM7 -D__TARGET_FPU_VFP -DOSQP_EMBEDDED_MODE="1"-o rm_main/comm_task.o -MMD)
 I (..\User\Task\comm_task.h)(0x68B5ADB6)
@@ -999,7 +999,7 @@ I (..\Middlewares\Third_Party\FreeRTOS\Source\include\event_groups.h)(0x68B5ADB6
 I (..\User\Task\status_task.h)(0x68B5ADB6)
 F (..\User\Task\status_task.c)(0x696FE71C)(-xc -std=gnu11 --target=arm-arm-none-eabi -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-4 -O0 -fno-function-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Drivers/CMSIS/Include -I ../Core/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../User/Communication -I ../User/Drivers -I ../User/Protocol -I ../User/Math/DSP/Include -I ../User/Math -I ../User/Model -I ../User/Support -I ../User/Middle -I ../User/Task -I ../User/UI -I ../User/Math/OSQP/include/public -I ../User/Math/OSQP/configure -I ../User/Math/OSQP/algebra -I ../User/Math/OSQP/algebra/_common -I ../User/Math/OSQP/algebra/builtin -I ../User/Math/OSQP/algebra/cuda/include -I ../User/Math/OSQP/algebra/mkl -I ../User/Math/OSQP/include/private -D__weak="__attribute__((weak))" -D__packed="__attribute__((__packed__))"  -D__NOINLINE="__attribute__ ( (noinline) )"  -Wno-error=armcc-pragma-import -Wno-error=armcc-pragma-arm-I./RTE/_rm_main-ID:/KEIL5/keli_pkg/ARM/CMSIS/6.2.0/CMSIS/Core/Include-ID:/KEIL5/keli_pkg/Keil/STM32H7xx_DFP/3.1.1/Drivers/CMSIS/Device/ST/STM32H7xx/Include-D__UVISION_VERSION="543" -DSTM32H723xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32H723xx -DARM_MATH_CM7 -D__TARGET_FPU_VFP -DOSQP_EMBEDDED_MODE="1"-o rm_main/status_task.o -MMD)
 I (..\User\Task\status_task.h)(0x68B5ADB6)
-I (..\User\Task\control_def.h)(0x698299D6)
+I (..\User\Task\control_def.h)(0x69845307)
 I (..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS\cmsis_os.h)(0x68B5ADB6)
 I (..\Middlewares\Third_Party\FreeRTOS\Source\include\FreeRTOS.h)(0x68B5ADB6)
 I (..\Core\Inc\FreeRTOSConfig.h)(0x68B5ADB4)
@@ -1073,10 +1073,10 @@ I (..\User\Protocol\prot_vision.h)(0x68B5ADB6)
 I (..\User\Drivers\drv_ws2812b.h)(0x68B5ADB6)
 I (..\Core\Inc\iwdg.h)(0x68B5ADB4)
 I (..\User\Communication\board_comm.h)(0x68C63186)
-F (..\User\Task\gimbal_task.c)(0x6983B8D8)(-xc -std=gnu11 --target=arm-arm-none-eabi -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-4 -O0 -fno-function-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Drivers/CMSIS/Include -I ../Core/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../User/Communication -I ../User/Drivers -I ../User/Protocol -I ../User/Math/DSP/Include -I ../User/Math -I ../User/Model -I ../User/Support -I ../User/Middle -I ../User/Task -I ../User/UI -I ../User/Math/OSQP/include/public -I ../User/Math/OSQP/configure -I ../User/Math/OSQP/algebra -I ../User/Math/OSQP/algebra/_common -I ../User/Math/OSQP/algebra/builtin -I ../User/Math/OSQP/algebra/cuda/include -I ../User/Math/OSQP/algebra/mkl -I ../User/Math/OSQP/include/private -D__weak="__attribute__((weak))" -D__packed="__attribute__((__packed__))"  -D__NOINLINE="__attribute__ ( (noinline) )"  -Wno-error=armcc-pragma-import -Wno-error=armcc-pragma-arm-I./RTE/_rm_main-ID:/KEIL5/keli_pkg/ARM/CMSIS/6.2.0/CMSIS/Core/Include-ID:/KEIL5/keli_pkg/Keil/STM32H7xx_DFP/3.1.1/Drivers/CMSIS/Device/ST/STM32H7xx/Include-D__UVISION_VERSION="543" -DSTM32H723xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32H723xx -DARM_MATH_CM7 -D__TARGET_FPU_VFP -DOSQP_EMBEDDED_MODE="1"-o rm_main/gimbal_task.o -MMD)
+F (..\User\Task\gimbal_task.c)(0x6984B99A)(-xc -std=gnu11 --target=arm-arm-none-eabi -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-4 -O0 -fno-function-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Drivers/CMSIS/Include -I ../Core/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../User/Communication -I ../User/Drivers -I ../User/Protocol -I ../User/Math/DSP/Include -I ../User/Math -I ../User/Model -I ../User/Support -I ../User/Middle -I ../User/Task -I ../User/UI -I ../User/Math/OSQP/include/public -I ../User/Math/OSQP/configure -I ../User/Math/OSQP/algebra -I ../User/Math/OSQP/algebra/_common -I ../User/Math/OSQP/algebra/builtin -I ../User/Math/OSQP/algebra/cuda/include -I ../User/Math/OSQP/algebra/mkl -I ../User/Math/OSQP/include/private -D__weak="__attribute__((weak))" -D__packed="__attribute__((__packed__))"  -D__NOINLINE="__attribute__ ( (noinline) )"  -Wno-error=armcc-pragma-import -Wno-error=armcc-pragma-arm-I./RTE/_rm_main-ID:/KEIL5/keli_pkg/ARM/CMSIS/6.2.0/CMSIS/Core/Include-ID:/KEIL5/keli_pkg/Keil/STM32H7xx_DFP/3.1.1/Drivers/CMSIS/Device/ST/STM32H7xx/Include-D__UVISION_VERSION="543" -DSTM32H723xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32H723xx -DARM_MATH_CM7 -D__TARGET_FPU_VFP -DOSQP_EMBEDDED_MODE="1"-o rm_main/gimbal_task.o -MMD)
 I (..\User\Task\mode_switch_task.h)(0x68B5ADB6)
 I (..\User\Task\status_task.h)(0x68B5ADB6)
-I (..\User\Task\control_def.h)(0x698299D6)
+I (..\User\Task\control_def.h)(0x69845307)
 I (..\User\Drivers\drv_dji_motor.h)(0x696F61A2)
 I (..\User\Communication\can_comm.h)(0x68B5ADB6)
 I (..\Drivers\CMSIS\Device\ST\STM32H7xx\Include\stm32h7xx.h)(0x68B5ADB4)
@@ -1140,14 +1140,14 @@ I (..\Drivers\CMSIS\Include\cmsis_compiler.h)(0x68B5ADB4)
 I (..\User\Support\func_generator.h)(0x68B5ADB6)
 I (..\Core\Inc\rng.h)(0x68B5ADB4)
 I (..\Core\Inc\main.h)(0x68B5ADB4)
-I (..\User\Task\gimbal_task.h)(0x68B5ADB6)
+I (..\User\Task\gimbal_task.h)(0x69846547)
 I (..\User\Math\pid.h)(0x68B5ADB6)
 I (..\User\Math\smc.h)(0x68B5ADB6)
 I (..\User\Drivers\drv_dm_motor.h)(0x696FDE1F)
 F (..\User\Task\chassis_task.c)(0x68B5ADB6)(-xc -std=gnu11 --target=arm-arm-none-eabi -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-4 -O0 -fno-function-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Drivers/CMSIS/Include -I ../Core/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../User/Communication -I ../User/Drivers -I ../User/Protocol -I ../User/Math/DSP/Include -I ../User/Math -I ../User/Model -I ../User/Support -I ../User/Middle -I ../User/Task -I ../User/UI -I ../User/Math/OSQP/include/public -I ../User/Math/OSQP/configure -I ../User/Math/OSQP/algebra -I ../User/Math/OSQP/algebra/_common -I ../User/Math/OSQP/algebra/builtin -I ../User/Math/OSQP/algebra/cuda/include -I ../User/Math/OSQP/algebra/mkl -I ../User/Math/OSQP/include/private -D__weak="__attribute__((weak))" -D__packed="__attribute__((__packed__))"  -D__NOINLINE="__attribute__ ( (noinline) )"  -Wno-error=armcc-pragma-import -Wno-error=armcc-pragma-arm-I./RTE/_rm_main-ID:/KEIL5/keli_pkg/ARM/CMSIS/6.2.0/CMSIS/Core/Include-ID:/KEIL5/keli_pkg/Keil/STM32H7xx_DFP/3.1.1/Drivers/CMSIS/Device/ST/STM32H7xx/Include-D__UVISION_VERSION="543" -DSTM32H723xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32H723xx -DARM_MATH_CM7 -D__TARGET_FPU_VFP -DOSQP_EMBEDDED_MODE="1"-o rm_main/chassis_task.o -MMD)
 I (..\User\Task\chassis_task.h)(0x68B5ADB6)
 I (..\User\Task\mode_switch_task.h)(0x68B5ADB6)
-I (..\User\Task\control_def.h)(0x698299D6)
+I (..\User\Task\control_def.h)(0x69845307)
 I (..\User\Model\wlr.h)(0x68B5ADB6)
 I (..\User\Math\pid.h)(0x68B5ADB6)
 I (..\User\Math\kalman_filter.h)(0x68B5ADB6)
@@ -1213,7 +1213,7 @@ I (..\Middlewares\Third_Party\FreeRTOS\Source\include\timers.h)(0x68B5ADB6)
 I (..\Middlewares\Third_Party\FreeRTOS\Source\include\queue.h)(0x68B5ADB6)
 I (..\Middlewares\Third_Party\FreeRTOS\Source\include\semphr.h)(0x68B5ADB6)
 I (..\Middlewares\Third_Party\FreeRTOS\Source\include\event_groups.h)(0x68B5ADB6)
-I (..\User\Task\gimbal_task.h)(0x68B5ADB6)
+I (..\User\Task\gimbal_task.h)(0x69846547)
 I (..\User\Task\status_task.h)(0x68B5ADB6)
 I (..\User\Math\KNN.h)(0x68B5ADB6)
 I (..\User\Support\func_generator.h)(0x68B5ADB6)
@@ -1224,7 +1224,7 @@ F (..\User\Task\shoot_task.c)(0x697A2A3D)(-xc -std=gnu11 --target=arm-arm-none-e
 I (..\User\Task\shoot_task.h)(0x694E97F8)
 I (..\User\Math\pid.h)(0x68B5ADB6)
 I (..\User\Task\mode_switch_task.h)(0x68B5ADB6)
-I (..\User\Task\control_def.h)(0x698299D6)
+I (..\User\Task\control_def.h)(0x69845307)
 I (..\User\Drivers\drv_dji_motor.h)(0x696F61A2)
 I (..\User\Communication\can_comm.h)(0x68B5ADB6)
 I (..\Drivers\CMSIS\Device\ST\STM32H7xx\Include\stm32h7xx.h)(0x68B5ADB4)
@@ -1364,7 +1364,7 @@ I (..\User\UI\ui_default_group5_0.h)(0x68B5ADB6)
 I (..\User\UI\ui_default_group5_1.h)(0x68B5ADB6)
 I (..\User\Support\us_time.h)(0x68B5ADB6)
 I (..\Core\Inc\tim.h)(0x68B5ADB4)
-F (..\User\Task\control_def.h)(0x698299D6)()
+F (..\User\Task\control_def.h)(0x69845307)()
 F (..\User\Communication\can_comm.c)(0x6983B8B9)(-xc -std=gnu11 --target=arm-arm-none-eabi -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-4 -O0 -fno-function-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Drivers/CMSIS/Include -I ../Core/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../User/Communication -I ../User/Drivers -I ../User/Protocol -I ../User/Math/DSP/Include -I ../User/Math -I ../User/Model -I ../User/Support -I ../User/Middle -I ../User/Task -I ../User/UI -I ../User/Math/OSQP/include/public -I ../User/Math/OSQP/configure -I ../User/Math/OSQP/algebra -I ../User/Math/OSQP/algebra/_common -I ../User/Math/OSQP/algebra/builtin -I ../User/Math/OSQP/algebra/cuda/include -I ../User/Math/OSQP/algebra/mkl -I ../User/Math/OSQP/include/private -D__weak="__attribute__((weak))" -D__packed="__attribute__((__packed__))"  -D__NOINLINE="__attribute__ ( (noinline) )"  -Wno-error=armcc-pragma-import -Wno-error=armcc-pragma-arm-I./RTE/_rm_main-ID:/KEIL5/keli_pkg/ARM/CMSIS/6.2.0/CMSIS/Core/Include-ID:/KEIL5/keli_pkg/Keil/STM32H7xx_DFP/3.1.1/Drivers/CMSIS/Device/ST/STM32H7xx/Include-D__UVISION_VERSION="543" -DSTM32H723xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32H723xx -DARM_MATH_CM7 -D__TARGET_FPU_VFP -DOSQP_EMBEDDED_MODE="1"-o rm_main/can_comm.o -MMD)
 I (..\User\Communication\can_comm.h)(0x68B5ADB6)
 I (..\Drivers\CMSIS\Device\ST\STM32H7xx\Include\stm32h7xx.h)(0x68B5ADB4)
@@ -1507,7 +1507,7 @@ I (..\User\Task\mode_switch_task.h)(0x68B5ADB6)
 I (..\User\Protocol\prot_imu.h)(0x68B5ADB6)
 I (..\User\Communication\can_comm.h)(0x68B5ADB6)
 I (..\User\Protocol\prot_vision.h)(0x68B5ADB6)
-I (..\User\Task\gimbal_task.h)(0x68B5ADB6)
+I (..\User\Task\gimbal_task.h)(0x69846547)
 I (..\User\Math\pid.h)(0x68B5ADB6)
 I (..\User\Task\chassis_task.h)(0x68B5ADB6)
 I (..\User\Protocol\prot_judge.h)(0x68B5ADB6)
@@ -1644,9 +1644,9 @@ I (..\Drivers\CMSIS\Include\cmsis_compiler.h)(0x68B5ADB4)
 I (..\User\Communication\can_comm.h)(0x68B5ADB6)
 I (..\Core\Inc\fdcan.h)(0x68B5ADB4)
 I (..\User\Drivers\bsp_LK_Motor_MG4005.h)(0x692FFDFA)
-I (..\User\Task\gimbal_task.h)(0x68B5ADB6)
+I (..\User\Task\gimbal_task.h)(0x69846547)
 I (..\User\Math\pid.h)(0x68B5ADB6)
-I (..\User\Task\control_def.h)(0x698299D6)
+I (..\User\Task\control_def.h)(0x69845307)
 F (..\User\Drivers\drv_ws2812b.c)(0x68B5ADB6)(-xc -std=gnu11 --target=arm-arm-none-eabi -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-4 -O0 -fno-function-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Drivers/CMSIS/Include -I ../Core/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../User/Communication -I ../User/Drivers -I ../User/Protocol -I ../User/Math/DSP/Include -I ../User/Math -I ../User/Model -I ../User/Support -I ../User/Middle -I ../User/Task -I ../User/UI -I ../User/Math/OSQP/include/public -I ../User/Math/OSQP/configure -I ../User/Math/OSQP/algebra -I ../User/Math/OSQP/algebra/_common -I ../User/Math/OSQP/algebra/builtin -I ../User/Math/OSQP/algebra/cuda/include -I ../User/Math/OSQP/algebra/mkl -I ../User/Math/OSQP/include/private -D__weak="__attribute__((weak))" -D__packed="__attribute__((__packed__))"  -D__NOINLINE="__attribute__ ( (noinline) )"  -Wno-error=armcc-pragma-import -Wno-error=armcc-pragma-arm-I./RTE/_rm_main-ID:/KEIL5/keli_pkg/ARM/CMSIS/6.2.0/CMSIS/Core/Include-ID:/KEIL5/keli_pkg/Keil/STM32H7xx_DFP/3.1.1/Drivers/CMSIS/Device/ST/STM32H7xx/Include-D__UVISION_VERSION="543" -DSTM32H723xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32H723xx -DARM_MATH_CM7 -D__TARGET_FPU_VFP -DOSQP_EMBEDDED_MODE="1"-o rm_main/drv_ws2812b.o -MMD)
 I (..\User\Drivers\drv_ws2812b.h)(0x68B5ADB6)
 I (..\Core\Inc\spi.h)(0x68B5ADB4)
@@ -1883,7 +1883,7 @@ F (..\User\Protocol\prot_vision.c)(0x68B5ADB6)(-xc -std=gnu11 --target=arm-arm-n
 I (..\User\Protocol\prot_vision.h)(0x68B5ADB6)
 I (..\User\Task\shoot_task.h)(0x694E97F8)
 I (..\User\Math\pid.h)(0x68B5ADB6)
-I (..\User\Task\gimbal_task.h)(0x68B5ADB6)
+I (..\User\Task\gimbal_task.h)(0x69846547)
 I (..\User\Protocol\prot_judge.h)(0x68B5ADB6)
 I (..\Core\Inc\usart.h)(0x68B5ADB4)
 I (..\Core\Inc\main.h)(0x68B5ADB4)
@@ -1936,7 +1936,7 @@ I (..\USB_DEVICE\Target\usbd_conf.h)(0x68B5ADB6)
 I (..\Middlewares\ST\STM32_USB_Device_Library\Core\Inc\usbd_core.h)(0x68B5ADB4)
 I (..\Middlewares\ST\STM32_USB_Device_Library\Core\Inc\usbd_ctlreq.h)(0x68B5ADB4)
 I (..\User\Protocol\prot_dr16.h)(0x68B5ADB6)
-I (..\User\Task\control_def.h)(0x698299D6)
+I (..\User\Task\control_def.h)(0x69845307)
 I (..\User\Communication\board_comm.h)(0x68C63186)
 F (..\User\Math\DSP\arm_cortexM7lfdp_math.lib)(0x68B5ADB6)()
 F (..\User\Math\crc.c)(0x68B5ADB6)(-xc -std=gnu11 --target=arm-arm-none-eabi -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-4 -O0 -fno-function-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Drivers/CMSIS/Include -I ../Core/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../User/Communication -I ../User/Drivers -I ../User/Protocol -I ../User/Math/DSP/Include -I ../User/Math -I ../User/Model -I ../User/Support -I ../User/Middle -I ../User/Task -I ../User/UI -I ../User/Math/OSQP/include/public -I ../User/Math/OSQP/configure -I ../User/Math/OSQP/algebra -I ../User/Math/OSQP/algebra/_common -I ../User/Math/OSQP/algebra/builtin -I ../User/Math/OSQP/algebra/cuda/include -I ../User/Math/OSQP/algebra/mkl -I ../User/Math/OSQP/include/private -D__weak="__attribute__((weak))" -D__packed="__attribute__((__packed__))"  -D__NOINLINE="__attribute__ ( (noinline) )"  -Wno-error=armcc-pragma-import -Wno-error=armcc-pragma-arm-I./RTE/_rm_main-ID:/KEIL5/keli_pkg/ARM/CMSIS/6.2.0/CMSIS/Core/Include-ID:/KEIL5/keli_pkg/Keil/STM32H7xx_DFP/3.1.1/Drivers/CMSIS/Device/ST/STM32H7xx/Include-D__UVISION_VERSION="543" -DSTM32H723xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32H723xx -DARM_MATH_CM7 -D__TARGET_FPU_VFP -DOSQP_EMBEDDED_MODE="1"-o rm_main/crc.o -MMD)
@@ -2376,7 +2376,7 @@ I (..\Core\Inc\usart.h)(0x68B5ADB4)
 I (..\Core\Inc\main.h)(0x68B5ADB4)
 I (..\User\Math\DSP\Include\arm_math.h)(0x68B5ADB6)
 I (..\Drivers\CMSIS\Include\cmsis_compiler.h)(0x68B5ADB4)
-I (..\User\Task\control_def.h)(0x698299D6)
+I (..\User\Task\control_def.h)(0x69845307)
 I (..\User\Drivers\drv_dji_motor.h)(0x696F61A2)
 I (..\User\Communication\can_comm.h)(0x68B5ADB6)
 I (..\User\Support\data_list.h)(0x68B5ADB6)

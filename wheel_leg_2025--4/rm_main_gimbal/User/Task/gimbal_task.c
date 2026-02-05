@@ -15,7 +15,7 @@
 #include "smc.h"
 #include "drv_dm_motor.h"
 
-
+float yaw_err_up;
 FGT_agl_t yaw_test = {
     .Td = 1,
     .time = 0,
@@ -29,7 +29,7 @@ FGT_agl_t yaw_test = {
 gimbal_scale_t gimbal_scale = {
     .ecd_remote = 0.000005f,//待修改sensity
     .ecd_keyboard = 1,
-    .angle_remote = 0.000015f,
+    .angle_remote = 0.000007f,
     .angle_keyboard = 0.00003f
 };
 gimbal_t gimbal;
@@ -56,7 +56,7 @@ static void gimbal_init(void)
       
 //    pid_init(&gimbal.yaw_angle.pid, CHANG_I_RATE,25.0f, 0.15, 0.0f, 50, 100);
 	pid_init(&gimbal.yaw_angle.pid, CHANG_I_RATE,25.0f, 0.1f, 0.0f, 50, 100);//尝试云台补偿算法
-    pid_init(&gimbal.yaw_spd.pid, CHANG_I_RATE, 8000.0f, 0.00f, 0, 10000.0f, 25000.0f);
+    pid_init(&gimbal.yaw_spd.pid, CHANG_I_RATE, 0.5f, 0.00f, 0, 10000.0f, 25000.0f);
 	gimbal.yaw_angle.pid.threshold_a = 0.002f;
 	gimbal.yaw_angle.pid.threshold_b = 0.3f; 
 	
@@ -74,10 +74,13 @@ static void gimbal_pid_calc(void)
     //速度环反馈 陀螺仪
     //此yaw_err用于云台pit限幅
     yaw_err = circle_error(CHASSIS_YAW_OFFSET / 8192.0f * 2 * PI, yaw_motor.ecd / 8192.0f * 2 * PI, 2 * PI);
-    pit_max = -arm_cos_f32(yaw_err) * chassis_imu.pit + 0.50f;
-		//1111 测试架，pit没装好，暂时限0.38
-	//pit_max = -arm_cos_f32(yaw_err) * chassis_imu.pit + 0.32f;
-    pit_min = -arm_cos_f32(yaw_err) * chassis_imu.pit - 0.35f;
+//    pit_max = -arm_cos_f32(yaw_err) * chassis_imu.pit + 0.50f;
+//		//1111 测试架，pit没装好，暂时限0.38
+//	//pit_max = -arm_cos_f32(yaw_err) * chassis_imu.pit + 0.32f;
+//    pit_min = -arm_cos_f32(yaw_err) * chassis_imu.pit - 0.35f;
+	
+	pit_max = 0.62f;
+	pit_min = -0.44f;
     data_limit(&gimbal.pit_angle.ref, pit_min, pit_max);
     gimbal.pit_angle.fdb = gimbal_imu.pit;
 		
@@ -104,34 +107,37 @@ static void gimbal_pid_calc(void)
     //此yaw_err用于云台yaw环形控制
 		
 
-		slope_feed = gimbal.yaw_angle.ref - last_yaw_ref;
+//	slope_feed = gimbal.yaw_angle.ref - last_yaw_ref;
 
-//		slope_feed = 0;
+	slope_feed = 0;
 		
-    yaw_err = circle_error(gimbal.yaw_angle.ref + gimbal.feedback_alpha_speed_input * 0.002f + slope_feed  , gimbal.yaw_angle.fdb, 2*PI);
-    if (gimbal.start_up == 0 && yaw_err < 0.03f)//-------------------->无云台控制下注释
+    yaw_err = circle_error(gimbal.yaw_angle.ref + gimbal.feedback_alpha_speed_input * 0.000f + slope_feed  , gimbal.yaw_angle.fdb, 2*PI);
+    if (gimbal.start_up == 0 && fabsf(yaw_err) < 0.03f)//-------------------->无云台控制下注释
         gimbal.start_up = 1;
 	
     gimbal.yaw_spd.ref = pid_calc(&gimbal.yaw_angle.pid, gimbal.yaw_angle.fdb + yaw_err, gimbal.yaw_angle.fdb);    
     gimbal.yaw_spd.fdb = gimbal_imu.wz;
     gimbal.yaw_output = pid_calc(&gimbal.yaw_spd.pid, gimbal.yaw_spd.ref, gimbal.yaw_spd.fdb);//SMC
+	//起身先转pitch
+	if((!(fabsf(gimbal.pit_angle.ref - gimbal.pit_angle.fdb) < 0.03f) && !gimbal.start_up) && gimbal.start_cnt < 200)
+		gimbal.yaw_output = 0.0f;
+		
 //		if (gimbal.start_up == 0 && fabs(yaw_err)  > 0.03f)//-------------------->无云台控制下注释
 //       gimbal.yaw_output  *= 0.1f;
     
 //    //无云台控制------->无陀螺仪, 通过ecd控制
-	if( rc_fsm_check(RC_LEFT_LD) && (!(rc_fsm_check(RC_RIGHT_RD)))){  //  	调弹道
-    gimbal.yaw_ecd.fdb = (float)yaw_motor.ecd / 8192 * 2  * PI;
-    yaw_err = circle_error(gimbal.yaw_ecd.ref, gimbal.yaw_ecd.fdb, 2*PI);
-    gimbal.yaw_spd_ecd.ref = pid_calc(&gimbal.yaw_ecd.pid, gimbal.yaw_ecd.fdb + yaw_err, gimbal.yaw_ecd.fdb);
+//	if( rc_fsm_check(RC_LEFT_LD) && (!(rc_fsm_check(RC_RIGHT_RD))))
+//	{  //  	调弹道
+//		gimbal.yaw_ecd.fdb = (float)yaw_motor.ecd / 8192 * 2  * PI;
+//		yaw_err = circle_error(gimbal.yaw_ecd.ref, gimbal.yaw_ecd.fdb, 2*PI);
+//		gimbal.yaw_spd_ecd.ref = pid_calc(&gimbal.yaw_ecd.pid, gimbal.yaw_ecd.fdb + yaw_err, gimbal.yaw_ecd.fdb);
+//			
+//		gimbal.yaw_spd_ecd.fdb = gimbal_imu.wz;
+//		gimbal.yaw_output = pid_calc(&gimbal.yaw_spd_ecd.pid, gimbal.yaw_spd_ecd.ref, gimbal.yaw_spd_ecd.fdb);
+//	}
 		
-    gimbal.yaw_spd_ecd.fdb = gimbal_imu.wz;
-		gimbal.yaw_output = pid_calc(&gimbal.yaw_spd_ecd.pid, gimbal.yaw_spd_ecd.ref, gimbal.yaw_spd_ecd.fdb);
-		
-		
-		}
-		
-		last_yaw_ref = gimbal.yaw_angle.ref;
-		last_pit_ref = gimbal.pit_angle.ref;
+	last_yaw_ref = gimbal.yaw_angle.ref;
+	last_pit_ref = gimbal.pit_angle.ref;
 //		    if (gimbal.start_up == 0 && yaw_err < 0.03f) //无云台时起身判断
 //        gimbal.start_up = 1;    
 
@@ -146,7 +152,7 @@ static void gimbal_data_output(void)
     }       
     else{
     //dji_motor_set_torque(&pit_motor, 1.0f*gimbal.pit_output);
-		dji_motor_set_torque(&yaw_motor, 0.0f*gimbal.yaw_output);
+		dji_motor_set_torque(&yaw_motor, -1.0f*gimbal.yaw_output);
 		dm_motor_set_control_para(&pit_motor,0,0,0,0,1.0f*gimbal.pit_output);
     }
 }
@@ -186,33 +192,38 @@ void gimbal_task(void const *argu)
 {
     uint32_t thread_wake_time = osKernelSysTick();
     gimbal_init();
-	static float yaw_err_up;
     for(;;) {
         thread_wake_time = osKernelSysTick();
         taskENTER_CRITICAL();
         switch (ctrl_mode) {
             case PROTECT_MODE: {
                 gimbal.start_up = 0;//保护模式下，起身标志位置零
+				gimbal.start_cnt = 0;//保护模式下，起身计数置零
                 gimbal.yaw_ecd.ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
-								yaw_err_up = circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, (float)yaw_motor.ecd / 8192 * 2 *PI, 2 * PI);
-
-//测试架是暂时不跟随到，后面上车改回去
-//				if(fabs(yaw_err_up) > PI ||!gimbal.start_up )
-//					gimbal.yaw_angle.ref = gimbal_imu.yaw - (float)yaw_motor.ecd / 8192 * 2 * PI +  (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;//yaw轴反馈值+电机与前方灯条差值
+				yaw_err_up = circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, (float)yaw_motor.ecd / 8192 * 2 *PI, 2 * PI);
+				
+				if(!gimbal.start_up)
+				{
+					if(fabsf(yaw_err_up) < PI / 2.0f)
+						gimbal.yaw_angle.ref = gimbal_imu.yaw + (float)yaw_motor.ecd / 8192 * 2 * PI -  (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;//yaw轴反馈值+电机与前方灯条差值
+					else
+						gimbal.yaw_angle.ref = gimbal_imu.yaw + (float)yaw_motor.ecd / 8192 * 2 * PI -  (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI;	
+				}
+//				if(fabs(yaw_err_up) > PI || !gimbal.start_up )
+//					gimbal.yaw_angle.ref = gimbal_imu.yaw + (float)yaw_motor.ecd / 8192 * 2 * PI -  (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;//yaw轴反馈值+电机与前方灯条差值
 //				else
-////				gimbal.yaw_angle.ref = gimbal_imu.yaw + (float)yaw_motor.ecd / 8192 * 2 * PI +  (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI + PI;	
+//					gimbal.yaw_angle.ref = gimbal_imu.yaw + (float)yaw_motor.ecd / 8192 * 2 * PI +  (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI + PI;	
 	
 //					gimbal.yaw_angle.ref = gimbal_imu.yaw - (float)yaw_motor.ecd / 8192 * 2 * PI +  (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI ;	
-				gimbal.yaw_angle.ref = gimbal.yaw_angle.fdb;
+//				gimbal.yaw_angle.ref = gimbal.yaw_angle.fdb;
 
-                gimbal.pit_angle.ref = 0.42;
+                gimbal.pit_angle.ref = 0.55;
                 gimbal.pit_output = 0;
                 gimbal.yaw_output = 0;
                 break;
             }
             case REMOTER_MODE: {
                 if ( rc_fsm_check(RC_LEFT_LD) && rc_fsm_check(RC_RIGHT_RD) ){ //遥控器开启视觉
-                   
                     gimbal_get_vision_data();
                 } 
                 else {
@@ -220,7 +231,10 @@ void gimbal_task(void const *argu)
                    gimbal.pit_angle.ref -= -rc.ch2 * gimbal_scale.angle_remote;
                    gimbal.yaw_angle.ref -= rc.ch1 * gimbal_scale.angle_remote;
                 }
-
+				if(!gimbal.start_up)
+					gimbal.start_cnt++;
+				else
+					gimbal.start_cnt = 0;
 //								YawSMC.ref = gimbal_imu.yaw* 57.29577f + circle_error(gimbal.yaw_angle.ref* 57.29577f, gimbal_imu.yaw* 57.29577f, 360.0f);;
 //								SMC_Tick(&YawSMC,gimbal_imu.yaw* 57.29577f,gimbal_imu.wz* 57.29577f);
 //								gimbal.yaw_output = -YawSMC.u;

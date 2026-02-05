@@ -218,7 +218,7 @@
         <Ww>
           <count>12</count>
           <WinNumber>1</WinNumber>
-          <ItemText>pit_motor,0x10</ItemText>
+          <ItemText>pit_motor,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>13</count>
@@ -289,6 +289,56 @@
           <count>26</count>
           <WinNumber>1</WinNumber>
           <ItemText>hfdcan3</ItemText>
+        </Ww>
+        <Ww>
+          <count>27</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>gimbal_imu,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>28</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>gimbal.yaw_angle.ref</ItemText>
+        </Ww>
+        <Ww>
+          <count>29</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>gimbal.yaw_angle.pid</ItemText>
+        </Ww>
+        <Ww>
+          <count>30</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>gimbal.pit_spd.pid</ItemText>
+        </Ww>
+        <Ww>
+          <count>31</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>yaw_err</ItemText>
+        </Ww>
+        <Ww>
+          <count>32</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>gimbal.yaw_spd.pid</ItemText>
+        </Ww>
+        <Ww>
+          <count>33</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>yaw_err_up</ItemText>
+        </Ww>
+        <Ww>
+          <count>34</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>\\rm_main\../User/Protocol/prot_imu.c\gimbal_imu.yaw</ItemText>
+        </Ww>
+        <Ww>
+          <count>35</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>gimbal.start_up</ItemText>
+        </Ww>
+        <Ww>
+          <count>36</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>gimbal.start_cnt,0x0A</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>
