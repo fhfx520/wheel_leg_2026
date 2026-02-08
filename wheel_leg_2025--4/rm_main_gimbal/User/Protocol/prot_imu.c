@@ -24,7 +24,7 @@ void imu_get_data(imu_t *imu, uint32_t id, uint8_t *data)
 //			    imu->wy = 1.0f * buffer[1] ;
 			//3.1
 			    imu->pit = 1.0f * buffer[0] * PI / 180;
-			    imu->wy =  1.0f * buffer[1] ;
+			    imu->wy =  1.0f * buffer[1] ;	
 			
         break;
     }

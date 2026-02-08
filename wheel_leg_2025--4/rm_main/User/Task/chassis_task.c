@@ -22,6 +22,12 @@
 #include "prot_judge.h"
 #include "prot_power.h"
 #include "dwt.h"
+#include "prot_hipnuc.h"
+
+
+#ifndef DO_ONCE
+#define DO_ONCE(code_block) { static int _flag = 0; if (!_flag) { _flag = 1; code_block; } }
+#endif
 
 extern uint16_t quadrant_cnt;
 extern pid_t pid_leg_recover[2];
@@ -135,8 +141,9 @@ static void chassis_init(void)
     wlr.yaw_offset = 1.7f;
 	DWT_Init(550);
     
-	if(!kal_init)
-	{
+	   
+	DO_ONCE({
+		
 		for(int i = 0; i < 2; i++) {
 			kalman_filter_init(&kal_3508_vel[i], 1, 0, 1);
 			kal_3508_vel[i].A_data[0] = 1;
@@ -150,8 +157,8 @@ static void chassis_init(void)
 		kal_wy.H_data[0] = 1;
 		kal_wy.Q_data[0] = 1;
 		kal_wy.R_data[0] = 100;
-		kal_init = 1;
-	}
+	});
+	
     FGT_sin_init (&FGT_sin_chassis,2,0,6000,7.0f,0,7.0f,-0.0f);
     chassis.init = 1;
 }
@@ -325,7 +332,7 @@ static void chassis_data_input(void)
         case CHASSIS_MODE_REMOTER_ROTATE1:
         case CHASSIS_MODE_REMOTER_ROTATE2: {
 			if( wlr.high_flag == 1 )
-				chassis_scale.remote =	1.0f/660*2.4f;
+				chassis_scale.remote =	1.0f/660*2.6f;
 			else 
 				chassis_scale.remote =	1.0f/660*2.5f;	
 			
@@ -351,17 +358,17 @@ static void chassis_data_input(void)
 //                   wlr.high_flag = 2;
 //                 } else if (rc.sw2 == RC_DN && 0)//发射器
 //                      chassis.rescue_test = 1;
-               else if (rc.sw2 == RC_DN && wlr.jump_flag == 0 && wlr.jump2_over == 0)//&& !rc_fsm_check(RC_RIGHT_LU))
-                    wlr.jump_flag = 1;
-               else 
-                    wlr.high_flag = 0; 
-//			   else if (rc.sw2 == RC_DN && wlr.sky_flag == WLR_SKY_IDLE)
-//			   { 
-//				   wlr.jump_flag = 0;
-//                   wlr.high_flag = 0;		//短腿
-//				   wlr.sky_flag = WLR_SKY_FOLDING;
-//				   wlr.jump2_over = 0;
-//			   }
+//               else if (rc.sw2 == RC_DN && wlr.jump_flag == 0 && wlr.jump2_over == 0)//&& !rc_fsm_check(RC_RIGHT_LU))
+//                    wlr.jump_flag = 1;
+//               else 
+//                    wlr.high_flag = 0; 
+			   else if (rc.sw2 == RC_DN && wlr.sky_flag == WLR_SKY_IDLE)
+			   { 
+				   wlr.jump_flag = 0;
+                   wlr.high_flag = 0;		//短腿
+				   wlr.sky_flag = WLR_SKY_FOLDING;
+				   wlr.jump2_over = 0;
+			   }
 			   if (rotate_flag == 1) {//小陀螺不能改变腿长
 				   wlr.jump_flag = 0;
 				   wlr.high_flag = 0;
@@ -525,7 +532,7 @@ static void chassis_data_input(void)
 //******************************************************************************************************
 			
 //			//help不拆头 start
-			if (gimbal.start_up)	//完成起身，前方灯条
+			if (gimbal.start_up)	//完成起身，前方主控
                 wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
             else					//起身未完成，目标值等于反馈值
                 wlr.yaw_ref = (float)yaw_motor.ecd / 8192 * 2  * PI;  
@@ -536,9 +543,14 @@ static void chassis_data_input(void)
             //此yaw_err用于底盘前后都可跟随 算哪边最短路径
             wlr.yaw_err = circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
 			
-            if ( wlr.yaw_err > PI / 2 || wlr.yaw_err < - PI / 2) {
+            if (wlr.yaw_err > PI / 2 || wlr.yaw_err < - PI / 2) {
                 wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI ;
+				wlr.direction = 1;
             }
+			else if(wlr.yaw_err < PI / 2 || wlr.yaw_err > - PI / 2)
+			{
+				wlr.direction = 0;
+			}
 //			//help不拆头 end
 			
 			
@@ -691,16 +703,16 @@ static void chassis_data_input(void)
 				||last_chassis_mode == CHASSIS_MODE_KEYBOARD_ROTATE ) 
 			rotate_chassis_mode = last_chassis_mode;
 		if(rotate_chassis_mode == CHASSIS_MODE_REMOTER_ROTATE2 ||rotate_chassis_mode == CHASSIS_MODE_KEYBOARD_ROTATE  )
-			wlr.wz_ref = -12.0f/2.0f;  
+			wlr.wz_ref = -12.0f/1.5f;  
 		else if (rotate_chassis_mode == CHASSIS_MODE_REMOTER_ROTATE1 )		
-			wlr.wz_ref = -12.0f/2.0f;   	
+			wlr.wz_ref = -12.0f/1.5f;   	
 		wlr.yaw_ref	= wlr.yaw_fdb;
 	}
 	
 	wlr.yaw_err = circle_error(wlr.yaw_ref,wlr.yaw_fdb, 2 * PI);//补
 	/**********上台阶前让车身转至正对**********/
 	if (wlr.jump_flag && !wlr.jump_pre) {
-		wlr.wz_ref = 8.0f;
+		wlr.wz_ref = 6.0f;
 		wlr.yaw_err = 0;
 	}
 	wlr.yaw_ref = wlr.yaw_fdb + 1.0f * wlr.yaw_err;//同步带哥 有头
@@ -727,11 +739,27 @@ static void chassis_data_input(void)
 	}
 		
     //陀螺仪数据输入
-    wlr.roll_fdb    = -chassis_imu.rol;
-    wlr.pit_fdb     = -(chassis_imu.pit + 0.067f);
-    kal_wy.measured_vector[0] = -chassis_imu.wy;
-    kalman_filter_update(&kal_wy);
-    wlr.wy_fdb = kal_wy.filter_vector[0];
+//    wlr.roll_fdb    = -chassis_imu.rol;
+//    wlr.pit_fdb     = -(chassis_imu.pit + 0.117f);
+//    kal_wy.measured_vector[0] = -chassis_imu.wy;
+//    kalman_filter_update(&kal_wy);
+//    wlr.wy_fdb = kal_wy.filter_vector[0];
+//    wlr.wz_fdb      = -chassis_imu.wz;//过一下滤波
+//    wlr.az_fdb      =  chassis_imu.az;
+	
+//	wlr.roll_fdb    = -hipnuc_data.hi91.roll;
+//    wlr.pit_fdb     = -hipnuc_data.hi91.pitch;
+////    kal_wy.measured_vector[0] = -chassis_imu.wy;
+////    kalman_filter_update(&kal_wy);
+//    wlr.wy_fdb = -hipnuc_data.hi91.gyr[0];
+//    wlr.wz_fdb      = -hipnuc_data.hi91.gyr[2];//过一下滤波
+//    wlr.az_fdb      =  hipnuc_data.hi91.acc[2];
+	
+	wlr.roll_fdb    = -chassis_imu.rol;
+    wlr.pit_fdb     = -(chassis_imu.pit);
+//    kal_wy.measured_vector[0] = -chassis_imu.wy;
+//    kalman_filter_update(&kal_wy);
+    wlr.wy_fdb = -chassis_imu.wy;
     wlr.wz_fdb      = -chassis_imu.wz;//过一下滤波
     wlr.az_fdb      =  chassis_imu.az;
 		
@@ -1100,7 +1128,7 @@ void chassis_task(void const *argu)
         thread_wake_time = osKernelSysTick();
         chassis_mode_switch();
         chassis_data_input();
-		if(ctrl_mode != PROTECT_MODE || 1)
+		if(ctrl_mode != PROTECT_MODE)
 			wlr_control();
 		else
 			chassis_init();

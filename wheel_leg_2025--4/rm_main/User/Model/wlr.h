@@ -5,6 +5,8 @@
 #include "pid.h"
 #include "kalman_filter.h"
 
+
+
 typedef enum {
     WLR_JUMP_IDLE = 0,
     WLR_JUMP_ASCEND = 1,
@@ -80,7 +82,7 @@ typedef struct
 		jump2_over  =1机体已磕上第二级台阶 */
 	
 	uint16_t s_wait;//定点wait
-	
+	uint8_t direction;//当前前进方向 0为膝关节反向 1为膝关节正向
     //单侧控制参数
     struct
     {

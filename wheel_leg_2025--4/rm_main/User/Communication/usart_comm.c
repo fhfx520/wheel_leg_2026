@@ -4,6 +4,7 @@
 #include "string.h"
 #include "data_log.h"
 #include "prot_tfmini.h"
+#include "prot_hipnuc.h"
 
 #define DEBUG_DATA_LEN 10
 #define JUDGE_DATA_LEN 150
@@ -14,6 +15,7 @@ uint8_t judge_data_rx_buf[JUDGE_DATA_LEN];
 uint8_t debug_dma_rx_buf[DEBUG_DATA_LEN];
 uint8_t TFminiPlusBuffArray_Front_Left[TFMINIPLUS_BUFF_SIZE];
 uint8_t TFminiPlusBuffArray_Front_Right[TFMINIPLUS_BUFF_SIZE];
+uint8_t Hipnuc_buff[82];
 /*
  * @brief  串口初始化，开启空闲中断并开始DMA接收数据
  * @retval void
@@ -38,9 +40,12 @@ void usart_comm_init(void)
     __HAL_UART_ENABLE_IT(&TF_LEFT_HUART, UART_IT_IDLE);
     HAL_UART_Receive_DMA(&TF_LEFT_HUART, TFminiPlusBuffArray_Front_Left, TFMINIPLUS_BUFF_SIZE);
 	
+//	__HAL_UART_CLEAR_IDLEFLAG(&TF_RIGHT_HUART);
+//    __HAL_UART_ENABLE_IT(&TF_RIGHT_HUART, UART_IT_IDLE);
+//    HAL_UART_Receive_DMA(&TF_RIGHT_HUART, TFminiPlusBuffArray_Front_Right, TFMINIPLUS_BUFF_SIZE);
 	__HAL_UART_CLEAR_IDLEFLAG(&TF_RIGHT_HUART);
     __HAL_UART_ENABLE_IT(&TF_RIGHT_HUART, UART_IT_IDLE);
-    HAL_UART_Receive_DMA(&TF_RIGHT_HUART, TFminiPlusBuffArray_Front_Right, TFMINIPLUS_BUFF_SIZE);
+    HAL_UART_Receive_DMA(&TF_RIGHT_HUART, Hipnuc_buff, 82);
 }
 
 /*
@@ -66,9 +71,11 @@ void usart_user_handler(UART_HandleTypeDef *huart)
 			memset(TFminiPlusBuffArray_Front_Left, 0, TFMINIPLUS_BUFF_SIZE);
 			HAL_UART_Receive_DMA(huart, (uint8_t *)TFminiPlusBuffArray_Front_Left, TFMINIPLUS_BUFF_SIZE); 
 		} else if (huart == &TF_RIGHT_HUART){ 
-			vTfGetData(TFminiPlusBuffArray_Front_Right, RIGHT);
-			memset(TFminiPlusBuffArray_Front_Right, 0, TFMINIPLUS_BUFF_SIZE);
-			HAL_UART_Receive_DMA(huart, (uint8_t *)TFminiPlusBuffArray_Front_Right, TFMINIPLUS_BUFF_SIZE); 
+			hipnuc_get_data(Hipnuc_buff);
+			HAL_UART_Receive_DMA(huart, (uint8_t *)Hipnuc_buff, 82); 
+//			vTfGetData(TFminiPlusBuffArray_Front_Right, RIGHT);
+//			memset(TFminiPlusBuffArray_Front_Right, 0, TFMINIPLUS_BUFF_SIZE);
+//			HAL_UART_Receive_DMA(huart, (uint8_t *)TFminiPlusBuffArray_Front_Right, TFMINIPLUS_BUFF_SIZE); 
 		}
   
     }

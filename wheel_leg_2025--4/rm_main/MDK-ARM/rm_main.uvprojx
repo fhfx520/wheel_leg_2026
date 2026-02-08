@@ -1188,6 +1188,16 @@
               <FileType>1</FileType>
               <FilePath>..\User\Protocol\prot_tfmini.c</FilePath>
             </File>
+            <File>
+              <FileName>prot_hipnuc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Protocol\prot_hipnuc.c</FilePath>
+            </File>
+            <File>
+              <FileName>prot_hipnuc.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\User\Protocol\prot_hipnuc.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

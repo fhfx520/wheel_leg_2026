@@ -153,13 +153,13 @@ void HAL_FDCAN_RxFifo1Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo1ITs)
         } else if (hfdcan->Instance == FDCAN2) {
 			switch(rx_fifo1_message.Identifier)
 			{
-				case IMU_PIT_ID:
-				case IMU_YAW_ID:
-				case IMU_ROL_ID:
-			    case IMU_ACC_ID:{
-					imu_get_data(&chassis_imu, rx_fifo1_message.Identifier, rx_fifo1_data);
-					break;
-				}
+//				case IMU_PIT_ID:
+//				case IMU_YAW_ID:
+//				case IMU_ROL_ID:
+//			    case IMU_ACC_ID:{
+//					imu_get_data(&chassis_imu, rx_fifo1_message.Identifier, rx_fifo1_data);
+//					break;
+//				}
 				case SUPERCAP_DATA_ID :{power_get_data(rx_fifo1_data);break;}
 				case SUPERCAP_STATE_ID:{power_get_status(rx_fifo1_data);break;}
 				default : break;
