@@ -64,11 +64,11 @@ float LegLengthMax = 0.37f, LegLengthMin = 0.11f;
 const float LegLengthHighFly = 0.28f; //长腿腿长腾空 0.28
 const float LegLengthFly 	 = 0.20f; //正常腿长腾空
 const float LegLengthHigh2 	 = 0.34f; //超长腿
-const float LegLengthHigh 	 = 0.24f;//长腿 0.23
+const float LegLengthHigh 	 = 0.21f;//长腿 0.23
 const float LegLengthRotate  = 0.18f; //正常
 const float LegLengthNormal  = 0.18f; //正常
 
-const float gas_spring_F = 300.0f;	//气弹簧行程为0时力	N
+const float gas_spring_F = 310.0f;	//气弹簧行程为0时力	N
 const float gas_spring_S = 0.1f;    //气弹簧行程  m 
 const float gas_spring_D = 0.006f;	//气弹簧气缸直径  m
 const float gas_spring_P = 10.6105f;//气弹簧行程为0时压强	Mpa
@@ -494,16 +494,16 @@ static void update_leg_height_and_balance(float yaw_error)
 		: 
 		(  (lqr.X_fdb[1] <= 0) ? (Last_cnt = 50) :  (Last_cnt = 250)   ) ; 
 		
-		DO_LAST(wlr_both_legs_flying(),Last_cnt){
+		DO_LAST(wlr_both_legs_flying(),Last_cnt){     
 				if(wlr.direction == 0){
 			if(lqr.X_fdb[1] <= 0)
-			x3_balance_zero = x3_balance_zero_normal - 0.16f;
+			x3_balance_zero = x3_balance_zero_normal - 0.1f;
 			else
 			x3_balance_zero = x3_balance_zero_normal + 0.3f;	
 			}
 		else{
 			if(lqr.X_fdb[1] <= 0)
-			x3_balance_zero = x3_balance_zero_normal - 0.16f;
+			x3_balance_zero = x3_balance_zero_normal - 0.1f;
 			else
 			x3_balance_zero = x3_balance_zero_normal + 0.3f;	
 			}
@@ -862,7 +862,7 @@ static void update_fly_state(uint8_t index, float yaw_err)
 //        && wlr.jump_flag == WLR_JUMP_IDLE && double_cnt <= 0 && chassis.recover_flag == 0
 //        && wlr.sky_over == 0 && wlr.sky_flag == WLR_SKY_IDLE && KEY_PRESS_POWER && yaw_err < 0.5f) {
 
-    if ( wlr.side[index].Fn_kal < 140.0f && rotate_flag == 0 && wlr.high_flag == 1 && chassis.recover_flag == 0
+    if ( fabs(lqr.X_ref[1]) > 1.0  &&  fabs(chassis_imu.pit) < 0.50f &&  wlr.side[index].Fn_kal < 155.0f && rotate_flag == 0 && wlr.high_flag == 1 && chassis.recover_flag == 0
 		&& (wlr.sky_flag == WLR_SKY_IDLE) && (wlr.sky_flag == WLR_JUMP_IDLE) && (yaw_err < 0.5f || 1))  {
         wlr.side[index].fly_cnt += 30;
     } else if (wlr.side[index].fly_cnt > 0) {
@@ -1020,7 +1020,7 @@ void wlr_init(void)
         pid_init(&pid_leg_sky_cover[i], NONE, 1500, 1.5f, 10000.0f,150,300);		    //空中收腿专用pid
 		pid_init(&pid_leg_sky_jump[i],  NONE,1500, 2.0, 10000.0f, 150.0, 300);			    //跳跃专用pid
 		pid_init(&pid_leg_recover[i], NONE, 1500, 1.5f, 20000.0f, 100, 300);		//起身专用pid
-        pid_init(&pid_leg_length_fly[i], NONE, 1000, 0.0, 20000, 0, 300);			//离地腿长/缓冲腿长pid
+        pid_init(&pid_leg_length_fly[i], NONE, 800, 0.0, 20000, 0, 200);			//离地腿长/缓冲腿长pid
         pid_init(&pid_L_test[i], NONE, 800, 2.0, 60000, 70, 300);					//日常腿长pid
 		pid_init(&pid_rescue[i], NONE, 2.0f, 0.5f, 0, 45, 50);						//翻倒起身腿转速pid
 		pid_init(&pid_rotate_leg[i], NONE, 1200.0f, 0.0f, 40000.0f, 0, 300);		
