@@ -664,12 +664,12 @@ static void handle_sky_state(void)
             wlr.sky_flag = WLR_SKY_AIR_FOLDING;
         }	
     } else if (wlr.sky_flag == WLR_SKY_AIR_FOLDING) {
-        wlr.high_set = 0.13f;
+        wlr.high_set = 0.18f;
 		sky_height_ramp.out = wlr.high_set;
         x3_balance_zero = -0.1f;
         x5_balance_zero = 0.0f;
         wlr.sky_cnt++;
-        if (wlr.sky_cnt > 100) {
+        if (wlr.sky_cnt > 160) {
             wlr.sky_cnt = 0;
             wlr.sky_flag = WLR_SKY_LANDING;
         }
