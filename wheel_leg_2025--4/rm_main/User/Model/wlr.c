@@ -124,8 +124,8 @@ const float K_Array_Fly[4][10] =
 
 {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
-{0, 0, 0, 0, 36.6923, 3.38355, -19.6919, -1.42373, -0.0, -0.0}, 
-{0, 0, 0, 0,-19.6919, -1.42373, 36.6923, 3.38355, -0.0, -0.0}
+{0, 0, 0, 0, 36.6923, 3.38355, -19.6919, -1.42373, -30.6724, -3.53106}, 
+{0, 0, 0, 0,-19.6919, -1.42373, 36.6923, 3.38355, -30.6724, -3.53106}
 };
 
 const float K_Array_FOLDING[4][10] = 
@@ -490,26 +490,24 @@ static void update_leg_height_and_balance(float yaw_error)
         }
 		
 		wlr.direction == 0 ? 
-		(  (lqr.X_fdb[1] <= 0) ? (Last_cnt = 50) :  (Last_cnt = 250)   )
+		(  (lqr.X_fdb[1] <= 0) ? (Last_cnt = 50) :  (Last_cnt = 200)   )
 		: 
-		(  (lqr.X_fdb[1] <= 0) ? (Last_cnt = 50) :  (Last_cnt = 250)   ) ; 
+		(  (lqr.X_fdb[1] <= 0) ? (Last_cnt = 50) :  (Last_cnt = 200)   ) ; 
 		
 		DO_LAST(wlr_both_legs_flying(),Last_cnt){     
-				if(wlr.direction == 0){
-			if(lqr.X_fdb[1] <= 0)
-			x3_balance_zero = x3_balance_zero_normal - 0.1f;
-			else
-			x3_balance_zero = x3_balance_zero_normal + 0.3f;	
+			if(wlr.direction == 0){
+				if(lqr.X_fdb[1] <= 0)
+					x3_balance_zero = x3_balance_zero_normal - 0.1f;
+				else
+					x3_balance_zero = x3_balance_zero_normal + 0.25f;	
 			}
-		else{
-			if(lqr.X_fdb[1] <= 0)
-			x3_balance_zero = x3_balance_zero_normal - 0.1f;
-			else
-			x3_balance_zero = x3_balance_zero_normal + 0.3f;	
+			else{
+				if(lqr.X_fdb[1] <= 0)
+					x3_balance_zero = x3_balance_zero_normal - 0.1f;
+				else
+					x3_balance_zero = x3_balance_zero_normal + 0.25f;	
 			}
 		}
-		
-		
 		x5_balance_zero = 0.0f;
     } else {
         if (wlr_both_legs_flying()) {
