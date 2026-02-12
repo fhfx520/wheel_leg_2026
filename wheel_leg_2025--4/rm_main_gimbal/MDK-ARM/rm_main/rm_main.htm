@@ -3,7 +3,7 @@
 <title>Static Call Graph - [rm_main\rm_main.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image rm_main\rm_main.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Thu Feb 12 16:39:16 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Thu Feb 12 21:41:28 2026
 <BR><P>
 <H3>Maximum Stack Usage =        568 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -1865,7 +1865,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[b0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_task
 </UL>
 
-<P><STRONG><a name="[1b5]"></a>judge_get_data</STRONG> (Thumb, 638 bytes, Stack size 40 bytes, prot_judge.o(.text), UNUSED)
+<P><STRONG><a name="[1b5]"></a>judge_get_data</STRONG> (Thumb, 610 bytes, Stack size 40 bytes, prot_judge.o(.text), UNUSED)
 <BR><BR>[Calls]<UL><LI><a href="#[1b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;crc8_verify_checksum
 <LI><a href="#[1b7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy
 </UL>
@@ -1887,7 +1887,7 @@ Global Symbols
 <BR><BR>[Calls]<UL><LI><a href="#[103]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr4
 </UL>
 
-<P><STRONG><a name="[397]"></a>power_judge_update</STRONG> (Thumb, 58 bytes, Stack size 0 bytes, prot_power.o(.text), UNUSED)
+<P><STRONG><a name="[397]"></a>power_judge_update</STRONG> (Thumb, 54 bytes, Stack size 0 bytes, prot_power.o(.text), UNUSED)
 
 <P><STRONG><a name="[398]"></a>motor_power_calcu</STRONG> (Thumb, 64 bytes, Stack size 0 bytes, prot_power.o(.text), UNUSED)
 
@@ -3677,11 +3677,11 @@ Global Symbols
 </UL>
 <BR>[Called By]<UL><LI><a href="#[121]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_PWM_Init
 <LI><a href="#[11e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_Base_Init
-<LI><a href="#[27d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_Encoder_Init
-<LI><a href="#[279]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_OnePulse_Init
 <LI><a href="#[271]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_IC_Init
 <LI><a href="#[264]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_OC_Init
 <LI><a href="#[292]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIMEx_HallSensor_Init
+<LI><a href="#[27d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_Encoder_Init
+<LI><a href="#[279]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_OnePulse_Init
 </UL>
 
 <P><STRONG><a name="[25f]"></a>HAL_TIM_Base_DeInit</STRONG> (Thumb, 104 bytes, Stack size 8 bytes, stm32h7xx_hal_tim.o(.text), UNUSED)
@@ -3850,8 +3850,8 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[279]"></a>HAL_TIM_OnePulse_Init</STRONG> (Thumb, 90 bytes, Stack size 16 bytes, stm32h7xx_hal_tim.o(.text), UNUSED)
-<BR><BR>[Calls]<UL><LI><a href="#[27a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_OnePulse_MspInit
-<LI><a href="#[25e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_Base_SetConfig
+<BR><BR>[Calls]<UL><LI><a href="#[25e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_Base_SetConfig
+<LI><a href="#[27a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_OnePulse_MspInit
 </UL>
 
 <P><STRONG><a name="[27a]"></a>HAL_TIM_OnePulse_MspInit</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, stm32h7xx_hal_tim.o(.text), UNUSED)

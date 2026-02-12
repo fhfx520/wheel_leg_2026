@@ -14,6 +14,7 @@
 
 board_comm_t board_comm;
 uint8_t board_comm_tx_buff[8];
+uint8_t fdcan_board_comm_tx_buff[64];
 
 //1111板间通信要把这个改掉，变成直接遥控器输入在中断那里已经收到数据
 static void rc_rc_decode(void){	
@@ -129,4 +130,16 @@ void board_comm_send_data(void){
 			break;
 		}
 	}
+}
+//fdcan板间通信下发数据
+static void fdcan_board_comm_send(void)
+{
+	//图传链路键鼠数据
+	
+}
+
+//fdcan板间通信收数据
+static void fdcan_board_comm_get(void)
+{
+	
 }

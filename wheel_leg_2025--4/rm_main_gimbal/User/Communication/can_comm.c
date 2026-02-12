@@ -76,7 +76,6 @@ void can_comm_init(void)
 	HAL_FDCAN_ActivateNotification(&hfdcan3, FDCAN_IT_RX_FIFO1_NEW_MESSAGE, 0);//使能邮箱1新消息中断
     HAL_FDCAN_Start(&hfdcan3);
 		
-    
     //can tx_message config
     can_tx_message.IdType = FDCAN_STANDARD_ID;  
     can_tx_message.TxFrameType = FDCAN_DATA_FRAME;

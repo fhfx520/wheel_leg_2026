@@ -1049,6 +1049,11 @@
               <FileType>1</FileType>
               <FilePath>..\User\Protocol\prot_vision.c</FilePath>
             </File>
+            <File>
+              <FileName>prot_vtm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Protocol\prot_vtm.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
