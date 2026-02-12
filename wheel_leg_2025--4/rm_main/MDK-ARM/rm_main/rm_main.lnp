@@ -29,6 +29,7 @@
 "rm_main\can_comm.o"
 "rm_main\usart_comm.o"
 "rm_main\container.o"
+"rm_main\container_bus.o"
 "rm_main\drv_dji_motor.o"
 "rm_main\drv_ws2812b.o"
 "rm_main\drv_dm_motor.o"
