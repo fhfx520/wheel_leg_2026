@@ -3,12 +3,10 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include <stdbool.h>
 
-// --- FreeRTOS 集成 ---
+// 引入 FreeRTOS
 #include "FreeRTOS.h"
 #include "semphr.h"
-// --------------------
 
 #ifdef __cplusplus
 extern "C" {
@@ -31,35 +29,33 @@ typedef struct {
     size_t length;       
 } ContainerStat;
 
-typedef struct Container Container;
+/**
+ * @brief 系统初始化 (建议在 main 函数开始时调用一次)
+ * @note 初始化内部的单例对象和互斥锁
+ */
+void container_sys_init(void);
 
 /**
- * @brief 创建一个新的 Container 实例 (包含 Mutex 初始化)
+ * @brief 存入数据 (不需要句柄，直接调用)
+ * @note 线程安全
  */
-Container* container_create(void);
+int container_set(uint32_t tag_id, const void* data, size_t data_len, ContainerDataType type);
 
 /**
- * @brief 销毁 Container
+ * @brief 获取数据
+ * @note 线程安全，零拷贝
  */
-void container_destroy(Container* ctx);
+int container_get(uint32_t tag_id, void** out_data, size_t* out_len, ContainerDataType* out_type);
 
 /**
- * @brief (线程安全) 存入数据
- * @note 内部会获取 Mutex，阻塞直到获取成功
+ * @brief 获取状态 (用于 Bus 轮询)
  */
-int container_set(Container* ctx, uint32_t tag_id, const void* data, size_t data_len, ContainerDataType type);
+int container_get_stat(uint32_t tag_id, ContainerStat* out_stat);
 
 /**
- * @brief (线程安全) 获取数据
+ * @brief 打印调试信息
  */
-int container_get(Container* ctx, uint32_t tag_id, void** out_data, size_t* out_len, ContainerDataType* out_type);
-
-/**
- * @brief (线程安全) 获取状态
- */
-int container_get_stat(Container* ctx, uint32_t tag_id, ContainerStat* out_stat);
-
-void container_dump_info(Container* ctx);
+void container_dump_info(void);
 
 #ifdef __cplusplus
 }
