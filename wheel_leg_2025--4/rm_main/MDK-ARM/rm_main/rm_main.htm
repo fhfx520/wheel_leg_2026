@@ -3,7 +3,7 @@
 <title>Static Call Graph - [rm_main\rm_main.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image rm_main\rm_main.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Thu Feb 12 01:23:38 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Thu Feb 12 16:23:52 2026
 <BR><P>
 <H3>Maximum Stack Usage =        624 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -839,21 +839,21 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[33]"></a>FDCAN1_IT0_IRQHandler</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, stm32h7xx_it.o(.text.FDCAN1_IT0_IRQHandler))
-<BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = FDCAN1_IT0_IRQHandler &rArr; HAL_FDCAN_IRQHandler &rArr; HAL_FDCAN_RxFifo0Callback &rArr; dm_motor_get_data
+<BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = FDCAN1_IT0_IRQHandler &rArr; HAL_FDCAN_IRQHandler &rArr; HAL_FDCAN_RxFifo1Callback &rArr; dm_motor_get_data
 </UL>
 <BR>[Calls]<UL><LI><a href="#[d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_IRQHandler
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32h723xx.o(RESET)
 </UL>
 <P><STRONG><a name="[34]"></a>FDCAN2_IT0_IRQHandler</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, stm32h7xx_it.o(.text.FDCAN2_IT0_IRQHandler))
-<BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = FDCAN2_IT0_IRQHandler &rArr; HAL_FDCAN_IRQHandler &rArr; HAL_FDCAN_RxFifo0Callback &rArr; dm_motor_get_data
+<BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = FDCAN2_IT0_IRQHandler &rArr; HAL_FDCAN_IRQHandler &rArr; HAL_FDCAN_RxFifo1Callback &rArr; dm_motor_get_data
 </UL>
 <BR>[Calls]<UL><LI><a href="#[d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_IRQHandler
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32h723xx.o(RESET)
 </UL>
 <P><STRONG><a name="[a5]"></a>FDCAN3_IT0_IRQHandler</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, stm32h7xx_it.o(.text.FDCAN3_IT0_IRQHandler))
-<BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = FDCAN3_IT0_IRQHandler &rArr; HAL_FDCAN_IRQHandler &rArr; HAL_FDCAN_RxFifo0Callback &rArr; dm_motor_get_data
+<BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = FDCAN3_IT0_IRQHandler &rArr; HAL_FDCAN_IRQHandler &rArr; HAL_FDCAN_RxFifo1Callback &rArr; dm_motor_get_data
 </UL>
 <BR>[Calls]<UL><LI><a href="#[d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_IRQHandler
 </UL>
@@ -932,7 +932,7 @@ Global Symbols
 <LI><a href="#[133]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_SetCurrentMode
 </UL>
 
-<P><STRONG><a name="[f5]"></a>HAL_FDCAN_ActivateNotification</STRONG> (Thumb, 120 bytes, Stack size 0 bytes, stm32h7xx_hal_fdcan.o(.text.HAL_FDCAN_ActivateNotification))
+<P><STRONG><a name="[f7]"></a>HAL_FDCAN_ActivateNotification</STRONG> (Thumb, 120 bytes, Stack size 0 bytes, stm32h7xx_hal_fdcan.o(.text.HAL_FDCAN_ActivateNotification))
 <BR><BR>[Called By]<UL><LI><a href="#[1d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;can_comm_init
 <LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_RxFifo1Callback
 <LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_RxFifo0Callback
@@ -980,7 +980,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[d2]"></a>HAL_FDCAN_IRQHandler</STRONG> (Thumb, 806 bytes, Stack size 64 bytes, stm32h7xx_hal_fdcan.o(.text.HAL_FDCAN_IRQHandler))
-<BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = HAL_FDCAN_IRQHandler &rArr; HAL_FDCAN_RxFifo0Callback &rArr; dm_motor_get_data
+<BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = HAL_FDCAN_IRQHandler &rArr; HAL_FDCAN_RxFifo1Callback &rArr; dm_motor_get_data
 </UL>
 <BR>[Calls]<UL><LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_RxFifo1Callback
 <LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_RxFifo0Callback
@@ -1030,25 +1030,27 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_IRQHandler
 </UL>
 
-<P><STRONG><a name="[e0]"></a>HAL_FDCAN_RxFifo0Callback</STRONG> (Thumb, 132 bytes, Stack size 16 bytes, can_comm.o(.text.HAL_FDCAN_RxFifo0Callback))
+<P><STRONG><a name="[e0]"></a>HAL_FDCAN_RxFifo0Callback</STRONG> (Thumb, 162 bytes, Stack size 16 bytes, can_comm.o(.text.HAL_FDCAN_RxFifo0Callback))
 <BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = HAL_FDCAN_RxFifo0Callback &rArr; dm_motor_get_data
 </UL>
-<BR>[Calls]<UL><LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dji_motor_get_data
+<BR>[Calls]<UL><LI><a href="#[f6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;power_get_status
+<LI><a href="#[f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;power_get_data
+<LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dji_motor_get_data
 <LI><a href="#[f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dm_motor_get_data
 <LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_GetRxMessage
-<LI><a href="#[f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_ActivateNotification
+<LI><a href="#[f7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_ActivateNotification
 </UL>
 <BR>[Called By]<UL><LI><a href="#[d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_IRQHandler
 </UL>
 
-<P><STRONG><a name="[e1]"></a>HAL_FDCAN_RxFifo1Callback</STRONG> (Thumb, 140 bytes, Stack size 16 bytes, can_comm.o(.text.HAL_FDCAN_RxFifo1Callback))
-<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = HAL_FDCAN_RxFifo1Callback &rArr; HAL_FDCAN_GetRxMessage
+<P><STRONG><a name="[e1]"></a>HAL_FDCAN_RxFifo1Callback</STRONG> (Thumb, 142 bytes, Stack size 16 bytes, can_comm.o(.text.HAL_FDCAN_RxFifo1Callback))
+<BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = HAL_FDCAN_RxFifo1Callback &rArr; dm_motor_get_data
 </UL>
-<BR>[Calls]<UL><LI><a href="#[f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;power_get_status
-<LI><a href="#[f7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vision_gimbal_get_data
-<LI><a href="#[f6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;power_get_data
+<BR>[Calls]<UL><LI><a href="#[f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vision_gimbal_get_data
+<LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dji_motor_get_data
+<LI><a href="#[f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dm_motor_get_data
 <LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_GetRxMessage
-<LI><a href="#[f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_ActivateNotification
+<LI><a href="#[f7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_ActivateNotification
 </UL>
 <BR>[Called By]<UL><LI><a href="#[d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_IRQHandler
 </UL>
@@ -1937,7 +1939,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[17d]"></a>MX_FDCAN3_Init</STRONG> (Thumb, 114 bytes, Stack size 8 bytes, fdcan.o(.text.MX_FDCAN3_Init))
+<P><STRONG><a name="[17d]"></a>MX_FDCAN3_Init</STRONG> (Thumb, 120 bytes, Stack size 8 bytes, fdcan.o(.text.MX_FDCAN3_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 136<LI>Call Chain = MX_FDCAN3_Init &rArr; HAL_FDCAN_Init &rArr; HAL_FDCAN_MspInit &rArr; HAL_GPIO_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[ed]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_Init
@@ -2973,7 +2975,7 @@ Global Symbols
 <LI><a href="#[26c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_forward_solution_five (via Veneer)
 </UL>
 
-<P><STRONG><a name="[1d4]"></a>can_comm_init</STRONG> (Thumb, 544 bytes, Stack size 80 bytes, can_comm.o(.text.can_comm_init))
+<P><STRONG><a name="[1d4]"></a>can_comm_init</STRONG> (Thumb, 548 bytes, Stack size 80 bytes, can_comm.o(.text.can_comm_init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 172<LI>Call Chain = can_comm_init &rArr; dm_motor_init &rArr; dm_motor_output_single_data &rArr; can_std_transmit &rArr; HAL_FDCAN_AddMessageToTxFifoQ &rArr; FDCAN_CopyMessageToRAM
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_ConfigGlobalFilter
@@ -2981,12 +2983,12 @@ Global Symbols
 <LI><a href="#[1d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dji_motor_init
 <LI><a href="#[1d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dm_motor_init
 <LI><a href="#[1d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_Start
-<LI><a href="#[f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_ActivateNotification
+<LI><a href="#[f7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_ActivateNotification
 </UL>
 <BR>[Called By]<UL><LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[1da]"></a>can_std_transmit</STRONG> (Thumb, 36 bytes, Stack size 0 bytes, can_comm.o(.text.can_std_transmit))
+<P><STRONG><a name="[1da]"></a>can_std_transmit</STRONG> (Thumb, 74 bytes, Stack size 0 bytes, can_comm.o(.text.can_std_transmit))
 <BR><BR>[Stack]<UL><LI>Max Depth = 36<LI>Call Chain = can_std_transmit &rArr; HAL_FDCAN_AddMessageToTxFifoQ &rArr; FDCAN_CopyMessageToRAM
 </UL>
 <BR>[Calls]<UL><LI><a href="#[da]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_AddMessageToTxFifoQ
@@ -3027,7 +3029,8 @@ Global Symbols
 <P><STRONG><a name="[f4]"></a>dji_motor_get_data</STRONG> (Thumb, 328 bytes, Stack size 36 bytes, drv_dji_motor.o(.text.dji_motor_get_data))
 <BR><BR>[Stack]<UL><LI>Max Depth = 36<LI>Call Chain = dji_motor_get_data
 </UL>
-<BR>[Called By]<UL><LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_RxFifo0Callback
+<BR>[Called By]<UL><LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_RxFifo1Callback
+<LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_RxFifo0Callback
 </UL>
 
 <P><STRONG><a name="[1d9]"></a>dji_motor_init</STRONG> (Thumb, 30 bytes, Stack size 0 bytes, drv_dji_motor.o(.text.dji_motor_init))
@@ -3057,7 +3060,8 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1dc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BranchlessNormalizeAngle
 </UL>
-<BR>[Called By]<UL><LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_RxFifo0Callback
+<BR>[Called By]<UL><LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_RxFifo1Callback
+<LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_RxFifo0Callback
 </UL>
 
 <P><STRONG><a name="[1d8]"></a>dm_motor_init</STRONG> (Thumb, 108 bytes, Stack size 40 bytes, drv_dm_motor.o(.text.dm_motor_init))
@@ -3397,12 +3401,12 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;status_task (via Veneer)
 </UL>
 
-<P><STRONG><a name="[f6]"></a>power_get_data</STRONG> (Thumb, 76 bytes, Stack size 0 bytes, prot_power.o(.text.power_get_data))
-<BR><BR>[Called By]<UL><LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_RxFifo1Callback
+<P><STRONG><a name="[f5]"></a>power_get_data</STRONG> (Thumb, 76 bytes, Stack size 0 bytes, prot_power.o(.text.power_get_data))
+<BR><BR>[Called By]<UL><LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_RxFifo0Callback
 </UL>
 
-<P><STRONG><a name="[f8]"></a>power_get_status</STRONG> (Thumb, 14 bytes, Stack size 0 bytes, prot_power.o(.text.power_get_status))
-<BR><BR>[Called By]<UL><LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_RxFifo1Callback
+<P><STRONG><a name="[f6]"></a>power_get_status</STRONG> (Thumb, 14 bytes, Stack size 0 bytes, prot_power.o(.text.power_get_status))
+<BR><BR>[Called By]<UL><LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_RxFifo0Callback
 </UL>
 
 <P><STRONG><a name="[208]"></a>power_init</STRONG> (Thumb, 114 bytes, Stack size 16 bytes, prot_power.o(.text.power_init))
@@ -3564,8 +3568,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[20c]"></a>uxListRemove</STRONG> (Thumb, 42 bytes, Stack size 0 bytes, list.o(.text.uxListRemove))
-<BR><BR>[Called By]<UL><LI><a href="#[21f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskRemoveFromEventList
-<LI><a href="#[21b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskResumeAll
+<BR><BR>[Called By]<UL><LI><a href="#[21b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskResumeAll
 <LI><a href="#[217]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvSampleTimeNow
 <LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvTimerTask
 <LI><a href="#[1ff]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
@@ -3574,6 +3577,7 @@ Global Symbols
 <LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvIdleTask
 <LI><a href="#[20b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddCurrentTaskToDelayedList
 <LI><a href="#[233]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskPriorityDisinherit
+<LI><a href="#[21f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskRemoveFromEventList
 </UL>
 
 <P><STRONG><a name="[22a]"></a>vApplicationGetIdleTaskMemory</STRONG> (Thumb, 26 bytes, Stack size 0 bytes, freertos.o(.text.vApplicationGetIdleTaskMemory))
@@ -3607,13 +3611,13 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[20d]"></a>vListInsertEnd</STRONG> (Thumb, 28 bytes, Stack size 0 bytes, list.o(.text.vListInsertEnd))
-<BR><BR>[Called By]<UL><LI><a href="#[21f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskRemoveFromEventList
-<LI><a href="#[21b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskResumeAll
+<BR><BR>[Called By]<UL><LI><a href="#[21b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskResumeAll
 <LI><a href="#[19b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskIncrementTick
 <LI><a href="#[20b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddCurrentTaskToDelayedList
 <LI><a href="#[20f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddNewTaskToReadyList
 <LI><a href="#[228]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskPlaceOnEventListRestricted
 <LI><a href="#[233]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskPriorityDisinherit
+<LI><a href="#[21f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskRemoveFromEventList
 </UL>
 
 <P><STRONG><a name="[210]"></a>vPortEnterCritical</STRONG> (Thumb, 74 bytes, Stack size 0 bytes, port.o(.text.vPortEnterCritical))
@@ -3766,7 +3770,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[14]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CDC_Receive_HS
 </UL>
 
-<P><STRONG><a name="[f7]"></a>vision_gimbal_get_data</STRONG> (Thumb, 60 bytes, Stack size 0 bytes, prot_vision.o(.text.vision_gimbal_get_data))
+<P><STRONG><a name="[f8]"></a>vision_gimbal_get_data</STRONG> (Thumb, 60 bytes, Stack size 0 bytes, prot_vision.o(.text.vision_gimbal_get_data))
 <BR><BR>[Called By]<UL><LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_RxFifo1Callback
 </UL>
 
@@ -3805,7 +3809,6 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[210]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
 <LI><a href="#[212]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
-<LI><a href="#[21f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskRemoveFromEventList
 <LI><a href="#[21e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvUnlockQueue
 <LI><a href="#[21b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskResumeAll
 <LI><a href="#[21a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskSuspendAll
@@ -3814,6 +3817,7 @@ Global Symbols
 <LI><a href="#[229]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskPlaceOnEventList
 <LI><a href="#[232]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskCheckForTimeOut
 <LI><a href="#[231]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskInternalSetTimeOutState
+<LI><a href="#[21f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskRemoveFromEventList
 <LI><a href="#[1e3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy
 </UL>
 <BR>[Called By]<UL><LI><a href="#[217]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvSampleTimeNow
@@ -3825,7 +3829,6 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[210]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
 <LI><a href="#[212]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
-<LI><a href="#[21f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskRemoveFromEventList
 <LI><a href="#[21e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvUnlockQueue
 <LI><a href="#[21b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskResumeAll
 <LI><a href="#[21a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskSuspendAll
@@ -3833,6 +3836,7 @@ Global Symbols
 <LI><a href="#[229]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskPlaceOnEventList
 <LI><a href="#[232]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskCheckForTimeOut
 <LI><a href="#[231]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskInternalSetTimeOutState
+<LI><a href="#[21f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskRemoveFromEventList
 <LI><a href="#[1e3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy
 </UL>
 <BR>[Called By]<UL><LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvTimerTask
@@ -4510,8 +4514,8 @@ Local Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[210]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
 <LI><a href="#[212]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
-<LI><a href="#[21f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskRemoveFromEventList
 <LI><a href="#[220]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskMissedYield
+<LI><a href="#[21f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskRemoveFromEventList
 </UL>
 <BR>[Called By]<UL><LI><a href="#[21c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vQueueWaitForMessageRestricted
 <LI><a href="#[21d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueReceive

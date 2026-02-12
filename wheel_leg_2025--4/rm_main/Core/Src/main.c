@@ -99,8 +99,8 @@ int main(void)
   PeriphCommonClock_Config();
 
   /* USER CODE BEGIN SysInit */
-	 USB_Reset();//USB复位，让电脑重新识别
-   HAL_Delay(100);
+  USB_Reset();//USB复位，让电脑重新识别
+  HAL_Delay(100);
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -122,11 +122,11 @@ int main(void)
 //  MX_IWDG1_Init();
   MX_UART4_Init();
   /* USER CODE BEGIN 2 */
-   HAL_Delay(300);
+  HAL_Delay(300);
   us_timer_start();
   usart_comm_init();
   can_comm_init();
-	 HAL_Delay(300);
+  HAL_Delay(300);
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */

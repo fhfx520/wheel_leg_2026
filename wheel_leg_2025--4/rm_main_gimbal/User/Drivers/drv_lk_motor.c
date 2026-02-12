@@ -54,11 +54,9 @@ void lk_set_current(lk_motor_t* motor)
 	iq_buff[0] = CURRENT_MODE;
 	iq_buff[4] = (uint8_t)motor->tx_current;		//电流低8位
 	iq_buff[5] = (uint8_t)(motor->tx_current >> 8);	//电流高8位
-	if(can_std_transmit(motor->can_channel,motor->can_id,iq_buff) == HAL_OK)
-	{
-		motor->send_cnt++;
-		motor->online = 0;
-	}
+	can_std_transmit(motor->can_channel,motor->can_id,iq_buff);
+	motor->send_cnt++;
+	motor->online = 0;
 }
 /*
  * @brief    	瓴控电机接收数据处理
