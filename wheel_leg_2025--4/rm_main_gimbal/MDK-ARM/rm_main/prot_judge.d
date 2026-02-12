@@ -39,7 +39,7 @@ rm_main/prot_judge.o: ..\User\Protocol\prot_judge.c \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_pcd_ex.h \
   ..\User\Math\DSP\Include\arm_math.h \
   ..\Drivers\CMSIS\Include\cmsis_compiler.h ..\User\Task\shoot_task.h \
-  ..\User\Math\pid.h ..\User\UI\ui_interface.h ..\User\UI\ui_types.h \
+  ..\User\Math\pid.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS\cmsis_os.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\FreeRTOS.h \
   ..\Core\Inc\FreeRTOSConfig.h \

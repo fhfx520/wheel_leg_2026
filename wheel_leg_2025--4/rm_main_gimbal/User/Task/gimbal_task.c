@@ -37,33 +37,19 @@ gimbal_t gimbal;
 static void gimbal_init(void)
 {
     memset(&gimbal, 0, sizeof(gimbal_t));
-
-//    pid_init(&gimbal.pit_angle.pid, NONE, 18, 0, 0, 0, 7);//20 0 0 有测速模块
-//    pid_init(&gimbal.pit_spd.pid, NONE, -1.2f, -0.006f, 0, 0.4f, 2.2f);//-1.0 -0.008
-//    
-//1111 测试架的p调节
-	//6020的，并且6020是暂时发电流的
-//	pid_init(&gimbal.pit_angle.pid, CHANG_I_RATE, 15.0f, 0.1, 0, 25, 50);//20 0 0 有测速模块
-//    pid_init(&gimbal.pit_spd.pid, CHANG_I_RATE, 4000.0f, 0.0f, 0, 8000.0f, 25000.0f);//-1.0 -0.008
-//	gimbal.pit_angle.pid.threshold_a = 0.002f;
-//	gimbal.pit_angle.pid.threshold_b = 0.2f;
 	
 	pid_init(&gimbal.pit_angle.pid, CHANG_I_RATE, 22.0f, 0.5f, 0, 25, 50);//17 0 0 
     pid_init(&gimbal.pit_spd.pid, CHANG_I_RATE, 1.0f, 0.165f, 0, 2.5f, 7.0f);//0.52 0.165 
 	gimbal.pit_angle.pid.threshold_a = 0.0f;
 	gimbal.pit_angle.pid.threshold_b = 0.0f;
 	
-      
-//    pid_init(&gimbal.yaw_angle.pid, CHANG_I_RATE,25.0f, 0.15, 0.0f, 50, 100);
 	pid_init(&gimbal.yaw_angle.pid, CHANG_I_RATE,25.0f, 0.1f, 0.0f, 50, 100);//尝试云台补偿算法
-    pid_init(&gimbal.yaw_spd.pid, CHANG_I_RATE, 0.5f, 0.00f, 0, 10000.0f, 25000.0f);
+    pid_init(&gimbal.yaw_spd.pid, CHANG_I_RATE, 8000.0f, 0.00f, 0, 10000.0f, 25000.0f);
 	gimbal.yaw_angle.pid.threshold_a = 0.002f;
 	gimbal.yaw_angle.pid.threshold_b = 0.3f; 
 	
     pid_init(&gimbal.yaw_ecd.pid, NONE, 10.0f, 0, 0, 0.0f, 30.0f);
 	pid_init(&gimbal.yaw_spd_ecd.pid, NONE, 6000.0f, 10.00f, 0, 1000.0f, 25000.0f);
-	
-
 }
 float yaw_err;
 float slope_feed,last_yaw_ref,slope_feed_pit,last_pit_ref;

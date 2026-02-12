@@ -1,6 +1,5 @@
 #include "prot_judge.h"
 #include "shoot_task.h"
-#include "ui_interface.h"
 #include "cmsis_os.h"
 #include "string.h"
 #include "crc.h"

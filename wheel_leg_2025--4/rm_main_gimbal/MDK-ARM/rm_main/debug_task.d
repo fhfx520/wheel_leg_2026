@@ -54,12 +54,11 @@ rm_main/debug_task.o: ..\User\Task\debug_task.c ..\User\Task\debug_task.h \
   ..\User\Math\DSP\Include\arm_math.h \
   ..\Drivers\CMSIS\Include\cmsis_compiler.h \
   ..\User\Protocol\prot_vision.h ..\User\Task\shoot_task.h \
-  ..\User\Math\pid.h ..\User\Model\wlr.h ..\User\Math\kalman_filter.h \
-  ..\User\Model\leg_vmc.h ..\User\Model\wheel_leg_model.h \
-  ..\User\Drivers\drv_dji_motor.h ..\User\Communication\can_comm.h \
-  ..\User\Support\data_list.h ..\User\Drivers\drv_dm_motor.h \
-  ..\User\Protocol\prot_judge.h ..\User\Protocol\prot_power.h \
-  ..\User\Protocol\prot_imu.h ..\User\Support\func_generator.h \
+  ..\User\Math\pid.h ..\User\Drivers\drv_dji_motor.h \
+  ..\User\Communication\can_comm.h ..\User\Support\data_list.h \
+  ..\User\Drivers\drv_dm_motor.h ..\User\Protocol\prot_judge.h \
+  ..\User\Protocol\prot_power.h ..\User\Protocol\prot_imu.h \
+  ..\User\Math\kalman_filter.h ..\User\Support\func_generator.h \
   ..\Core\Inc\rng.h ..\User\Protocol\prot_dr16.h \
   ..\User\Support\us_time.h ..\Core\Inc\tim.h ..\User\Task\gimbal_task.h \
   ..\User\Task\mode_switch_task.h

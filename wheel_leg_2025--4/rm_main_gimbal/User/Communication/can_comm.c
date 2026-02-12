@@ -150,13 +150,14 @@ void HAL_FDCAN_RxFifo1Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo1ITs)
  * @param[in] data      : 数据指针
  * @retval    v oid
  */
-void can_std_transmit(can_channel_e can_periph, uint32_t id, uint8_t *data)
+HAL_StatusTypeDef can_std_transmit(can_channel_e can_periph, uint32_t id, uint8_t *data)
 {
     tx_message.Identifier = id;
     if (can_periph == CAN_CHANNEL_1)
-        HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &tx_message, data);
+        return HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &tx_message, data);
     else if (can_periph == CAN_CHANNEL_2)
-        HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan2, &tx_message, data);
+        return HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan2, &tx_message, data);
     else if (can_periph == CAN_CHANNEL_3)
-        HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan3, &tx_message, data);
+        return HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan3, &tx_message, data);
+	return HAL_ERROR;
 }

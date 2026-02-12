@@ -30,6 +30,7 @@ typedef enum
     FIRST_LOST = 2
 } vision_aim_status_e;
 
+#pragma pack(1)
 typedef struct
 {
     uint32_t rx_repeat_cnt;
@@ -42,10 +43,10 @@ typedef struct
     uint32_t shoot_enable;
 		uint8_t trace_id;
     uint8_t online;
-    __packed union
+    union
     {
         uint8_t buff[VISION_DATA_LEN];
-         __packed struct
+         struct
         {
             float yaw;
             float pit;
@@ -61,10 +62,10 @@ typedef struct
             uint8_t eof;
         } data;
     } rx[2];
-    __packed union
+    union
     {
         uint8_t buff[23];
-         __packed struct
+         struct
         {
             uint8_t sof;
             uint8_t imu_pit[4];
@@ -86,10 +87,10 @@ typedef struct
         } data;
     } tx;
     
-    __packed union
+    union
     {
         uint8_t buff[8];
-         __packed struct
+         struct
         {
             uint8_t vision_shoot_enable;
             uint8_t start_up_flag;
@@ -111,7 +112,7 @@ typedef struct
     uint8_t imu_yaw[4];
     uint8_t imu_pit_spd[4];
     uint8_t imu_yaw_spd[4];
-    __packed struct
+    struct
     {
         uint8_t vacancy : 1;       
         uint8_t camp : 1;          
@@ -129,7 +130,7 @@ typedef struct
     
 } vision_tx_msg_t;
 
-
+#pragma pack()
 
 extern vision_t vision;
 extern vision_tx_msg_t vision_tx_msg;

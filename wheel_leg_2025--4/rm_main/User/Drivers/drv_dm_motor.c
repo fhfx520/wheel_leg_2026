@@ -72,7 +72,7 @@ static void dm_motor_get_single_data(dm_motor_t *motor, uint8_t *data)
     motor->state = (data[0])>>4;
     
     if( motor->state > 1)
-     motor->err_state = motor->state;
+		motor->err_state = motor->state;
     
     tmp_value = (data[1] << 8) | data[2];
     motor->position = uint_to_float(tmp_value, P_MIN, P_MAX, 16);

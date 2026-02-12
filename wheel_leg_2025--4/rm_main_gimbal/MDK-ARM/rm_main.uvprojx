@@ -10,6 +10,7 @@
       <TargetName>rm_main</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
+      <pArmCC>6240000::V6.24::ARMCLANG</pArmCC>
       <pCCUsed>6240000::V6.24::ARMCLANG</pCCUsed>
       <uAC6>1</uAC6>
       <TargetOption>
@@ -81,7 +82,7 @@
           </BeforeMake>
           <AfterMake>
             <RunUserProg1>0</RunUserProg1>
-            <RunUserProg2>0</RunUserProg2>
+            <RunUserProg2>1</RunUserProg2>
             <UserProg1Name></UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
@@ -314,7 +315,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>1</Optim>
+            <Optim>2</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>0</OneElfS>
@@ -337,10 +338,10 @@
             <v6WtE>0</v6WtE>
             <v6Rtti>0</v6Rtti>
             <VariousControls>
-              <MiscControls>-D__weak="__attribute__((weak))" -D__packed="__attribute__((__packed__))"  -D__NOINLINE="__attribute__ ( (noinline) )"  -Wno-error=armcc-pragma-import -Wno-error=armcc-pragma-arm</MiscControls>
-              <Define>USE_HAL_DRIVER,STM32H723xx,ARM_MATH_CM7,__TARGET_FPU_VFP,OSQP_EMBEDDED_MODE = 1</Define>
+              <MiscControls></MiscControls>
+              <Define>USE_HAL_DRIVER,STM32H723xx,ARM_MATH_CM7,__TARGET_FPU_VFP</Define>
               <Undefine></Undefine>
-              <IncludePath>../Drivers/CMSIS/Include;../Core/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../Middlewares/ST/STM32_USB_Device_Library/Core/Inc;../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc;../USB_DEVICE/App;../USB_DEVICE/Target;../User/Communication;../User/Drivers;../User/Protocol;../User/Math/DSP/Include;../User/Math;../User/Model;../User/Support;../User/Middle;../User/Task;../User/UI;../User/Math/OSQP/include/public;../User/Math/OSQP/configure;../User/Math/OSQP/algebra;../User/Math/OSQP/algebra/_common;../User/Math/OSQP/algebra/builtin;../User/Math/OSQP/algebra/cuda/include;../User/Math/OSQP/algebra/mkl;../User/Math/OSQP/include/private</IncludePath>
+              <IncludePath>../Drivers/CMSIS/Include;../Core/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../Middlewares/ST/STM32_USB_Device_Library/Core/Inc;../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc;../USB_DEVICE/App;../USB_DEVICE/Target;../User/Communication;../User/Drivers;../User/Protocol;../User/Math/DSP/Include;../User/Math;../User/Support;../User/Middle;../User/Task</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -964,19 +965,9 @@
               <FilePath>..\User\Task\gimbal_task.c</FilePath>
             </File>
             <File>
-              <FileName>chassis_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\User\Task\chassis_task.c</FilePath>
-            </File>
-            <File>
               <FileName>shoot_task.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\Task\shoot_task.c</FilePath>
-            </File>
-            <File>
-              <FileName>ui_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\User\Task\ui_task.c</FilePath>
             </File>
             <File>
               <FileName>control_def.h</FileName>
@@ -1024,9 +1015,9 @@
               <FilePath>..\User\Drivers\bsp_LK_Motor_MG4005.c</FilePath>
             </File>
             <File>
-              <FileName>drv_ws2812b.c</FileName>
+              <FileName>drv_lk_motor.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\User\Drivers\drv_ws2812b.c</FilePath>
+              <FilePath>..\User\Drivers\drv_lk_motor.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1104,99 +1095,9 @@
               <FilePath>..\User\Math\KNN.c</FilePath>
             </File>
             <File>
-              <FileName>OSQP_C.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\User\Math\OSQP_C.c</FilePath>
-            </File>
-            <File>
-              <FileName>OSQP_C.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\User\Math\OSQP_C.h</FilePath>
-            </File>
-            <File>
               <FileName>SMC.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\Math\SMC.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>User/UI</GroupName>
-          <Files>
-            <File>
-              <FileName>ui_interface.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\User\UI\ui_interface.c</FilePath>
-            </File>
-            <File>
-              <FileName>ui_default_group1_0.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\User\UI\ui_default_group1_0.c</FilePath>
-            </File>
-            <File>
-              <FileName>ui_default_group2_0.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\User\UI\ui_default_group2_0.c</FilePath>
-            </File>
-            <File>
-              <FileName>ui_default_group2_1.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\User\UI\ui_default_group2_1.c</FilePath>
-            </File>
-            <File>
-              <FileName>ui_default_group2_2.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\User\UI\ui_default_group2_2.c</FilePath>
-            </File>
-            <File>
-              <FileName>ui_default_group2_3.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\User\UI\ui_default_group2_3.c</FilePath>
-            </File>
-            <File>
-              <FileName>ui_default_group2_4.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\User\UI\ui_default_group2_4.c</FilePath>
-            </File>
-            <File>
-              <FileName>ui_default_group3_0.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\User\UI\ui_default_group3_0.c</FilePath>
-            </File>
-            <File>
-              <FileName>ui_default_group4_0.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\User\UI\ui_default_group4_0.c</FilePath>
-            </File>
-            <File>
-              <FileName>ui_default_group5_0.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\User\UI\ui_default_group5_0.c</FilePath>
-            </File>
-            <File>
-              <FileName>ui_default_group5_1.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\User\UI\ui_default_group5_1.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>User/Model</GroupName>
-          <Files>
-            <File>
-              <FileName>leg_vmc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\User\Model\leg_vmc.c</FilePath>
-            </File>
-            <File>
-              <FileName>wheel_leg_model.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\User\Model\wheel_leg_model.c</FilePath>
-            </File>
-            <File>
-              <FileName>wlr.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\User\Model\wlr.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4005,8 +3906,8 @@
   <RTE>
     <apis/>
     <components>
-      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="5.3.0" condition="ARMv6_7_8-M Device">
-        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.6.0"/>
+      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="6.1.1" condition="ARMv6_7_8-M Device" ymlID="CMSIS:CORE">
+        <package name="CMSIS" schemaVersion="1.7.40" url="https://www.keil.com/pack/" vendor="ARM" version="6.2.0"/>
         <targetInfos>
           <targetInfo name="rm_main"/>
         </targetInfos>

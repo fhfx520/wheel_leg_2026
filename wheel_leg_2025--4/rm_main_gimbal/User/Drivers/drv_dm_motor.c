@@ -3,7 +3,7 @@
 #define LIMIT_MIN_MAX(x,min,max) (x)=(((x)<=(min))?(min):(((x)>=(max))?(max):(x)))
 
 #ifndef PI
-#define PI 3.14159265358979323846f
+	#define PI 3.14159265358979323846f
 #endif
 
 static list_t object_list = {&object_list, &object_list};
@@ -17,7 +17,6 @@ dm_motor_t trigger_motor_2325;					//新拨盘电机dm2325
 
 dm_motor_t pit_motor;					//新云台dm4310
 
-float ppoo = 0;
 
 //根据协议，对float参数进行转换，用于数据发送
 static uint16_t float_to_uint(float x, float x_min, float x_max, uint8_t bits)
@@ -40,8 +39,9 @@ static float uint_to_float(int x_int, float x_min, float x_max, int bits)
  * @brief     达妙电机初始化设置
  * @param[in] motor     : 电机数据结构体
  * @param[in] can_periph: 电机所在can通道
- * @param[in] id        : 电机id
+ * @param[in] id        : 电机发送报文id
  * @param[in] zero_point: 电机安装零点
+ * @param[in] mst_id	: 电机反馈报文id
  * @retval    void
  */
 void dm_motor_init(dm_motor_t *motor, can_channel_e can_channel, uint32_t id, float zero_point, uint32_t mst_id)
@@ -88,8 +88,6 @@ void dm_motor_get_single_data(dm_motor_t *motor, uint8_t *data)
      motor->err_state = motor->state;
     
     tmp_value = (data[1] << 8) | data[2];
-	ppoo = tmp_value;
-	
 	
     motor->position = uint_to_float(tmp_value, P_MIN, P_MAX, 16);
 

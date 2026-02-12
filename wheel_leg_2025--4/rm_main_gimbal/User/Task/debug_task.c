@@ -4,9 +4,6 @@
 #include "stdint.h"
 #include "prot_vision.h"
 #include "shoot_task.h"
-#include "wlr.h"
-#include "leg_vmc.h"
-#include "wheel_leg_model.h"
 #include "drv_dji_motor.h"
 #include "drv_dm_motor.h"
 #include "prot_judge.h"
@@ -24,7 +21,7 @@
 uint8_t debug_wave = 2;
 uint32_t aqdihakdhakjhdaukd;
 uint32_t no_online_imu;
-
+//-D__weak="__attribute__((weak))" -D__packed="__attribute__((__packed__))"  -D__NOINLINE="__attribute__ ( (noinline) )"  -Wno-error=armcc-pragma-import -Wno-error=armcc-pragma-arm
 extern float feed_torque;
 extern float velocity_err;
 void log_scope_data_pkg(void)
