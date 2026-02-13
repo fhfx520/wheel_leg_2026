@@ -4,7 +4,6 @@
 #include "fsm_core.h" 
 #include <stdint.h>
 
-// --- 编译器宏适配 ---
 #ifndef __PACKED_STRUCT
 #define __PACKED_STRUCT struct __attribute__((packed))
 #endif
@@ -42,13 +41,21 @@ typedef __PACKED_STRUCT {
 // ==========================================
 typedef enum {
     CHASSIS_STOP = 0,
-    CHASSIS_LOW,        // 低腿 (sw2 UP)
-    CHASSIS_HIGH,       // 高腿 (sw2 MID)
-    CHASSIS_TERRAIN,    // 跨越 (sw2 DOWN)
-    CHASSIS_INDEPENDENT // 键鼠
+    CHASSIS_LOW,        // 普通低腿
+    CHASSIS_FIGHT,      // 迎敌模式 (低腿姿态 + 特殊底盘算法)
+    CHASSIS_LOW_SPIN,   // 低腿小陀螺
+    CHASSIS_HIGH,       // 高腿
+    CHASSIS_TERRAIN_READY, 
+    CHASSIS_TERRAIN_EXECUTING
 } ChassisState_e;
 
-typedef enum { GIMBAL_STOP=0, GIMBAL_GYRO_STABILIZE, GIMBAL_AUTO_AIM } GimbalState_e;
+typedef enum { 
+    GIMBAL_STOP=0, 
+    GIMBAL_GYRO_STABILIZE, // 纯陀螺稳定 (遥控器用)
+    GIMBAL_MOUSE_CONTROL,  // [New] 鼠标控制
+    GIMBAL_AUTO_AIM        // [New] 自瞄模式
+} GimbalState_e;
+
 typedef enum { SHOOT_STOP=0, SHOOT_READY, SHOOT_FIRING } ShootState_e;
 
 // ==========================================
@@ -56,18 +63,25 @@ typedef enum { SHOOT_STOP=0, SHOOT_READY, SHOOT_FIRING } ShootState_e;
 // ==========================================
 typedef struct {
     RC_Ctrl_t input;
+    
     struct {
         ChassisState_e chassis;
         GimbalState_e  gimbal;
         ShootState_e   shoot;
+        uint8_t chassis_speed; // 0:低速, 1:高速 (Shift)
     } output;
+    
     uint8_t is_online;
+    
+    // 辅助变量
+    int16_t  last_ch3;     
+    uint16_t last_key_code; 
+    uint32_t ctrl_tick;     
 } RobotContext_t;
 
 extern RobotContext_t g_robot_ctx;
-extern FsmMachine_t g_top_fsm; // 顶层状态机
+extern FsmMachine_t g_top_fsm; 
 
-// API
 void robot_logic_init(void);
 void robot_logic_update(const RC_Ctrl_t* rc_data);
 
