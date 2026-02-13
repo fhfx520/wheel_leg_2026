@@ -65,9 +65,9 @@ void can_comm_init(void)
     //板间通信
     can_filter.IdType = FDCAN_STANDARD_ID;//标准帧
     can_filter.FilterIndex = 0;
-    can_filter.FilterType = FDCAN_FILTER_RANGE;//范围过滤
+    can_filter.FilterType = FDCAN_FILTER_DUAL;//范围过滤
     can_filter.FilterID1 = 0x001;
-    can_filter.FilterID2 = 0x008;
+//    can_filter.FilterID2 = 0x008;
     can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO1;//通过过滤后给邮箱0
     HAL_FDCAN_ConfigFilter(&hfdcan3, &can_filter);
 	
@@ -139,7 +139,7 @@ void HAL_FDCAN_RxFifo1Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo1ITs)
         } else if (hfdcan->Instance == FDCAN2) {
 //			dji_motor_get_data(CAN_CHANNEL_2, rx_fifo1_message.Identifier, rx_fifo1_data);
         } else if (hfdcan->Instance == FDCAN3) {
-			board_comm_get_data(rx_fifo1_message.Identifier, rx_fifo1_data);//板间通信解析函数
+			fdcan_board_comm_get(rx_fifo1_message.Identifier, rx_fifo1_data);//板间通信解析函数
         }
         HAL_FDCAN_ActivateNotification(hfdcan, FDCAN_IT_RX_FIFO1_NEW_MESSAGE, 0);
     }

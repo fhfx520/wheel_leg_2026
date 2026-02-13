@@ -44,4 +44,4 @@ rm_main/board_comm.o: ..\User\Communication\board_comm.c \
   ..\User\Protocol\prot_judge.h ..\Core\Inc\usart.h ..\Core\Inc\main.h \
   ..\User\Math\DSP\Include\arm_math.h \
   ..\Drivers\CMSIS\Include\cmsis_compiler.h ..\User\Task\status_task.h \
-  ..\User\Math\math_lib.h
+  ..\User\Math\math_lib.h ..\User\Protocol\prot_vtm.h

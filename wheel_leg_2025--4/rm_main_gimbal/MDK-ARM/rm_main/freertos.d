@@ -56,4 +56,5 @@ rm_main/freertos.o: ..\Core\Src\freertos.c \
   ..\User\Task\status_task.h ..\User\Task\gimbal_task.h \
   ..\User\Math\pid.h ..\User\Task\chassis_task.h \
   ..\User\Task\shoot_task.h ..\User\Task\debug_task.h \
-  ..\User\Task\ui_task.h ..\Core\Inc\tim.h
+  ..\User\Task\ui_task.h ..\Core\Inc\tim.h \
+  ..\User\Task\board_comm_task.h

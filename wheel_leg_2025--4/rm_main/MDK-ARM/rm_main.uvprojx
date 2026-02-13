@@ -10,7 +10,7 @@
       <TargetName>rm_main</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>6220000::V6.22::ARMCLANG</pCCUsed>
+      <pCCUsed>6240000::V6.24::ARMCLANG</pCCUsed>
       <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -1084,6 +1084,11 @@
               <FilePath>..\User\Task\comm_task.c</FilePath>
             </File>
             <File>
+              <FileName>board_comm_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Task\board_comm_task.c</FilePath>
+            </File>
+            <File>
               <FileName>mode_switch_task.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\Task\mode_switch_task.c</FilePath>
@@ -1127,6 +1132,11 @@
               <FileName>can_comm.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\Communication\can_comm.c</FilePath>
+            </File>
+            <File>
+              <FileName>board_comm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Communication\board_comm.c</FilePath>
             </File>
             <File>
               <FileName>usart_comm.c</FileName>
@@ -1179,6 +1189,11 @@
               <FilePath>..\User\Protocol\prot_imu.c</FilePath>
             </File>
             <File>
+              <FileName>prot_hipnuc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Protocol\prot_hipnuc.c</FilePath>
+            </File>
+            <File>
               <FileName>prot_judge.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\Protocol\prot_judge.c</FilePath>
@@ -1197,16 +1212,6 @@
               <FileName>prot_tfmini.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\Protocol\prot_tfmini.c</FilePath>
-            </File>
-            <File>
-              <FileName>prot_hipnuc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\User\Protocol\prot_hipnuc.c</FilePath>
-            </File>
-            <File>
-              <FileName>prot_hipnuc.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\User\Protocol\prot_hipnuc.h</FilePath>
             </File>
           </Files>
         </Group>

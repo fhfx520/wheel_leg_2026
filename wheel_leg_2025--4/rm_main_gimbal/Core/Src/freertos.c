@@ -35,7 +35,7 @@
 #include "debug_task.h"
 #include "ui_task.h"
 #include "tim.h"
-
+#include "board_comm_task.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -63,6 +63,7 @@ osThreadId GimbalTaskHandle;
 osThreadId ShootTaskHandle;
 osThreadId UITaskHandle;
 osThreadId DebugTaskHandle;
+osThreadId BoardCommTaskHandle;
 /* USER CODE END Variables */
 osThreadId StartTaskHandle;
 
@@ -154,13 +155,16 @@ void MX_FREERTOS_Init(void) {
 //  ChassisTaskHandle = osThreadCreate(osThread(ChassisTask), NULL);
   
   osThreadDef(GimbalTask, gimbal_task, osPriorityNormal, 0, 256);
-  ChassisTaskHandle = osThreadCreate(osThread(GimbalTask), NULL);
+  GimbalTaskHandle = osThreadCreate(osThread(GimbalTask), NULL);
   
   osThreadDef(ShootTask, shoot_task, osPriorityNormal, 0, 128);
-  ChassisTaskHandle = osThreadCreate(osThread(ShootTask), NULL);
+  ShootTaskHandle = osThreadCreate(osThread(ShootTask), NULL);
   
   osThreadDef(DebugTask, debug_task, osPriorityLow, 0, 128);
   DebugTaskHandle = osThreadCreate(osThread(DebugTask), NULL);
+  
+  osThreadDef(BoardCommTask, board_comm_task, osPriorityHigh, 0, 256);
+  BoardCommTaskHandle = osThreadCreate(osThread(BoardCommTask), NULL);
 //  osThreadDef(UITask, ui_task, osPriorityLow, 0, 512);
 //  DebugTaskHandle = osThreadCreate(osThread(UITask), NULL);
   /* USER CODE END RTOS_THREADS */

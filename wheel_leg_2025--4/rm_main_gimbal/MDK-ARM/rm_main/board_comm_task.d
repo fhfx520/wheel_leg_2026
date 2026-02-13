@@ -1,5 +1,5 @@
-rm_main/status_task.o: ..\User\Task\status_task.c \
-  ..\User\Task\status_task.h ..\User\Task\control_def.h \
+rm_main/board_comm_task.o: ..\User\Task\board_comm_task.c \
+  ..\User\Task\board_comm_task.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS\cmsis_os.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\FreeRTOS.h \
   ..\Core\Inc\FreeRTOSConfig.h \
@@ -14,8 +14,7 @@ rm_main/status_task.o: ..\User\Task\status_task.c \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\queue.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\semphr.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\event_groups.h \
-  ..\User\Task\mode_switch_task.h ..\User\Drivers\drv_dji_motor.h \
-  ..\User\Communication\can_comm.h \
+  ..\User\Communication\board_comm.h \
   ..\Drivers\CMSIS\Device\ST\STM32H7xx\Include\stm32h7xx.h \
   ..\Drivers\CMSIS\Device\ST\STM32H7xx\Include\stm32h723xx.h \
   ..\Drivers\CMSIS\Include\core_cm7.h \
@@ -52,12 +51,4 @@ rm_main/status_task.o: ..\User\Task\status_task.c \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_uart_ex.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_pcd.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_ll_usb.h \
-  ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_pcd_ex.h \
-  ..\User\Support\data_list.h ..\User\Drivers\drv_dm_motor.h \
-  ..\User\Protocol\prot_dr16.h ..\User\Protocol\prot_imu.h \
-  ..\User\Protocol\prot_judge.h ..\Core\Inc\usart.h ..\Core\Inc\main.h \
-  ..\User\Math\DSP\Include\arm_math.h \
-  ..\Drivers\CMSIS\Include\cmsis_compiler.h \
-  ..\User\Protocol\prot_power.h ..\User\Protocol\prot_vision.h \
-  ..\Core\Inc\iwdg.h ..\User\Communication\board_comm.h \
-  ..\User\Protocol\prot_vtm.h
+  ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_pcd_ex.h

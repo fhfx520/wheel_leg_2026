@@ -6,7 +6,7 @@
 #include "fdcan.h"
 #include "drv_dm_motor.h"
 #include "prot_vision.h"
-
+#include "board_comm.h"
 
 FDCAN_TxHeaderTypeDef can_tx_message;
 FDCAN_TxHeaderTypeDef fdcan_tx_message;
@@ -87,12 +87,12 @@ void can_comm_init(void)
 	can_filter.FilterID2 = SUPERCAP_STATE_ID; 
     can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;//通过过滤后给邮箱0
     HAL_FDCAN_ConfigFilter(&hfdcan3, &can_filter);
-	//vision_shoot_enable
+	//board
     can_filter.IdType = FDCAN_STANDARD_ID;//标准帧
     can_filter.FilterIndex = 2;
     can_filter.FilterType = FDCAN_FILTER_DUAL;//等于过滤
-    can_filter.FilterID1 = 0x003;
-	can_filter.FilterID2 = 0x006;
+    can_filter.FilterID1 = 0x002;
+//	can_filter.FilterID2 = 0x006;
     can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO1;//通过过滤后给邮箱1
     HAL_FDCAN_ConfigFilter(&hfdcan3, &can_filter);  
 		
@@ -179,7 +179,8 @@ void HAL_FDCAN_RxFifo1Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo1ITs)
         } else if (hfdcan->Instance == FDCAN2) {
 			dji_motor_get_data(CAN_CHANNEL_2, rx_fifo1_message.Identifier, rx_fifo1_data);
         } else if (hfdcan->Instance == FDCAN3) {	
-			vision_gimbal_get_data(&vision, rx_fifo1_message.Identifier, rx_fifo1_data);
+//			vision_gimbal_get_data(&vision, rx_fifo1_message.Identifier, rx_fifo1_data);
+			fdcan_board_comm_get(rx_fifo1_message.Identifier, rx_fifo1_data);
         }
         HAL_FDCAN_ActivateNotification(hfdcan, FDCAN_IT_RX_FIFO1_NEW_MESSAGE, 0);
     }

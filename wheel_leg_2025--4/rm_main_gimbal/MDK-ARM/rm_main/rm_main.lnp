@@ -19,6 +19,7 @@
 "rm_main\usbd_conf.o"
 "rm_main\debug_task.o"
 "rm_main\comm_task.o"
+"rm_main\board_comm_task.o"
 "rm_main\mode_switch_task.o"
 "rm_main\status_task.o"
 "rm_main\gimbal_task.o"

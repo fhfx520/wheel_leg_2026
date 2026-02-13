@@ -11,10 +11,10 @@
 #include "status_task.h"
 #include "stdlib.h"
 #include "math_lib.h"
-
+#include "prot_vtm.h"
 board_comm_t board_comm;
+fdcan_board_comm_t fdcan_board_comm;
 uint8_t board_comm_tx_buff[8];
-uint8_t fdcan_board_comm_tx_buff[64];
 
 //1111板间通信要把这个改掉，变成直接遥控器输入在中断那里已经收到数据
 static void rc_rc_decode(void){	
@@ -132,14 +132,28 @@ void board_comm_send_data(void){
 	}
 }
 //fdcan板间通信下发数据
-static void fdcan_board_comm_send(void)
+void fdcan_board_comm_send(void)
 {
 	//图传链路键鼠数据
+	memcpy(&fdcan_board_comm.tx_msg.data_keyboard.mouse_data,&vtm.vtm_data.mouse_data,sizeof(vtm.vtm_data.mouse_data));
+	fdcan_board_comm.tx_msg.data_keyboard.key_code = vtm.vtm_data.kb.key_code;
+	fdcan_board_comm.tx_msg.data_keyboard.online = vtm.online;
+	//云台数据
+	fdcan_board_comm.tx_msg.gimbal_data.yaw_output = -1.0f * gimbal.yaw_output;
+	fdcan_board_comm.tx_msg.gimbal_data.gimbal_start_up = gimbal.start_up;
+	//视觉数据
+	fdcan_board_comm.tx_msg.vision_data.vision_enanle = vision.shoot_enable;
+	if(vision.aim_status == AIMING)
+		fdcan_board_comm.tx_msg.vision_data.vision_trace_id = vision.trace_id;
+	else
+		fdcan_board_comm.tx_msg.vision_data.vision_trace_id = 0;
+	//联合体数组发送
+	can_std_transmit(CAN_CHANNEL_3,FDCAN_GIMBAL_TO_CHA_ID,fdcan_board_comm.tx_msg.buff);
 	
 }
 
 //fdcan板间通信收数据
-static void fdcan_board_comm_get(void)
+void fdcan_board_comm_get(uint32_t id, uint8_t *data)
 {
 	
 }
