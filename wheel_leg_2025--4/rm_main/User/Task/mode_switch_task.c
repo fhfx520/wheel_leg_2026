@@ -6,10 +6,25 @@
 #include "drv_dji_motor.h"
 #include "prot_vision.h"
 #include "chassis_task.h"
+#include "board_comm.h"
 
 uint8_t lock_flag = 0;
 uint8_t reset_flag = 0;
 ctrl_mode_e ctrl_mode;
+
+static data_keyboard_t modesw_get_keyboard_data_container;
+
+
+// 收到vision数据：
+static void keyboard_data_cb(uint32_t tag_id, void* data, size_t len) {
+    data_keyboard_t* modesw_get_keyboard_data_container = (data_keyboard_t*)data;
+}
+
+// --- 回调配置表  ---
+static const ContainerBusCfg mb_callback[] = {
+    { TAG_KEYBOARD_DATA, keyboard_data_cb, NULL }
+};
+
 
 static void unlock_init(void) {
     if (rc.sw1 == RC_UP && rc.sw2 == RC_UP ) { //左拨杆置上，右拨杆置上
@@ -62,6 +77,7 @@ void mode_switch_task(void const *argu)
 {
     ctrl_mode = PROTECT_MODE;
     lock_flag = 0;
+    container_bus_init(mb_callback, sizeof(mb_callback)/sizeof(ContainerBusCfg));
     for (;;) {
         if (!lock_flag) {
             if (game_status.game_progress == 4) {//比赛中直接解锁
