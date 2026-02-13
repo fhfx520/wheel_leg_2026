@@ -8,7 +8,9 @@
 #include "prot_vision.h"
 #include "board_comm.h"
 #include "bsp_LK_Motor_MG4005.h"
-FDCAN_TxHeaderTypeDef tx_message;
+
+FDCAN_TxHeaderTypeDef can_tx_message;
+FDCAN_TxHeaderTypeDef fdcan_tx_message;
 FDCAN_RxHeaderTypeDef rx_fifo0_message, rx_fifo1_message;
 //注意FDCAN只能设置64个字节给用，设置8个会数组越界进硬件错误中断
 uint8_t rx_fifo0_data[64], rx_fifo1_data[64];
@@ -63,18 +65,10 @@ void can_comm_init(void)
     //板间通信
     can_filter.IdType = FDCAN_STANDARD_ID;//标准帧
     can_filter.FilterIndex = 0;
-    can_filter.FilterType = FDCAN_FILTER_RANGE;//范围过滤
+    can_filter.FilterType = FDCAN_FILTER_DUAL;//范围过滤
     can_filter.FilterID1 = 0x001;
-    can_filter.FilterID2 = 0x008;
+//    can_filter.FilterID2 = 0x008;
     can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO1;//通过过滤后给邮箱0
-    HAL_FDCAN_ConfigFilter(&hfdcan3, &can_filter);
-
-	//6020 yaw
-	can_filter.IdType = FDCAN_STANDARD_ID;//标准帧
-    can_filter.FilterIndex = 1;
-    can_filter.FilterType = FDCAN_FILTER_DUAL;//等于过滤
-	can_filter.FilterID1 = 0x205;//6020yaw
-    can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;//通过过滤后给邮箱1
     HAL_FDCAN_ConfigFilter(&hfdcan3, &can_filter);
 	
     HAL_FDCAN_ConfigGlobalFilter(&hfdcan3, FDCAN_REJECT, FDCAN_REJECT, FDCAN_REJECT_REMOTE, FDCAN_REJECT_REMOTE);
@@ -82,16 +76,24 @@ void can_comm_init(void)
 	HAL_FDCAN_ActivateNotification(&hfdcan3, FDCAN_IT_RX_FIFO1_NEW_MESSAGE, 0);//使能邮箱1新消息中断
     HAL_FDCAN_Start(&hfdcan3);
 		
-    
-    //配置标准发送参数
-    tx_message.IdType = FDCAN_STANDARD_ID;  
-    tx_message.TxFrameType = FDCAN_DATA_FRAME;
-    tx_message.DataLength = FDCAN_DLC_BYTES_8;
-    tx_message.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
-    tx_message.BitRateSwitch = FDCAN_BRS_ON;
-    tx_message.FDFormat = FDCAN_CLASSIC_CAN;
-    tx_message.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
-    tx_message.MessageMarker = 0;
+    //can tx_message config
+    can_tx_message.IdType = FDCAN_STANDARD_ID;  
+    can_tx_message.TxFrameType = FDCAN_DATA_FRAME;
+    can_tx_message.DataLength = FDCAN_DLC_BYTES_8;
+    can_tx_message.ErrorStateIndicator = FDCAN_ESI_PASSIVE;
+    can_tx_message.BitRateSwitch = FDCAN_BRS_OFF;
+    can_tx_message.FDFormat = FDCAN_CLASSIC_CAN;
+    can_tx_message.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
+    can_tx_message.MessageMarker = 0;
+	//fdcan tx_message config
+	can_tx_message.IdType = FDCAN_STANDARD_ID;  
+    can_tx_message.TxFrameType = FDCAN_DATA_FRAME;
+    can_tx_message.DataLength = FDCAN_DLC_BYTES_64;
+    can_tx_message.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
+    can_tx_message.BitRateSwitch = FDCAN_BRS_ON;
+    can_tx_message.FDFormat = FDCAN_FD_CAN;
+    can_tx_message.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
+    can_tx_message.MessageMarker = 0;
     
     //各驱动初始化
 	dm_motor_init(&pit_motor, CAN_CHANNEL_1, 0x05, 0.0f, 0x15);
@@ -137,7 +139,7 @@ void HAL_FDCAN_RxFifo1Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo1ITs)
         } else if (hfdcan->Instance == FDCAN2) {
 //			dji_motor_get_data(CAN_CHANNEL_2, rx_fifo1_message.Identifier, rx_fifo1_data);
         } else if (hfdcan->Instance == FDCAN3) {
-				board_comm_get_data(rx_fifo1_message.Identifier, rx_fifo1_data);//板间通信解析函数
+			fdcan_board_comm_get(rx_fifo1_message.Identifier, rx_fifo1_data);//板间通信解析函数
         }
         HAL_FDCAN_ActivateNotification(hfdcan, FDCAN_IT_RX_FIFO1_NEW_MESSAGE, 0);
     }
@@ -150,14 +152,21 @@ void HAL_FDCAN_RxFifo1Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo1ITs)
  * @param[in] data      : 数据指针
  * @retval    v oid
  */
-HAL_StatusTypeDef can_std_transmit(can_channel_e can_periph, uint32_t id, uint8_t *data)
+void can_std_transmit(can_channel_e can_periph, uint32_t id, uint8_t *data)
 {
-    tx_message.Identifier = id;
     if (can_periph == CAN_CHANNEL_1)
-        return HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &tx_message, data);
+	{
+		can_tx_message.Identifier = id;
+        HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &can_tx_message, data);
+	}
     else if (can_periph == CAN_CHANNEL_2)
-        return HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan2, &tx_message, data);
+	{
+		can_tx_message.Identifier = id;
+        HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan2, &can_tx_message, data);
+	}
     else if (can_periph == CAN_CHANNEL_3)
-        return HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan3, &tx_message, data);
-	return HAL_ERROR;
+	{
+		fdcan_tx_message.Identifier = id;
+        HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan3, &fdcan_tx_message, data);
+	}
 }

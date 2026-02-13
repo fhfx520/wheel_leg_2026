@@ -1,81 +1,36 @@
 #include "board_comm.h"
 #include "string.h"
-#include "prot_dr16.h"
-#include "mode_switch_task.h"
-#include "prot_imu.h"
-#include "can_comm.h"
-#include "prot_vision.h"
-#include "gimbal_task.h"
-#include "chassis_task.h"
-
-board_comm_t board_comm;
-
-uint8_t board_comm_tx_buff[8];
+#include "container.h"
 
 
-static void rc_rc_decode(void){
+fdcan_board_comm_t fdcan_board_comm;
 
-	
-	if(ctrl_mode == REMOTER_MODE || ctrl_mode == PROTECT_MODE){
-	rc.ch1 			 = board_comm.rx_rc_msg.data_remote.chl;
-	rc.ch2 		 	 = board_comm.rx_rc_msg.data_remote.ch2;
-	rc.sw1 			 = board_comm.rx_rc_msg.data_remote.sw1;
-	rc.sw2 			 = board_comm.rx_rc_msg.data_remote.sw2;
-	}
-	else if(ctrl_mode == KEYBOARD_MODE){
-	rc.mouse.x 			 = board_comm.rx_rc_msg.data_keyboard.x;
-	rc.mouse.y 		 	 = board_comm.rx_rc_msg.data_keyboard.y;
-	rc.mouse.l 			 = board_comm.rx_rc_msg.data_keyboard.l;
-	rc.mouse.r 			 = board_comm.rx_rc_msg.data_keyboard.r;
-	}
+data_keyboard_t data_keyboard_rec;
+gimbal_data_t gimbal_data_rec;
+vision_data_t vision_data_rec;
 
+
+//fdcan板间通信上发数据
+void fdcan_board_comm_send(void)
+{
+	container_set(TAG_KEYBOARD_DATA, &data_keyboard_rec, sizeof(data_keyboard_rec), CONTAINER_TYPE_STRUCT);
+	container_set(TAG_GIMBAL_DATA,   &gimbal_data_rec,   sizeof(gimbal_data_rec), CONTAINER_TYPE_STRUCT);
+	container_set(TAG_VISION_DATA,   &vision_data_rec,   sizeof(vision_data_rec), CONTAINER_TYPE_STRUCT);
 }
 
-static void rc_cha_decode(void){
-     if( fabs(board_comm.rx_cha_msg.data.cha_pit) < 1e-4 && board_comm.rx_cha_msg.data.ctrl_mode==0 )
-         return ;
-             
-         
-	chassis_imu.pit = board_comm.rx_cha_msg.data.cha_pit;
-	ctrl_mode 	    = board_comm.rx_cha_msg.data.ctrl_mode;
-	chassis.mode    = board_comm.rx_cha_msg.data.chassis_mode;
-    rc.init_status  = board_comm.rx_cha_msg.data.rc_init_status;
-}
+//fdcan板间通信收数据
+void fdcan_board_comm_get(uint32_t id,uint8_t *pdata)
+{
+	if(id == FDCAN_GIMBAL_TO_CHA_ID)
+	{
+		//联合体内存拷贝
+		memcpy(&fdcan_board_comm.rx_msg.buff,pdata,FDCAN_BOARD_DATA_LEN);
+		//待补充数据分发
+		memcpy(&data_keyboard_rec,&fdcan_board_comm.rx_msg.data_keyboard,sizeof(data_keyboard_rec));
 
-static void tx_cha_decode(void){
-   
-	board_comm.tx_cha_msg.data.vision_enanle    = vision.shoot_enable;
-	board_comm.tx_cha_msg.data.gimbal_start_up  = gimbal.start_up;
-}
+		memcpy(&gimbal_data_rec,&fdcan_board_comm.rx_msg.gimbal_data,sizeof(gimbal_data_rec));
 
-void board_comm_get_data(uint32_t id, uint8_t *data){
-
-	 switch(id) {
-		
-		case RC_MSG_ID: {
-				 memcpy(board_comm.rx_rc_msg.buff,data,BOARD_DATA_LEN);
-				 rc_rc_decode();
-				 break;
-    }
-        case CHA_MSG_ID: {
-				memcpy(board_comm.rx_cha_msg.buff,data,BOARD_DATA_LEN);
-				rc_cha_decode();
-        break;
-    }
-	}
-}	 
-
-void board_comm_send_data(uint32_t id){
-		
-		 switch(id) {
-		
-		case VISION_MSG_ID: {
-					tx_cha_decode();
-				  memcpy(board_comm_tx_buff,board_comm.tx_cha_msg.buff,BOARD_DATA_LEN);
-					can_std_transmit(CAN_CHANNEL_3,VISION_MSG_ID,board_comm_tx_buff);
-				 break;
-    }
+		memcpy(&vision_data_rec,&fdcan_board_comm.rx_msg.vision_data,sizeof(vision_data_rec));
 
 	}
-
 }

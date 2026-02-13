@@ -14,6 +14,8 @@
 #include "wlr.h"
 #include "chassis_task.h"
 #include "status_task.h"
+#include "board_comm.h"
+
 
 FGT_agl_t yaw_test = {
     .Td = 1,
@@ -33,6 +35,32 @@ gimbal_scale_t gimbal_scale = {
 };
 gimbal_t gimbal;
 gimbal_stable_t gimbal_stable;
+
+static gimbal_data_t gimbal_get_gimbal_data_container;
+static vision_data_t gimbal_get_vision_data_container;
+
+
+// 收到gimbal数据：
+static void gimbal_data_cb(uint32_t tag_id, void* data, size_t len) {
+    gimbal_data_t* gimbal_get_gimbal_data_container = (gimbal_data_t*)data;
+
+}
+
+// 收到vision数据：
+static void vision_data_cb(uint32_t tag_id, void* data, size_t len) {
+    vision_data_t* gimbal_get_vision_data_container = (vision_data_t*)data;
+}
+
+// --- 回调配置表  ---
+static const ContainerBusCfg mb_callback[] = {
+    { TAG_GIMBAL_DATA, gimbal_data_cb, NULL },
+    { TAG_VISION_DATA, vision_data_cb, NULL }
+};
+
+
+
+
+
 static void gimbal_init(void)
 {
     memset(&gimbal, 0, sizeof(gimbal_t));
@@ -45,6 +73,8 @@ static void gimbal_init(void)
     
     pid_init(&gimbal.yaw_angle.pid, NONE, 500, 0, 0, 0, 15000.0f);
 	pid_init(&gimbal.yaw_spd.pid, NONE, 0.05f, 0.00f, 0, 1000.0f, 25000.0f);
+	
+	container_bus_init(mb_callback, sizeof(mb_callback)/sizeof(ContainerBusCfg));
 
 }
 
@@ -96,7 +126,10 @@ static void gimbal_pid_calc(void)
     gimbal.yaw_spd.ref = pid_calc(&gimbal.yaw_angle.pid, gimbal.yaw_angle.fdb + yaw_err, gimbal.yaw_angle.fdb);    
 //    gimbal.yaw_spd.fdb = gimbal_imu.wz + 0.4f * chassis_imu.wz;
     gimbal.yaw_spd.fdb = gimbal_imu.wz;
-    gimbal.yaw_output = pid_calc(&gimbal.yaw_spd.pid, gimbal.yaw_spd.ref, gimbal.yaw_spd.fdb);
+
+   // gimbal.yaw_output = pid_calc(&gimbal.yaw_spd.pid, gimbal.yaw_spd.ref, gimbal.yaw_spd.fdb); 新板间通信用云台下发的yaw_output值
+
+     gimbal.yaw_output = gimbal_get_gimbal_data_container.yaw_output;
     
 //    //无云台控制------->无陀螺仪, 通过ecd控制
 

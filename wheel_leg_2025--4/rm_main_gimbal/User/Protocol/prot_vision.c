@@ -40,58 +40,52 @@ void vision_get_data(uint8_t *data)
     NAN_PROCESS(vision.rx[0].data.fire, vision.rx[1].data.fire);
     NAN_PROCESS(vision.rx[0].data.pos, vision.rx[1].data.pos);
     
-    if (vision.rx[0].data.aim_flag) {
+	if (vision.rx[0].data.aim_flag) {
         vision.aim_status = AIMING;
         vision.new_frame_flag = 1;
         vision.target_yaw_angle = vision.rx[0].data.yaw / 180.0f * PI;
         vision.target_pit_angle = -vision.rx[0].data.pit / 180.0f * PI;
-				if( vision.target_pit_angle < -0.40f )
-					vision.target_pit_angle = -0.40f;
+		if( vision.target_pit_angle < -0.40f )
+			vision.target_pit_angle = -0.40f;
 				
 				
 //				if ((vision.target_yaw_angle - gimbal.yaw_angle.fdb) > 1.73f)
-					if( fabs( circle_error(vision.target_yaw_angle,gimbal.yaw_angle.fdb, 2*PI)   ) > 1.73f)
-					vision.target_yaw_angle = gimbal.yaw_angle.fdb;
+		if( fabs( circle_error(vision.target_yaw_angle,gimbal.yaw_angle.fdb, 2*PI)   ) > 1.73f)
+			vision.target_yaw_angle = gimbal.yaw_angle.fdb;
 			
         vision.yaw_min_err = vision.rx[0].data.dis / 180.0f * PI;
-				vision.pit_min_err = vision.rx[0].data.dis2 / 180.0f * PI;
+		vision.pit_min_err = vision.rx[0].data.dis2 / 180.0f * PI;
 
         if (ABS(gimbal.yaw_angle.fdb - vision.target_yaw_angle) < vision.yaw_min_err && \
             ABS(gimbal.pit_angle.fdb - vision.target_pit_angle) < vision.pit_min_err && \
-            (vision.rx[0].data.fire == 1 ||vision.rx[0].data.fire == 2) ){
-					
-
-							
+            (vision.rx[0].data.fire == 1 ||vision.rx[0].data.fire == 2) ){				
             vision.shoot_enable = 1;
-							
-							
-					  shoot_Cnt++;}
+					  shoot_Cnt++;
+			}
         else
             vision.shoot_enable = 0;
-    } else {
+	} 
+	else {
         vision.aim_status = UNAIMING;
         vision.shoot_enable = 0;
-    }
+	}
 
 		
-		 if (ABS(gimbal.yaw_angle.fdb - vision.target_yaw_angle) < vision.yaw_min_err)
-			 vis_e[0] = 1;
-			else
-			 vis_e[0] = 0;	
-		 		 if (ABS(gimbal.pit_angle.fdb - vision.target_pit_angle) < vision.pit_min_err)
-			 vis_e[1] = 1;
-			else
-			 vis_e[1] = 0;	
-		 
-			if(vision.rx[0].data.fire == 1 ||vision.rx[0].data.fire == 2) 
+	if (ABS(gimbal.yaw_angle.fdb - vision.target_yaw_angle) < vision.yaw_min_err)
+		 vis_e[0] = 1;
+	else
+		 vis_e[0] = 0;	
+	if (ABS(gimbal.pit_angle.fdb - vision.target_pit_angle) < vision.pit_min_err)
+		 vis_e[1] = 1;
+	else
+		 vis_e[1] = 0;	
+	if(vision.rx[0].data.fire == 1 ||vision.rx[0].data.fire == 2) 
 		 fire_Cnt++;
-		 
     if (last_aim_status == AIMING && vision.aim_status == UNAIMING)
         vision.aim_status = FIRST_LOST;
-
     last_aim_status = vision.aim_status;
-		board_comm.tx_vis_msg.data.vision_online = 1;
-
+	board_comm.tx_vis_msg.data.vision_online = 1;
+	fdcan_board_comm.tx_msg.vision_data.vision_online = 1;
 }
 uint8_t vision_send_buf[40];
 float kanan;

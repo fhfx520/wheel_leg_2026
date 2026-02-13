@@ -30,7 +30,7 @@ void power_init(void)
 
 void power_judge_update(void)
 {
-    power_control.judge_chassis_power = power_heat_data.chassis_power;
+//    power_control.judge_chassis_power = power_heat_data.chassis_power;
     power_control.judge_max_power     = robot_status.chassis_power_limit;
     power_control.judge_power_buffer  = power_heat_data.buffer_energy;
 }

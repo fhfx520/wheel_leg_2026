@@ -13,6 +13,6 @@ typedef enum
 
 void can_comm_init(void);
 
-HAL_StatusTypeDef can_std_transmit(can_channel_e can_periph, uint32_t id, uint8_t *data);
+void can_std_transmit(can_channel_e can_periph, uint32_t id, uint8_t *data);
 
 #endif
