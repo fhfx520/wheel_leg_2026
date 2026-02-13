@@ -1,11 +1,11 @@
-# rm_main/MDK-ARM/rm_main/*.o
-# rm_main/MDK-ARM/rm_main/*.d
-
-# rm_main_gimbal/MDK-ARM/rm_main/*.o
-# rm_main_gimbal/MDK-ARM/rm_main/*.d
 
 rm_main/MDK-ARM/rm_main/*
-rm_main/MDK-ARM/rm_main/!*.c
-rm_main/MDK-ARM/rm_main/!*.h
-rm_main/MDK-ARM/rm_main/!*.m
-rm_main/MDK-ARM/rm_main/!*.25328
+
+
+!rm_main/MDK-ARM/rm_main/*.c
+!rm_main/MDK-ARM/rm_main/*.h
+
+rm_main_gimbal/MDK-ARM/rm_main/*
+
+!rm_main_gimbal/MDK-ARM/rm_main/*.c
+!rm_main_gimbal/MDK-ARM/rm_main/*.h
