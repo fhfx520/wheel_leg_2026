@@ -9,7 +9,7 @@
 #include "cmsis_os.h"
 #include "status_task.h"
 #include "math_lib.h"
-
+#include "board_comm.h"
 
 #define SHOOT_SPEED_NUM 15
 #ifndef ABS
@@ -31,6 +31,21 @@ static uint8_t back_flag = 0;
 
 shoot_t shoot;
 //static buffer_t *shoot_speed_buffer;
+
+
+static gimbal_data_t shoot_get_gimbal_data_container;
+static vision_data_t shoot_get_vision_data_container;
+
+// 收到vision数据：
+static void vision_data_cb(uint32_t tag_id, void* data, size_t len) {
+    vision_data_t* shoot_get_vision_data_container = (vision_data_t*)data;
+}
+
+// --- 回调配置表  ---
+static const ContainerBusCfg mb_callback[] = {
+    { TAG_VISION_DATA, vision_data_cb, NULL }
+};
+
 
 static uint8_t single_shoot_reset(void)
 {
@@ -63,7 +78,8 @@ static uint8_t series_shoot_enable(void)
         ( (ctrl_mode == REMOTER_MODE && vision.shoot_enable) //&& ( rc_fsm_check(RC_LEFT_LD) && rc_fsm_check(RC_RIGHT_RD) ) ) //开启视觉连发
 			|| (ctrl_mode == REMOTER_MODE && rc.sw2 == RC_DN && rc_fsm_check(RC_LEFT_LD) && !rc_fsm_check(RC_RIGHT_RD)  )  //开启遥控连发
 			|| (ctrl_mode == KEYBOARD_MODE && rc.mouse.l && rc.mouse.r && rc.kb.bit.G)//直接射	
-            || (ctrl_mode == KEYBOARD_MODE && rc.mouse.l && rc.mouse.r && vision.shoot_enable)
+        //  || (ctrl_mode == KEYBOARD_MODE && rc.mouse.l && rc.mouse.r && vision.shoot_enable)
+            || (ctrl_mode == KEYBOARD_MODE && rc.mouse.l && rc.mouse.r && shoot_get_vision_data_container.vision_enanle)
             || (ctrl_mode == KEYBOARD_MODE && rc.mouse.l && rc.mouse.r == 0)
         )
 				
@@ -166,6 +182,7 @@ static void shoot_init(void)
     shoot.barrel.heat_max       = 50;
     //历史射速反馈缓存区
 //    shoot_speed_buffer = buffer_create(SHOOT_SPEED_NUM, sizeof(float));
+	container_bus_init(mb_callback, sizeof(mb_callback)/sizeof(ContainerBusCfg));
 }
 
 static void shoot_pid_calc(void)
