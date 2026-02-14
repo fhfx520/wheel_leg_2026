@@ -56,7 +56,7 @@ static GimbalState_e get_kb_gimbal_mode(void) {
     return g_robot_ctx.input.mouse.r ? GIMBAL_AUTO_AIM : GIMBAL_MOUSE_CONTROL;
 }
 static ShootState_e get_kb_shoot_mode(void) {
-    return g_robot_ctx.input.mouse.r ? SHOOT_SINGLE : SHOOT_SERIES;
+    return g_robot_ctx.input.mouse.r ? SHOOT_SERIES : SHOOT_SERIES;
 }
 
 #define KEY_SHIFT (1<<4)
@@ -186,10 +186,10 @@ static void kb_high_execute(void) {
     g_robot_ctx.output.chassis = CHASSIS_HIGH;
     g_robot_ctx.output.chassis_speed = 0; 
     g_robot_ctx.output.gimbal = get_kb_gimbal_mode();
-    g_robot_ctx.output.shoot  = SHOOT_STOP; 
+    g_robot_ctx.output.shoot  = get_kb_shoot_mode(); 
 
     if (check_key_trigger(KEY_C)) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
-    if (check_key_trigger(KEY_R)) { fsm_change(&fsm_keyboard_sub, &state_kb_spin); return; }
+    //if (check_key_trigger(KEY_R)) { fsm_change(&fsm_keyboard_sub, &state_kb_spin); return; } 高腿长不能小陀螺
     if (check_key_trigger(KEY_CTRL)) { fsm_change(&fsm_keyboard_sub, &state_kb_ter_ready); return; }
 }
 static const FsmState_t state_kb_high = { .name = "KB_HIGH", .enter = kb_high_enter, .execute = kb_high_execute };
@@ -201,7 +201,7 @@ static void kb_ter_ready_enter(void) {
 static void kb_ter_ready_execute(void) {
     g_robot_ctx.output.chassis = CHASSIS_TERRAIN_READY;
     g_robot_ctx.output.gimbal = get_kb_gimbal_mode();
-    g_robot_ctx.output.shoot  = SHOOT_STOP; 
+    g_robot_ctx.output.shoot  = get_kb_shoot_mode(); 
     
     if (check_key_trigger(KEY_C) || check_key_trigger(KEY_R)) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
     if (g_robot_ctx.input.kb.bit.CTRL) {
@@ -215,7 +215,7 @@ static void kb_ter_run_enter(void) { g_robot_ctx.output.chassis = CHASSIS_TERRAI
 static void kb_ter_run_execute(void) {
     g_robot_ctx.output.chassis = CHASSIS_TERRAIN_EXECUTING;
     g_robot_ctx.output.gimbal = get_kb_gimbal_mode();
-    g_robot_ctx.output.shoot  = SHOOT_STOP;
+    g_robot_ctx.output.shoot  = get_kb_shoot_mode();
     if (!g_robot_ctx.input.kb.bit.CTRL) fsm_change(&fsm_keyboard_sub, &state_kb_ter_ready);
 }
 static const FsmState_t state_kb_ter_run = { .name = "KB_TER_RUN", .enter = kb_ter_run_enter, .execute = kb_ter_run_execute };

@@ -5,7 +5,7 @@
 #include "robot_logic.h"
 
 // ==========================================
-// 1. 宏定义：复刻底层宏，供模拟器自身使用
+// 1. 底层宏定义复刻 (供模拟器自身测试使用)
 // ==========================================
 #ifndef RC_LEFT_LD
 #define RC_LEFT_LU  ( 1<<0 ) 
@@ -18,20 +18,15 @@
 #define RC_RIGHT_LD ( 1<<7 ) 
 #endif
 
-// ==========================================
-// 2. 核心！在 main.c 中为 robot_logic.c 提供 rc_fsm_check 函数
-// 这使得 robot_logic.c 可以无缝在 PC 上编译，而到了真机上会自动连上 prot_dr16.c
-// ==========================================
 RC_Ctrl_t rc_sim;
-uint8_t remote_online = 1;      // 遥控器在线状态
-uint8_t mock_init_status = 0;   // 锁存的全局状态
+uint8_t remote_online = 1;      
+uint8_t mock_init_status = 0;   
 
-// 手搓模拟 prot_dr16.c 里的锁存器
+// 手搓模拟 prot_dr16.c 里的上电锁存器
 void mock_rc_fsm_init(uint8_t trig_flag) {
     static uint8_t last_trig_flag = 0;
     static uint8_t state = 0;
     
-    // 检测到触发信号上升沿 (遥控器刚连上的那一瞬间)
     if (trig_flag == 1 && last_trig_flag == 0) {  
         if (rc_sim.ch3 < -500 && rc_sim.ch4 >  500) state |= RC_LEFT_LU;
         if (rc_sim.ch3 >  500 && rc_sim.ch4 >  500) state |= RC_LEFT_RU;
@@ -46,68 +41,11 @@ void mock_rc_fsm_init(uint8_t trig_flag) {
     }
     last_trig_flag = trig_flag;
     mock_init_status = state;
-    
-    if (!trig_flag && last_trig_flag) {  
-        mock_init_status = 0;
-    }
+    if (!trig_flag && last_trig_flag) mock_init_status = 0;
 }
 
-// FSM 调用的底层接口，在这里被 PC 接管
 uint8_t rc_fsm_check(uint8_t target_status) {
     return (mock_init_status & target_status) ? 1 : 0;
-}
-
-// ==========================================
-// 辅助打印函数 
-// ==========================================
-const char* top_mode_str(TopMode_e mode) {
-    switch(mode) {
-        case TOP_MODE_PROTECT: return "PROTECT (保护急停)";
-        case TOP_MODE_REMOTE:  return "REMOTE (遥控)";
-        case TOP_MODE_KEYBOARD:return "KEYBOARD (键鼠)";
-        default: return "UNKNOWN";
-    }
-}
-
-const char* chassis_state_str(ChassisState_e state) {
-    switch(state) {
-        case CHASSIS_STOP: return "STOP (无力/锁死)";
-        case CHASSIS_LOW:  return "LOW (低腿长)";
-        case CHASSIS_HIGH: return "HIGH (高腿长)";
-        case CHASSIS_LOW_SPIN: return "LOW_SPIN (低腿小陀螺)";
-        case CHASSIS_FIGHT: return "FIGHT (迎敌模式)";
-        case CHASSIS_TERRAIN_READY: return "TERRAIN_READY (跨越准备)";
-        case CHASSIS_TERRAIN_EXECUTING: return "TERRAIN_RUN (跨越执行)";
-        default: return "UNKNOWN";
-    }
-}
-
-const char* gimbal_state_str(GimbalState_e state) {
-    switch(state) {
-        case GIMBAL_STOP: return "STOP";
-        case GIMBAL_GYRO_STABILIZE: return "STABILIZE (陀螺稳定)";
-        case GIMBAL_MOUSE_CONTROL:  return "MOUSE (鼠标控制)";
-        case GIMBAL_AUTO_AIM:       return "AUTO_AIM (自瞄)";
-        default: return "UNKNOWN";
-    }
-}
-
-const char* shoot_state_str(ShootState_e state) {
-    switch(state) {
-        case SHOOT_PROTECT: return "PROTECT (无力保护)";
-        case SHOOT_STOP:    return "STOP (有力锁死)";
-        case SHOOT_SINGLE:  return "SINGLE (单发点射)";
-        case SHOOT_SERIES:  return "SERIES (连发扫射)";
-        case SHOOT_READY:   return "READY (摩擦轮转, 待命)";
-        default: return "UNKNOWN";
-    }
-}
-
-const char* sw_str(uint8_t sw) {
-    if (sw == 1) return "1-UP (上)";
-    if (sw == 3) return "3-MID (中)";
-    if (sw == 2) return "2-DOWN (下)";
-    return "0-UNKNOWN";
 }
 
 // ==========================================
@@ -123,9 +61,7 @@ void capture_physical_inputs() {
             remote_online = !remote_online; 
             key_o_pressed = 1;
         }
-    } else {
-        key_o_pressed = 0;
-    }
+    } else { key_o_pressed = 0; }
 
     rc_sim.kb.bit.W = (GetAsyncKeyState('W') & 0x8000) ? 1 : 0;
     rc_sim.kb.bit.S = (GetAsyncKeyState('S') & 0x8000) ? 1 : 0;
@@ -157,6 +93,7 @@ void capture_physical_inputs() {
     rc_sim.ch1 = 0; rc_sim.ch2 = 0; rc_sim.ch3 = 0; rc_sim.ch4 = 0; rc_sim.ch5 = 0;
     if (GetAsyncKeyState('Q') & 0x8000) rc_sim.ch3 = 660;  
     if (GetAsyncKeyState('E') & 0x8000) rc_sim.ch2 = 600; 
+    if (GetAsyncKeyState('T') & 0x8000) rc_sim.ch5 = 660; 
     
     // 模拟摇杆角落
     if (GetAsyncKeyState('Z') & 0x8000) { rc_sim.ch3 = -660; rc_sim.ch4 = -660; }
@@ -164,84 +101,154 @@ void capture_physical_inputs() {
 }
 
 // ==========================================
-// 打印仪表盘 
+// 打印仪表盘与各Task内部变量透视
 // ==========================================
 void print_dashboard() {
-    printf("\033[H"); 
+    printf("\033[H"); // 光标复位
 
-    printf("========================================================\n");
-    printf("     🚀 RoboMaster 状态机锁存模拟器 (按 ESC 退出) \n");
-    printf("========================================================\n");
-    printf(" 💡 [锁存测试教程]:\n");
-    printf("  1. 按 [O] 键断开遥控器 (状态变为 OFFLINE)。\n");
-    printf("  2. 按住 [Z] 键不放 (模拟左摇杆打到左下角)。\n");
-    printf("  3. 再次按 [O] 键连接遥控器 (触发上电上升沿)。\n");
-    printf("  4. 松开 [Z] 键，你会发现 [视觉模式(LD)] 已经被锁死了！\n");
-    printf("--------------------------------------------------------\n");
+    // --- 1. 帮助说明 ---
+    printf("=================================================================\n");
+    printf("     🚀 RoboMaster 状态机及底层标志位 综合透视模拟器 (ESC退出) \n");
+    printf("=================================================================\n");
+    printf(" [按键说明 - 遥控器模拟]\n");
+    printf("  O 键 : 断开/连接 遥控器 (测试锁存必用)\n");
+    printf("  1/2/3: 左拨杆(SW1) 保护 / 遥控 / 键鼠\n");
+    printf("  4/5/6: 右拨杆(SW2) 低腿 / 高腿 / 地形\n");
+    printf("  Q 键 : 猛推左摇杆(CH3) -> 触发小陀螺\n");
+    printf("  E 键 : 猛推右摇杆(CH2) -> 触发跨越地形\n");
+    printf("  T 键 : 拨动拨轮(CH5)   -> 触发开火\n");
+    printf("  Z 键 : 左摇杆左下 (测试架枪断电 / 视觉锁存)\n");
+    printf("  X 键 : 右摇杆右下 (双杆急停 / 禁止发射)\n");
+    printf(" [按键说明 - 键鼠模拟]\n");
+    printf("  WASD : 移动   Shift : 加速   Ctrl : 长按跨越地形\n");
+    printf("  C/R/F: 切腿长(C) / 小陀螺(R) / 迎敌模式(F)\n");
+    printf("  G 键 : 高频射击   鼠标左/右: 开火 / 自瞄\n");
+    printf("-----------------------------------------------------------------\n");
     
-    printf("\n=== [当前外设输入] ===\n");
-    printf(" 遥控器状态 : %s\n", remote_online ? "🟢 ONLINE (已连接)" : "🔴 OFFLINE (已掉线)");
-    printf(" 拨杆 : 左(SW1)=%s \t 右(SW2)=%s\n", sw_str(rc_sim.sw1), sw_str(rc_sim.sw2));
-    
-    char ld_str[10] = "  ", rd_str[10] = "  ";
-    if (rc_fsm_check(RC_LEFT_LD)) strcpy(ld_str, "LD");
-    if (rc_fsm_check(RC_RIGHT_RD)) strcpy(rd_str, "RD");
-    printf(" 摇杆 : CH1=%-4d CH2=%-4d CH3=%-4d CH4=%-4d | 角落: [%s] [%s]\n", 
-            rc_sim.ch1, rc_sim.ch2, rc_sim.ch3, rc_sim.ch4, ld_str, rd_str);
-            
+    // --- 2. 输入状态 ---
+    printf("\n>>> [输入层] 当前外设与锁存状态 <<<\n");
+    printf(" 遥控器 : %s\n", remote_online ? "🟢 ONLINE" : "🔴 OFFLINE");
+    printf(" 拨杆   : 左SW1 = %d, 右SW2 = %d\n", rc_sim.sw1, rc_sim.sw2);
+    printf(" 摇杆   : CH1=%-4d CH2=%-4d CH3=%-4d CH4=%-4d CH5=%-4d\n", rc_sim.ch1, rc_sim.ch2, rc_sim.ch3, rc_sim.ch4, rc_sim.ch5);
     char latch_str[100] = "";
-    if (rc_fsm_check(RC_LEFT_LD)) strcat(latch_str, "[视觉开启(LD)] ");
-    if (rc_fsm_check(RC_RIGHT_RD)) strcat(latch_str, "[禁止发射(RD)] ");
-    printf(" 🔒 全局锁存状态 : %s\n", strlen(latch_str) > 0 ? latch_str : "无");
+    if (rc_fsm_check(RC_LEFT_LD)) strcat(latch_str, "[视觉LD] ");
+    if (rc_fsm_check(RC_RIGHT_RD)) strcat(latch_str, "[禁发RD] ");
+    printf(" 锁存   : %s\n", strlen(latch_str) > 0 ? latch_str : "无");
 
-    printf("\n>>> [大脑决策 FSM] <<<\n");
-    if (g_robot_ctx.output.top_mode == TOP_MODE_PROTECT) {
-        printf(" 🚨 大模式   : %-30s\n", top_mode_str(g_robot_ctx.output.top_mode));
-    } else {
-        printf("    大模式   : %-30s\n", top_mode_str(g_robot_ctx.output.top_mode));
-    }
-    
-    if (g_robot_ctx.output.chassis == CHASSIS_STOP && g_robot_ctx.output.top_mode != TOP_MODE_PROTECT) {
-        printf(" ⚓ 底盘状态 : %-30s (架枪断电中!)\n", chassis_state_str(g_robot_ctx.output.chassis));
-    } else {
-        printf("    底盘状态 : %-30s\n", chassis_state_str(g_robot_ctx.output.chassis));
-    }
+    // --- 3. FSM 大脑决策输出 ---
+    printf("\n>>> [大脑层] Robot_Logic 状态机输出 <<<\n");
+    char* top_str = "UNKNOWN";
+    if (g_robot_ctx.output.top_mode == TOP_MODE_PROTECT) top_str = "PROTECT (保护)";
+    else if (g_robot_ctx.output.top_mode == TOP_MODE_REMOTE) top_str = "REMOTE (遥控)";
+    else if (g_robot_ctx.output.top_mode == TOP_MODE_KEYBOARD) top_str = "KEYBOARD (键鼠)";
+    printf(" [Top Mode] %s\n", top_str);
 
-    printf("    云台状态 : %-30s\n", gimbal_state_str(g_robot_ctx.output.gimbal));
+    // --- 4. 模拟 Chassis Task 标志位解析 ---
+    printf("\n=== [执行层] Chassis Task (底盘任务) 标志位 ===\n");
+    int wlr_ctrl_mode = 2, wlr_high = 0, rotate_flag = 0, recover_flag = 1;
+    char wlr_jump[100] = "0", wlr_sky[20] = "WLR_SKY_IDLE";
+    float chassis_spd = (g_robot_ctx.output.chassis_speed) ? 2.5f : 2.0f;
     
-    printf("\n=== [★ 发射器输出 ★] ===\n");
-    if (g_robot_ctx.output.shoot == SHOOT_SERIES || g_robot_ctx.output.shoot == SHOOT_SINGLE) {
-        printf(" 🔥 组合模式 : %-30s\n", shoot_state_str(g_robot_ctx.output.shoot));
-    } else {
-        printf("    组合模式 : %-30s\n", shoot_state_str(g_robot_ctx.output.shoot));
+    switch (g_robot_ctx.output.chassis) {
+        case CHASSIS_STOP: 
+            wlr_ctrl_mode = 0; recover_flag = 0; chassis_spd = 0; 
+            printf(" 状态映射 : CHASSIS_STOP -> 失去动力锁定\n"); break;
+        case CHASSIS_LOW: 
+            printf(" 状态映射 : CHASSIS_LOW -> 普通低腿\n"); break;
+        case CHASSIS_HIGH: 
+            wlr_high = 1; chassis_spd = (g_robot_ctx.output.chassis_speed) ? 2.5f : 1.5f;
+            printf(" 状态映射 : CHASSIS_HIGH -> 普通高腿\n"); break;
+        case CHASSIS_LOW_SPIN: 
+            rotate_flag = 1; 
+            printf(" 状态映射 : CHASSIS_LOW_SPIN -> 开启小陀螺\n"); break;
+        case CHASSIS_FIGHT: 
+            printf(" 状态映射 : CHASSIS_FIGHT -> 迎敌底盘算法\n"); break;
+        case CHASSIS_TERRAIN_READY: 
+            strcpy(wlr_sky, "WLR_SKY_FOLDING"); 
+            printf(" 状态映射 : CHASSIS_TERRAIN_READY -> 跨越准备\n"); break;
+        case CHASSIS_TERRAIN_EXECUTING: 
+            strcpy(wlr_jump, "WLR_SKY_EXTENDING"); 
+            printf(" 状态映射 : CHASSIS_TERRAIN_EXECUTING -> 跨越跳跃执行中！\n"); break;
     }
-    printf("========================================================\n");
+    printf("  ├─ wlr.ctrl_mode  = %d %s\n", wlr_ctrl_mode, wlr_ctrl_mode==0?"(无力)":"(力控)");
+    printf("  ├─ wlr.high_flag  = %d\n", wlr_high);
+    printf("  ├─ wlr.jump_flag  = %s\n", wlr_jump);
+    printf("  ├─ wlr.sky_flag   = %s\n", wlr_sky);
+    printf("  ├─ rotate_flag    = %d %s\n", rotate_flag, rotate_flag?"(正在旋转)":"");
+    printf("  ├─ recover_flag   = %d %s\n", recover_flag, recover_flag?"(允许自起)":"(禁止自起)");
+    printf("  └─ 速度限制上限   = %.1f\n", chassis_spd);
+
+    // --- 5. 模拟 Shoot Task 标志位解析 ---
+    printf("\n=== [执行层] Shoot Task (发射任务) 标志位 ===\n");
+    char fric_mode[100] = "STOP", trig_mode[100] = "STOP";
+    int trigger_period = 0; // 模拟周期
+    
+    // 射频映射
+    if (g_robot_ctx.output.top_mode == TOP_MODE_KEYBOARD && rc_sim.mouse.r) 
+        trigger_period = 2; // TRIGGER_PERIOD2
+    else 
+        trigger_period = 1; // TRIGGER_PERIOD
+
+    switch(g_robot_ctx.output.shoot) {
+        case SHOOT_PROTECT: strcpy(fric_mode, "PROTECT"); strcpy(trig_mode, "PROTECT"); break;
+        case SHOOT_STOP:    strcpy(fric_mode, "STOP");    strcpy(trig_mode, "STOP"); break;
+        case SHOOT_READY:   strcpy(fric_mode, "RUN");     strcpy(trig_mode, "STOP"); break;
+        case SHOOT_SINGLE:  strcpy(fric_mode, "RUN");     strcpy(trig_mode, "SINGLE"); break;
+        case SHOOT_SERIES:  strcpy(fric_mode, "RUN");     strcpy(trig_mode, "SERIES"); break;
+    }
+    printf("  ├─ fric_mode      = %-10s %s\n", fric_mode, strcmp(fric_mode,"RUN")==0?"(摩擦轮转动)":"(摩擦轮关闭)");
+    printf("  ├─ trigger_mode   = %-10s %s\n", trig_mode, strcmp(trig_mode,"SERIES")==0?"(疯狂拨盘)":"");
+    printf("  └─ trigger_period = %-10d %s\n", trigger_period, trigger_period==2?"(高射频模式)":"(标准射频)");
+
+    // --- 6. 模拟 Gimbal Task 标志位解析 ---
+    printf("\n=== [执行层] Gimbal Task (云台任务) 标志位 ===\n");
+    char aiming[100] = "0 (不自瞄)";
+    if (g_robot_ctx.output.gimbal == GIMBAL_AUTO_AIM) strcpy(aiming, "1 (视觉自瞄介入)");
+    
+    char alpha_spd[100] = "0 (无底盘补偿)";
+    if (g_robot_ctx.output.chassis == CHASSIS_LOW_SPIN) {
+        strcpy(alpha_spd, "-chassis_wz_fdb (开启小陀螺反向补偿)");
+    }
+    printf("  ├─ aiming_mode    = %s\n", aiming);
+    printf("  └─ alpha_speed    = %s\n", alpha_spd);
+
+    printf("=================================================================\n");
 }
 
 int main() {
-    printf("\033[2J"); 
+    // 强制终端输出 UTF-8 避免中文乱码
     system("chcp 65001 > nul");
+    printf("\033[2J"); // 清屏
+
     memset(&rc_sim, 0, sizeof(rc_sim));
     rc_sim.sw1 = RC_SW_UP; 
     rc_sim.sw2 = RC_SW_UP; 
     robot_logic_init();
 
     while (1) {
+        // 监控 ESC 键退出
         if (GetAsyncKeyState(VK_ESCAPE) & 0x8000) break;
         
+        // 1. 采集物理输入
         capture_physical_inputs();
+        
+        // 2. 模拟底层的掉线检测和上电锁存
         mock_rc_fsm_init(remote_online);
         
+        // 3. 将数据喂给大脑
         if (remote_online) {
             robot_logic_update(&rc_sim);
         } else {
             robot_logic_update(NULL); 
         }
         
+        // 4. 打印全局仪表盘
         print_dashboard();
+        
+        // 5. 模拟 STM32 Task 的执行周期 (50Hz)
         Sleep(20); 
     }
 
-    printf("\n测试结束！\n");
+    printf("\n程序安全退出。\n");
     return 0;
 }
