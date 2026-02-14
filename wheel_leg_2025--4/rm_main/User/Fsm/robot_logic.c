@@ -2,17 +2,28 @@
 #include <string.h>
 #include <stdlib.h> 
 
+// ==========================================
+// [新增] 引入你原有的底层头文件，直接调用你的 rc_fsm_check
+// ==========================================
+#include "mode_switch_task.h" 
+#include "control_def.h"      // 假设 RC_LEFT_LD 等宏定义在这里
+
 RobotContext_t g_robot_ctx;
 FsmMachine_t g_top_fsm; 
 
 // ==========================================
-// Forward Declarations
+// 前向声明
 // ==========================================
 extern const FsmState_t state_protect;
 extern const FsmState_t state_remote;
 extern const FsmState_t state_keyboard;
 
-// Keyboard 子状态
+static const FsmState_t state_rem_low;
+static const FsmState_t state_rem_spin;
+static const FsmState_t state_rem_high;
+static const FsmState_t state_rem_ter_ready;
+static const FsmState_t state_rem_ter_run;
+
 static const FsmState_t state_kb_low;
 static const FsmState_t state_kb_high;
 static const FsmState_t state_kb_fight; 
@@ -20,18 +31,11 @@ static const FsmState_t state_kb_spin;
 static const FsmState_t state_kb_ter_ready;
 static const FsmState_t state_kb_ter_run;
 
-// Remote 子状态 (保持逻辑一致)
-static const FsmState_t state_rem_low;
-static const FsmState_t state_rem_spin;
-static const FsmState_t state_rem_high;
-static const FsmState_t state_rem_ter_ready;
-static const FsmState_t state_rem_ter_run;
-
 static FsmMachine_t fsm_remote_sub;   
 static FsmMachine_t fsm_keyboard_sub; 
 
 // ==========================================
-// Tools
+// 工具函数
 // ==========================================
 static uint8_t check_key_trigger(uint16_t key_mask) {
     if ((g_robot_ctx.input.kb.key_code & key_mask) && 
@@ -42,15 +46,11 @@ static uint8_t check_ch3_trigger(void) {
     if (g_robot_ctx.input.ch3 >= 650 && g_robot_ctx.last_ch3 < 650) return 1;
     return 0;
 }
-
-// [New] 统一的云台逻辑 helper
-// 规则：按住右键 -> 自瞄；否则 -> 鼠标控制
 static GimbalState_e get_kb_gimbal_mode(void) {
-    if (g_robot_ctx.input.mouse.r) {
-        return GIMBAL_AUTO_AIM;
-    } else {
-        return GIMBAL_MOUSE_CONTROL;
-    }
+    return g_robot_ctx.input.mouse.r ? GIMBAL_AUTO_AIM : GIMBAL_MOUSE_CONTROL;
+}
+static ShootState_e get_kb_shoot_mode(void) {
+    return g_robot_ctx.input.mouse.r ? SHOOT_SINGLE : SHOOT_SERIES;
 }
 
 #define KEY_SHIFT (1<<4)
@@ -59,123 +59,162 @@ static GimbalState_e get_kb_gimbal_mode(void) {
 #define KEY_F     (1<<9)
 #define KEY_C     (1<<13)
 
-// ==========================================
-// KEYBOARD FSM (Level 2)
-// ==========================================
+// =========================================================================
+// SECTION: REMOTE 模式子状态机
+// =========================================================================
 
-// --- 1. KB Low (普通低腿) ---
-static void kb_low_enter(void) {
+static void rem_low_enter(void) { g_robot_ctx.output.chassis = CHASSIS_LOW; }
+static void rem_low_execute(void) {
     g_robot_ctx.output.chassis = CHASSIS_LOW;
+    g_robot_ctx.output.gimbal  = GIMBAL_GYRO_STABILIZE;
+    g_robot_ctx.output.shoot   = SHOOT_STOP; 
+    
+    if (check_ch3_trigger()) { fsm_change(&fsm_remote_sub, &state_rem_spin); return; }
+    if (g_robot_ctx.input.sw2 == RC_SW_MID) fsm_change(&fsm_remote_sub, &state_rem_high);
+    else if (g_robot_ctx.input.sw2 == RC_SW_DOWN) fsm_change(&fsm_remote_sub, &state_rem_ter_ready);
 }
+static const FsmState_t state_rem_low = { .name = "REM_LOW", .enter = rem_low_enter, .execute = rem_low_execute };
+
+static void rem_spin_enter(void) { g_robot_ctx.output.chassis = CHASSIS_LOW_SPIN; }
+static void rem_spin_execute(void) {
+    g_robot_ctx.output.chassis = CHASSIS_LOW_SPIN;
+    g_robot_ctx.output.gimbal  = GIMBAL_GYRO_STABILIZE;
+    g_robot_ctx.output.shoot   = SHOOT_STOP;
+    
+    if (check_ch3_trigger()) fsm_change(&fsm_remote_sub, &state_rem_low);
+}
+static const FsmState_t state_rem_spin = { .name = "REM_SPIN", .enter = rem_spin_enter, .execute = rem_spin_execute };
+
+static void rem_high_enter(void) { g_robot_ctx.output.chassis = CHASSIS_HIGH; }
+static void rem_high_execute(void) {
+    g_robot_ctx.output.chassis = CHASSIS_HIGH;
+    g_robot_ctx.output.gimbal  = GIMBAL_GYRO_STABILIZE;
+    g_robot_ctx.output.shoot   = SHOOT_SINGLE; 
+    
+    if (g_robot_ctx.input.sw2 == RC_SW_UP) fsm_change(&fsm_remote_sub, &state_rem_low);
+    else if (g_robot_ctx.input.sw2 == RC_SW_DOWN) fsm_change(&fsm_remote_sub, &state_rem_ter_ready);
+}
+static const FsmState_t state_rem_high = { .name = "REM_HIGH", .enter = rem_high_enter, .execute = rem_high_execute };
+
+// --- 4. Rem Terrain Ready (跨越准备) ---
+static void rem_ter_ready_enter(void) { g_robot_ctx.output.chassis = CHASSIS_TERRAIN_READY; }
+static void rem_ter_ready_execute(void) {
+    g_robot_ctx.output.chassis = CHASSIS_TERRAIN_READY;
+    g_robot_ctx.output.gimbal  = GIMBAL_GYRO_STABILIZE;
+    
+    // =======================================================
+    // [核心融合] 直接调用你的 rc_fsm_check 接口！
+    // 复刻原 shoot_task 和 chassis_task 逻辑：如果是架枪开火状态
+    // =======================================================
+    if (rc_fsm_check(RC_LEFT_LD) && !rc_fsm_check(RC_RIGHT_RD)) {
+        g_robot_ctx.output.shoot   = SHOOT_SERIES; 
+        g_robot_ctx.output.chassis = CHASSIS_STOP; // 底盘无力保护 (对应原版 chassis_task 里的 dji_motor_set_torque 0)
+    } else {
+        g_robot_ctx.output.shoot   = SHOOT_READY;  // 平时保持摩擦轮转动待命
+    }
+    
+    if (g_robot_ctx.input.sw2 == RC_SW_UP) { fsm_change(&fsm_remote_sub, &state_rem_low); return; }
+    if (g_robot_ctx.input.sw2 == RC_SW_MID) { fsm_change(&fsm_remote_sub, &state_rem_high); return; }
+    if (abs(g_robot_ctx.input.ch2) > 500) fsm_change(&fsm_remote_sub, &state_rem_ter_run);
+}
+static const FsmState_t state_rem_ter_ready = { .name = "REM_TER_RDY", .enter = rem_ter_ready_enter, .execute = rem_ter_ready_execute };
+
+// --- 5. Rem Terrain Run (跨越执行) ---
+static void rem_ter_run_enter(void) { g_robot_ctx.output.chassis = CHASSIS_TERRAIN_EXECUTING; }
+static void rem_ter_run_execute(void) {
+    g_robot_ctx.output.chassis = CHASSIS_TERRAIN_EXECUTING;
+    g_robot_ctx.output.gimbal  = GIMBAL_GYRO_STABILIZE;
+    
+    // =======================================================
+    // 同理，跨越执行时也检测开火
+    // =======================================================
+    if (rc_fsm_check(RC_LEFT_LD) && !rc_fsm_check(RC_RIGHT_RD)) {
+        g_robot_ctx.output.shoot   = SHOOT_SERIES;
+        g_robot_ctx.output.chassis = CHASSIS_STOP; 
+    } else {
+        g_robot_ctx.output.shoot   = SHOOT_READY;
+    }
+    
+    if (g_robot_ctx.input.sw2 == RC_SW_UP) { fsm_change(&fsm_remote_sub, &state_rem_low); return; }
+    if (g_robot_ctx.input.sw2 == RC_SW_MID) { fsm_change(&fsm_remote_sub, &state_rem_high); return; }
+    if (abs(g_robot_ctx.input.ch2) <= 500) fsm_change(&fsm_remote_sub, &state_rem_ter_ready);
+}
+static const FsmState_t state_rem_ter_run = { .name = "REM_TER_RUN", .enter = rem_ter_run_enter, .execute = rem_ter_run_execute };
+
+// =========================================================================
+// SECTION: KEYBOARD 模式子状态机 
+// =========================================================================
+
+static void kb_low_enter(void) { g_robot_ctx.output.chassis = CHASSIS_LOW; }
 static void kb_low_execute(void) {
     g_robot_ctx.output.chassis = CHASSIS_LOW;
     g_robot_ctx.output.chassis_speed = (g_robot_ctx.input.kb.bit.SHIFT) ? 1 : 0;
     
-    // [Gimbal] 统一逻辑
     g_robot_ctx.output.gimbal = get_kb_gimbal_mode();
-    // [Shoot] 左键开火
-    g_robot_ctx.output.shoot  = g_robot_ctx.input.mouse.l ? SHOOT_FIRING : SHOOT_READY;
+    g_robot_ctx.output.shoot  = get_kb_shoot_mode();
 
-    // [Trans] F -> 迎敌 (仅低腿可进)
     if (check_key_trigger(KEY_F)) { fsm_change(&fsm_keyboard_sub, &state_kb_fight); return; }
-    // [Trans] R -> 小陀螺
     if (check_key_trigger(KEY_R)) { fsm_change(&fsm_keyboard_sub, &state_kb_spin); return; }
-    // [Trans] C -> 高腿
     if (check_key_trigger(KEY_C)) { fsm_change(&fsm_keyboard_sub, &state_kb_high); return; }
-    // [Trans] Ctrl -> 地形
     if (check_key_trigger(KEY_CTRL)) { fsm_change(&fsm_keyboard_sub, &state_kb_ter_ready); return; }
 }
 static const FsmState_t state_kb_low = { .name = "KB_LOW", .enter = kb_low_enter, .execute = kb_low_execute };
 
-// --- 2. KB Fight (迎敌模式) ---
-static void kb_fight_enter(void) {
-    g_robot_ctx.output.chassis = CHASSIS_FIGHT; 
-}
+static void kb_fight_enter(void) { g_robot_ctx.output.chassis = CHASSIS_FIGHT; }
 static void kb_fight_execute(void) {
     g_robot_ctx.output.chassis = CHASSIS_FIGHT;
     g_robot_ctx.output.chassis_speed = (g_robot_ctx.input.kb.bit.SHIFT) ? 1 : 0;
     
-    // [Gimbal] 统一逻辑 (即使是迎敌底盘，云台也听右键的)
     g_robot_ctx.output.gimbal = get_kb_gimbal_mode();
-    g_robot_ctx.output.shoot  = g_robot_ctx.input.mouse.l ? SHOOT_FIRING : SHOOT_READY;
+    g_robot_ctx.output.shoot  = get_kb_shoot_mode();
 
-    // [Trans] F -> 退出迎敌 (回普通低腿)
     if (check_key_trigger(KEY_F)) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
-    
-    // [Trans] R -> 普通小陀螺 (直接切过去，不需要迎敌小陀螺状态)
     if (check_key_trigger(KEY_R)) { fsm_change(&fsm_keyboard_sub, &state_kb_spin); return; }
-    
-    // [Trans] Ctrl -> 地形 (允许)
     if (check_key_trigger(KEY_CTRL)) { fsm_change(&fsm_keyboard_sub, &state_kb_ter_ready); return; }
-    
-    // [Constraint] C 键无效 (不能切腿长)
 }
 static const FsmState_t state_kb_fight = { .name = "KB_FIGHT", .enter = kb_fight_enter, .execute = kb_fight_execute };
 
-// --- 3. KB Spin (普通小陀螺) ---
-static void kb_spin_enter(void) {
-    g_robot_ctx.output.chassis = CHASSIS_LOW_SPIN;
-}
+static void kb_spin_enter(void) { g_robot_ctx.output.chassis = CHASSIS_LOW_SPIN; }
 static void kb_spin_execute(void) {
     g_robot_ctx.output.chassis = CHASSIS_LOW_SPIN;
     g_robot_ctx.output.chassis_speed = (g_robot_ctx.input.kb.bit.SHIFT) ? 1 : 0;
     
-    // [Gimbal] 统一逻辑
     g_robot_ctx.output.gimbal = get_kb_gimbal_mode();
-    g_robot_ctx.output.shoot  = g_robot_ctx.input.mouse.l ? SHOOT_FIRING : SHOOT_READY;
+    g_robot_ctx.output.shoot  = get_kb_shoot_mode();
 
-    // [Trans] R -> 停止小陀螺 (回普通低腿)
     if (check_key_trigger(KEY_R)) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
-    
-    // [Trans] F -> 进迎敌 (停止旋转，变成迎敌站立)
-    // 如果你希望 F 键无效，就把这行删掉
-    //if (check_key_trigger(KEY_F)) { fsm_change(&fsm_keyboard_sub, &state_kb_fight); return; }
-    
-    // [Trans] Ctrl -> 地形
+    if (check_key_trigger(KEY_F)) { fsm_change(&fsm_keyboard_sub, &state_kb_fight); return; }
     if (check_key_trigger(KEY_CTRL)) { fsm_change(&fsm_keyboard_sub, &state_kb_ter_ready); return; }
 }
 static const FsmState_t state_kb_spin = { .name = "KB_SPIN", .enter = kb_spin_enter, .execute = kb_spin_execute };
 
-// --- 4. KB High (高腿) ---
-static void kb_high_enter(void) {
-    g_robot_ctx.output.chassis = CHASSIS_HIGH;
-}
+static void kb_high_enter(void) { g_robot_ctx.output.chassis = CHASSIS_HIGH; }
 static void kb_high_execute(void) {
     g_robot_ctx.output.chassis = CHASSIS_HIGH;
-    g_robot_ctx.output.chassis_speed = 0; // 高腿不加速
+    g_robot_ctx.output.chassis_speed = 0; 
     
-    // [Gimbal] 统一逻辑
     g_robot_ctx.output.gimbal = get_kb_gimbal_mode();
-    g_robot_ctx.output.shoot  = SHOOT_STOP; // 高腿通常不射击，或者改为READY
+    g_robot_ctx.output.shoot  = SHOOT_STOP; 
 
-    // [Trans] C -> 回低腿
     if (check_key_trigger(KEY_C)) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
-    
-    // [Trans] R -> 强切小陀螺 (变相回低腿)
     if (check_key_trigger(KEY_R)) { fsm_change(&fsm_keyboard_sub, &state_kb_spin); return; }
-    
-    // [Trans] Ctrl -> 地形
-    //if (check_key_trigger(KEY_CTRL)) { fsm_change(&fsm_keyboard_sub, &state_kb_ter_ready); return; }
-    
-    // [Constraint] F 键无效 (不能在高腿进迎敌)
+    if (check_key_trigger(KEY_CTRL)) { fsm_change(&fsm_keyboard_sub, &state_kb_ter_ready); return; }
 }
 static const FsmState_t state_kb_high = { .name = "KB_HIGH", .enter = kb_high_enter, .execute = kb_high_execute };
 
-// --- 5. KB Terrain Ready & Run ---
 static void kb_ter_ready_enter(void) {
     g_robot_ctx.output.chassis = CHASSIS_TERRAIN_READY;
     g_robot_ctx.ctrl_tick = 0;
 }
 static void kb_ter_ready_execute(void) {
     g_robot_ctx.output.chassis = CHASSIS_TERRAIN_READY;
-    // [Gimbal] 地形模式下也允许鼠标看视野
     g_robot_ctx.output.gimbal = get_kb_gimbal_mode();
+    g_robot_ctx.output.shoot  = SHOOT_STOP; 
     
     if (check_key_trigger(KEY_C) || check_key_trigger(KEY_R)) {
         fsm_change(&fsm_keyboard_sub, &state_kb_low);
         return;
     }
-    // 长按监测
     if (g_robot_ctx.input.kb.bit.CTRL) {
         g_robot_ctx.ctrl_tick++;
         if (g_robot_ctx.ctrl_tick > 20) fsm_change(&fsm_keyboard_sub, &state_kb_ter_run);
@@ -188,108 +227,74 @@ static const FsmState_t state_kb_ter_ready = { .name = "KB_TER_RDY", .enter = kb
 static void kb_ter_run_enter(void) { g_robot_ctx.output.chassis = CHASSIS_TERRAIN_EXECUTING; }
 static void kb_ter_run_execute(void) {
     g_robot_ctx.output.chassis = CHASSIS_TERRAIN_EXECUTING;
-    // 地形执行中也给云台控制权
     g_robot_ctx.output.gimbal = get_kb_gimbal_mode();
+    g_robot_ctx.output.shoot  = SHOOT_STOP;
     
     if (!g_robot_ctx.input.kb.bit.CTRL) fsm_change(&fsm_keyboard_sub, &state_kb_ter_ready);
 }
 static const FsmState_t state_kb_ter_run = { .name = "KB_TER_RUN", .enter = kb_ter_run_enter, .execute = kb_ter_run_execute };
 
+// =========================================================================
+// SECTION: TOP LEVEL 大模式实现
+// =========================================================================
 
-// ==========================================
-// REMOTE FSM (Level 2)
-// ==========================================
-// 逻辑保持原样，仅为了完整性列出
-static void rem_low_enter(void) { g_robot_ctx.output.chassis = CHASSIS_LOW; }
-static void rem_low_execute(void) {
-    g_robot_ctx.output.chassis = CHASSIS_LOW;
-    // Remote 模式下的云台保持陀螺稳定
-    g_robot_ctx.output.gimbal = GIMBAL_GYRO_STABILIZE;
-    g_robot_ctx.output.shoot  = SHOOT_STOP;
-    
-    if (check_ch3_trigger()) { fsm_change(&fsm_remote_sub, &state_rem_spin); return; }
-    if (g_robot_ctx.input.sw2 == RC_SW_MID) fsm_change(&fsm_remote_sub, &state_rem_high);
-    else if (g_robot_ctx.input.sw2 == RC_SW_DOWN) fsm_change(&fsm_remote_sub, &state_rem_ter_ready);
-}
-static const FsmState_t state_rem_low = { .name = "REM_LOW", .enter = rem_low_enter, .execute = rem_low_execute };
-
-static void rem_spin_enter(void) { g_robot_ctx.output.chassis = CHASSIS_LOW_SPIN; }
-static void rem_spin_execute(void) {
-    g_robot_ctx.output.chassis = CHASSIS_LOW_SPIN;
-    g_robot_ctx.output.gimbal = GIMBAL_GYRO_STABILIZE;
-    if (check_ch3_trigger()) fsm_change(&fsm_remote_sub, &state_rem_low);
-}
-static const FsmState_t state_rem_spin = { .name = "REM_SPIN", .enter = rem_spin_enter, .execute = rem_spin_execute };
-
-static void rem_high_enter(void) { g_robot_ctx.output.chassis = CHASSIS_HIGH; }
-static void rem_high_execute(void) {
-    g_robot_ctx.output.chassis = CHASSIS_HIGH;
-    g_robot_ctx.output.gimbal = GIMBAL_GYRO_STABILIZE;
-    g_robot_ctx.output.shoot  = SHOOT_READY;
-    if (g_robot_ctx.input.sw2 == RC_SW_UP) fsm_change(&fsm_remote_sub, &state_rem_low);
-    else if (g_robot_ctx.input.sw2 == RC_SW_DOWN) fsm_change(&fsm_remote_sub, &state_rem_ter_ready);
-}
-static const FsmState_t state_rem_high = { .name = "REM_HIGH", .enter = rem_high_enter, .execute = rem_high_execute };
-
-static void rem_ter_ready_enter(void) { g_robot_ctx.output.chassis = CHASSIS_TERRAIN_READY; }
-static void rem_ter_ready_execute(void) {
-    g_robot_ctx.output.chassis = CHASSIS_TERRAIN_READY;
-    g_robot_ctx.output.gimbal = GIMBAL_GYRO_STABILIZE;
-    g_robot_ctx.output.shoot  = SHOOT_FIRING;
-    if (g_robot_ctx.input.sw2 == RC_SW_UP) { fsm_change(&fsm_remote_sub, &state_rem_low); return; }
-    if (g_robot_ctx.input.sw2 == RC_SW_MID) { fsm_change(&fsm_remote_sub, &state_rem_high); return; }
-    if (abs(g_robot_ctx.input.ch2) > 500) fsm_change(&fsm_remote_sub, &state_rem_ter_run);
-}
-static const FsmState_t state_rem_ter_ready = { .name = "REM_TER_RDY", .enter = rem_ter_ready_enter, .execute = rem_ter_ready_execute };
-
-static void rem_ter_run_enter(void) { g_robot_ctx.output.chassis = CHASSIS_TERRAIN_EXECUTING; }
-static void rem_ter_run_execute(void) {
-    g_robot_ctx.output.chassis = CHASSIS_TERRAIN_EXECUTING;
-    g_robot_ctx.output.gimbal = GIMBAL_GYRO_STABILIZE;
-    if (g_robot_ctx.input.sw2 == RC_SW_UP) { fsm_change(&fsm_remote_sub, &state_rem_low); return; }
-    if (g_robot_ctx.input.sw2 == RC_SW_MID) { fsm_change(&fsm_remote_sub, &state_rem_high); return; }
-    if (abs(g_robot_ctx.input.ch2) <= 500) fsm_change(&fsm_remote_sub, &state_rem_ter_ready);
-}
-static const FsmState_t state_rem_ter_run = { .name = "REM_TER_RUN", .enter = rem_ter_run_enter, .execute = rem_ter_run_execute };
-
-// ==========================================
-// TOP LEVEL FSM
-// ==========================================
 static void protect_enter(void) {
-    memset(&g_robot_ctx.output, 0, sizeof(g_robot_ctx.output)); // Clear all
+    g_robot_ctx.output.top_mode = TOP_MODE_PROTECT;
+    g_robot_ctx.output.chassis  = CHASSIS_STOP;
+    g_robot_ctx.output.gimbal   = GIMBAL_STOP;
+    g_robot_ctx.output.shoot    = SHOOT_PROTECT;
 }
 static void protect_execute(void) {
     g_robot_ctx.output.top_mode = TOP_MODE_PROTECT;
-    g_robot_ctx.output.chassis = CHASSIS_STOP;
+    g_robot_ctx.output.chassis  = CHASSIS_STOP;
+    g_robot_ctx.output.gimbal   = GIMBAL_STOP;
+    g_robot_ctx.output.shoot    = SHOOT_PROTECT;
+    
     if (g_robot_ctx.is_online) {
-        if (g_robot_ctx.input.sw1 == RC_SW_MID) fsm_change(&g_top_fsm, &state_remote);
-        else if (g_robot_ctx.input.sw1 == RC_SW_DOWN) fsm_change(&g_top_fsm, &state_keyboard);
+        // [核心安全解锁：如果有额外的上电自检或状态保持，可以直接在这加判断]
+        if (g_robot_ctx.input.sw1 == RC_SW_MID && g_robot_ctx.input.sw2 == RC_SW_UP) {
+            fsm_change(&g_top_fsm, &state_remote);
+        }
+        else if (g_robot_ctx.input.sw1 == RC_SW_DOWN) {
+            fsm_change(&g_top_fsm, &state_keyboard);
+        }
     }
 }
 const FsmState_t state_protect = { .name = "PROTECT", .enter = protect_enter, .execute = protect_execute };
 
 static void remote_enter(void) {
-    const FsmState_t* init_st;
-    switch (g_robot_ctx.input.sw2) {
-        case RC_SW_UP:   init_st = &state_rem_low; break;
-        case RC_SW_DOWN: init_st = &state_rem_ter_ready; break;
-        default:         init_st = &state_rem_high; break;
-    }
-    fsm_init(&fsm_remote_sub, init_st);
+    g_robot_ctx.output.top_mode = TOP_MODE_REMOTE;
+    fsm_init(&fsm_remote_sub, &state_rem_low);
 }
 static void remote_execute(void) {
     g_robot_ctx.output.top_mode = TOP_MODE_REMOTE;
+    
+    // =======================================================
+    // [全局异常检测] 如果在遥控模式下任何时候触发保护机制 (例如 rc_fsm_check 检测到断电摇杆)
+    // =======================================================
+    if (rc_fsm_check(RC_LEFT_LD) && rc_fsm_check(RC_RIGHT_RD)) {
+        // 假设双摇杆内下为强制停机保护
+        fsm_change(&g_top_fsm, &state_protect);
+        return;
+    }
+
     if (g_robot_ctx.input.sw1 == RC_SW_UP) { fsm_change(&g_top_fsm, &state_protect); return; }
     if (g_robot_ctx.input.sw1 == RC_SW_DOWN) { fsm_change(&g_top_fsm, &state_keyboard); return; }
+    
     fsm_run(&fsm_remote_sub);
 }
 const FsmState_t state_remote = { .name = "REMOTE", .enter = remote_enter, .execute = remote_execute };
 
-static void keyboard_enter(void) { fsm_init(&fsm_keyboard_sub, &state_kb_low); }
+static void keyboard_enter(void) {
+    g_robot_ctx.output.top_mode = TOP_MODE_KEYBOARD;
+    fsm_init(&fsm_keyboard_sub, &state_kb_low);
+}
 static void keyboard_execute(void) {
     g_robot_ctx.output.top_mode = TOP_MODE_KEYBOARD;
+    
     if (g_robot_ctx.input.sw1 == RC_SW_UP) { fsm_change(&g_top_fsm, &state_protect); return; }
     if (g_robot_ctx.input.sw1 == RC_SW_MID) { fsm_change(&g_top_fsm, &state_remote); return; }
+    
     fsm_run(&fsm_keyboard_sub);
 }
 const FsmState_t state_keyboard = { .name = "KEYBOARD", .enter = keyboard_enter, .execute = keyboard_execute };
@@ -310,7 +315,9 @@ void robot_logic_update(const RC_Ctrl_t* rc_data) {
         g_robot_ctx.is_online = 0;
         fsm_change(&g_top_fsm, &state_protect);
     }
+
     fsm_run(&g_top_fsm);
+
     if (rc_data) {
         g_robot_ctx.last_ch3 = rc_data->ch3;
         g_robot_ctx.last_key_code = rc_data->kb.key_code;

@@ -10,6 +10,8 @@
 #include "status_task.h"
 #include "math_lib.h"
 #include "board_comm.h"
+#include "robot_logic.h"
+#include "mode_switch_task.h"
 
 #define SHOOT_SPEED_NUM 15
 #ifndef ABS
@@ -247,76 +249,62 @@ static void shoot_test(void) {
 
 static void shoot_mode_switch(void)
 {
-    /* 更新裁判系统参数 */
+    /* 1. 更新裁判系统参数 (保持原样) */
     shoot_param_update();
-    /* 模式切换 */
-    switch (ctrl_mode) {
-        case PROTECT_MODE: {
-            shoot.trigger_period = TRIGGER_PERIOD;
+
+    /* 2. 射频切换 (复刻你原版的右键高频逻辑) */
+    if (ctrl_mode == KEYBOARD_MODE && rc.mouse.r)
+        shoot.trigger_period = TRIGGER_PERIOD2;
+    else
+        shoot.trigger_period = TRIGGER_PERIOD;
+
+    /* 3. 解析 FSM 大脑的组合状态 */
+    switch (g_robot_ctx.output.shoot) {
+        case SHOOT_PROTECT:
             shoot.fric_mode = FRIC_MODE_STOP;
             shoot.trigger_mode = TRIGGER_MODE_PROTECT;
             break;
-        }
-        case REMOTER_MODE: {
-            shoot.trigger_period = TRIGGER_PERIOD;
-            /* 摩擦轮和拨盘模式切换 */
-            switch (rc.sw2) {
-                case RC_UP: {
-                    shoot.fric_mode = FRIC_MODE_STOP;
-                    shoot.trigger_mode = TRIGGER_MODE_STOP;
-                    break;
-                }
-                case RC_MI: {
-                    shoot.fric_mode = FRIC_MODE_RUN;
-                    shoot.trigger_mode = TRIGGER_MODE_SINGLE;
-//                    shoot.fric_mode = FRIC_MODE_STOP;//调试
-//                    shoot.trigger_mode = TRIGGER_MODE_STOP;                    
-                    break;
-                }
-                case RC_DN: {
-                    shoot.fric_mode = FRIC_MODE_RUN;
-                    shoot.trigger_mode = TRIGGER_MODE_SERIES;                
-                    break;
-                }
-                default: break;
-            }
-//            if  ( ! ( rc_fsm_check(RC_LEFT_LD) ) ) { //遥控器注释发射
-//                shoot.fric_mode = FRIC_MODE_STOP;//调试用
-//                shoot.trigger_mode = TRIGGER_MODE_PROTECT;
-//            }
+            
+        case SHOOT_STOP:
+            shoot.fric_mode = FRIC_MODE_STOP;
+            shoot.trigger_mode = TRIGGER_MODE_STOP;
             break;
-        }
-        case KEYBOARD_MODE: {
-            /* 射频切换 */
-            if (rc.mouse.r)
-                shoot.trigger_period = TRIGGER_PERIOD2;
-            else
-                shoot.trigger_period = TRIGGER_PERIOD;
-            /* 摩擦轮模式切换 */
-            if (robot_status.power_management_shooter_output) {  //发射机构得到供电 
-                shoot.fric_mode = FRIC_MODE_RUN;  //开关摩擦轮         
-            } else {
-                shoot.fric_mode = FRIC_MODE_PROTECT;  //摩擦轮断电，软件保护，禁用摩擦轮
-            }
-            /* 视觉模式切换 */
-            if (KEY_PRESS_VISION2) {
-                vision.tx.data.aiming_mode = 2;
-            } else if (KEY_PRESS_VISION1) {
-                vision.tx.data.aiming_mode = 1;
-            } else {
-                vision.tx.data.aiming_mode = 0;
-            }
-            /* 拨盘模式切换 */
-            if (shoot.fric_mode != FRIC_MODE_RUN) {
-                shoot.trigger_mode = TRIGGER_MODE_STOP;
-            } else if (vision.tx.data.aiming_mode != 0) {
-                shoot.trigger_mode = TRIGGER_MODE_SINGLE;
-            } else {
-                shoot.trigger_mode = TRIGGER_MODE_SERIES;
-            }
+            
+        case SHOOT_SINGLE:
+            shoot.fric_mode = FRIC_MODE_RUN;
+            shoot.trigger_mode = TRIGGER_MODE_SINGLE;
             break;
+            
+        case SHOOT_SERIES:
+            shoot.fric_mode = FRIC_MODE_RUN;
+            shoot.trigger_mode = TRIGGER_MODE_SERIES;
+            break;
+            
+        default:
+            shoot.fric_mode = FRIC_MODE_STOP;
+            shoot.trigger_mode = TRIGGER_MODE_PROTECT;
+            break;
+    }
+
+    /* 4. 视觉模式切换 (保留你原版的键位掩码判断) */
+    if (ctrl_mode == KEYBOARD_MODE) {
+        if (KEY_PRESS_VISION2) {
+            vision.tx.data.aiming_mode = 2;
+        } else if (KEY_PRESS_VISION1) {
+            vision.tx.data.aiming_mode = 1;
+        } else {
+            vision.tx.data.aiming_mode = 0;
         }
-        default: break;
+    } else {
+        vision.tx.data.aiming_mode = 0;
+    }
+
+    /* 5. 裁判系统掉电保护 (保留你原版的安全逻辑) */
+    if (ctrl_mode == KEYBOARD_MODE) {
+        if (!robot_status.power_management_shooter_output) {
+            shoot.fric_mode = FRIC_MODE_PROTECT;
+            shoot.trigger_mode = TRIGGER_MODE_STOP;
+        }
     }
 }
 
