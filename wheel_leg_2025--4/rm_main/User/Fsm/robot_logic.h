@@ -40,6 +40,12 @@ typedef __PACKED_STRUCT {
 // 2. 输出枚举
 // ==========================================
 typedef enum {
+    TOP_MODE_PROTECT = 0,
+    TOP_MODE_REMOTE,
+    TOP_MODE_KEYBOARD
+} TopMode_e;
+
+typedef enum {
     CHASSIS_STOP = 0,
     CHASSIS_LOW,        // 普通低腿
     CHASSIS_FIGHT,      // 迎敌模式 (低腿姿态 + 特殊底盘算法)
@@ -65,10 +71,12 @@ typedef struct {
     RC_Ctrl_t input;
     
     struct {
+        TopMode_e      top_mode;   // [新增] 当前的大模式
         ChassisState_e chassis;
         GimbalState_e  gimbal;
         ShootState_e   shoot;
-        uint8_t chassis_speed; // 0:低速, 1:高速 (Shift)
+        
+        uint8_t chassis_speed; 
     } output;
     
     uint8_t is_online;

@@ -3,6 +3,10 @@
 
 #include "stdint.h"
 #include "kalman_filter.h"
+#include "robot_logic.h" // 引入 FSM 大脑
+
+// [修改] 彻底删除了旧的 chassis_mode_e 枚举，直接使用 FSM 的 ChassisState_e
+
 typedef enum
 {
     CHASSIS_MODE_PROTECT,
@@ -37,25 +41,23 @@ typedef struct
 
 typedef struct
 {
-    uint8_t recover_flag;			// =0保护模式 或 已经把车身撑起(详细请看该变量==2)  =1进入翻倒自起   =2（也可以说是 > 1）收腿起立时，先把车身以前导轮撑起，再收腿 
-    uint8_t rescue_inter_flag;		// =1车身正在归正  =2进入收腿  =3整车翻倒且保护天鹅颈  =4第二象限启动卡墙
+    uint8_t recover_flag;           
+    uint8_t rescue_inter_flag;      
     uint32_t rescue_cnt_L;
     uint32_t rescue_cnt_R;
-    uint8_t init;					// = 0底盘未初始化  =1底盘完成初始化
-    uint8_t joint_motor_reset;		//未使用
+    uint8_t init;                   
+    uint8_t joint_motor_reset;      
+    // [修改] 删除了 chassis_mode_e mode 暂时保留 有耦合模块
     chassis_mode_e mode;
-    float wheel_max;				//未使用
+    float wheel_max;                
     chassis_speed_t input, output;
 } chassis_t;
 
 extern chassis_t chassis;
 extern uint8_t rotate_flag;
 extern kalman_filter_t kal_fusion_vel;
-void Fusion_Vel_Acc_Test(void);
-//extern uint32_t rescue_cnt_T0;
-//extern uint8_t recover_flag;
 
+void Fusion_Vel_Acc_Test(void);
 void chassis_task(void const *argu);
 
 #endif
-

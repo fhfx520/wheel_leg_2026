@@ -129,7 +129,7 @@ static void kb_spin_execute(void) {
     
     // [Trans] F -> 进迎敌 (停止旋转，变成迎敌站立)
     // 如果你希望 F 键无效，就把这行删掉
-    if (check_key_trigger(KEY_F)) { fsm_change(&fsm_keyboard_sub, &state_kb_fight); return; }
+    //if (check_key_trigger(KEY_F)) { fsm_change(&fsm_keyboard_sub, &state_kb_fight); return; }
     
     // [Trans] Ctrl -> 地形
     if (check_key_trigger(KEY_CTRL)) { fsm_change(&fsm_keyboard_sub, &state_kb_ter_ready); return; }
@@ -155,7 +155,7 @@ static void kb_high_execute(void) {
     if (check_key_trigger(KEY_R)) { fsm_change(&fsm_keyboard_sub, &state_kb_spin); return; }
     
     // [Trans] Ctrl -> 地形
-    if (check_key_trigger(KEY_CTRL)) { fsm_change(&fsm_keyboard_sub, &state_kb_ter_ready); return; }
+    //if (check_key_trigger(KEY_CTRL)) { fsm_change(&fsm_keyboard_sub, &state_kb_ter_ready); return; }
     
     // [Constraint] F 键无效 (不能在高腿进迎敌)
 }
@@ -259,6 +259,7 @@ static void protect_enter(void) {
     memset(&g_robot_ctx.output, 0, sizeof(g_robot_ctx.output)); // Clear all
 }
 static void protect_execute(void) {
+    g_robot_ctx.output.top_mode = TOP_MODE_PROTECT;
     g_robot_ctx.output.chassis = CHASSIS_STOP;
     if (g_robot_ctx.is_online) {
         if (g_robot_ctx.input.sw1 == RC_SW_MID) fsm_change(&g_top_fsm, &state_remote);
@@ -277,6 +278,7 @@ static void remote_enter(void) {
     fsm_init(&fsm_remote_sub, init_st);
 }
 static void remote_execute(void) {
+    g_robot_ctx.output.top_mode = TOP_MODE_REMOTE;
     if (g_robot_ctx.input.sw1 == RC_SW_UP) { fsm_change(&g_top_fsm, &state_protect); return; }
     if (g_robot_ctx.input.sw1 == RC_SW_DOWN) { fsm_change(&g_top_fsm, &state_keyboard); return; }
     fsm_run(&fsm_remote_sub);
@@ -285,6 +287,7 @@ const FsmState_t state_remote = { .name = "REMOTE", .enter = remote_enter, .exec
 
 static void keyboard_enter(void) { fsm_init(&fsm_keyboard_sub, &state_kb_low); }
 static void keyboard_execute(void) {
+    g_robot_ctx.output.top_mode = TOP_MODE_KEYBOARD;
     if (g_robot_ctx.input.sw1 == RC_SW_UP) { fsm_change(&g_top_fsm, &state_protect); return; }
     if (g_robot_ctx.input.sw1 == RC_SW_MID) { fsm_change(&g_top_fsm, &state_remote); return; }
     fsm_run(&fsm_keyboard_sub);
