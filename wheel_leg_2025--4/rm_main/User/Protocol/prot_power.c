@@ -6,6 +6,7 @@
 #include "prot_judge.h"
 #include "drv_dji_motor.h"
 #include "string.h"
+#include "robot_logic.h"
 
 #define  TOQUE_COEFFICIENT      1.99688994e-6f
 #define  K0 1.453e-07f
@@ -41,9 +42,7 @@ void power_judge_update(void)
     power_control.judge_max_power     = robot_status.chassis_power_limit;
 		
     power_control.judge_power_buffer  = power_heat_data.buffer_energy;
-		if (chassis.mode == CHASSIS_MODE_REMOTER_ROTATE1 ||
-        chassis.mode == CHASSIS_MODE_REMOTER_ROTATE2 ||
-        chassis.mode == CHASSIS_MODE_KEYBOARD_ROTATE){ 
+		if (g_robot_ctx.output.chassis == CHASSIS_LOW_SPIN){ 
 				power_control.limit_power = power_control.judge_max_power + power_control.rotate_add_power;
     } else 
 				power_control.limit_power = power_control.judge_max_power + power_control.normal_add_power;

@@ -15,6 +15,7 @@
 #include "prot_vision.h"
 #include "drv_ws2812b.h"
 #include "iwdg.h"
+#include "robot_logic.h"
 
 status_t status;
 
@@ -29,18 +30,20 @@ void normal_status(void)
         rgb_change(1,7);
     }
 
-	if (chassis.mode == CHASSIS_MODE_REMOTER_FOLLOW || \
-        chassis.mode == CHASSIS_MODE_KEYBOARD_FOLLOW) {
+	if (g_robot_ctx.output.chassis == CHASSIS_LOW || \
+        g_robot_ctx.output.chassis == CHASSIS_HIGH) {
         rgb_change(2,7);
-    } else if (chassis.mode == CHASSIS_MODE_KEYBOARD_FIGHT) {
+    } else if (g_robot_ctx.output.chassis == CHASSIS_FIGHT) {
         rgb_change(2,2);
-    } else if (chassis.mode == CHASSIS_MODE_REMOTER_ROTATE1 || \
-                chassis.mode == CHASSIS_MODE_REMOTER_ROTATE2 || \
-               chassis.mode == CHASSIS_MODE_KEYBOARD_ROTATE) {
+    } else if (g_robot_ctx.output.chassis == CHASSIS_LOW_SPIN || \
+                g_robot_ctx.output.chassis == CHASSIS_LOW_SPIN || \
+               g_robot_ctx.output.chassis == CHASSIS_LOW_SPIN) {
         rgb_change(2,1);
-    } else if (chassis.mode == CHASSIS_MODE_KEYBOARD_UNFOLLOW) {
-        rgb_change(2,3);
-    } else {
+    }
+    //  else if (g_robot_ctx.output.chassis == CHASSIS_MODE_KEYBOARD_UNFOLLOW) {
+    //     rgb_change(2,3);
+    // } 
+    else {
         rgb_change(2,0);
     }
     

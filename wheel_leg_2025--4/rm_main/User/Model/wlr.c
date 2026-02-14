@@ -707,7 +707,7 @@ static void update_rotate_state(void)
     if (rotate_flag) {
         wlr.high_set = LegLengthRotate;
 		pid_L_test[0].i_out = pid_L_test[1].i_out = 0;
-        if (chassis.mode == CHASSIS_MODE_REMOTER_ROTATE2 || chassis.mode == CHASSIS_MODE_KEYBOARD_ROTATE) {
+       	 if (g_robot_ctx.output.chassis  == CHASSIS_LOW_SPIN) {
             Rotate_balance_zero = 0.05f;
 			x5_balance_zero = 0.06f;
         } else {
@@ -1159,9 +1159,7 @@ void wlr_control(void)
 
     aMartix_Add(1, lqr.X_ref, -1, lqr.X_fdb, lqr.X_diff, 10, 1);
 	
-    if (chassis.mode == CHASSIS_MODE_REMOTER_ROTATE1
-        || chassis.mode == CHASSIS_MODE_REMOTER_ROTATE2
-        || chassis.mode == CHASSIS_MODE_KEYBOARD_ROTATE) {
+    if (g_robot_ctx.output.chassis  == CHASSIS_LOW_SPIN) {
         data_limit(&lqr.X_diff[1], -3.0f, 3.0f);
     } else {
         data_limit(&lqr.X_diff[1], -2.0f, 2.0f);

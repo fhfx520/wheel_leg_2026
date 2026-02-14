@@ -62,7 +62,12 @@ typedef enum {
     GIMBAL_AUTO_AIM        // [New] 自瞄模式
 } GimbalState_e;
 
-typedef enum { SHOOT_STOP=0, SHOOT_READY, SHOOT_FIRING } ShootState_e;
+typedef enum { 
+    SHOOT_STOP=0,
+    SHOOT_READY, 
+    SHOOT_FIRING 
+} 
+ShootState_e;
 
 // ==========================================
 // 3. 全局机器人上下文

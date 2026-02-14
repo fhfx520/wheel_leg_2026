@@ -188,7 +188,7 @@ static void gimbal_stable_calc(void)
 	if(gimbal_stable.a_fdb < 0.0f)
 		gimbal_stable.a_fdb += 2 * PI;
 	
-	if(chassis.mode == CHASSIS_MODE_REMOTER_ROTATE2 || chassis.mode == CHASSIS_MODE_REMOTER_ROTATE1 ||chassis.mode == CHASSIS_MODE_KEYBOARD_ROTATE )
+	 if (g_robot_ctx.output.chassis  == CHASSIS_LOW_SPIN) 
 		gimbal_stable.feedback_alpha_speed = -gimbal_stable.chassis_wz_fdb;
 	else
 		gimbal_stable.feedback_alpha_speed = 0;

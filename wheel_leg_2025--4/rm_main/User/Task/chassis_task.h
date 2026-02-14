@@ -48,7 +48,7 @@ typedef struct
     uint8_t init;                   
     uint8_t joint_motor_reset;      
     // [修改] 删除了 chassis_mode_e mode 暂时保留 有耦合模块
-    chassis_mode_e mode;
+    //chassis_mode_e mode;
     float wheel_max;                
     chassis_speed_t input, output;
 } chassis_t;
