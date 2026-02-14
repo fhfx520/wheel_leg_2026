@@ -14,8 +14,8 @@ vision_data_t vision_data_rec;
 void fdcan_board_comm_send(void)
 {
 	container_set(TAG_KEYBOARD_DATA, &data_keyboard_rec, sizeof(data_keyboard_rec), CONTAINER_TYPE_STRUCT);
-	container_set(TAG_GIMBAL_DATA,   &gimbal_data_rec,   sizeof(gimbal_data_rec), CONTAINER_TYPE_STRUCT);
-	container_set(TAG_VISION_DATA,   &vision_data_rec,   sizeof(vision_data_rec), CONTAINER_TYPE_STRUCT);
+	container_set(TAG_GIMBAL_DATA,   &gimbal_data_rec,   sizeof(gimbal_data_rec),   CONTAINER_TYPE_STRUCT);
+	container_set(TAG_VISION_DATA,   &vision_data_rec,   sizeof(vision_data_rec),   CONTAINER_TYPE_STRUCT);
 }
 
 //fdcan板间通信收数据

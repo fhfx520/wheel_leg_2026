@@ -17,7 +17,6 @@ void board_comm_task(const void *argu)
 
 		container_bus_poll();//contain_bus 
 
-
 		taskEXIT_CRITICAL();
 		osDelayUntil(&thread_wake_time,5);
 	}

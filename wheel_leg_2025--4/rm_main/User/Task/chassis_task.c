@@ -207,7 +207,7 @@ static void chassis_execute_fsm(void)
             break;
     }
 
-    if (wlr.high_flag == 1) { 
+    if (g_robot_ctx.output.chassis == CHASSIS_HIGH) { 
         if (g_robot_ctx.output.chassis_speed) chassis_scale.keyboard = 2.5f;
         else chassis_scale.keyboard = 1.5f;
     } else { 
@@ -218,8 +218,9 @@ static void chassis_execute_fsm(void)
     if (supercap.volume_percent < 10 )  chassis_scale.keyboard = 1.5f;
     else if (supercap.volume_percent < 20 ) chassis_scale.keyboard = 2.0f;
 
-    if( wlr.high_flag == 1 ) chassis_scale.remote = 1.0f/660*2.6f;
+    if (g_robot_ctx.output.chassis == CHASSIS_HIGH) chassis_scale.remote = 1.0f/660*2.6f;
     else chassis_scale.remote = 1.0f/660*2.5f; 
+    
 }
 
 uint8_t rotate_ramp_flag; 
