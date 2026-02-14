@@ -2,11 +2,17 @@
 #include <string.h>
 #include <stdlib.h> 
 
-// ==========================================
-// [新增] 引入你原有的底层头文件，直接调用你的 rc_fsm_check
-// ==========================================
-#include "mode_switch_task.h" 
-#include "control_def.h"      // 假设 RC_LEFT_LD 等宏定义在这里
+// ==========================================================
+// [接口隔离] 弱引用底层 rc_fsm_check 接口与宏定义
+// 这样不需要 #include 任何底层文件，保证在任何平台都能无痛编译
+// ==========================================================
+#ifndef RC_LEFT_LD
+#define RC_LEFT_LD  (1<<3)
+#endif
+#ifndef RC_RIGHT_RD
+#define RC_RIGHT_RD (1<<6)
+#endif
+extern uint8_t rc_fsm_check(uint8_t target_status);
 
 RobotContext_t g_robot_ctx;
 FsmMachine_t g_top_fsm; 
@@ -60,9 +66,8 @@ static ShootState_e get_kb_shoot_mode(void) {
 #define KEY_C     (1<<13)
 
 // =========================================================================
-// SECTION: REMOTE 模式子状态机
+// REMOTE 模式子状态机
 // =========================================================================
-
 static void rem_low_enter(void) { g_robot_ctx.output.chassis = CHASSIS_LOW; }
 static void rem_low_execute(void) {
     g_robot_ctx.output.chassis = CHASSIS_LOW;
@@ -96,21 +101,17 @@ static void rem_high_execute(void) {
 }
 static const FsmState_t state_rem_high = { .name = "REM_HIGH", .enter = rem_high_enter, .execute = rem_high_execute };
 
-// --- 4. Rem Terrain Ready (跨越准备) ---
 static void rem_ter_ready_enter(void) { g_robot_ctx.output.chassis = CHASSIS_TERRAIN_READY; }
 static void rem_ter_ready_execute(void) {
     g_robot_ctx.output.chassis = CHASSIS_TERRAIN_READY;
     g_robot_ctx.output.gimbal  = GIMBAL_GYRO_STABILIZE;
     
-    // =======================================================
-    // [核心融合] 直接调用你的 rc_fsm_check 接口！
-    // 复刻原 shoot_task 和 chassis_task 逻辑：如果是架枪开火状态
-    // =======================================================
+    // [架枪模式集成] 左下且非右下 -> 连发 + 底盘急停锁死
     if (rc_fsm_check(RC_LEFT_LD) && !rc_fsm_check(RC_RIGHT_RD)) {
         g_robot_ctx.output.shoot   = SHOOT_SERIES; 
-        g_robot_ctx.output.chassis = CHASSIS_STOP; // 底盘无力保护 (对应原版 chassis_task 里的 dji_motor_set_torque 0)
+        g_robot_ctx.output.chassis = CHASSIS_STOP; 
     } else {
-        g_robot_ctx.output.shoot   = SHOOT_READY;  // 平时保持摩擦轮转动待命
+        g_robot_ctx.output.shoot   = SHOOT_SINGLE;  
     }
     
     if (g_robot_ctx.input.sw2 == RC_SW_UP) { fsm_change(&fsm_remote_sub, &state_rem_low); return; }
@@ -119,20 +120,16 @@ static void rem_ter_ready_execute(void) {
 }
 static const FsmState_t state_rem_ter_ready = { .name = "REM_TER_RDY", .enter = rem_ter_ready_enter, .execute = rem_ter_ready_execute };
 
-// --- 5. Rem Terrain Run (跨越执行) ---
 static void rem_ter_run_enter(void) { g_robot_ctx.output.chassis = CHASSIS_TERRAIN_EXECUTING; }
 static void rem_ter_run_execute(void) {
     g_robot_ctx.output.chassis = CHASSIS_TERRAIN_EXECUTING;
     g_robot_ctx.output.gimbal  = GIMBAL_GYRO_STABILIZE;
     
-    // =======================================================
-    // 同理，跨越执行时也检测开火
-    // =======================================================
     if (rc_fsm_check(RC_LEFT_LD) && !rc_fsm_check(RC_RIGHT_RD)) {
         g_robot_ctx.output.shoot   = SHOOT_SERIES;
         g_robot_ctx.output.chassis = CHASSIS_STOP; 
     } else {
-        g_robot_ctx.output.shoot   = SHOOT_READY;
+        g_robot_ctx.output.shoot   = SHOOT_SINGLE;
     }
     
     if (g_robot_ctx.input.sw2 == RC_SW_UP) { fsm_change(&fsm_remote_sub, &state_rem_low); return; }
@@ -142,14 +139,12 @@ static void rem_ter_run_execute(void) {
 static const FsmState_t state_rem_ter_run = { .name = "REM_TER_RUN", .enter = rem_ter_run_enter, .execute = rem_ter_run_execute };
 
 // =========================================================================
-// SECTION: KEYBOARD 模式子状态机 
+// KEYBOARD 模式子状态机 
 // =========================================================================
-
 static void kb_low_enter(void) { g_robot_ctx.output.chassis = CHASSIS_LOW; }
 static void kb_low_execute(void) {
     g_robot_ctx.output.chassis = CHASSIS_LOW;
     g_robot_ctx.output.chassis_speed = (g_robot_ctx.input.kb.bit.SHIFT) ? 1 : 0;
-    
     g_robot_ctx.output.gimbal = get_kb_gimbal_mode();
     g_robot_ctx.output.shoot  = get_kb_shoot_mode();
 
@@ -164,7 +159,6 @@ static void kb_fight_enter(void) { g_robot_ctx.output.chassis = CHASSIS_FIGHT; }
 static void kb_fight_execute(void) {
     g_robot_ctx.output.chassis = CHASSIS_FIGHT;
     g_robot_ctx.output.chassis_speed = (g_robot_ctx.input.kb.bit.SHIFT) ? 1 : 0;
-    
     g_robot_ctx.output.gimbal = get_kb_gimbal_mode();
     g_robot_ctx.output.shoot  = get_kb_shoot_mode();
 
@@ -178,7 +172,6 @@ static void kb_spin_enter(void) { g_robot_ctx.output.chassis = CHASSIS_LOW_SPIN;
 static void kb_spin_execute(void) {
     g_robot_ctx.output.chassis = CHASSIS_LOW_SPIN;
     g_robot_ctx.output.chassis_speed = (g_robot_ctx.input.kb.bit.SHIFT) ? 1 : 0;
-    
     g_robot_ctx.output.gimbal = get_kb_gimbal_mode();
     g_robot_ctx.output.shoot  = get_kb_shoot_mode();
 
@@ -192,7 +185,6 @@ static void kb_high_enter(void) { g_robot_ctx.output.chassis = CHASSIS_HIGH; }
 static void kb_high_execute(void) {
     g_robot_ctx.output.chassis = CHASSIS_HIGH;
     g_robot_ctx.output.chassis_speed = 0; 
-    
     g_robot_ctx.output.gimbal = get_kb_gimbal_mode();
     g_robot_ctx.output.shoot  = SHOOT_STOP; 
 
@@ -211,16 +203,11 @@ static void kb_ter_ready_execute(void) {
     g_robot_ctx.output.gimbal = get_kb_gimbal_mode();
     g_robot_ctx.output.shoot  = SHOOT_STOP; 
     
-    if (check_key_trigger(KEY_C) || check_key_trigger(KEY_R)) {
-        fsm_change(&fsm_keyboard_sub, &state_kb_low);
-        return;
-    }
+    if (check_key_trigger(KEY_C) || check_key_trigger(KEY_R)) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
     if (g_robot_ctx.input.kb.bit.CTRL) {
         g_robot_ctx.ctrl_tick++;
         if (g_robot_ctx.ctrl_tick > 20) fsm_change(&fsm_keyboard_sub, &state_kb_ter_run);
-    } else {
-        g_robot_ctx.ctrl_tick = 0;
-    }
+    } else { g_robot_ctx.ctrl_tick = 0; }
 }
 static const FsmState_t state_kb_ter_ready = { .name = "KB_TER_RDY", .enter = kb_ter_ready_enter, .execute = kb_ter_ready_execute };
 
@@ -229,15 +216,13 @@ static void kb_ter_run_execute(void) {
     g_robot_ctx.output.chassis = CHASSIS_TERRAIN_EXECUTING;
     g_robot_ctx.output.gimbal = get_kb_gimbal_mode();
     g_robot_ctx.output.shoot  = SHOOT_STOP;
-    
     if (!g_robot_ctx.input.kb.bit.CTRL) fsm_change(&fsm_keyboard_sub, &state_kb_ter_ready);
 }
 static const FsmState_t state_kb_ter_run = { .name = "KB_TER_RUN", .enter = kb_ter_run_enter, .execute = kb_ter_run_execute };
 
 // =========================================================================
-// SECTION: TOP LEVEL 大模式实现
+// TOP LEVEL 大模式实现
 // =========================================================================
-
 static void protect_enter(void) {
     g_robot_ctx.output.top_mode = TOP_MODE_PROTECT;
     g_robot_ctx.output.chassis  = CHASSIS_STOP;
@@ -251,7 +236,6 @@ static void protect_execute(void) {
     g_robot_ctx.output.shoot    = SHOOT_PROTECT;
     
     if (g_robot_ctx.is_online) {
-        // [核心安全解锁：如果有额外的上电自检或状态保持，可以直接在这加判断]
         if (g_robot_ctx.input.sw1 == RC_SW_MID && g_robot_ctx.input.sw2 == RC_SW_UP) {
             fsm_change(&g_top_fsm, &state_remote);
         }
@@ -269,11 +253,8 @@ static void remote_enter(void) {
 static void remote_execute(void) {
     g_robot_ctx.output.top_mode = TOP_MODE_REMOTE;
     
-    // =======================================================
-    // [全局异常检测] 如果在遥控模式下任何时候触发保护机制 (例如 rc_fsm_check 检测到断电摇杆)
-    // =======================================================
+    // [全局异常检测] 如果在遥控模式下双摇杆内八/右下断电触发
     if (rc_fsm_check(RC_LEFT_LD) && rc_fsm_check(RC_RIGHT_RD)) {
-        // 假设双摇杆内下为强制停机保护
         fsm_change(&g_top_fsm, &state_protect);
         return;
     }
@@ -291,10 +272,8 @@ static void keyboard_enter(void) {
 }
 static void keyboard_execute(void) {
     g_robot_ctx.output.top_mode = TOP_MODE_KEYBOARD;
-    
     if (g_robot_ctx.input.sw1 == RC_SW_UP) { fsm_change(&g_top_fsm, &state_protect); return; }
     if (g_robot_ctx.input.sw1 == RC_SW_MID) { fsm_change(&g_top_fsm, &state_remote); return; }
-    
     fsm_run(&fsm_keyboard_sub);
 }
 const FsmState_t state_keyboard = { .name = "KEYBOARD", .enter = keyboard_enter, .execute = keyboard_execute };
