@@ -3,23 +3,23 @@
 # 路径从 wheel_leg_2026 下面开始写
 # =======================================================
 
-# 1. 忽略 rm_main 项目的 MDK 垃圾
-wheel_leg_2025--4/rm_main/MDK-ARM/**
-!wheel_leg_2025--4/rm_main/MDK-ARM/**/
-!wheel_leg_2025--4/rm_main/MDK-ARM/**/*.c
-!wheel_leg_2025--4/rm_main/MDK-ARM/**/*.h
 
-# 2. 忽略 rm_main_gimbal 项目的 MDK 垃圾
-wheel_leg_2025--4/rm_main_gimbal/MDK-ARM/**
-!wheel_leg_2025--4/rm_main_gimbal/MDK-ARM/**/
-!wheel_leg_2025--4/rm_main_gimbal/MDK-ARM/**/*.c
-!wheel_leg_2025--4/rm_main_gimbal/MDK-ARM/**/*.h
 
-# 3. (可选) 忽略一些通用的垃圾文件
-*.o
-*.dep
-*.axf
-*.htm
-*.lnp
-.vscode/
-wheel_leg_2025--4/rm_main/MDK-ARM/RTE/_rm_main/RTE_Components.h
+wheel_leg_2025--4/rm_main/MDK-ARM/rm_main
+o*
+d*
+rm_main.uvguix.*
+
+wheel_leg_2025--4/rm_main_gimbal/MDK-ARM/rm_main
+o*
+d*
+rm_main.uvguix.*
+
+wheel_leg_2025--4/ICM42688/MDK-ARM/Taurus_imu_icm_test
+o*
+d*
+
+
+wheel_leg_2025--4/IMU/MDK-ARM/
+o*
+d*

@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "icm42688_middleware.h": "c",
+        "string": "c",
+        "icm42688_driver.h": "c",
+        "stdint.h": "c"
+    }
+}
