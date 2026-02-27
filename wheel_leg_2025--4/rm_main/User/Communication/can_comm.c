@@ -11,9 +11,12 @@
 FDCAN_TxHeaderTypeDef can_tx_message;
 FDCAN_TxHeaderTypeDef fdcan_tx_message;
 FDCAN_RxHeaderTypeDef rx_fifo0_message, rx_fifo1_message;
+FDCAN_RxHeaderTypeDef fdcan_rx_fifo0_message, fdcan_rx_fifo1_message;
 //注意FDCAN只能设置64个字节给用，设置8个会数组越界进硬件错误中断
 uint8_t rx_fifo0_data[64], rx_fifo1_data[64];
+uint8_t fdcan_rx_fifo0_data[64], fdcan_rx_fifo1_data[64];
 
+uint32_t r_cnt;
 
 /*
  * @brief  can总线初始化
@@ -72,27 +75,27 @@ void can_comm_init(void)
 
     //fdcan3 filter config begin
 	//imu
-    can_filter.IdType = FDCAN_STANDARD_ID;//标准帧
-    can_filter.FilterIndex = 0;
-    can_filter.FilterType = FDCAN_FILTER_RANGE;//范围过滤
-    can_filter.FilterID1 = IMU_PIT_ID;
-    can_filter.FilterID2 = IMU_ACC_ID;
-    can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;//通过过滤后给邮箱0
-	HAL_FDCAN_ConfigFilter(&hfdcan3, &can_filter);
-	//supercap
-    can_filter.IdType = FDCAN_STANDARD_ID;//标准帧
-    can_filter.FilterIndex = 1;
-    can_filter.FilterType = FDCAN_FILTER_DUAL;//等于过滤
-    can_filter.FilterID1 = SUPERCAP_DATA_ID;
-	can_filter.FilterID2 = SUPERCAP_STATE_ID; 
-    can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;//通过过滤后给邮箱0
-    HAL_FDCAN_ConfigFilter(&hfdcan3, &can_filter);
+//    can_filter.IdType = FDCAN_STANDARD_ID;//标准帧
+//    can_filter.FilterIndex = 0;
+//    can_filter.FilterType = FDCAN_FILTER_RANGE;//范围过滤
+//    can_filter.FilterID1 = IMU_PIT_ID;
+//    can_filter.FilterID2 = IMU_ACC_ID;
+//    can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;//通过过滤后给邮箱0
+//	HAL_FDCAN_ConfigFilter(&hfdcan3, &can_filter);
+//	//supercap
+//    can_filter.IdType = FDCAN_STANDARD_ID;//标准帧
+//    can_filter.FilterIndex = 1;
+//    can_filter.FilterType = FDCAN_FILTER_DUAL;//等于过滤
+//    can_filter.FilterID1 = SUPERCAP_DATA_ID;
+//	can_filter.FilterID2 = SUPERCAP_STATE_ID; 
+//    can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;//通过过滤后给邮箱0
+//    HAL_FDCAN_ConfigFilter(&hfdcan3, &can_filter);
 	//board
     can_filter.IdType = FDCAN_STANDARD_ID;//标准帧
-    can_filter.FilterIndex = 2;
+    can_filter.FilterIndex = 0;
     can_filter.FilterType = FDCAN_FILTER_DUAL;//等于过滤
-    can_filter.FilterID1 = 0x002;
-//	can_filter.FilterID2 = 0x006;
+    can_filter.FilterID1 = 0x011;
+	can_filter.FilterID2 = 0x011;
     can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO1;//通过过滤后给邮箱1
     HAL_FDCAN_ConfigFilter(&hfdcan3, &can_filter);  
 		
@@ -112,14 +115,14 @@ void can_comm_init(void)
     can_tx_message.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
     can_tx_message.MessageMarker = 0;
 	//fdcan tx_message config
-	can_tx_message.IdType = FDCAN_STANDARD_ID;  
-    can_tx_message.TxFrameType = FDCAN_DATA_FRAME;
-    can_tx_message.DataLength = FDCAN_DLC_BYTES_64;
-    can_tx_message.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
-    can_tx_message.BitRateSwitch = FDCAN_BRS_ON;
-    can_tx_message.FDFormat = FDCAN_FD_CAN;
-    can_tx_message.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
-    can_tx_message.MessageMarker = 0;
+	fdcan_tx_message.IdType = FDCAN_STANDARD_ID;  
+    fdcan_tx_message.TxFrameType = FDCAN_DATA_FRAME;
+    fdcan_tx_message.DataLength = FDCAN_DLC_BYTES_64;
+    fdcan_tx_message.ErrorStateIndicator = FDCAN_ESI_PASSIVE;
+    fdcan_tx_message.BitRateSwitch = FDCAN_BRS_OFF;
+    fdcan_tx_message.FDFormat = FDCAN_FD_CAN;
+    fdcan_tx_message.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
+    fdcan_tx_message.MessageMarker = 0;
 	
     //driver init
 	dm_motor_init(&joint_motor[0], CAN_CHANNEL_1, JOINT_LB_CMD_ID, -0.370364666f, JOINT_LB_REC_ID);//LB -0.27579996
@@ -173,14 +176,17 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 void HAL_FDCAN_RxFifo1Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo1ITs)
 {
     if((RxFifo1ITs & FDCAN_IT_RX_FIFO1_NEW_MESSAGE) != RESET) {
-        HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO1, &rx_fifo1_message, rx_fifo1_data);
         if (hfdcan->Instance == FDCAN1) {
+			HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO1, &rx_fifo1_message, rx_fifo1_data);
 			 dm_motor_get_data(rx_fifo1_message.Identifier, rx_fifo1_data);
         } else if (hfdcan->Instance == FDCAN2) {
+			HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO1, &rx_fifo1_message, rx_fifo1_data);
 			dji_motor_get_data(CAN_CHANNEL_2, rx_fifo1_message.Identifier, rx_fifo1_data);
-        } else if (hfdcan->Instance == FDCAN3) {	
+        } else if (hfdcan->Instance == FDCAN3) {
+			r_cnt++;
+			HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO1, &fdcan_rx_fifo1_message, fdcan_rx_fifo1_data);			
 //			vision_gimbal_get_data(&vision, rx_fifo1_message.Identifier, rx_fifo1_data);
-			fdcan_board_comm_get(rx_fifo1_message.Identifier, rx_fifo1_data);
+			fdcan_board_comm_get(fdcan_rx_fifo1_message.Identifier, fdcan_rx_fifo1_data);
         }
         HAL_FDCAN_ActivateNotification(hfdcan, FDCAN_IT_RX_FIFO1_NEW_MESSAGE, 0);
     }

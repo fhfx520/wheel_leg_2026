@@ -1,7 +1,7 @@
 #include "board_comm.h"
 #include "string.h"
 #include "container.h"
-
+#include "can_comm.h"
 
 fdcan_board_comm_t fdcan_board_comm;
 
@@ -16,6 +16,16 @@ void fdcan_board_comm_send(void)
 	container_set(TAG_KEYBOARD_DATA, &data_keyboard_rec, sizeof(data_keyboard_rec), CONTAINER_TYPE_STRUCT);
 	container_set(TAG_GIMBAL_DATA,   &gimbal_data_rec,   sizeof(gimbal_data_rec),   CONTAINER_TYPE_STRUCT);
 	container_set(TAG_VISION_DATA,   &vision_data_rec,   sizeof(vision_data_rec),   CONTAINER_TYPE_STRUCT);
+	//测试
+	static uint8_t ccc = 1;
+	for(uint8_t i = 0;i < 64;i++)
+	{
+		fdcan_board_comm.tx_msg.buff[i] = ccc;
+		ccc++;
+		if(ccc > 128)
+			ccc = 1;
+	}
+	can_std_transmit(CAN_CHANNEL_3,FDCAN_CHA_TO_GIMBAL_ID,fdcan_board_comm.tx_msg.buff);
 }
 
 //fdcan板间通信收数据

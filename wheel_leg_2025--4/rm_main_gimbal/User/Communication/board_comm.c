@@ -134,19 +134,28 @@ void board_comm_send_data(void){
 //fdcan板间通信下发数据
 void fdcan_board_comm_send(void)
 {
-	//图传链路键鼠数据
-	memcpy(&fdcan_board_comm.tx_msg.data_keyboard.mouse_data,&vtm.vtm_data.mouse_data,sizeof(vtm.vtm_data.mouse_data));
-	fdcan_board_comm.tx_msg.data_keyboard.key_code = vtm.vtm_data.kb.key_code;
-	fdcan_board_comm.tx_msg.data_keyboard.online = vtm.online;
-	//云台数据
-	fdcan_board_comm.tx_msg.gimbal_data.yaw_output = -1.0f * gimbal.yaw_output;
-	fdcan_board_comm.tx_msg.gimbal_data.gimbal_start_up = gimbal.start_up;
-	//视觉数据
-	fdcan_board_comm.tx_msg.vision_data.vision_enanle = vision.shoot_enable;
-	if(vision.aim_status == AIMING)
-		fdcan_board_comm.tx_msg.vision_data.vision_trace_id = vision.trace_id;
-	else
-		fdcan_board_comm.tx_msg.vision_data.vision_trace_id = 0;
+//	//图传链路键鼠数据
+//	memcpy(&fdcan_board_comm.tx_msg.data_keyboard.mouse_data,&vtm.vtm_data.mouse_data,sizeof(vtm.vtm_data.mouse_data));
+//	fdcan_board_comm.tx_msg.data_keyboard.key_code = vtm.vtm_data.kb.key_code;
+//	fdcan_board_comm.tx_msg.data_keyboard.online = vtm.online;
+//	//云台数据
+//	fdcan_board_comm.tx_msg.gimbal_data.yaw_output = -1.0f * gimbal.yaw_output;
+//	fdcan_board_comm.tx_msg.gimbal_data.gimbal_start_up = gimbal.start_up;
+//	//视觉数据
+//	fdcan_board_comm.tx_msg.vision_data.vision_enanle = vision.shoot_enable;
+//	if(vision.aim_status == AIMING)
+//		fdcan_board_comm.tx_msg.vision_data.vision_trace_id = vision.trace_id;
+//	else
+//		fdcan_board_comm.tx_msg.vision_data.vision_trace_id = 0;
+	//通信测试用下面
+	static uint8_t ccc = 1;
+	for(uint8_t i = 0;i < 64;i++)
+	{
+		fdcan_board_comm.tx_msg.buff[i] = ccc;
+		ccc++;
+		if(ccc > 128)
+			ccc = 1;
+	}
 	//联合体数组发送
 	can_std_transmit(CAN_CHANNEL_3,FDCAN_GIMBAL_TO_CHA_ID,fdcan_board_comm.tx_msg.buff);
 	

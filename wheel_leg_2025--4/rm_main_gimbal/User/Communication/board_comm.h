@@ -15,7 +15,7 @@
 
 #define FDCAN_BOARD_DATA_LEN 	 	 64
 #define FDCAN_CHA_TO_GIMBAL_ID		 0x001
-#define FDCAN_GIMBAL_TO_CHA_ID		 0x002
+#define FDCAN_GIMBAL_TO_CHA_ID		 0x011
 
 typedef struct
 {

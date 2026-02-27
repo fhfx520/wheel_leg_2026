@@ -6,7 +6,7 @@
 
 #define FDCAN_BOARD_DATA_LEN 		 64
 #define FDCAN_CHA_TO_GIMBAL_ID		 0x001
-#define FDCAN_GIMBAL_TO_CHA_ID		 0x002
+#define FDCAN_GIMBAL_TO_CHA_ID		 0x011
 
 
 #define TAG_KEYBOARD_DATA 0x10
@@ -52,6 +52,12 @@ typedef struct
 		//±£¡Ù
 		uint8_t reserved[FDCAN_BOARD_DATA_LEN - 16];
     } rx_msg;
+	
+	union
+	{
+		//64bytes
+        uint8_t buff[FDCAN_BOARD_DATA_LEN];
+	} tx_msg;
 }fdcan_board_comm_t;
 
 typedef struct

@@ -12,9 +12,10 @@
 FDCAN_TxHeaderTypeDef can_tx_message;
 FDCAN_TxHeaderTypeDef fdcan_tx_message;
 FDCAN_RxHeaderTypeDef rx_fifo0_message, rx_fifo1_message;
+FDCAN_RxHeaderTypeDef fdcan_rx_fifo0_message, fdcan_rx_fifo1_message;
 //注意FDCAN只能设置64个字节给用，设置8个会数组越界进硬件错误中断
 uint8_t rx_fifo0_data[64], rx_fifo1_data[64];
-
+uint8_t fdcan_rx_fifo0_data[64], fdcan_rx_fifo1_data[64];
 /*
  * @brief  can总线初始化
  * @retval void
@@ -86,14 +87,14 @@ void can_comm_init(void)
     can_tx_message.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
     can_tx_message.MessageMarker = 0;
 	//fdcan tx_message config
-	can_tx_message.IdType = FDCAN_STANDARD_ID;  
-    can_tx_message.TxFrameType = FDCAN_DATA_FRAME;
-    can_tx_message.DataLength = FDCAN_DLC_BYTES_64;
-    can_tx_message.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
-    can_tx_message.BitRateSwitch = FDCAN_BRS_ON;
-    can_tx_message.FDFormat = FDCAN_FD_CAN;
-    can_tx_message.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
-    can_tx_message.MessageMarker = 0;
+	fdcan_tx_message.IdType = FDCAN_STANDARD_ID;  
+    fdcan_tx_message.TxFrameType = FDCAN_DATA_FRAME;
+    fdcan_tx_message.DataLength = FDCAN_DLC_BYTES_64;
+    fdcan_tx_message.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
+    fdcan_tx_message.BitRateSwitch = FDCAN_BRS_OFF;
+    fdcan_tx_message.FDFormat = FDCAN_FD_CAN;
+    fdcan_tx_message.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
+    fdcan_tx_message.MessageMarker = 0;
     
     //各驱动初始化
 	dm_motor_init(&pit_motor, CAN_CHANNEL_1, 0x05, 0.0f, 0x15);
@@ -101,7 +102,7 @@ void can_comm_init(void)
     dji_motor_init(&fric_motor[0], DJI_3508_MOTOR, CAN_CHANNEL_2, 0x203, 1.0f);
     dji_motor_init(&fric_motor[1], DJI_3508_MOTOR, CAN_CHANNEL_2, 0x201, 1.0f);
 	
-    dji_motor_init(&yaw_motor, DJI_6020_MOTOR, CAN_CHANNEL_3, 0x205, 1.0f);
+//    dji_motor_init(&yaw_motor, DJI_6020_MOTOR, CAN_CHANNEL_3, 0x205, 1.0f);
 }
 
 
@@ -133,13 +134,15 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 void HAL_FDCAN_RxFifo1Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo1ITs)
 {
     if((RxFifo1ITs & FDCAN_IT_RX_FIFO1_NEW_MESSAGE) != RESET) {
-        HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO1, &rx_fifo1_message, rx_fifo1_data);
         if (hfdcan->Instance == FDCAN1) {
+			HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO1, &rx_fifo1_message, rx_fifo1_data);
 			imu_get_data(&gimbal_imu, rx_fifo1_message.Identifier, rx_fifo1_data);
         } else if (hfdcan->Instance == FDCAN2) {
+			HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO1, &rx_fifo1_message, rx_fifo1_data);
 //			dji_motor_get_data(CAN_CHANNEL_2, rx_fifo1_message.Identifier, rx_fifo1_data);
         } else if (hfdcan->Instance == FDCAN3) {
-			fdcan_board_comm_get(rx_fifo1_message.Identifier, rx_fifo1_data);//板间通信解析函数
+			HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO1, &fdcan_rx_fifo1_message, fdcan_rx_fifo1_data);
+//			fdcan_board_comm_get(fdcan_rx_fifo1_message.Identifier, fdcan_rx_fifo1_data);//板间通信解析函数
         }
         HAL_FDCAN_ActivateNotification(hfdcan, FDCAN_IT_RX_FIFO1_NEW_MESSAGE, 0);
     }
@@ -167,6 +170,14 @@ void can_std_transmit(can_channel_e can_periph, uint32_t id, uint8_t *data)
     else if (can_periph == CAN_CHANNEL_3)
 	{
 		fdcan_tx_message.Identifier = id;
+		fdcan_tx_message.IdType = FDCAN_STANDARD_ID;  
+    fdcan_tx_message.TxFrameType = FDCAN_DATA_FRAME;
+    fdcan_tx_message.DataLength = FDCAN_DLC_BYTES_64;
+    fdcan_tx_message.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
+    fdcan_tx_message.BitRateSwitch = FDCAN_BRS_OFF;
+    fdcan_tx_message.FDFormat = FDCAN_FD_CAN;
+    fdcan_tx_message.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
+    fdcan_tx_message.MessageMarker = 0;
         HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan3, &fdcan_tx_message, data);
 	}
 }
