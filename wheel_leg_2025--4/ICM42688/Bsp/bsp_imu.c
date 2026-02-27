@@ -126,6 +126,27 @@ void IMU_AHRS_Calcu_task(void){
 				imu_msg_send.cha_angle_msg.e.ay = -INS.MotionAccel_n[Y_axis];//
 				imu_msg_send.cha_angle_msg.e.az = INS.MotionAccel_b[Z_axis];//
 				
+				//fdcan≤‚ ‘
+				imu_msg_send.all_angle_msg.e.angle.rol = -INS.Roll;
+				imu_msg_send.all_angle_msg.e.angle.pit = INS.Pitch;
+				imu_msg_send.all_angle_msg.e.angle.yaw = INS.Yaw;
+				
+				imu_msg_send.all_angle_msg.e.gyro.wx = -INS.Gyro[Y_axis];
+				imu_msg_send.all_angle_msg.e.gyro.wy = INS.Gyro[X_axis];
+				imu_msg_send.all_angle_msg.e.gyro.wz = INS.Gyro[Z_axis];
+				
+				imu_msg_send.all_angle_msg.e.acc.ax = INS.Accel[X_axis];
+				imu_msg_send.all_angle_msg.e.acc.ay = -INS.Accel[Y_axis];
+				imu_msg_send.all_angle_msg.e.acc.az = INS.Accel[Z_axis];
+				
+				imu_msg_send.all_angle_msg.e.acc.n_ax = INS.MotionAccel_n[X_axis];
+				imu_msg_send.all_angle_msg.e.acc.n_ay = -INS.MotionAccel_n[Y_axis];
+				imu_msg_send.all_angle_msg.e.acc.n_az = INS.MotionAccel_n[Z_axis];
+				
+				imu_msg_send.all_angle_msg.e.acc.n_ax = INS.MotionAccel_b[X_axis];
+				imu_msg_send.all_angle_msg.e.acc.n_ay = -INS.MotionAccel_b[Y_axis];
+				imu_msg_send.all_angle_msg.e.acc.n_az = INS.MotionAccel_b[Z_axis];
+				
 				
 				if(count % 2 == 0)
 				{

@@ -22,7 +22,7 @@ typedef struct{
             float wz;
         } e;
     } yaw_msg;//yaw
-		    union
+	union
     {
         uint8_t array[8];
         struct
@@ -31,7 +31,7 @@ typedef struct{
             float wx;
         } e;
     } rol_msg;//roll
-				union
+	union
     {
 		 uint8_t array[8];
         struct
@@ -40,7 +40,7 @@ typedef struct{
             float wz;
         } e;
     } gim_w_msg;//
-				union
+	union
     {
 		 uint8_t array[8];
         struct
@@ -49,16 +49,51 @@ typedef struct{
             float yaw;
         } e;
     } gim_angle_msg;//
-				union
+	union
     {
 		 uint8_t array[8];
 		struct
 		{
+			float ay;
+			float az;
+		} e;
+	} cha_angle_msg;//
+	union
+	{
+		uint8_t array[64];
+		struct
+		{
+			struct //12bytes
+			{
+				float pit;
+				float yaw;
+				float rol;
+			} angle;
+			struct //12bytes
+			{
+				float wy;
+				float wz;
+				float wx;
+			} gyro;
+			struct //36bytes
+			{
+				//加速计测得世界系 az = g
 				float ay;
 				float az;
+				float ax;
+				//四元数转化到绝对系
+				float n_ay;
+				float n_az;
+				float n_ax;
+				//机体坐标系
+				float b_ay;
+				float b_az;
+				float b_ax;
+			} acc;
+			//保留位 4bytes
+			float r0;
 		} e;
-		} cha_angle_msg;//
-
+	} all_angle_msg;
 
 }imu_msg_t;	
 

@@ -23,16 +23,16 @@ void can_comm_init(void)
 //  HAL_FDCAN_ActivateNotification(&hfdcan1, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0); // 使能邮箱0新消息中断
 	HAL_FDCAN_ConfigGlobalFilter(&hfdcan1, FDCAN_REJECT, FDCAN_REJECT, FDCAN_REJECT_REMOTE, FDCAN_REJECT_REMOTE);
 	// 初始化FDCAN时启用传输完成中断
-  HAL_FDCAN_Start(&hfdcan1);
-  // 配置标准发送参数
-  tx_message.IdType = FDCAN_STANDARD_ID;
-  tx_message.TxFrameType = FDCAN_DATA_FRAME;
-  tx_message.DataLength = FDCAN_DLC_BYTES_8;
-  tx_message.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
-  tx_message.BitRateSwitch = FDCAN_BRS_ON;
-  tx_message.FDFormat = FDCAN_CLASSIC_CAN;
-  tx_message.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
-  tx_message.MessageMarker = 0;
+	HAL_FDCAN_Start(&hfdcan1);
+    // 配置标准发送参数
+    tx_message.IdType = FDCAN_STANDARD_ID;
+    tx_message.TxFrameType = FDCAN_DATA_FRAME;
+    tx_message.DataLength = FDCAN_DLC_BYTES_64;
+    tx_message.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
+    tx_message.BitRateSwitch = FDCAN_BRS_ON;
+    tx_message.FDFormat = FDCAN_FD_CAN;
+    tx_message.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
+    tx_message.MessageMarker = 0;
 
 		
 }
@@ -47,7 +47,7 @@ void can_comm_init(void)
 void can_std_transmit(FDCAN_HandleTypeDef *hfdcan, uint32_t id, uint8_t *data)
 {
 	static int32_t iwdg_cnt;
-  tx_message.Identifier = id;
+	tx_message.Identifier = id;
 	
 	if(HAL_FDCAN_AddMessageToTxFifoQ(hfdcan, &tx_message, data) == HAL_OK){
 		if(iwdg_cnt>0)
@@ -58,7 +58,4 @@ void can_std_transmit(FDCAN_HandleTypeDef *hfdcan, uint32_t id, uint8_t *data)
 	
 	if(iwdg_cnt < 500)
 	HAL_IWDG_Refresh(&hiwdg);
-	
-	
-
 }

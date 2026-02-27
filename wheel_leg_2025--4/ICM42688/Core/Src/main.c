@@ -113,7 +113,7 @@ int main(void)
   MX_TIM1_Init();
   MX_FDCAN1_Init();
   MX_TIM3_Init();
-
+//  MX_IWDG_Init();
   /* USER CODE BEGIN 2 */
 	
   DWT_Init(170);
@@ -154,7 +154,7 @@ int main(void)
     /*使能定时器1中断*/
    HAL_TIM_Base_Start_IT(&htim3);
   /* USER CODE END 2 */
-//	  MX_IWDG_Init();
+
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
@@ -230,7 +230,7 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+static uint32_t send_dnt;
 /* USER CODE END 4 */
 
 /**
@@ -243,7 +243,6 @@ void SystemClock_Config(void)
   */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-	static uint32_t send_dnt;
   /* USER CODE BEGIN Callback 0 */
 
   /* USER CODE END Callback 0 */
@@ -254,14 +253,16 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	
 	if(htim->Instance==TIM3)
 	{
-		
-	dt_can = DWT_GetDeltaT(&dwt_count);
-		if(send_dnt++ % 2 == 0){
-	can_std_transmit(&hfdcan1,0x011,imu_msg_send.pit_msg.array);
-	can_std_transmit(&hfdcan1,0x012,imu_msg_send.yaw_msg.array);}
-		else{
-	can_std_transmit(&hfdcan1,0x013,imu_msg_send.rol_msg.array);
-	can_std_transmit(&hfdcan1,0x014,imu_msg_send.cha_angle_msg.array);}
+		dt_can = DWT_GetDeltaT(&dwt_count);
+//		if(send_dnt++ % 2 == 0){
+//			can_std_transmit(&hfdcan1,0x011,imu_msg_send.pit_msg.array);
+//			can_std_transmit(&hfdcan1,0x012,imu_msg_send.yaw_msg.array);
+//		}
+//		else{
+//			can_std_transmit(&hfdcan1,0x013,imu_msg_send.rol_msg.array);
+//			can_std_transmit(&hfdcan1,0x014,imu_msg_send.cha_angle_msg.array);
+//		}
+		can_std_transmit(&hfdcan1,0x011,imu_msg_send.all_angle_msg.array);
 		
 
 //	can_std_transmit(&hfdcan1,0x011,imu_msg_send.pit_msg.array);
@@ -284,7 +285,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 /**
   * @brief  This function is executed in case of error occurrence.
   * @retval None
-  */	
+  */
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
