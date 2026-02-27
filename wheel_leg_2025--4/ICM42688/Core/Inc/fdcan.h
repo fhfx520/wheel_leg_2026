@@ -42,6 +42,8 @@ void MX_FDCAN1_Init(void);
 
 /* USER CODE BEGIN Prototypes */
 
+void MY_FDCAN1_Init(void);
+	
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

@@ -143,9 +143,9 @@ void IMU_AHRS_Calcu_task(void){
 				imu_msg_send.all_angle_msg.e.acc.n_ay = -INS.MotionAccel_n[Y_axis];
 				imu_msg_send.all_angle_msg.e.acc.n_az = INS.MotionAccel_n[Z_axis];
 				
-				imu_msg_send.all_angle_msg.e.acc.n_ax = INS.MotionAccel_b[X_axis];
-				imu_msg_send.all_angle_msg.e.acc.n_ay = -INS.MotionAccel_b[Y_axis];
-				imu_msg_send.all_angle_msg.e.acc.n_az = INS.MotionAccel_b[Z_axis];
+				imu_msg_send.all_angle_msg.e.acc.b_ax = INS.MotionAccel_b[X_axis];
+				imu_msg_send.all_angle_msg.e.acc.b_ay = -INS.MotionAccel_b[Y_axis];
+				imu_msg_send.all_angle_msg.e.acc.b_az = INS.MotionAccel_b[Z_axis];
 				
 				
 				if(count % 2 == 0)

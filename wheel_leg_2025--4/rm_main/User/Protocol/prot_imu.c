@@ -15,8 +15,11 @@ imu_t chassis_imu, gimbal_imu;
  */
 void imu_get_data(imu_t *imu, uint32_t id, uint8_t *data)
 {
-    float buffer[2];
-    memcpy(buffer, data, 8);
+    float buffer[2],array[16];
+	if(id != IMU_ALL_ID)
+		memcpy(buffer, data, 8);
+	else
+		memcpy(array, data, 64);
     switch(id) {
     case IMU_PIT_ID: {
         imu->pit = -1.0f * buffer[0] * PI / 180;
@@ -38,6 +41,19 @@ void imu_get_data(imu_t *imu, uint32_t id, uint8_t *data)
         imu->az = -1.0f * buffer[1];
         break;
     }
+	case IMU_ALL_ID:{
+		imu->pit = -1.0f * array[0] * PI / 180;
+		imu->yaw = 1.0f * array[1] * PI / 180;
+		imu->rol = 1.0f * array[2] * PI / 180;
+		
+		imu->wy = -1.0f * array[3];
+		imu->wz = 1.0f * array[4];
+		imu->wx = 1.0f * array[5];
+		
+		imu->ay = 1.0f * array[11];
+		imu->az = -1.0f * array[13];
+		imu->ax = 1.0f * array[9];
+	}break;
 	default:break;
     }
     imu->online = 1;

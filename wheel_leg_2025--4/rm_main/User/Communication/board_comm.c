@@ -25,7 +25,7 @@ void fdcan_board_comm_send(void)
 		if(ccc > 128)
 			ccc = 1;
 	}
-	can_std_transmit(CAN_CHANNEL_3,FDCAN_CHA_TO_GIMBAL_ID,fdcan_board_comm.tx_msg.buff);
+	can_std_transmit(CAN_CHANNEL_2,FDCAN_CHA_TO_GIMBAL_ID,fdcan_board_comm.tx_msg.buff);
 }
 
 //fdcan板间通信收数据

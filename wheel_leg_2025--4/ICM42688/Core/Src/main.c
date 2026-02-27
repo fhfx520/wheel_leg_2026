@@ -50,6 +50,7 @@
 /* USER CODE BEGIN PD */
 
 //          #define Calibrate //操作此宏定义决定是否校准
+			#define Fdcan //操作此宏定义决定是否使用fdcan
 
 /* USER CODE END PD */
 
@@ -115,20 +116,30 @@ int main(void)
   MX_TIM3_Init();
 //  MX_IWDG_Init();
   /* USER CODE BEGIN 2 */
-	
+#ifndef Fdcan
+  MY_FDCAN1_Init();
+#endif
+
+
   DWT_Init(170);
 	
-	while(init_flag)
-		ICM42688_init();
+  while(init_flag)
+	ICM42688_init();
 
-   ICM42688_init();
+  ICM42688_init();
   HAL_Delay(100);
-	
-	can_comm_init();
+  
+#ifndef Fdcan
+  can_comm_init();
+#else
+  fdcan_comm_init();
+#endif
+  
+  
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
 	
-	HAL_Delay(100);
-	PID_struct_init(&pid_temperature,POSITION_PID,2000, 300,1000, 20,0);	
+  HAL_Delay(100);
+  PID_struct_init(&pid_temperature,POSITION_PID,2000, 300,1000, 20,0);	
 	
 
 #ifdef Calibrate
@@ -230,7 +241,7 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-static uint32_t send_dnt;
+static uint32_t send_dnt = 0;
 /* USER CODE END 4 */
 
 /**
@@ -244,7 +255,7 @@ static uint32_t send_dnt;
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   /* USER CODE BEGIN Callback 0 */
-
+  
   /* USER CODE END Callback 0 */
   if (htim->Instance == TIM2) {
     HAL_IncTick();
@@ -254,15 +265,20 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	if(htim->Instance==TIM3)
 	{
 		dt_can = DWT_GetDeltaT(&dwt_count);
-//		if(send_dnt++ % 2 == 0){
-//			can_std_transmit(&hfdcan1,0x011,imu_msg_send.pit_msg.array);
-//			can_std_transmit(&hfdcan1,0x012,imu_msg_send.yaw_msg.array);
-//		}
-//		else{
-//			can_std_transmit(&hfdcan1,0x013,imu_msg_send.rol_msg.array);
-//			can_std_transmit(&hfdcan1,0x014,imu_msg_send.cha_angle_msg.array);
-//		}
-		can_std_transmit(&hfdcan1,0x011,imu_msg_send.all_angle_msg.array);
+#ifndef Fdcan
+	if(send_dnt++ % 2 == 0){
+			can_std_transmit(&hfdcan1,0x011,imu_msg_send.pit_msg.array);
+			can_std_transmit(&hfdcan1,0x012,imu_msg_send.yaw_msg.array);
+		}
+		else{
+			can_std_transmit(&hfdcan1,0x013,imu_msg_send.rol_msg.array);
+			can_std_transmit(&hfdcan1,0x014,imu_msg_send.cha_angle_msg.array);
+		}
+#else
+		can_std_transmit(&hfdcan1,0x015,imu_msg_send.all_angle_msg.array);
+#endif
+//		
+		
 		
 
 //	can_std_transmit(&hfdcan1,0x011,imu_msg_send.pit_msg.array);

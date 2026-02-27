@@ -174,7 +174,9 @@ void dji_motor_output_data(void)
     dji_motor_fill_data();
 	motor_send_flag[CAN_CHANNEL_3][2] = 0;
 	motor_send_flag[CAN_CHANNEL_3][3] = 0;
-    for (can_channel_e can_channel = CAN_CHANNEL_1; can_channel != CAN_CHANNEL_3; can_channel++) {
+    for (can_channel_e can_channel = CAN_CHANNEL_1; can_channel != CAN_CHANNEL_NUM; can_channel++) {
+		if(can_channel == CAN_CHANNEL_2)
+			continue;
         for (int i = 0; i < 4; i++) {
             if (motor_send_flag[can_channel][i] == 1) {
 				if(status.dji_motor != 2 && status.dji_motor != 3)

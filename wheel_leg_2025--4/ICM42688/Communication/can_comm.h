@@ -98,6 +98,7 @@ typedef struct{
 }imu_msg_t;	
 
 void can_comm_init(void);
+void fdcan_comm_init(void);
 void can_std_transmit(FDCAN_HandleTypeDef *hfdcan, uint32_t id, uint8_t *data);
 
 extern imu_msg_t imu_msg_send;
