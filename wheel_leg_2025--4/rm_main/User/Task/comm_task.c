@@ -41,7 +41,8 @@ void comm_task(void const* argument)
 				dm_motor_output_single_data(&joint_motor[i]);   
             } 
         }
-		 fdcan_board_comm_send();
+//		 fdcan_board_comm_send();
+		
 //		board_send_cnt++;
 //				
 //		if(board_send_cnt % 2 == 0)

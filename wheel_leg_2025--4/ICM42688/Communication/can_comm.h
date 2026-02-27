@@ -3,6 +3,9 @@
 
 #include "stm32g4xx.h"
 
+#define IMU_CHA_ID 0x015
+#define IMU_GIM_ID 0X016
+
 typedef struct{
     union
     {

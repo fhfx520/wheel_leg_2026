@@ -7,6 +7,7 @@
 #define IMU_YAW_ID 0x012
 #define IMU_ROL_ID 0x013
 #define IMU_ACC_ID 0x014
+#define IMU_ALL_ID 0x016
 
 typedef struct
 {

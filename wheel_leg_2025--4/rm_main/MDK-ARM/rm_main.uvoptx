@@ -178,7 +178,7 @@
         <Ww>
           <count>4</count>
           <WinNumber>1</WinNumber>
-          <ItemText>rx_fifo1_data</ItemText>
+          <ItemText>rx_fifo1_data,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>5</count>
@@ -214,6 +214,21 @@
           <count>11</count>
           <WinNumber>1</WinNumber>
           <ItemText>chassis_imu</ItemText>
+        </Ww>
+        <Ww>
+          <count>12</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>fdcan_rx_fifo0_message</ItemText>
+        </Ww>
+        <Ww>
+          <count>13</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>fdcan_rx_fifo1_message,0x10</ItemText>
+        </Ww>
+        <Ww>
+          <count>14</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>can_channel</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>
@@ -809,7 +824,7 @@
 
   <Group>
     <GroupName>User/Protocol</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>

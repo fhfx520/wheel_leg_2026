@@ -180,14 +180,14 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 void HAL_FDCAN_RxFifo1Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo1ITs)
 {
     if((RxFifo1ITs & FDCAN_IT_RX_FIFO1_NEW_MESSAGE) != RESET) {
-		HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO1, &rx_fifo1_message, rx_fifo1_data);
         if (hfdcan->Instance == FDCAN1) {
-			 dm_motor_get_data(rx_fifo1_message.Identifier, rx_fifo1_data);
+			HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO1, &rx_fifo1_message, rx_fifo1_data);
+			dm_motor_get_data(rx_fifo1_message.Identifier, rx_fifo1_data);
         } else if (hfdcan->Instance == FDCAN2) {
 			HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO1, &fdcan_rx_fifo1_message, fdcan_rx_fifo1_data);
 			fdcan_board_comm_get(fdcan_rx_fifo1_message.Identifier, fdcan_rx_fifo1_data);
         } else if (hfdcan->Instance == FDCAN3) {
-			HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO1, &fdcan_rx_fifo1_message, fdcan_rx_fifo1_data);
+			HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO1, &rx_fifo1_message, rx_fifo1_data);
 			dji_motor_get_data(CAN_CHANNEL_3, rx_fifo1_message.Identifier, rx_fifo1_data);			
 //			vision_gimbal_get_data(&vision, rx_fifo1_message.Identifier, rx_fifo1_data);
         }

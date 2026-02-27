@@ -157,7 +157,7 @@ void fdcan_board_comm_send(void)
 			ccc = 1;
 	}
 	//联合体数组发送
-	can_std_transmit(CAN_CHANNEL_3,FDCAN_GIMBAL_TO_CHA_ID,fdcan_board_comm.tx_msg.buff);
+	can_std_transmit(CAN_CHANNEL_1,FDCAN_GIMBAL_TO_CHA_ID,fdcan_board_comm.tx_msg.buff);
 	
 }
 
