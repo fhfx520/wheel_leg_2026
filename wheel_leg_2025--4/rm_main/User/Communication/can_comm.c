@@ -109,8 +109,8 @@ void can_comm_init(void)
     can_tx_message.IdType = FDCAN_STANDARD_ID;  
     can_tx_message.TxFrameType = FDCAN_DATA_FRAME;
     can_tx_message.DataLength = FDCAN_DLC_BYTES_8;
-    can_tx_message.ErrorStateIndicator = FDCAN_ESI_PASSIVE;
-    can_tx_message.BitRateSwitch = FDCAN_BRS_OFF;
+    can_tx_message.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
+    can_tx_message.BitRateSwitch = FDCAN_BRS_ON;
     can_tx_message.FDFormat = FDCAN_CLASSIC_CAN;
     can_tx_message.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
     can_tx_message.MessageMarker = 0;
@@ -118,8 +118,8 @@ void can_comm_init(void)
 	fdcan_tx_message.IdType = FDCAN_STANDARD_ID;  
     fdcan_tx_message.TxFrameType = FDCAN_DATA_FRAME;
     fdcan_tx_message.DataLength = FDCAN_DLC_BYTES_64;
-    fdcan_tx_message.ErrorStateIndicator = FDCAN_ESI_PASSIVE;
-    fdcan_tx_message.BitRateSwitch = FDCAN_BRS_OFF;
+    fdcan_tx_message.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
+    fdcan_tx_message.BitRateSwitch = FDCAN_BRS_ON;
     fdcan_tx_message.FDFormat = FDCAN_FD_CAN;
     fdcan_tx_message.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
     fdcan_tx_message.MessageMarker = 0;
@@ -204,7 +204,7 @@ void can_std_transmit(can_channel_e can_periph, uint32_t id, uint8_t *data)
     if (can_periph == CAN_CHANNEL_1)
 	{
 		can_tx_message.Identifier = id;
-        HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &can_tx_message, data);
+        HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &can_tx_message, data);\
 	}
     else if (can_periph == CAN_CHANNEL_2)
 	{

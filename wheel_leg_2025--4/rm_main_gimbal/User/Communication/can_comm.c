@@ -16,6 +16,8 @@ FDCAN_RxHeaderTypeDef fdcan_rx_fifo0_message, fdcan_rx_fifo1_message;
 //注意FDCAN只能设置64个字节给用，设置8个会数组越界进硬件错误中断
 uint8_t rx_fifo0_data[64], rx_fifo1_data[64];
 uint8_t fdcan_rx_fifo0_data[64], fdcan_rx_fifo1_data[64];
+
+uint8_t t_flag = 0;
 /*
  * @brief  can总线初始化
  * @retval void
@@ -91,7 +93,7 @@ void can_comm_init(void)
     fdcan_tx_message.TxFrameType = FDCAN_DATA_FRAME;
     fdcan_tx_message.DataLength = FDCAN_DLC_BYTES_64;
     fdcan_tx_message.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
-    fdcan_tx_message.BitRateSwitch = FDCAN_BRS_OFF;
+    fdcan_tx_message.BitRateSwitch = FDCAN_BRS_ON;
     fdcan_tx_message.FDFormat = FDCAN_FD_CAN;
     fdcan_tx_message.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
     fdcan_tx_message.MessageMarker = 0;
@@ -142,7 +144,7 @@ void HAL_FDCAN_RxFifo1Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo1ITs)
 //			dji_motor_get_data(CAN_CHANNEL_2, rx_fifo1_message.Identifier, rx_fifo1_data);
         } else if (hfdcan->Instance == FDCAN3) {
 			HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO1, &fdcan_rx_fifo1_message, fdcan_rx_fifo1_data);
-//			fdcan_board_comm_get(fdcan_rx_fifo1_message.Identifier, fdcan_rx_fifo1_data);//板间通信解析函数
+			fdcan_board_comm_get(fdcan_rx_fifo1_message.Identifier, fdcan_rx_fifo1_data);//板间通信解析函数
         }
         HAL_FDCAN_ActivateNotification(hfdcan, FDCAN_IT_RX_FIFO1_NEW_MESSAGE, 0);
     }
@@ -165,19 +167,11 @@ void can_std_transmit(can_channel_e can_periph, uint32_t id, uint8_t *data)
     else if (can_periph == CAN_CHANNEL_2)
 	{
 		can_tx_message.Identifier = id;
-        HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan2, &can_tx_message, data);
+		HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan2, &can_tx_message, data);
 	}
     else if (can_periph == CAN_CHANNEL_3)
 	{
 		fdcan_tx_message.Identifier = id;
-		fdcan_tx_message.IdType = FDCAN_STANDARD_ID;  
-    fdcan_tx_message.TxFrameType = FDCAN_DATA_FRAME;
-    fdcan_tx_message.DataLength = FDCAN_DLC_BYTES_64;
-    fdcan_tx_message.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
-    fdcan_tx_message.BitRateSwitch = FDCAN_BRS_OFF;
-    fdcan_tx_message.FDFormat = FDCAN_FD_CAN;
-    fdcan_tx_message.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
-    fdcan_tx_message.MessageMarker = 0;
         HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan3, &fdcan_tx_message, data);
 	}
 }

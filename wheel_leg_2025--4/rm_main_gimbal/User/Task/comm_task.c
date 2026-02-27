@@ -29,7 +29,7 @@ void comm_task(void const *argument)
 
         taskENTER_CRITICAL();
         status.task.comm = 1;
-//        dji_motor_output_data();
+        dji_motor_output_data();
 //        board_comm_send_data();		//∞Âº‰Õ®–≈
 		
  		if(pit_motor.state == 0 ){
