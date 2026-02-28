@@ -50,25 +50,17 @@ void can_comm_init(void)
 	//can1 filter config begin
     
     //fdcan2 filter config begin
-	//imu
+	//imu supercap
     can_filter.IdType = FDCAN_STANDARD_ID;//标准帧
     can_filter.FilterIndex = 0;
-    can_filter.FilterType = FDCAN_FILTER_RANGE;//范围过滤
+    can_filter.FilterType = FDCAN_FILTER_DUAL;//等于过滤
     can_filter.FilterID1 = IMU_ALL_ID;
-    can_filter.FilterID2 = IMU_ALL_ID;
+    can_filter.FilterID2 = SUPERCAP_DATA_ID;
     can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;//通过过滤后给邮箱0
 	HAL_FDCAN_ConfigFilter(&hfdcan2, &can_filter);
-	//supercap
-    can_filter.IdType = FDCAN_STANDARD_ID;//标准帧
-    can_filter.FilterIndex = 1;
-    can_filter.FilterType = FDCAN_FILTER_DUAL;//等于过滤
-    can_filter.FilterID1 = SUPERCAP_DATA_ID;
-	can_filter.FilterID2 = SUPERCAP_STATE_ID; 
-    can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;//通过过滤后给邮箱0
-    HAL_FDCAN_ConfigFilter(&hfdcan2, &can_filter);
 	//board
     can_filter.IdType = FDCAN_STANDARD_ID;//标准帧
-    can_filter.FilterIndex = 2;
+    can_filter.FilterIndex = 1;
     can_filter.FilterType = FDCAN_FILTER_DUAL;//等于过滤
     can_filter.FilterID1 = 0x011;
 	can_filter.FilterID2 = 0x011;
@@ -160,8 +152,7 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 //					break;
 //				}
 				case IMU_ALL_ID :{imu_get_data(&chassis_imu, fdcan_rx_fifo0_message.Identifier, fdcan_rx_fifo0_data);break;}
-				case SUPERCAP_DATA_ID :{power_get_data(rx_fifo0_data);break;}
-				case SUPERCAP_STATE_ID:{power_get_status(rx_fifo0_data);break;}
+				case SUPERCAP_DATA_ID :{power_get_data(fdcan_rx_fifo0_data);break;}
 				default : break;
 			}
         } else if (hfdcan->Instance == FDCAN3) {

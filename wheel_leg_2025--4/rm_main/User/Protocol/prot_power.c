@@ -151,6 +151,18 @@ void power_get_data(uint8_t *data)
 			 supercap.volume_percent = 0;
 		
     supercap.current = chassis_current_buf;
+		
+	uint8_t cap_state_buf;
+    memcpy(&cap_state_buf,data + 8,1);
+    supercap.state.cap_v_over = cap_state_buf  & 1;
+    supercap.state.cap_v_low = cap_state_buf >> 1 & 1;
+    supercap.state.bat_v_over = cap_state_buf >> 2 & 1;
+    supercap.state.bat_v_low = cap_state_buf >> 3 & 1;
+    supercap.state.cap_i_over = cap_state_buf >> 4 & 1;
+    supercap.state.chassis_i_over = cap_state_buf >> 5 & 1;
+    supercap.state.chassis_msg_miss = cap_state_buf >> 6 & 1;
+    supercap.state.judge_msg_miss = cap_state_buf >> 7;
+	memcpy(&supercap.power_mode,data + 9,1);
     //0x101
 //    uint8_t cap_state_buf;
 //    memcpy(&cap_state_buf,data,1);

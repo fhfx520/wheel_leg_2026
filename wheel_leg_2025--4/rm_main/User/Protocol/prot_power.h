@@ -6,6 +6,13 @@
 #define SUPERCAP_DATA_ID  0x100
 #define SUPERCAP_STATE_ID 0x101
 
+typedef enum
+{
+    POWER_NORMAL,
+    POWER_PROTECT,
+    POWER_RESTART,
+}power_mode_e;
+
 typedef struct
 {
     float volage, current;          //接收的信息 电容电压 底盘电流
@@ -22,6 +29,7 @@ typedef struct
             uint8_t chassis_msg_miss : 1;
             uint8_t judge_msg_miss : 1;	
     }state;
+	power_mode_e power_mode;
 } supercap_t;
 
 
