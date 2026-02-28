@@ -16,6 +16,14 @@ board_comm_t board_comm;
 fdcan_board_comm_t fdcan_board_comm;
 uint8_t board_comm_tx_buff[8];
 
+rc_data_t rc_data_rec;
+kb_data_t kb_data_rec;
+shoot_data_t shoot_data_rec;
+imu_data_t imu_data_rec;
+judge_data_t judge_data_rec;
+vision_data_t vision_data_rec;
+gimbal_data_t gimbal_data_rec;
+
 //1111板间通信要把这个改掉，变成直接遥控器输入在中断那里已经收到数据
 static void rc_rc_decode(void){	
 	if(ctrl_mode == REMOTER_MODE || ctrl_mode == PROTECT_MODE){
@@ -135,27 +143,27 @@ void board_comm_send_data(void){
 void fdcan_board_comm_send(void)
 {
 //	//图传链路键鼠数据
-//	memcpy(&fdcan_board_comm.tx_msg.data_keyboard.mouse_data,&vtm.vtm_data.mouse_data,sizeof(vtm.vtm_data.mouse_data));
-//	fdcan_board_comm.tx_msg.data_keyboard.key_code = vtm.vtm_data.kb.key_code;
-//	fdcan_board_comm.tx_msg.data_keyboard.online = vtm.online;
-//	//云台数据
-//	fdcan_board_comm.tx_msg.gimbal_data.yaw_output = -1.0f * gimbal.yaw_output;
-//	fdcan_board_comm.tx_msg.gimbal_data.gimbal_start_up = gimbal.start_up;
-//	//视觉数据
-//	fdcan_board_comm.tx_msg.vision_data.vision_enanle = vision.shoot_enable;
-//	if(vision.aim_status == AIMING)
-//		fdcan_board_comm.tx_msg.vision_data.vision_trace_id = vision.trace_id;
-//	else
-//		fdcan_board_comm.tx_msg.vision_data.vision_trace_id = 0;
+	memcpy(&fdcan_board_comm.tx_msg.e.data_keyboard.mouse_data,&vtm.vtm_data.mouse_data,sizeof(vtm.vtm_data.mouse_data));
+	fdcan_board_comm.tx_msg.e.data_keyboard.key_code = vtm.vtm_data.kb.key_code;
+	fdcan_board_comm.tx_msg.e.data_keyboard.online = vtm.online;
+	//云台数据
+	fdcan_board_comm.tx_msg.e.gimbal_data.yaw_output = -1.0f * gimbal.yaw_output;
+	fdcan_board_comm.tx_msg.e.gimbal_data.gimbal_start_up = gimbal.start_up;
+	//视觉数据
+	fdcan_board_comm.tx_msg.e.vision_data.vision_enanle = vision.shoot_enable;
+	if(vision.aim_status == AIMING)
+		fdcan_board_comm.tx_msg.e.vision_data.vision_trace_id = vision.trace_id;
+	else
+		fdcan_board_comm.tx_msg.e.vision_data.vision_trace_id = 0;
 	//通信测试用下面
-	static uint8_t ccc = 1;
-	for(uint8_t i = 0;i < 64;i++)
-	{
-		fdcan_board_comm.tx_msg.buff[i] = ccc;
-		ccc++;
-		if(ccc > 128)
-			ccc = 1;
-	}
+//	static uint8_t ccc = 1;
+//	for(uint8_t i = 0;i < 64;i++)
+//	{
+//		fdcan_board_comm.tx_msg.buff[i] = ccc;
+//		ccc++;
+//		if(ccc > 128)
+//			ccc = 1;
+//	}
 	//联合体数组发送
 	can_std_transmit(CAN_CHANNEL_1,FDCAN_GIMBAL_TO_CHA_ID,fdcan_board_comm.tx_msg.buff);
 	
@@ -164,5 +172,17 @@ void fdcan_board_comm_send(void)
 //fdcan板间通信收数据
 void fdcan_board_comm_get(uint32_t id, uint8_t *data)
 {
-	
+	if(id == FDCAN_CHA_TO_GIMBAL_ID)
+	{
+		//联合体内存拷贝
+		memcpy(fdcan_board_comm.rx_msg.buff,data,FDCAN_BOARD_DATA_LEN);
+		//数据分发
+		memcpy(&rc_data_rec,&fdcan_board_comm.rx_msg.e.rc_data,sizeof(rc_data_rec));
+		memcpy(&kb_data_rec,&fdcan_board_comm.rx_msg.e.kb_data,sizeof(kb_data_rec));
+		memcpy(&imu_data_rec,&fdcan_board_comm.rx_msg.e.imu_data,sizeof(imu_data_rec));
+		memcpy(&judge_data_rec,&fdcan_board_comm.rx_msg.e.judge_data,sizeof(judge_data_rec));
+		memcpy(&vision_data_rec,&fdcan_board_comm.rx_msg.e.vision_data,sizeof(vision_data_rec));
+		memcpy(&gimbal_data_rec,&fdcan_board_comm.rx_msg.e.gimbal_data,sizeof(gimbal_data_rec));
+		
+	}
 }

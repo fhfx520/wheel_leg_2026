@@ -37,6 +37,7 @@
 #include "data_log.h"
 #include "can_comm.h"
 #include "usart_comm.h"
+#include "container.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -127,6 +128,8 @@ int main(void)
   usart_comm_init();
   can_comm_init();
   HAL_Delay(300);
+  
+  container_sys_init();
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */

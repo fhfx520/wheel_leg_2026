@@ -23,10 +23,14 @@
 #include "prot_power.h"
 #include "dwt.h"
 #include "prot_hipnuc.h"
+#include "board_comm.h"
+#include "container.h"
 
 #ifndef DO_ONCE
 #define DO_ONCE(code_block) { static int _flag = 0; if (!_flag) { _flag = 1; code_block; } }
 #endif
+
+static imu_data_t chassis_set_imu_data_container;
 
 extern uint16_t quadrant_cnt;
 extern pid_t pid_leg_recover[2];
@@ -513,6 +517,13 @@ static void chassis_data_output(void)
 		wlr.joint_all_online = 0;	
 }
 
+void chassis_set_container(void)
+{
+	chassis_set_imu_data_container.pit = wlr.pit_fdb;
+	chassis_set_imu_data_container.rol = wlr.roll_fdb;
+	container_set(TAG_TX_IMU_DATA,&chassis_set_imu_data_container,sizeof(chassis_set_imu_data_container),CONTAINER_TYPE_STRUCT);
+}
+
 // ==============================================================================
 // 最终任务主循环
 // ==============================================================================
@@ -547,7 +558,10 @@ void chassis_task(void const *argu)
         
         // 5. 将算好的力矩下发到电机
         chassis_data_output();
-            
+        
+		//底盘待发送数据打包
+//		chassis_set_container();
+		
         status.task.chassis = 1;
         osDelayUntil(&thread_wake_time, 2);
     }

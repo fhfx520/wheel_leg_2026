@@ -57,7 +57,7 @@ void status_task(void const* argument)
         }
 //         HAL_IWDG_Refresh(&hiwdg1);
 		board_comm.tx_vis_msg.data.vision_online = 0;
-		fdcan_board_comm.tx_msg.vision_data.vision_online = 0;
+		fdcan_board_comm.tx_msg.e.vision_data.vision_online = 0;
         osDelay(100);
     }
 }

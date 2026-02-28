@@ -12,6 +12,7 @@
 #include "board_comm.h"
 #include "robot_logic.h"
 #include "mode_switch_task.h"
+#include "container.h"
 
 #define SHOOT_SPEED_NUM 15
 #ifndef ABS
@@ -35,18 +36,28 @@ shoot_t shoot;
 //static buffer_t *shoot_speed_buffer;
 
 
-static gimbal_data_t shoot_get_gimbal_data_container;
 static vision_data_t shoot_get_vision_data_container;
+
+static vision_tx_data_t shoot_set_vision_data_container;
 
 // 收到vision数据：
 static void vision_data_cb(uint32_t tag_id, void* data, size_t len) {
-    vision_data_t* shoot_get_vision_data_container = (vision_data_t*)data;
+	if(data == NULL || len != sizeof(vision_data_t))
+    memcpy(&shoot_get_vision_data_container,(vision_data_t*)data,len);
 }
 
 // --- 回调配置表  ---
 static const ContainerBusCfg mb_callback[] = {
     { TAG_VISION_DATA, vision_data_cb, NULL }
 };
+
+void shoot_set_container(void)
+{
+	shoot_set_vision_data_container.shoot_speed = shoot_data.initial_speed;
+	shoot_set_vision_data_container.vision_bias_time = vision_send_time;
+	shoot_set_vision_data_container.vision_ID = ID_judge;
+	container_set(TAG_TX_VISION_DATA,&shoot_set_vision_data_container,sizeof(shoot_set_vision_data_container),CONTAINER_TYPE_STRUCT);
+}
 
 
 static uint8_t single_shoot_reset(void)
@@ -345,6 +356,7 @@ void shoot_task(void const *argu)
         shoot_data_output();
         shoot_test();
 		vision_shoot_delay();
+//		shoot_set_container();
         status.task.shoot = 1;
 //        taskEXIT_CRITICAL();
         osDelayUntil(&thread_wake_time, 2);

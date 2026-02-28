@@ -15,7 +15,7 @@
 #include "chassis_task.h"
 #include "status_task.h"
 #include "board_comm.h"
-
+#include "container.h"
 
 FGT_agl_t yaw_test = {
     .Td = 1,
@@ -39,16 +39,22 @@ gimbal_stable_t gimbal_stable;
 static gimbal_data_t gimbal_get_gimbal_data_container;
 static vision_data_t gimbal_get_vision_data_container;
 
+static gimbal_tx_data_t gimbal_set_gimbal_data_container;
+
+
 
 // 收到gimbal数据：
 static void gimbal_data_cb(uint32_t tag_id, void* data, size_t len) {
-    gimbal_data_t* gimbal_get_gimbal_data_container = (gimbal_data_t*)data;
-
+	if(data == NULL || len != sizeof(gimbal_data_t))
+		return;
+	memcpy(&gimbal_get_gimbal_data_container,(gimbal_data_t*)data,len);
 }
 
 // 收到vision数据：
 static void vision_data_cb(uint32_t tag_id, void* data, size_t len) {
-    vision_data_t* gimbal_get_vision_data_container = (vision_data_t*)data;
+	if(data == NULL || len != sizeof(vision_data_t))
+		return;
+    memcpy(&gimbal_get_vision_data_container,(vision_data_t*)data,len);
 }
 
 // --- 回调配置表  ---
@@ -228,6 +234,14 @@ static void yaw_control(void)
 	}
 }
 
+void gimbal_set_container(void)
+{
+	gimbal_set_gimbal_data_container.feedback_alpha_speed_input = gimbal_stable.feedback_alpha_speed;
+	gimbal_set_gimbal_data_container.feedback_beta_speed_input = gimbal_stable.feedback_beta_speed;
+	memcpy(gimbal_set_gimbal_data_container.yaw_raw_data,yaw_raw_data,8);
+	container_set(TAG_GIMBAL_DATA,&gimbal_set_gimbal_data_container,sizeof(gimbal_set_gimbal_data_container),CONTAINER_TYPE_STRUCT);	
+}
+
 void gimbal_task(void const *argu)
 {
     uint32_t thread_wake_time = osKernelSysTick();
@@ -235,6 +249,7 @@ void gimbal_task(void const *argu)
     for(;;) {
         thread_wake_time = osKernelSysTick();
 		gimbal_stable_calc();
+//		gimbal_set_container();
 		
 		//help 拆头 + 了下面两个函数     不拆头就不加
 //		yaw_control();

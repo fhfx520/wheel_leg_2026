@@ -85,7 +85,7 @@ void vision_get_data(uint8_t *data)
         vision.aim_status = FIRST_LOST;
     last_aim_status = vision.aim_status;
 	board_comm.tx_vis_msg.data.vision_online = 1;
-	fdcan_board_comm.tx_msg.vision_data.vision_online = 1;
+	fdcan_board_comm.tx_msg.e.vision_data.vision_online = 1;
 }
 uint8_t vision_send_buf[40];
 float kanan;

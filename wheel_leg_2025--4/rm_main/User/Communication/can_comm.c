@@ -18,6 +18,8 @@ uint8_t fdcan_rx_fifo0_data[64], fdcan_rx_fifo1_data[64];
 
 uint32_t r_cnt;
 
+uint8_t yaw_raw_data[8];
+
 /*
  * @brief  can总线初始化
  * @retval void
@@ -62,8 +64,7 @@ void can_comm_init(void)
     can_filter.IdType = FDCAN_STANDARD_ID;//标准帧
     can_filter.FilterIndex = 1;
     can_filter.FilterType = FDCAN_FILTER_DUAL;//等于过滤
-    can_filter.FilterID1 = 0x011;
-	can_filter.FilterID2 = 0x011;
+    can_filter.FilterID1 = FDCAN_GIMBAL_TO_CHA_ID;
     can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO1;//通过过滤后给邮箱1
     HAL_FDCAN_ConfigFilter(&hfdcan2, &can_filter);  
 	
@@ -144,13 +145,6 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 			r_cnt++;
 			switch(fdcan_rx_fifo0_message.Identifier)
 			{
-//				case IMU_PIT_ID:
-//				case IMU_YAW_ID:
-//				case IMU_ROL_ID:
-//			    case IMU_ACC_ID:{
-//					imu_get_data(&chassis_imu, rx_fifo1_message.Identifier, rx_fifo1_data);
-//					break;
-//				}
 				case IMU_ALL_ID :{imu_get_data(&chassis_imu, fdcan_rx_fifo0_message.Identifier, fdcan_rx_fifo0_data);break;}
 				case SUPERCAP_DATA_ID :{power_get_data(fdcan_rx_fifo0_data);break;}
 				default : break;
@@ -179,8 +173,9 @@ void HAL_FDCAN_RxFifo1Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo1ITs)
 			fdcan_board_comm_get(fdcan_rx_fifo1_message.Identifier, fdcan_rx_fifo1_data);
         } else if (hfdcan->Instance == FDCAN3) {
 			HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO1, &rx_fifo1_message, rx_fifo1_data);
-			dji_motor_get_data(CAN_CHANNEL_3, rx_fifo1_message.Identifier, rx_fifo1_data);			
-//			vision_gimbal_get_data(&vision, rx_fifo1_message.Identifier, rx_fifo1_data);
+			dji_motor_get_data(CAN_CHANNEL_3, rx_fifo1_message.Identifier, rx_fifo1_data);	
+			if(rx_fifo1_message.Identifier == YAW_MOTOR_ID)
+				memcpy(yaw_raw_data,rx_fifo1_data,8);
         }
         HAL_FDCAN_ActivateNotification(hfdcan, FDCAN_IT_RX_FIFO1_NEW_MESSAGE, 0);
     }

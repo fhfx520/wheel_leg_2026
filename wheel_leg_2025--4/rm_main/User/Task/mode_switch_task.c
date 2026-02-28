@@ -7,6 +7,7 @@
 #include "prot_vision.h"
 #include "chassis_task.h"
 #include "board_comm.h"
+#include "container.h"
 
 uint8_t lock_flag = 0;
 uint8_t reset_flag = 0;
@@ -14,10 +15,15 @@ ctrl_mode_e ctrl_mode;
 
 static data_keyboard_t modesw_get_keyboard_data_container;
 
+static rc_data_t modesw_set_rc_data_container;
+static kb_data_t modesw_set_kb_data_container;
+static judge_data_t modesw_set_judge_data_container;
 
 // 收到vision数据：
 static void keyboard_data_cb(uint32_t tag_id, void* data, size_t len) {
-    data_keyboard_t* modesw_get_keyboard_data_container = (data_keyboard_t*)data;
+	if(data == NULL || len != sizeof(data_keyboard_t))
+		return;
+	memcpy(&modesw_get_keyboard_data_container,(data_keyboard_t*)data,len);
 }
 
 // --- 回调配置表  ---
@@ -73,6 +79,27 @@ static void remote_reset(void)
     }
 }
 
+void modesw_set_container(void)
+{
+	modesw_set_rc_data_container.ch1 = rc.ch1;
+	modesw_set_rc_data_container.ch2 = rc.ch2;
+	modesw_set_rc_data_container.sw1 = rc.sw1;
+	modesw_set_rc_data_container.sw2 = rc.sw2;
+	modesw_set_rc_data_container.rc_init_status = rc.init_status;
+	container_set(TAG_TX_RC_DATA,&modesw_set_rc_data_container,sizeof(modesw_set_rc_data_container),CONTAINER_TYPE_STRUCT);
+	
+	modesw_set_kb_data_container.l = rc.mouse.l;
+	modesw_set_kb_data_container.r = rc.mouse.r;
+	modesw_set_kb_data_container.x = rc.mouse.x;
+	modesw_set_kb_data_container.y = rc.mouse.y;
+	modesw_set_kb_data_container.z = rc.mouse.z;
+	modesw_set_kb_data_container.key_code = rc.kb.key_code;
+	container_set(TAG_TX_KB_DATA,&modesw_set_kb_data_container,sizeof(modesw_set_kb_data_container),CONTAINER_TYPE_STRUCT);
+	
+	modesw_set_judge_data_container.camp = robot_status.robot_id;
+	container_set(TAG_TX_JUDGE_DATA,&modesw_set_judge_data_container,sizeof(modesw_set_judge_data_container),CONTAINER_TYPE_STRUCT);
+}
+
 void mode_switch_task(void const *argu)
 {
     ctrl_mode = PROTECT_MODE;
@@ -90,7 +117,8 @@ void mode_switch_task(void const *argu)
             remote_reset();
             sw1_mode_handler();  //根据左拨杆切换系统模式
         }
-		vision_num();		//用于板间通信传输数据，但云台未使用
+//		vision_num();		//用于板间通信传输数据，但云台未使用
+//		modesw_set_container();
         status.task.mode_switch = 1;
         osDelay(10);
     }

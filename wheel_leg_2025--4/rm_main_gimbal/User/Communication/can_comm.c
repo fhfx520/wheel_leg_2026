@@ -141,7 +141,7 @@ void HAL_FDCAN_RxFifo1Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo1ITs)
 			HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO1, &fdcan_rx_fifo1_message, fdcan_rx_fifo1_data);
 			switch(fdcan_rx_fifo1_message.Identifier)
 			{
-				case 0x001:{fdcan_board_comm_get(fdcan_rx_fifo1_message.Identifier, fdcan_rx_fifo1_data);break;}
+				case FDCAN_CHA_TO_GIMBAL_ID:{fdcan_board_comm_get(fdcan_rx_fifo1_message.Identifier, fdcan_rx_fifo1_data);break;}
 				case IMU_ALL_ID : {imu_get_data(&gimbal_imu, fdcan_rx_fifo1_message.Identifier, fdcan_rx_fifo1_data);break;}
 				default : break;
 			}
