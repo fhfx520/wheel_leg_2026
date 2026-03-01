@@ -94,50 +94,99 @@ static int check_init(void) {
     return 0;
 }
 
-int container_set(uint32_t tag_id, const void* data, size_t data_len, ContainerDataType type) {
-    if (check_init() != 0) return -1;
-    if (!data || data_len == 0) return -1;
+//int container_set(uint32_t tag_id, const void* data, size_t data_len, ContainerDataType type) {
+//    if (check_init() != 0) return -1;
+//    if (!data || data_len == 0) return -1;
 
-    // 上锁
-    if (xSemaphoreTake(g_instance->mutex, portMAX_DELAY) != pdTRUE) return -1;
+//    // 上锁
+//    if (xSemaphoreTake(g_instance->mutex, portMAX_DELAY) != pdTRUE) return -1;
+//	
+//	Node* node = find_node(tag_id);
+//	
+//	if(node)
+//	{
+////		node->offset = aligned_offset;
+//        node->length = data_len;
+//        node->type = type;
+//        node->frame_id++; 
+//		// 写入数据
+//		memcpy(g_instance->buffer + node->offset, data, data_len);
+//	}
+//	else
+//	{
+//		size_t current_offset = g_instance->used_size;
+//		size_t aligned_offset = ALIGN_UP(current_offset);
+//		size_t padding = aligned_offset - current_offset;
+//		size_t total_needed = padding + data_len;
+//		if (ensure_capacity(total_needed) != 0) {
+//			xSemaphoreGive(g_instance->mutex);
+//			return -1; 
+//		}
+//		Node* new_node = (Node*)malloc(sizeof(Node));
+//        if (new_node) {
+//            new_node->tag_id = tag_id;
+//            new_node->type = type;
+//            new_node->offset = aligned_offset;
+//            new_node->length = data_len;
+//            new_node->frame_id = 1;     
+//            new_node->read_count = 0;
+//            new_node->next = g_instance->head;
+//            g_instance->head = new_node;
+//			g_instance->used_size = aligned_offset + data_len;
+//		}
+//	}
+//    xSemaphoreGive(g_instance->mutex);
+//    return 0;
+//}
 
-    size_t current_offset = g_instance->used_size;
-    size_t aligned_offset = ALIGN_UP(current_offset);
-    size_t padding = aligned_offset - current_offset;
-    size_t total_needed = padding + data_len;
+int container_set(uint32_t tag_id, const void* data, size_t data_len, ContainerDataType type) 
+{
+	if (check_init() != 0) return -1;
+	if (!data || data_len == 0) return -1;
 
-    if (ensure_capacity(total_needed) != 0) {
-        xSemaphoreGive(g_instance->mutex);
-        return -1; 
-    }
+	// 上锁
+	if (xSemaphoreTake(g_instance->mutex, portMAX_DELAY) != pdTRUE) return -1;
 
-    Node* node = find_node(tag_id);
+	Node* node = find_node(tag_id);
 
-    // 写入数据
-    memcpy(g_instance->buffer + aligned_offset, data, data_len);
-    g_instance->used_size = aligned_offset + data_len;
 
-    if (node) {
-        node->offset = aligned_offset;
-        node->length = data_len;
-        node->type = type;
-        node->frame_id++; 
-    } else {
-        Node* new_node = (Node*)malloc(sizeof(Node));
-        if (new_node) {
-            new_node->tag_id = tag_id;
-            new_node->type = type;
-            new_node->offset = aligned_offset;
-            new_node->length = data_len;
-            new_node->frame_id = 1;     
-            new_node->read_count = 0;
-            new_node->next = g_instance->head;
-            g_instance->head = new_node;
-        }
-    }
+	size_t current_offset = g_instance->used_size;
+	size_t aligned_offset = ALIGN_UP(current_offset);
+	size_t padding = aligned_offset - current_offset;
+	size_t total_needed = padding + data_len;
 
-    xSemaphoreGive(g_instance->mutex);
-    return 0;
+	if (ensure_capacity(total_needed) != 0) {
+		xSemaphoreGive(g_instance->mutex);
+		return CONTAINER_ERROR_NOMEM_PARAM; 
+	}
+
+	if (node) {
+		if (data_len > node->length) {
+			// 不能覆盖，因为新数据更大（固定缓冲区无法扩容）
+			return CONTAINER_ERROR_INVALID_PARAM;
+		}
+		// 2. 直接覆盖原内存（不重新分配）
+		memcpy(g_instance->buffer + node->offset, data, data_len);
+		// 3. 更新长度和帧ID
+		node->length = data_len;
+		node->frame_id++;
+	} else {
+		 Node* new_node = (Node*)malloc(sizeof(Node));
+		 if (new_node) {
+		 new_node->tag_id = tag_id;
+		 new_node->type = type;
+		 new_node->offset = aligned_offset;
+		 new_node->length = data_len;
+		 new_node->frame_id = 1;
+		 new_node->read_count = 0;
+		 new_node->next = g_instance->head;
+		 g_instance->head = new_node;
+		 g_instance->used_size = aligned_offset + data_len;
+	 }
+ }
+
+	xSemaphoreGive(g_instance->mutex);
+	return 0;
 }
 
 int container_get(uint32_t tag_id, void** out_data, size_t* out_len, ContainerDataType* out_type) {

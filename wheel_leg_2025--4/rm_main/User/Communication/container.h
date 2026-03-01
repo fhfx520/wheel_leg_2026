@@ -29,6 +29,11 @@ typedef struct {
     size_t length;       
 } ContainerStat;
 
+typedef enum {
+	CONTAINER_ERROR_INVALID_PARAM = 0,
+	CONTAINER_ERROR_NOMEM_PARAM,
+} ContainerErrorType;
+
 /**
  * @brief 系统初始化 (建议在 main 函数开始时调用一次)
  * @note 初始化内部的单例对象和互斥锁

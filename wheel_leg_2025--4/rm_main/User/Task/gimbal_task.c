@@ -239,7 +239,7 @@ void gimbal_set_container(void)
 	gimbal_set_gimbal_data_container.feedback_alpha_speed_input = gimbal_stable.feedback_alpha_speed;
 	gimbal_set_gimbal_data_container.feedback_beta_speed_input = gimbal_stable.feedback_beta_speed;
 	memcpy(gimbal_set_gimbal_data_container.yaw_raw_data,yaw_raw_data,8);
-	container_set(TAG_GIMBAL_DATA,&gimbal_set_gimbal_data_container,sizeof(gimbal_set_gimbal_data_container),CONTAINER_TYPE_STRUCT);	
+	container_set(TAG_TX_GIMBAL_DATA,&gimbal_set_gimbal_data_container,sizeof(gimbal_set_gimbal_data_container),CONTAINER_TYPE_STRUCT);	
 }
 
 void gimbal_task(void const *argu)
@@ -249,7 +249,7 @@ void gimbal_task(void const *argu)
     for(;;) {
         thread_wake_time = osKernelSysTick();
 		gimbal_stable_calc();
-//		gimbal_set_container();
+		gimbal_set_container();
 		
 		//help 拆头 + 了下面两个函数     不拆头就不加
 //		yaw_control();

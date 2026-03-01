@@ -350,13 +350,14 @@ void shoot_task(void const *argu)
     {
         thread_wake_time = osKernelSysTick();
 //        taskENTER_CRITICAL();
+		vision_num();		//用于板间通信传输数据，但云台未使用
         shoot_mode_switch();    /* 发射器模式切换 */
         shoot_control();
         shoot_pid_calc();
         shoot_data_output();
         shoot_test();
 		vision_shoot_delay();
-//		shoot_set_container();
+		shoot_set_container();
         status.task.shoot = 1;
 //        taskEXIT_CRITICAL();
         osDelayUntil(&thread_wake_time, 2);

@@ -43,7 +43,7 @@ static void gimbal_data_cb(uint32_t tag_id, void* data, size_t len) {
 }
 
 static void transmit_data_cb(uint32_t tag_id, void* data, size_t len) {
-	if(data == NULL || len != FDCAN_CHA_TO_GIMBAL_ID)
+	if(data == NULL || len != FDCAN_BOARD_DATA_LEN)
 		return;
 	uint8_t *fdcan_tx_buff = (uint8_t*)data;
     can_std_transmit(CAN_CHANNEL_2,FDCAN_CHA_TO_GIMBAL_ID,fdcan_tx_buff);

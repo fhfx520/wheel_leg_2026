@@ -560,7 +560,7 @@ void chassis_task(void const *argu)
         chassis_data_output();
         
 		//底盘待发送数据打包
-//		chassis_set_container();
+		chassis_set_container();
 		
         status.task.chassis = 1;
         osDelayUntil(&thread_wake_time, 2);

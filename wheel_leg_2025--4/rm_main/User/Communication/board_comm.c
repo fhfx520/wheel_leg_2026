@@ -50,10 +50,10 @@ void fdcan_board_comm_get(uint32_t id,uint8_t *pdata)
 
 void board_comm_container_set(void)
 {
-//	container_set(TAG_KEYBOARD_DATA, &data_keyboard_rec, sizeof(data_keyboard_rec), CONTAINER_TYPE_STRUCT);
-//	container_set(TAG_GIMBAL_DATA,   &gimbal_data_rec,   sizeof(gimbal_data_rec),   CONTAINER_TYPE_STRUCT);
+	container_set(TAG_KEYBOARD_DATA, &data_keyboard_rec, sizeof(data_keyboard_rec), CONTAINER_TYPE_STRUCT);
+	container_set(TAG_GIMBAL_DATA,   &gimbal_data_rec,   sizeof(gimbal_data_rec),   CONTAINER_TYPE_STRUCT);
 	container_set(TAG_VISION_DATA,   &vision_data_rec,   sizeof(vision_data_rec),   CONTAINER_TYPE_STRUCT);
 	
 	//所有发送信息打包
-//	container_set(TAG_TX_ALL_DATA, fdcan_board_comm.tx_msg.buff, FDCAN_BOARD_DATA_LEN,CONTAINER_TYPE_INT);
+	container_set(TAG_TX_ALL_DATA, fdcan_board_comm.tx_msg.buff, FDCAN_BOARD_DATA_LEN,CONTAINER_TYPE_INT);
 }
