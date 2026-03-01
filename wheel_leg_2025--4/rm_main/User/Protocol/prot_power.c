@@ -37,15 +37,14 @@ void power_init(void)
 
 void power_judge_update(void)
 {
-    power_control.judge_chassis_power = power_heat_data.chassis_power;
-		if(robot_status.chassis_power_limit != 0)
+	if(robot_status.chassis_power_limit != 0)
     power_control.judge_max_power     = robot_status.chassis_power_limit;
 		
     power_control.judge_power_buffer  = power_heat_data.buffer_energy;
-		if (g_robot_ctx.output.chassis == CHASSIS_LOW_SPIN){ 
-				power_control.limit_power = power_control.judge_max_power + power_control.rotate_add_power;
+	if (g_robot_ctx.output.chassis == CHASSIS_LOW_SPIN){ 
+			power_control.limit_power = power_control.judge_max_power + power_control.rotate_add_power;
     } else 
-				power_control.limit_power = power_control.judge_max_power + power_control.normal_add_power;
+			power_control.limit_power = power_control.judge_max_power + power_control.normal_add_power;
 }
 
 float motor_power_calcu(float current, float wheel_speed_fdb)

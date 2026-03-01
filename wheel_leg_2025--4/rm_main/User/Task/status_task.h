@@ -8,7 +8,8 @@ typedef struct {
     uint16_t vision     :1;
     uint16_t judge      :1;
     uint16_t power      :1;
-    uint16_t imu        :3;// 0-2 3
+    uint16_t imu        :2;// 0-2 3
+	uint16_t board_comm :1;
     uint16_t dji_motor  :4;// 0-7 8
     uint16_t dm_motor   :4;// 0-4 5
     uint16_t all        :1;

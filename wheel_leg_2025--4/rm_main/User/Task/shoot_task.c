@@ -48,7 +48,7 @@ static void vision_data_cb(uint32_t tag_id, void* data, size_t len) {
 
 // --- 回调配置表  ---
 static const ContainerBusCfg mb_callback[] = {
-    { TAG_VISION_DATA, vision_data_cb, NULL }
+    { TAG_SHOOT_VISION_DATA, vision_data_cb, NULL }
 };
 
 void shoot_set_container(void)
@@ -56,7 +56,7 @@ void shoot_set_container(void)
 	shoot_set_vision_data_container.shoot_speed = shoot_data.initial_speed;
 	shoot_set_vision_data_container.vision_bias_time = vision_send_time;
 	shoot_set_vision_data_container.vision_ID = ID_judge;
-	container_set(TAG_TX_VISION_DATA,&shoot_set_vision_data_container,sizeof(shoot_set_vision_data_container),CONTAINER_TYPE_STRUCT);
+	container_set(TAG_SHOOT_VISION_DATA,&shoot_set_vision_data_container,sizeof(shoot_set_vision_data_container),CONTAINER_TYPE_STRUCT);
 }
 
 
@@ -271,30 +271,30 @@ static void shoot_mode_switch(void)
 
     /* 3. 解析 FSM 大脑的组合状态 */
     switch (g_robot_ctx.output.shoot) {
-        case SHOOT_PROTECT:
+        case SHOOT_PROTECT:{
             shoot.fric_mode = FRIC_MODE_STOP;
             shoot.trigger_mode = TRIGGER_MODE_PROTECT;
-            break;
+            break;}
             
-        case SHOOT_STOP:
+        case SHOOT_STOP:{
             shoot.fric_mode = FRIC_MODE_STOP;
             shoot.trigger_mode = TRIGGER_MODE_STOP;
-            break;
+            break;}
             
-        case SHOOT_SINGLE:
+        case SHOOT_SINGLE:{
             shoot.fric_mode = FRIC_MODE_RUN;
             shoot.trigger_mode = TRIGGER_MODE_SINGLE;
-            break;
+            break;}
             
-        case SHOOT_SERIES:
+        case SHOOT_SERIES:{
             shoot.fric_mode = FRIC_MODE_RUN;
             shoot.trigger_mode = TRIGGER_MODE_SERIES;
-            break;
+            break;}
             
-        default:
+        default:{
             shoot.fric_mode = FRIC_MODE_STOP;
             shoot.trigger_mode = TRIGGER_MODE_PROTECT;
-            break;
+            break;}
     }
 
     /* 4. 视觉模式切换 (保留你原版的键位掩码判断) */

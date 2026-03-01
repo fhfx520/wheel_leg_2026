@@ -9,18 +9,18 @@
 #define FDCAN_GIMBAL_TO_CHA_ID		 0x011
 
 
-#define TAG_KEYBOARD_DATA 	0x10
-#define TAG_GIMBAL_DATA 	0x20
-#define TAG_VISION_DATA		0x30
+#define TAG_VTM_KEYBOARD_DATA 	0x10
+#define TAG_GIMBAL_OUTPUT_DATA 	0x20
+#define TAG_TRACE_VISION_DATA	0x30
 
-#define TAG_TX_RC_DATA 		0x40
-#define TAG_TX_KB_DATA 		0x50
-#define TAG_TX_IMU_DATA 	0x60
-#define TAG_TX_JUDGE_DATA 	0x70
-#define TAG_TX_VISION_DATA 	0x80
-#define TAG_TX_GIMBAL_DATA 	0x90
+#define TAG_DR16_RC_DATA 		0x40
+#define TAG_DR16_KB_DATA 		0x50
+#define TAG_CHA_IMU_DATA 		0x60
+#define TAG_JUDGE_DATA 			0x70
+#define TAG_SHOOT_VISION_DATA 	0x80
+#define TAG_GIMBAL_CTRL_DATA 	0x90
 
-#define TAG_TX_ALL_DATA		0x100
+#define TAG_TRANSMIT_DATA		0x100
 
 #pragma pack(1)
 
@@ -168,5 +168,5 @@ extern fdcan_board_comm_t fdcan_board_comm;
 void fdcan_board_comm_send(void);
 void board_comm_container_set(void);
 void fdcan_board_comm_get(uint32_t id,uint8_t *pdata);
-
+uint8_t board_comm_check_offline(void);
 #endif

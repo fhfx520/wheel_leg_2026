@@ -521,7 +521,7 @@ void chassis_set_container(void)
 {
 	chassis_set_imu_data_container.pit = wlr.pit_fdb;
 	chassis_set_imu_data_container.rol = wlr.roll_fdb;
-	container_set(TAG_TX_IMU_DATA,&chassis_set_imu_data_container,sizeof(chassis_set_imu_data_container),CONTAINER_TYPE_STRUCT);
+	container_set(TAG_CHA_IMU_DATA,&chassis_set_imu_data_container,sizeof(chassis_set_imu_data_container),CONTAINER_TYPE_STRUCT);
 }
 
 // ==============================================================================
@@ -534,15 +534,10 @@ void chassis_task(void const *argu)
     chassis_init();
     Fusion_Vel_Acc_Init();
     
-    // 为了防止你原本的 else chassis_init(); 导致死循环，这里必须放在外面只跑一次。
-    robot_logic_init();
     
     for(;;)
     {   
         thread_wake_time = osKernelSysTick();
-        
-        // 1. 运行 FSM 大脑
-        robot_logic_update((const RC_Ctrl_t*)&rc);
         
         // 2. 将 FSM 状态直接挂载到执行参数
         chassis_execute_fsm();

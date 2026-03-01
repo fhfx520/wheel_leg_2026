@@ -28,7 +28,7 @@ static void keyboard_data_cb(uint32_t tag_id, void* data, size_t len) {
 
 // --- 回调配置表  ---
 static const ContainerBusCfg mb_callback[] = {
-    { TAG_KEYBOARD_DATA, keyboard_data_cb, NULL }
+    { TAG_VTM_KEYBOARD_DATA, keyboard_data_cb, NULL }
 };
 
 
@@ -38,36 +38,6 @@ static void unlock_init(void) {
             lock_flag = 1;  //左控制杆拨至右下
         }
     }
-}
-
-uint16_t chassis_power_cnt;
-static void sw1_mode_handler(void) { //由拨杆1决定系统模式切换，主要是云台、底盘和发射器
-	
-	static uint8_t last_chassis_power = 0;
-    switch (rc.sw1) {
-        case RC_UP: {
-            ctrl_mode = PROTECT_MODE;break;
-        }
-        case RC_MI: {
-            ctrl_mode = REMOTER_MODE;break;
-        }
-        case RC_DN: {
-//        if (rc.mouse.r == 1) {
-//            ctrl_mode = VISION_MODE;    //视觉模式，右键开启
-//        } else {
-            ctrl_mode = KEYBOARD_MODE;break;
-        }
-        default:break;
-    }
-		
-//		if ( (last_chassis_power ==0 && robot_status.power_management_chassis_output == 1 && status.judge == 0) || (chassis_power_cnt != 0 && robot_status.power_management_chassis_output == 1 ) ){
-//			if (!driver_motor[0].online || !driver_motor[1].online) {
-//				 ctrl_mode = PROTECT_MODE;
-//		}
-		if (chassis.recover_flag == 1 && rotate_flag)
-			ctrl_mode = PROTECT_MODE;
-				
-		last_chassis_power = robot_status.power_management_chassis_output ;
 }
 
 static void remote_reset(void)
@@ -86,7 +56,7 @@ void modesw_set_container(void)
 	modesw_set_rc_data_container.sw1 = rc.sw1;
 	modesw_set_rc_data_container.sw2 = rc.sw2;
 	modesw_set_rc_data_container.rc_init_status = rc.init_status;
-	container_set(TAG_TX_RC_DATA,&modesw_set_rc_data_container,sizeof(modesw_set_rc_data_container),CONTAINER_TYPE_STRUCT);
+	container_set(TAG_DR16_RC_DATA,&modesw_set_rc_data_container,sizeof(modesw_set_rc_data_container),CONTAINER_TYPE_STRUCT);
 	
 	modesw_set_kb_data_container.l = rc.mouse.l;
 	modesw_set_kb_data_container.r = rc.mouse.r;
@@ -94,10 +64,35 @@ void modesw_set_container(void)
 	modesw_set_kb_data_container.y = rc.mouse.y;
 	modesw_set_kb_data_container.z = rc.mouse.z;
 	modesw_set_kb_data_container.key_code = rc.kb.key_code;
-	container_set(TAG_TX_KB_DATA,&modesw_set_kb_data_container,sizeof(modesw_set_kb_data_container),CONTAINER_TYPE_STRUCT);
+	container_set(TAG_DR16_KB_DATA,&modesw_set_kb_data_container,sizeof(modesw_set_kb_data_container),CONTAINER_TYPE_STRUCT);
 	
 	modesw_set_judge_data_container.camp = robot_status.robot_id;
-	container_set(TAG_TX_JUDGE_DATA,&modesw_set_judge_data_container,sizeof(modesw_set_judge_data_container),CONTAINER_TYPE_STRUCT);
+	container_set(TAG_JUDGE_DATA,&modesw_set_judge_data_container,sizeof(modesw_set_judge_data_container),CONTAINER_TYPE_STRUCT);
+}
+
+//决定使用什么源头的键鼠数据 ： rc or vtm ?
+void decide_to_use_Witch_KbData(void)
+{
+	//如果遥控器离线，图传链路在线，使用图传链路键鼠数据
+	if(status.remote && modesw_get_keyboard_data_container.online)
+	{
+		rc.mouse.l = modesw_get_keyboard_data_container.mouse_data.mouse_l;
+		rc.mouse.r = modesw_get_keyboard_data_container.mouse_data.mouse_r;
+		rc.mouse.x = modesw_get_keyboard_data_container.mouse_data.mouse_x;
+		rc.mouse.y = modesw_get_keyboard_data_container.mouse_data.mouse_y;
+		rc.mouse.z = modesw_get_keyboard_data_container.mouse_data.mouse_z;
+		rc.kb.key_code = modesw_get_keyboard_data_container.key_code;
+	}
+	else if(status.remote && !modesw_get_keyboard_data_container.online) //都不在线 
+	{
+		//无法解锁
+		lock_flag = 0;
+	}
+	else //（遥控器在线 && 图传链路离线） || 都在线
+	{
+		//直接使用rc数据，那就返回
+		return;
+	}
 }
 
 void mode_switch_task(void const *argu)
@@ -105,6 +100,8 @@ void mode_switch_task(void const *argu)
     ctrl_mode = PROTECT_MODE;
     lock_flag = 0;
     container_bus_init(mb_callback, sizeof(mb_callback)/sizeof(ContainerBusCfg));
+
+    robot_logic_init();
     for (;;) {
         if (!lock_flag) {
             if (game_status.game_progress == 4) {//比赛中直接解锁
@@ -115,9 +112,14 @@ void mode_switch_task(void const *argu)
         }
         else {
             remote_reset();
-            sw1_mode_handler();  //根据左拨杆切换系统模式
         }
+		//决定键鼠数据来源
+		decide_to_use_Witch_KbData();
+		//运行 FSM 大脑 解锁后激活 否则一直保护
+        robot_logic_update((lock_flag == 1) ? (const RC_Ctrl_t*)&rc : NULL);
+		//遥控数据打包发送
 		modesw_set_container();
+		
         status.task.mode_switch = 1;
         osDelay(10);
     }

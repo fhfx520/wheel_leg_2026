@@ -57,10 +57,12 @@ static void vision_data_cb(uint32_t tag_id, void* data, size_t len) {
     memcpy(&gimbal_get_vision_data_container,(vision_data_t*)data,len);
 }
 
+
+
 // --- 回调配置表  ---
 static const ContainerBusCfg mb_callback[] = {
-    { TAG_GIMBAL_DATA, gimbal_data_cb, NULL },
-    { TAG_VISION_DATA, vision_data_cb, NULL }
+    { TAG_GIMBAL_OUTPUT_DATA, gimbal_data_cb, NULL },
+    { TAG_TRACE_VISION_DATA, vision_data_cb, NULL },
 };
 
 
@@ -234,12 +236,31 @@ static void yaw_control(void)
 	}
 }
 
+static void gimbal_execute_fsm(void)
+{
+	switch(g_robot_ctx.output.gimbal)
+	{
+		case GIMBAL_STOP:
+		{
+			gimbal.yaw_output = 0.0f;
+		}break;
+		//听云台算完发下来的电流
+		case GIMBAL_GYRO_STABILIZE:
+		case GIMBAL_MOUSE_CONTROL:
+		case GIMBAL_AUTO_AIM:
+		{
+			gimbal.yaw_output = (!status.board_comm ? gimbal_get_gimbal_data_container.yaw_output : 0.0f);
+		}break;
+		default : break;
+	}
+}
+
 void gimbal_set_container(void)
 {
 	gimbal_set_gimbal_data_container.feedback_alpha_speed_input = gimbal_stable.feedback_alpha_speed;
 	gimbal_set_gimbal_data_container.feedback_beta_speed_input = gimbal_stable.feedback_beta_speed;
 	memcpy(gimbal_set_gimbal_data_container.yaw_raw_data,yaw_raw_data,8);
-	container_set(TAG_TX_GIMBAL_DATA,&gimbal_set_gimbal_data_container,sizeof(gimbal_set_gimbal_data_container),CONTAINER_TYPE_STRUCT);	
+	container_set(TAG_GIMBAL_CTRL_DATA,&gimbal_set_gimbal_data_container,sizeof(gimbal_set_gimbal_data_container),CONTAINER_TYPE_STRUCT);	
 }
 
 void gimbal_task(void const *argu)
@@ -248,7 +269,11 @@ void gimbal_task(void const *argu)
     gimbal_init();
     for(;;) {
         thread_wake_time = osKernelSysTick();
+		
+		gimbal_execute_fsm();
+		
 		gimbal_stable_calc();
+		
 		gimbal_set_container();
 		
 		//help 拆头 + 了下面两个函数     不拆头就不加

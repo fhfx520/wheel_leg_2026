@@ -1,6 +1,5 @@
 #include "prot_judge.h"
 #include "shoot_task.h"
-#include "ui_interface.h"
 #include "cmsis_os.h"
 #include "string.h"
 #include "crc.h"
@@ -20,7 +19,6 @@ game_status_t                       game_status;                    //比赛状�
 game_result_t                       game_result;                    //比赛结果数据，比赛结束触发发送
 game_robot_HP_t                     game_robot_HP;                  //机器人血量数据，固定以3Hz频率发送
 event_data_t                        event_data;                     //场地事件数据，固定以1Hz频率发送
-ext_supply_projectile_action_t      ext_supply_projectile_action;   //补给站动作标识数据，补给站弹丸释放时触发发送
 referee_warning_t                   referee_warning;                //裁判警告数据，己方判罚/判负时触发发送，其余时间以1Hz频率发送
 dart_info_t                         dart_info;                      //飞镖发射相关数据，固定以1Hz频率发送
 robot_status_t                      robot_status;                   //机器人性能体系数据，固定以10Hz频率发送
@@ -31,8 +29,6 @@ hurt_data_t                         hurt_data;                      //伤害状�
 shoot_data_t                        shoot_data;                     //实时射击数据，弹丸发射后发送
 projectile_allowance_t              projectile_allowance;           //允许发弹量，固定以10Hz频率发送
 rfid_status_t                       rfid_status;                    //机器人RFID模块状态，固定以3Hz频率发送
-////空中独有的接收
-//air_support_data_t                  air_support_data;               //空中支援时间数据，固定以1Hz频率发送
 ////飞镖独有的接收
 //dart_client_cmd_t                   dart_client_cmd;                //飞镖选手端指令数据，固定以3Hz频率发送
 ////哨兵独有的接收
@@ -41,7 +37,6 @@ rfid_status_t                       rfid_status;                    //机器人R
 ////雷达独有的接收
 //radar_mark_data_t                   radar_mark_data;                //雷达标记进度数据，固定以1Hz频率发送
 //radar_info_t                        radar_info;                     //雷达自主决策信息同步，固定以1Hz频率发送
-
 //机器人交互/ui
 robot_interaction_data_t            robot_interaction_data;         //机器人交互数据，发送方触发发送，频率上限为10Hz
 //小地图交互接收
@@ -54,8 +49,6 @@ map_robot_data_t                    map_robot_data;                 //选手端�
 //custom_robot_data_t                 custom_robot_data;              //自定义控制器与机器人交互数据，发送方触发发送，频率上限为30Hz        图传链路
 ////自定义控制器发送
 //custom_client_data_t                custom_client_data;             //自定义控制器与选手端交互数据，发送方触发发送，频率上限为30Hz
-//图传链路遥控器
-remote_control_t                    remote_control;                 //键鼠遥控数据，固定30Hz频率发送                                      图传链路
 
 /*
  * @brief     读取裁判数据函数，串口中断函数中直接调用进行读取
@@ -86,11 +79,10 @@ uint8_t judge_get_data(uint8_t *data)
                         case ID_game_result                  : memcpy(&game_result                 , (data + 7), LEN_game_result                 );break;
                         case ID_game_robot_HP                : memcpy(&game_robot_HP               , (data + 7), LEN_game_robot_HP               );break;
                         case ID_event_data                   : memcpy(&event_data                  , (data + 7), LEN_event_data                  );break;
-                        case ID_ext_supply_projectile_action : memcpy(&ext_supply_projectile_action, (data + 7), LEN_ext_supply_projectile_action);break;
                         case ID_referee_warning              : memcpy(&referee_warning             , (data + 7), LEN_referee_warning             );break;
                         case ID_dart_info                    : memcpy(&dart_info                   , (data + 7), LEN_dart_info                   );break;
-                        case ID_robot_status                 : memcpy(&robot_status                , (data + 7), LEN_robot_status                );	ui_self_id = robot_status.robot_id; break;
-                        case ID_power_heat_data              : memcpy(&power_heat_data             , (data + 7), LEN_power_heat_data             );shoot.barrel.heat = power_heat_data.shooter_17mm_1_barrel_heat;break;
+                        case ID_robot_status                 : memcpy(&robot_status                , (data + 7), LEN_robot_status                );break;
+                        case ID_power_heat_data              : memcpy(&power_heat_data             , (data + 7), LEN_power_heat_data             );break;
                         case ID_robot_pos                    : memcpy(&robot_pos                   , (data + 7), LEN_robot_pos                   );break;
                         case ID_buff                         : memcpy(&buff                        , (data + 7), LEN_buff                        );break;
 //                        case ID_air_support_data             : memcpy(&air_support_data            , (data + 7), LEN_air_support_data            );break;
@@ -106,7 +98,6 @@ uint8_t judge_get_data(uint8_t *data)
                         case ID_robot_interaction_data       : memcpy(&robot_interaction_data      , (data + 7), LEN_robot_interaction_data      );break;
 //                        case ID_custom_robot_data            : memcpy(&custom_robot_data           , (data + 7), LEN_custom_robot_data           );break;
                         case ID_map_command                  : memcpy(&map_command                 , (data + 7), LEN_map_command                 );break;
-                        case ID_remote_control               : memcpy(&remote_control              , (data + 7), LEN_remote_control              );break;
                         case ID_map_robot_data               : memcpy(&map_robot_data              , (data + 7), LEN_map_robot_data              );break;
 //                        case ID_custom_client_data           : memcpy(&custom_client_data          , (data + 7), LEN_custom_client_data          );break;
 //                        case ID_map_data                     : memcpy(&map_data                    , (data + 7), LEN_map_data                    );break;

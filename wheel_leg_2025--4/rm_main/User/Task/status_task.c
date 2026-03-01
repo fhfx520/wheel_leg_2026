@@ -16,6 +16,8 @@
 #include "drv_ws2812b.h"
 #include "iwdg.h"
 #include "robot_logic.h"
+#include "container.h"
+#include "board_comm.h"
 
 status_t status;
 
@@ -101,6 +103,7 @@ void status_task(void const* argument)
         status.judge = judge_check_offline();
         status.power = power_check_offline();
         status.imu = imu_check_offline();
+		status.board_comm = board_comm_check_offline();
         status.dji_motor = dji_motor_check_offline();
         status.dm_motor = dm_motor_check_offline();
         

@@ -92,7 +92,7 @@ void log_scope_data_pkg(void)
 //          log_scope_get_data(power_heat_data.buffer_energy);
 //          log_scope_get_data(supercap.volage);
             log_scope_get_data(robot_status.chassis_power_limit);
-            log_scope_get_data( power_heat_data.chassis_power);
+//            log_scope_get_data( power_heat_data.chassis_power);
             break;
         } case 5: {//支持力调试
 //          log_scope_get_data(wlr.side[0].Fn_fdb);
@@ -184,8 +184,8 @@ void log_scope_data_pkg(void)
 			log_scope_get_data(lqr.X_diff[5]);
             break;
         } case 12: {//底盘功率模型
-            log_scope_get_data(power_heat_data.chassis_power);
-            log_scope_get_data(power_heat_data.chassis_voltage);
+//            log_scope_get_data(power_heat_data.chassis_power);
+//            log_scope_get_data(power_heat_data.chassis_voltage);
             log_scope_get_data(power_heat_data.buffer_energy);
             log_scope_get_data(supercap.volage);
             log_scope_get_data(power_control.power_scale);

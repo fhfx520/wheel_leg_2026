@@ -273,7 +273,10 @@ static void keyboard_enter(void) {
 static void keyboard_execute(void) {
     g_robot_ctx.output.top_mode = TOP_MODE_KEYBOARD;
     if (g_robot_ctx.input.sw1 == RC_SW_UP) { fsm_change(&g_top_fsm, &state_protect); return; }
-    if (g_robot_ctx.input.sw1 == RC_SW_MID) { fsm_change(&g_top_fsm, &state_remote); return; }
+    if (g_robot_ctx.input.sw1 == RC_SW_MID && g_robot_ctx.input.sw2 == RC_SW_UP) { 
+		fsm_change(&g_top_fsm, &state_remote); 
+		return; 
+	}
     fsm_run(&fsm_keyboard_sub);
 }
 const FsmState_t state_keyboard = { .name = "KEYBOARD", .enter = keyboard_enter, .execute = keyboard_execute };
@@ -294,7 +297,7 @@ void robot_logic_update(const RC_Ctrl_t* rc_data) {
         g_robot_ctx.is_online = 0;
         fsm_change(&g_top_fsm, &state_protect);
     }
-
+	
     fsm_run(&g_top_fsm);
 
     if (rc_data) {

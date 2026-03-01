@@ -51,13 +51,13 @@ static void transmit_data_cb(uint32_t tag_id, void* data, size_t len) {
 
 // --- ªÿµ˜≈‰÷√±Ì  ---
 static const ContainerBusCfg mb_callback[] = {
-	{ TAG_TX_RC_DATA, 	  rc_data_cb, 		NULL },
-	{ TAG_TX_KB_DATA, 	  kb_data_cb, 		NULL },
-	{ TAG_TX_IMU_DATA, 	  imu_data_cb, 		NULL },
-	{ TAG_TX_JUDGE_DATA,  judge_data_cb, 	NULL },
-	{ TAG_TX_VISION_DATA, vision_data_cb,	NULL },
-    { TAG_TX_GIMBAL_DATA, gimbal_data_cb, 	NULL },
-	{ TAG_TX_ALL_DATA, 	  transmit_data_cb, NULL },
+	{ TAG_DR16_RC_DATA, 	  rc_data_cb, 		NULL },
+	{ TAG_DR16_KB_DATA, 	  kb_data_cb, 		NULL },
+	{ TAG_CHA_IMU_DATA, 	  imu_data_cb, 		NULL },
+	{ TAG_JUDGE_DATA,  		 judge_data_cb, 	NULL },
+	{ TAG_SHOOT_VISION_DATA, vision_data_cb,	NULL },
+    { TAG_GIMBAL_CTRL_DATA, gimbal_data_cb, 	NULL },
+	{ TAG_TRANSMIT_DATA, 	  transmit_data_cb, NULL },
 };
 
 void board_comm_task(const void *argu)
@@ -75,7 +75,7 @@ void board_comm_task(const void *argu)
 		container_bus_poll();//contain_bus 
 
 		taskEXIT_CRITICAL();
-		osDelayUntil(&thread_wake_time,5);
+		osDelayUntil(&thread_wake_time,2);
 	}
 }
 
