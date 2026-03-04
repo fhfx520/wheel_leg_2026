@@ -64,6 +64,7 @@ static void dji_motor_get_single_data(dji_motor_t * motor, uint8_t *data)
     motor->speed_rpm    = (int16_t)(data[2] << 8 | data[3]);
     motor->rx_current   = (int16_t)(data[4] << 8 | data[5]);
     motor->temperature  = data[6];
+	motor->state 		= data[7];
     if (motor->receive_cnt < 50) {
         motor->offset_ecd = motor->ecd;
         motor->round_cnt = 0;

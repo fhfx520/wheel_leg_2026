@@ -16,7 +16,7 @@ void board_comm_task(const void *argu)
 		
 		taskEXIT_CRITICAL();
 		
-		osDelayUntil(&thread_wake_time,5);
+		osDelayUntil(&thread_wake_time,2);
 	}
 }
 

@@ -249,7 +249,7 @@ static void gimbal_execute_fsm(void)
 		case GIMBAL_MOUSE_CONTROL:
 		case GIMBAL_AUTO_AIM:
 		{
-			gimbal.yaw_output = (!status.board_comm ? gimbal_get_gimbal_data_container.yaw_output : 0.0f);
+			gimbal.yaw_output = gimbal_get_gimbal_data_container.yaw_output;
 		}break;
 		default : break;
 	}
@@ -257,8 +257,8 @@ static void gimbal_execute_fsm(void)
 
 void gimbal_set_container(void)
 {
-	gimbal_set_gimbal_data_container.feedback_alpha_speed_input = gimbal_stable.feedback_alpha_speed;
-	gimbal_set_gimbal_data_container.feedback_beta_speed_input = gimbal_stable.feedback_beta_speed;
+	gimbal_set_gimbal_data_container.feedback_alpha_speed_input = 0.0F;
+	gimbal_set_gimbal_data_container.feedback_beta_speed_input = 0.0F;
 	memcpy(gimbal_set_gimbal_data_container.yaw_raw_data,yaw_raw_data,8);
 	container_set(TAG_GIMBAL_CTRL_DATA,&gimbal_set_gimbal_data_container,sizeof(gimbal_set_gimbal_data_container),CONTAINER_TYPE_STRUCT);	
 }
@@ -274,7 +274,9 @@ void gimbal_task(void const *argu)
 		
 		gimbal_stable_calc();
 		
-		gimbal_set_container();
+		gimbal_data_output();
+		
+//		gimbal_set_container();
 		
 		//help 拆头 + 了下面两个函数     不拆头就不加
 //		yaw_control();

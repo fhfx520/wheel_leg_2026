@@ -999,6 +999,16 @@
               <FileType>1</FileType>
               <FilePath>..\User\Communication\board_comm.c</FilePath>
             </File>
+            <File>
+              <FileName>container.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Communication\container.c</FilePath>
+            </File>
+            <File>
+              <FileName>container_bus.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Communication\container_bus.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

@@ -17,6 +17,19 @@
 #define FDCAN_CHA_TO_GIMBAL_ID		 0x001
 #define FDCAN_GIMBAL_TO_CHA_ID		 0x011
 
+#define TAG_VTM_KEYBOARD_DATA 	0x10
+#define TAG_GIMBAL_OUTPUT_DATA 	0x20
+#define TAG_TRACE_VISION_DATA	0x30
+
+#define TAG_DR16_RC_DATA 		0x40
+#define TAG_DR16_KB_DATA 		0x50
+#define TAG_CHA_IMU_DATA 		0x60
+#define TAG_JUDGE_DATA 			0x70
+#define TAG_SHOOT_VISION_DATA 	0x80
+#define TAG_GIMBAL_CTRL_DATA 	0x90
+
+#define TAG_TRANSMIT_DATA		0x100
+
 typedef struct
 {
     __packed union
@@ -133,13 +146,14 @@ typedef struct
 
 #pragma pack(1)
 
-typedef struct //7bytes
+typedef struct //8bytes
 {
 	int16_t ch1;
 	int16_t ch2;
 	uint8_t sw1;
 	uint8_t sw2;
 	uint8_t rc_init_status;
+	uint8_t ctrl_mode;
 } rc_data_t;//Ò£¿ØÆ÷Öµ
 
 typedef struct //10bytes
@@ -240,11 +254,19 @@ typedef struct
 
 extern board_comm_t board_comm;
 extern fdcan_board_comm_t fdcan_board_comm;
+
+extern rc_data_t rc_data_rec;
+extern kb_data_t kb_data_rec;
+extern imu_data_t imu_data_rec;
+extern judge_data_t judge_data_rec;
+extern vision_data_t vision_data_rec;
+extern gimbal_data_t gimbal_data_rec;
+
 void board_comm_get_data(uint32_t id, uint8_t *data);
 void board_comm_send_data(void);
 
 void fdcan_board_comm_send(void);
 void fdcan_board_comm_get(uint32_t id, uint8_t *data);
-
+uint8_t board_comm_check_offline(void);
 
 #endif

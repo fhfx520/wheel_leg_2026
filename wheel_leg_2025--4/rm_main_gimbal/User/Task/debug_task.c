@@ -77,8 +77,8 @@ void debug_task(void const* argument)
         thread_wake_time = osKernelSysTick();
         
         log_scope_data_output();
-        imu_check_offline();
-        dji_motor_check_offline();
+//        imu_check_offline();
+//        dji_motor_check_offline();
 
             
         osDelayUntil(&thread_wake_time, 5);

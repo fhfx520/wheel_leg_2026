@@ -20,7 +20,7 @@
 //发送数据范围
 #define DJI_2006_MOTOR_DATA_RANGE 10000
 #define DJI_3508_MOTOR_DATA_RANGE 16384
-#define DJI_6020_MOTOR_DATA_RANGE 16384
+#define DJI_6020_MOTOR_DATA_RANGE 25000
 
 //发送数据所代表的物理量范围
 #define DJI_2006_MOTOR_CURRENT_RANGE 10
@@ -36,21 +36,36 @@
 //电机默认减速比
 #define DJI_2006_ORIGINAL_REDUCTION_RATIO 36.0f
 #define DJI_3508_ORIGINAL_REDUCTION_RATIO 19.2f
-#define DJI_3508_TAURUS_REDUCTION_RATIO   16.42f   
 #define DJI_6020_ORIGINAL_REDUCTION_RATIO 1.0f
+
+//自研减速箱减速比
+#define DJI_3508_WHEEL_TAURUS_REDUCTION_RATIO   	16.42f  
+#define DJI_3508_TRIGGER_TAURUS_REDUCTION_RATIO		5.0f
 
 //ID 膝关节超前定义左右
 #define DRIVER_MOTOR_LEFT_ID  0x204
 #define DRIVER_MOTOR_RIGHT_ID 0x203
 
 #define YAW_MOTOR_ID		  0x205
-#define TRIGGER_MOTOR_ID	  0x204
+#define TRIGGER_MOTOR_ID	  0x202
 
 typedef struct
 {
     uint32_t id;
     uint8_t data[8];
 } can_std_msg_t;
+
+typedef enum
+{
+	DJI_MOTOR_OK                  = 0,   // 无异常
+    DJI_MOTOR_STORAGE_ACCESS_FAIL = 1,   // 无法访问电机中的存储芯片（仅开机自检）
+    DJI_MOTOR_VOLTAGE_TOO_HIGH    = 2,   // 电调供电电压过高（仅开机自检）
+    DJI_MOTOR_PHASE_NOT_CONNECTED = 3,   // 电机三相线未接入
+    DJI_MOTOR_SENSOR_DATA_LOSS    = 4,   // 与电机相连的数据线中位置传感器数据丢失
+    DJI_MOTOR_TEMP_ABNORMAL       = 5,   // 电机温度异常或过高 (≥180°C)
+    DJI_MOTOR_CALIBRATION_FAILED  = 7,   // 电机校准失败
+    DJI_MOTOR_OVERHEAT            = 8    // 电机过热 (≥125°C)
+} dji_state_e;
 
 typedef struct
 {
@@ -72,6 +87,7 @@ typedef struct
     int16_t  speed_rpm;                 //转速               单位：rpm
     int16_t  rx_current, tx_current;    //实际转矩电流值     单位：
     uint8_t	 temperature;               //电机温度           单位：摄氏度
+	dji_state_e  state;					//电机错误码（新版C620添加）
     uint16_t offset_ecd;                //刚上电时的编码值
     uint16_t last_ecd;                  //上次接收的编码值
     int32_t  total_ecd;                 //上电到现在转动的总编码值

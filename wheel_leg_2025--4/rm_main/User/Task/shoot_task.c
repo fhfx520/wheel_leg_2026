@@ -18,8 +18,8 @@
 #ifndef ABS
 #define ABS(x) ((x>0)? (x): (-(x)))//32818
 #endif
-#define TRIGGER_MOTOR_ECD_SINGLE   (58982.0f)  //拨盘一颗子弹转过的编码值 8191 * 36 / 8 = 36859.5f
-#define TRIGGER_MOTOR_ECD_SERIES   (58982.4f)  //拨盘一颗子弹转过的编码值 8191 * 36 / 8 = 36859.5f
+#define TRIGGER_MOTOR_ECD_SINGLE   (8192.0f)  //拨盘一颗子弹转过的编码值 8192 * 5 * 2 / 10 = 8192.0f
+#define TRIGGER_MOTOR_ECD_SERIES   (8192.0f)  //拨盘一颗子弹转过的编码值 8192 * 5 * 2 / 10 = 8192.0f
 
 float MIN_HEAT = 50;        //热量控制裕量
 
@@ -34,6 +34,61 @@ static uint8_t back_flag = 0;
 
 shoot_t shoot;
 //static buffer_t *shoot_speed_buffer;
+
+
+//**********************添加预制弹位*************************//
+
+uint8_t microcurrent_flag = 0;		//预制标志位，如果暂时不需要用直接改成2就行了
+float micro_t = 0;					//微电流力矩
+float micro_t_test = 0;				//测试用
+
+/*
+* @brief	微电流（微小力矩）预制弹位，目前可用于dji3508电机，通过微小力矩推动到限位，
+			退小弹位，保证每次拨弹位置一致，可以保证每次打弹精度
+ * @prarm[in] void
+ * @return    void
+*/
+static void microcurrent_pre_fabricated_firing_position(void)
+{
+	static uint8_t microcurrent_cnt = 10;	//判断抵限位
+	static uint8_t microcurrent_wait_cnt = 100;//给予退弹位时间
+	static uint16_t microcurrent_out_cnt = 15000;//预制时间超过30s直接退出
+	
+	if(microcurrent_flag == 0)	//小力矩推动阶段,缓慢抵达限位处
+	{
+		if(ABS(trigger_motor.speed_rpm) < 60)	//防止力矩持续给力导致速度过快顶过限位	
+			micro_t = 0.30;
+		else
+			micro_t = 0.05f;
+		
+		shoot.trigger_ecd.ref = trigger_motor.total_ecd;//trigger stop下的ref和fbd一样，防止中途退出预制导致拨盘爆炸	
+		
+		if(ABS(trigger_motor.rx_current) > 3300 && ABS(trigger_motor.speed_rpm) < 2 && microcurrent_flag == 0) //判断是否抵住限位
+		{
+			if(microcurrent_cnt > 0)
+				microcurrent_cnt--;
+			else{									//第一阶段结束，进入第二阶段	
+				micro_t = 0;
+				microcurrent_flag = 1;	
+				shoot.trigger_ecd.ref += 2000.0f;	//退大约四分之一颗弹位	
+			}
+		}		
+	}
+	else if(microcurrent_flag == 1){	//重新回到pid位置环控制，往后退一小段位置
+		if(microcurrent_wait_cnt > 0)	//给予退弹位时间
+			microcurrent_wait_cnt--;
+		else
+			microcurrent_flag = 2;				//标志预制成功退出
+	}
+	
+	
+	if (microcurrent_out_cnt > 0)//预制时间超过30s直接退出
+		microcurrent_out_cnt--;
+	else
+		microcurrent_flag = 2;
+	
+}
+//**********************添加预制弹位结束*********************//
 
 
 static vision_data_t shoot_get_vision_data_container;
@@ -116,30 +171,36 @@ static void shoot_control(void)
         case TRIGGER_MODE_STOP: { //拨盘停止模式，保持静止，有力
             frequency_cnt = 0; //计时变量置0，打出当前一发，禁止
             shoot.barrel.shoot_period = 0;
-            
-            shoot.trigger_ecd.ref = trigger_motor.total_ecd;
-            shoot.trigger_spd.pid.i_out = 0;
+			
+            if(microcurrent_flag == 0 || microcurrent_flag == 1){			//微电流预制，只在上电时候进行一次
+				microcurrent_pre_fabricated_firing_position();					
+			}else{
+				shoot.trigger_ecd.ref = trigger_motor.total_ecd;
+				shoot.trigger_spd.pid.i_out = 0;}
+			
             break;
         }
         case TRIGGER_MODE_SINGLE: { //拨盘单发模式，连续开枪请求，只响应一次
             frequency_cnt++;
+			microcurrent_flag = 2;											//开始打弹无论如何直接结束预制，避免影响后续行为
             trigger_ecd_error = shoot.trigger_ecd.ref - shoot.trigger_ecd.fdb;
             if (single_shoot_reset()) {
                 shoot_enable = 1;
             }
             if (single_shoot_enable()) { //热量控制
                 shoot_enable = 0;
-                shoot.trigger_ecd.ref += TRIGGER_MOTOR_ECD_SINGLE;
+                shoot.trigger_ecd.ref -= TRIGGER_MOTOR_ECD_SINGLE;			//1：5减速箱3508转向和2006相反
                 shoot.barrel.heat += 10;
             }
             break;
         }
         case TRIGGER_MODE_SERIES: { //拨盘连发模式，连续开枪请求，连续响应
             frequency_cnt++;
+			microcurrent_flag = 2;											//开始打弹无论如何直接结束预制，避免影响后续行为
             trigger_ecd_error = shoot.trigger_ecd.ref - shoot.trigger_ecd.fdb;
            if ((series_shoot_enable() || 1) && !back_flag) { //一个周期打一颗
                 frequency_cnt = 0;
-				shoot.trigger_ecd.ref += 1 * TRIGGER_MOTOR_ECD_SERIES;
+				shoot.trigger_ecd.ref -= 1 * TRIGGER_MOTOR_ECD_SERIES;		//1：5减速箱3508转向和2006相反
                 shoot.barrel.heat += 10;
             }
 			//卡蛋反转
@@ -148,7 +209,7 @@ static void shoot_control(void)
 			if (back_cnt > 200) {
 				back_flag = 1;
 				err_cnt ++;
-				shoot.trigger_ecd.ref = trigger_motor.total_ecd - TRIGGER_MOTOR_ECD_SERIES;
+				shoot.trigger_ecd.ref = trigger_motor.total_ecd + TRIGGER_MOTOR_ECD_SERIES;	//1：5减速箱3508转向和2006相反
 				if (err_cnt > 200) {
 					back_cnt = 0;
 					err_cnt = 0;
@@ -183,8 +244,8 @@ static void shoot_init(void)
     //发射器底层初始化
     pid_init(&shoot.fric_spd[0].pid, NONE, 0.0005f, 0, 0, 0, 0.8);
     pid_init(&shoot.fric_spd[1].pid, NONE, 0.0005f, 0, 0, 0, 0.8);
-    pid_init(&shoot.trigger_ecd.pid, NONE, 0.1f, 0, 0.0f, 0, 10000);
-    pid_init(&shoot.trigger_spd.pid, NONE, 0.0015f, 0.00005f, 0, 0.18f, 1.8f);
+	pid_init(&shoot.trigger_ecd.pid, NONE, 0.25f, 0.0f, 0.0f, 100, 5000);		//改成了3508参数
+    pid_init(&shoot.trigger_spd.pid, NONE, 0.00065f, 0.0000008f, 0, 0.3f, 5.0); //改成了3508参数
     //发射器模式初始化
     shoot.trigger_mode  = TRIGGER_MODE_PROTECT;
     shoot.fric_mode     = FRIC_MODE_PROTECT;
@@ -226,7 +287,11 @@ static void shoot_data_output(void)
     if (shoot.trigger_mode == TRIGGER_MODE_PROTECT) {
         dji_motor_set_torque(&trigger_motor, 0);
     } else {
-        dji_motor_set_torque(&trigger_motor, shoot.trigger_output);
+		
+		if(microcurrent_flag == 0)							//预制第一阶段，需要力控，微小力矩推动到抵限位
+			dji_motor_set_torque(&trigger_motor, -micro_t);
+		else												//预制第二阶段和正常打弹下
+			dji_motor_set_torque(&trigger_motor, shoot.trigger_output);
     }
 }
 

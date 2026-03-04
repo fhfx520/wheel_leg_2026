@@ -43,8 +43,8 @@ void status_task(void const* argument)
         status.vtm = vtm_check_offline();
 				
 				
-//        status.imu = imu_check_offline();
-//        status.dji_motor = dji_motor_check_offline();
+        status.imu = imu_check_offline();
+        status.dji_motor = dji_motor_check_offline();
         status.dm_motor = dm_motor_check_offline();
 		status.task.board = 0;
         

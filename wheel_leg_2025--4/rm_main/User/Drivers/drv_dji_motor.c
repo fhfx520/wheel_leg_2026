@@ -26,7 +26,7 @@ static const float motor_para_table[3][4] =
 {
     //发送数据范围            发送数据所代表的物理量范围       力矩常数                        电机默认减速比
     {DJI_2006_MOTOR_DATA_RANGE, DJI_2006_MOTOR_CURRENT_RANGE, DJI_2006_MOTOR_TORQUE_CONSTANT, DJI_2006_ORIGINAL_REDUCTION_RATIO},
-    {DJI_3508_MOTOR_DATA_RANGE, DJI_3508_MOTOR_CURRENT_RANGE, DJI_3508_MOTOR_TORQUE_CONSTANT, DJI_3508_TAURUS_REDUCTION_RATIO},
+    {DJI_3508_MOTOR_DATA_RANGE, DJI_3508_MOTOR_CURRENT_RANGE, DJI_3508_MOTOR_TORQUE_CONSTANT, DJI_3508_ORIGINAL_REDUCTION_RATIO},
     {DJI_6020_MOTOR_DATA_RANGE, DJI_6020_MOTOR_CURRENT_RANGE, DJI_6020_MOTOR_TORQUE_CONSTANT, DJI_6020_ORIGINAL_REDUCTION_RATIO},
 };
 
@@ -64,6 +64,7 @@ static void dji_motor_get_single_data(dji_motor_t * motor, uint8_t *data)
     motor->speed_rpm    = (int16_t)(data[2] << 8 | data[3]);
     motor->rx_current   = (int16_t)(data[4] << 8 | data[5]);
     motor->temperature  = data[6];
+	motor->state 		= data[7];
     if (motor->receive_cnt < 50) {
         motor->offset_ecd = motor->ecd;
         motor->round_cnt = 0;
@@ -110,6 +111,8 @@ void dji_motor_get_data(can_channel_e can_periph, uint32_t id, uint8_t *data)
  */
 void dji_motor_set_torque(dji_motor_t *motor, float t)
 {
+	if(motor->motor_type == DJI_6020_MOTOR)//6020暂时直接发电流
+		motor->tx_current = (int16_t)(motor->t );
     motor->t = t;
     LIMIT(motor->t,   motor->reduction_ratio \
                     * motor_para_table[motor->motor_type][CURRENT_RANGE] \
@@ -172,10 +175,12 @@ static void dji_motor_fill_data(void)
 void dji_motor_output_data(void)
 {
     dji_motor_fill_data();
-	motor_send_flag[CAN_CHANNEL_3][2] = 0;
-	motor_send_flag[CAN_CHANNEL_3][3] = 0;
-    for (can_channel_e can_channel = CAN_CHANNEL_1; can_channel != CAN_CHANNEL_NUM; can_channel++)
+//	motor_send_flag[CAN_CHANNEL_3][2] = 0;
+//	motor_send_flag[CAN_CHANNEL_3][3] = 0;
+    for (can_channel_e can_channel = CAN_CHANNEL_3; can_channel != CAN_CHANNEL_NUM; can_channel++)
 	{
+//		if(can_channel == CAN_CHANNEL_2)
+//			continue;
         for (int i = 0; i < 4; i++) {
             if (motor_send_flag[can_channel][i] == 1) {
 				if(status.dji_motor != 2 && status.dji_motor != 3)

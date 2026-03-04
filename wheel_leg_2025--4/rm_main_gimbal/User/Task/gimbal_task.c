@@ -218,7 +218,7 @@ void gimbal_task(void const *argu)
                    gimbal.yaw_angle.ref -= rc.ch1 * gimbal_scale.angle_remote;
                 }
 				if(!gimbal.start_up)
-					gimbal.start_cnt++;
+					gimbal.starWt_cnt++;
 				else
 					gimbal.start_cnt = 0;
 //								YawSMC.ref = gimbal_imu.yaw* 57.29577f + circle_error(gimbal.yaw_angle.ref* 57.29577f, gimbal_imu.yaw* 57.29577f, 360.0f);;

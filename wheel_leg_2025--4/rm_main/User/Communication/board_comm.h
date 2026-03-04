@@ -24,13 +24,14 @@
 
 #pragma pack(1)
 
-typedef struct //7bytes
+typedef struct //8bytes
 {
 	int16_t ch1;
 	int16_t ch2;
 	uint8_t sw1;
 	uint8_t sw2;
 	uint8_t rc_init_status;
+	uint8_t ctrl_mode;
 } rc_data_t;//遥控器值
 
 typedef struct //10bytes
@@ -75,36 +76,39 @@ typedef struct
     {
 		//64bytes
         uint8_t buff[FDCAN_BOARD_DATA_LEN];
-		struct //10bytes
-        {
-			struct
+		struct
+		{
+			struct //10bytes
 			{
-				int16_t mouse_x;
-				int16_t mouse_y;
-				int16_t mouse_z;
-				struct{
-					uint8_t mouse_l : 2;
-					uint8_t mouse_r : 2;
-					uint8_t mouse_m : 2;
-					uint8_t empty   : 2;
-				} __attribute__((packed));
-			} mouse_data;
-			uint16_t key_code;
-			uint8_t online;
-		} data_keyboard;//图传链路键鼠数据
-		struct //3bytes
-		{
-			int16_t yaw_output;
-			uint8_t gimbal_start_up;
-		} gimbal_data;//云台下发数据
-		struct //3bytes
-		{
-			uint8_t vision_enanle;
-			uint8_t vision_trace_id;
-			uint8_t vision_online;
-		}vision_data;//视觉数据
-		//保留
-		uint8_t reserved[FDCAN_BOARD_DATA_LEN - 16];
+				struct
+				{
+					int16_t mouse_x;
+					int16_t mouse_y;
+					int16_t mouse_z;
+					struct{
+						uint8_t mouse_l : 2;
+						uint8_t mouse_r : 2;
+						uint8_t mouse_m : 2;
+						uint8_t empty   : 2;
+					} __attribute__((packed));
+				} mouse_data;
+				uint16_t key_code;
+				uint8_t online;
+			} data_keyboard;//图传链路键鼠数据
+			struct //3bytes
+			{
+				int16_t yaw_output;
+				uint8_t gimbal_start_up;
+			} gimbal_data;//云台下发数据
+			struct //3bytes
+			{
+				uint8_t vision_enanle;
+				uint8_t vision_trace_id;
+				uint8_t vision_online;
+			}vision_data;//视觉数据
+			//保留
+			uint8_t reserved[FDCAN_BOARD_DATA_LEN - 16];
+		} e;
     } rx_msg;
 	
 	union

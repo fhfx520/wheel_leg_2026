@@ -8,6 +8,7 @@
 #include "chassis_task.h"
 #include "board_comm.h"
 #include "container.h"
+#include "prot_imu.h"
 
 uint8_t lock_flag = 0;
 uint8_t reset_flag = 0;
@@ -40,6 +41,36 @@ static void unlock_init(void) {
     }
 }
 
+uint16_t chassis_power_cnt;
+static void sw1_mode_handler(void) { //由拨杆1决定系统模式切换，主要是云台、底盘和发射器
+	
+	static uint8_t last_chassis_power = 0;
+    switch (rc.sw1) {
+        case RC_UP: {
+            ctrl_mode = PROTECT_MODE;break;
+        }
+        case RC_MI: {
+            ctrl_mode = REMOTER_MODE;break;
+        }
+        case RC_DN: {
+//        if (rc.mouse.r == 1) {
+//            ctrl_mode = VISION_MODE;    //视觉模式，右键开启
+//        } else {
+            ctrl_mode = KEYBOARD_MODE;break;
+        }
+        default:break;
+    }
+		
+//		if ( (last_chassis_power ==0 && robot_status.power_management_chassis_output == 1 && status.judge == 0) || (chassis_power_cnt != 0 && robot_status.power_management_chassis_output == 1 ) ){
+//			if (!driver_motor[0].online || !driver_motor[1].online) {
+//				 ctrl_mode = PROTECT_MODE;
+//		}
+		if (chassis.recover_flag == 1 && rotate_flag)
+			ctrl_mode = PROTECT_MODE;
+				
+		last_chassis_power = robot_status.power_management_chassis_output ;
+}
+
 static void remote_reset(void)
 {
     //保护模式下右拨杆拨至左下
@@ -56,6 +87,9 @@ void modesw_set_container(void)
 	modesw_set_rc_data_container.sw1 = rc.sw1;
 	modesw_set_rc_data_container.sw2 = rc.sw2;
 	modesw_set_rc_data_container.rc_init_status = rc.init_status;
+	modesw_set_rc_data_container.ctrl_mode = ctrl_mode;
+	if (chassis.recover_flag == 1 && fabs(chassis_imu.pit) > 0.3f)
+		modesw_set_rc_data_container.ctrl_mode = PROTECT_MODE;
 	container_set(TAG_DR16_RC_DATA,&modesw_set_rc_data_container,sizeof(modesw_set_rc_data_container),CONTAINER_TYPE_STRUCT);
 	
 	modesw_set_kb_data_container.l = rc.mouse.l;
@@ -112,6 +146,7 @@ void mode_switch_task(void const *argu)
         }
         else {
             remote_reset();
+			sw1_mode_handler();
         }
 		//决定键鼠数据来源
 		decide_to_use_Witch_KbData();

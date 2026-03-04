@@ -12,6 +12,7 @@
 #include "stdlib.h"
 #include "math_lib.h"
 #include "prot_vtm.h"
+#include "container.h"
 board_comm_t board_comm;
 fdcan_board_comm_t fdcan_board_comm;
 uint8_t board_comm_tx_buff[8];
@@ -23,6 +24,8 @@ imu_data_t imu_data_rec;
 judge_data_t judge_data_rec;
 vision_data_t vision_data_rec;
 gimbal_data_t gimbal_data_rec;
+
+uint8_t board_comm_online;
 
 //1111板间通信要把这个改掉，变成直接遥控器输入在中断那里已经收到数据
 static void rc_rc_decode(void){	
@@ -184,5 +187,16 @@ void fdcan_board_comm_get(uint32_t id, uint8_t *data)
 		memcpy(&vision_data_rec,&fdcan_board_comm.rx_msg.e.vision_data,sizeof(vision_data_rec));
 		memcpy(&gimbal_data_rec,&fdcan_board_comm.rx_msg.e.gimbal_data,sizeof(gimbal_data_rec));
 		
+		board_comm_online = 1;
 	}
+}
+
+uint8_t board_comm_check_offline(void)
+{
+    if (board_comm_online == 0) {
+        return 1;
+    } else {
+        board_comm_online = 0;
+        return 0;
+    }
 }

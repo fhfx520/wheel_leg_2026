@@ -26,6 +26,8 @@
 #include "board_comm.h"
 #include "container.h"
 
+ChassisState_e last_chassis_output;
+
 #ifndef DO_ONCE
 #define DO_ONCE(code_block) { static int _flag = 0; if (!_flag) { _flag = 1; code_block; } }
 #endif
@@ -152,6 +154,7 @@ static void chassis_execute_fsm(void)
 
     switch (g_robot_ctx.output.chassis) {
         case CHASSIS_STOP:
+		{
             wlr.ctrl_mode = 0; 
             wlr.high_flag = 0;
             wlr.jump_flag = 0;
@@ -160,52 +163,60 @@ static void chassis_execute_fsm(void)
             chassis.rescue_cnt_R = 0;
             chassis.recover_flag = 0;
             break;
+		}
 
         case CHASSIS_LOW:
+		{
             wlr.ctrl_mode = 2; 
             wlr.high_flag = 0; 
             wlr.jump_flag = 0;
             wlr.sky_flag = WLR_SKY_IDLE;
-            chassis.recover_flag = 1; 
+			if(last_chassis_output == CHASSIS_STOP)
+				chassis.recover_flag = 1;
             break;
+		}
 
         case CHASSIS_HIGH:
+		{
             wlr.ctrl_mode = 2;
             wlr.high_flag = 1; 
             wlr.jump_flag = 0;
             wlr.sky_flag = WLR_SKY_IDLE;
-            chassis.recover_flag = 1;
             break;
+		}
 
         case CHASSIS_LOW_SPIN:
+		{
             wlr.ctrl_mode = 2;
             wlr.high_flag = 0; 
             rotate_flag = 1;   
-            chassis.recover_flag = 1;
             break;
+		}
 
         case CHASSIS_FIGHT:
+		{
             wlr.ctrl_mode = 2;
             wlr.high_flag = 0;
             wlr.jump_flag = 0;
-            chassis.recover_flag = 1;
             break;
+		}
 
         case CHASSIS_TERRAIN_READY:
+		{
             wlr.ctrl_mode = 2;
             wlr.high_flag = 0;
             wlr.jump_flag = 0;
             wlr.sky_flag = WLR_SKY_FOLDING; 
-            chassis.recover_flag = 1;
             break;
+		}
 
         case CHASSIS_TERRAIN_EXECUTING:
+		{
             wlr.ctrl_mode = 2;
             wlr.high_flag = 0;
             wlr.jump_flag = WLR_SKY_EXTENDING; 
-            chassis.recover_flag = 1;
             break;
-
+		}
         default:
             wlr.ctrl_mode = 0;
             break;
@@ -224,6 +235,8 @@ static void chassis_execute_fsm(void)
 
     if (g_robot_ctx.output.chassis == CHASSIS_HIGH) chassis_scale.remote = 1.0f/660*2.6f;
     else chassis_scale.remote = 1.0f/660*2.5f; 
+	
+	last_chassis_output = g_robot_ctx.output.chassis;
     
 }
 
@@ -425,7 +438,173 @@ float up_ready;
 
 static void chassis_self_rescue(void)
 {
-    // ... [原翻倒自救代码保持不变] ...
+    static uint32_t leg_length_cnt;		//腿长到达目标长度之后，变量++，延时0.1s
+	static float rescue_cnt = 0;		
+	static float rescue_T = 4;			//翻转力矩
+	
+	if (fabs(chassis_imu.pit) > 1.5f)
+		rescue_T = 6.5;
+	else
+		rescue_T = 4.5;
+		
+	left_T  = pid_calc(&pid_rescue[0], left_speed , (wlr.side[0].w1));
+	right_T = pid_calc(&pid_rescue[1], right_speed, (wlr.side[1].w1));
+		
+	//第四象限卡台阶
+	if ((vmc[0].quadrant ==4 || vmc[1].quadrant == 4) && chassis.rescue_inter_flag != 1)
+		rescue_cnt ++;
+		
+//    if (!chassis.rescue_inter_flag && fabs(chassis_imu.pit) > 1.0f && fabs(chassis_imu.rol) < 0.1f)
+//        chassis.rescue_inter_flag = 3;//3阶段 ----整车翻倒且保护天鹅颈
+		
+	if (!chassis.rescue_inter_flag && fabs(chassis_imu.pit) < 0.6f && (vmc[0].quadrant == 2 || vmc[1].quadrant == 2))
+		chassis.rescue_inter_flag = 4;//4阶段 ----第二象限启动卡墙
+		
+    if (!chassis.rescue_inter_flag)
+        chassis.rescue_inter_flag = 1;//1阶段 ----代表车身正在归正
+    
+    if (chassis.rescue_inter_flag == 3) {
+        dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, left_T);//0.03 0.5
+        dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);	
+        if (fabs(chassis_imu.rol) > 0.6f)
+            chassis.rescue_inter_flag = 1;
+    }    
+		
+	if (chassis.rescue_inter_flag == 4) {	//第二象限启动卡墙
+		//左腿归正
+		if (vmc[0].quadrant == 2 && chassis.rescue_cnt_L <= 100) {
+			dm_motor_set_control_para(&joint_motor[0], 0, -rescue_T, 0, 5, 0);//0.03 0.5
+            dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);	
+		} else if (vmc[0].quadrant == 1) 
+			chassis.rescue_cnt_L++;
+		if (chassis.rescue_cnt_L > 100) {
+			dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, 0);
+			dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0); 		
+		}
+		//右腿归正
+		if (vmc[1].quadrant == 2 && chassis.rescue_cnt_R <= 100 ) {
+			dm_motor_set_control_para(&joint_motor[2], 0, rescue_T, 0, 5, 0);//0.03 0.5
+            dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);	
+		} else if (vmc[1].quadrant == 1)
+			chassis.rescue_cnt_R++;
+		if (chassis.rescue_cnt_R > 100) {
+            dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, 0);
+            dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
+		}
+		//进入收腿阶段
+        if(chassis.rescue_cnt_L > 200 || chassis.rescue_cnt_R > 200) {
+            chassis.rescue_cnt_L = 0;
+            chassis.rescue_cnt_R = 0;
+			chassis.rescue_inter_flag = 1;
+		}
+	}
+    
+    if (chassis.rescue_inter_flag == 1) {
+        //左腿归正
+		if ( (vmc[0].quadrant == 1 || vmc[0].quadrant == 2 || vmc[0].quadrant == 3) && (fabs(chassis_imu.pit) > 0.3f ||fabs(chassis_imu.rol )> 0.3f) || chassis.rescue_cnt_L > 1250 ) {
+			dm_motor_set_control_para(&joint_motor[0], 0, 8, 0, 5, 10);//快哥z
+            dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);
+			if( chassis.rescue_cnt_L < 1000)
+				chassis.rescue_cnt_L = 0;
+        } else if (vmc[0].quadrant == 4 || fabs(chassis_imu.pit) < 0.2f ||fabs(chassis_imu.rol ) <  0.2f) {
+            dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, 0);
+            dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);        
+            chassis.rescue_cnt_L++;       
+        }
+        //右腿归正        
+		if ((vmc[1].quadrant == 1 || vmc[1].quadrant == 2 || vmc[1].quadrant == 3) &&  (fabs(chassis_imu.pit) > 0.3f ||fabs(chassis_imu.rol )> 0.3f) || chassis.rescue_cnt_R > 1250 ) {
+			dm_motor_set_control_para(&joint_motor[2], 0, -8, 0, 5, 10);//快哥
+            dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
+			if( chassis.rescue_cnt_R < 1000)
+				chassis.rescue_cnt_R = 0; 
+        } else if (vmc[1].quadrant == 4 || fabs(chassis_imu.pit) < 0.2f ||fabs(chassis_imu.rol ) <  0.2f) {
+            dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, 0);//0.03 0.5
+            dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
+            chassis.rescue_cnt_R++;
+        }
+        //进入收腿阶段
+		if((chassis.rescue_cnt_L > 100 && chassis.rescue_cnt_R > 100) || up_ready ){
+			if(!up_ready)
+				up_ready = 1;
+			/*shangjiao*/
+			if(vmc[0].quadrant != 1 ){
+				dm_motor_set_control_para(&joint_motor[0], 0, 6, 0, 5, 0);//快哥z
+				dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);
+			}else{
+				dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, 0);//0.03 0.5
+				dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);
+			}
+						
+			if(vmc[1].quadrant != 1 ){
+				dm_motor_set_control_para(&joint_motor[2], 0, -6, 0, 5, 0);//快哥
+				dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
+			}else{
+				dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, 0);//0.03 0.5
+				dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
+			}
+			
+			if(vmc[0].quadrant == 1 && vmc[1].quadrant == 1)
+				up_ready++;
+			if(up_ready > 100)
+				chassis.rescue_inter_flag = 2;
+		}
+		
+
+    } else if (chassis.rescue_inter_flag == 2) { //开始收腿
+        dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, 1.0f*wlr.side[0].T1);//0.03 0.5
+        dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 1.0f*wlr.side[0].T2); 
+        dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0,-1.0f*wlr.side[1].T1);
+        dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0,-1.0f*wlr.side[1].T2);
+		dji_motor_set_torque(&driver_motor[0], 0);
+		dji_motor_set_torque(&driver_motor[1], 0);
+				
+		//认为腿长已收到可以起身的长度
+        if ( fabs(vmc[0].L_fdb - wlr.recover_length) < 0.05f && fabs(vmc[1].L_fdb - wlr.recover_length) < 0.05f )  {
+			leg_length_cnt++;
+			if(leg_length_cnt > 50){
+				leg_length_cnt = 0;
+				rescue_cnt = 0;
+				quadrant_cnt = 0;
+				chassis.rescue_cnt_L = 0;
+				chassis.rescue_cnt_R = 0;
+				chassis.recover_flag = 2;
+				chassis.rescue_inter_flag = 0;
+				wlr.high_flag = 0;
+				up_ready=0;
+				//清掉收腿pid积分和腿长pid积分
+				pid_leg_recover[0].i_out = 0;
+				pid_leg_recover[1].i_out = 0;
+				pid_L_test[0].i_out = 0.0f;
+				pid_L_test[1].i_out = 0.0f;
+			}
+        }
+    }    
+    //收腿阶段不允许轮子出力
+    dji_motor_set_torque(&driver_motor[0], 0);
+    dji_motor_set_torque(&driver_motor[1], 0);
+	
+	//第四象限卡台阶 暂时注释
+	if (rescue_cnt > 5000 && (vmc[0].quadrant ==4 || vmc[1].quadrant == 4) && chassis.rescue_inter_flag != 2  && 0 ) {
+		if (chassis_imu.pit < -0.25f) { 
+			dji_motor_set_torque(&driver_motor[0], -2);
+			dji_motor_set_torque(&driver_motor[1], 2);			
+		}else {			
+			dji_motor_set_torque(&driver_motor[0], 2);
+			dji_motor_set_torque(&driver_motor[1], -2);
+		}
+	}
+	
+	if(ctrl_mode == PROTECT_MODE){
+		leg_length_cnt = 0;
+		rescue_cnt = 0;
+		quadrant_cnt = 0;
+		chassis.rescue_cnt_L = 0;
+		chassis.rescue_cnt_R = 0;
+		chassis.recover_flag = 2; 
+		chassis.rescue_inter_flag = 0;
+		wlr.high_flag = 0;
+		up_ready=0;
+	}
 }
 
 static void chassis_rescue_test(void)
@@ -454,7 +633,8 @@ static void chassis_data_output(void)
         if (wlr.prone_flag) {
             // ... [原力控和卧倒逻辑保持不变] ...
         } else {
-            if(chassis.recover_flag == 1) chassis_self_rescue();
+            if(chassis.recover_flag == 1) 
+				chassis_self_rescue();
             if(chassis.recover_flag != 1) {
 				if(wlr.crash_flag){	  
 					dm_motor_set_control_para(&joint_motor[0], 0, -5.0, 0, 5, 0);
@@ -556,6 +736,13 @@ void chassis_task(void const *argu)
         
 		//底盘待发送数据打包
 		chassis_set_container();
+		
+		 dji_motor_set_torque(&driver_motor[0], 0);
+        dji_motor_set_torque(&driver_motor[1], 0);
+        dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, 0);
+        dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);
+		dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, 0);
+		dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
 		
         status.task.chassis = 1;
         osDelayUntil(&thread_wake_time, 2);

@@ -18,22 +18,6 @@ gimbal_tx_data_t gimbal_data_tran;
 
 uint8_t board_comm_online;
 
-
-//fdcan板间通信上发数据
-void fdcan_board_comm_send(void)
-{
-	//测试
-//	static uint8_t ccc = 1;
-//	for(uint8_t i = 0;i < 64;i++)
-//	{
-//		fdcan_board_comm.tx_msg.buff[i] = ccc;
-//		ccc++;
-//		if(ccc > 128)
-//			ccc = 1;
-//	}
-	
-}
-
 //fdcan板间通信收数据
 void fdcan_board_comm_get(uint32_t id,uint8_t *pdata)
 {
@@ -42,11 +26,11 @@ void fdcan_board_comm_get(uint32_t id,uint8_t *pdata)
 		//联合体内存拷贝
 		memcpy(&fdcan_board_comm.rx_msg.buff,pdata,FDCAN_BOARD_DATA_LEN);
 		
-		memcpy(&data_keyboard_rec,&fdcan_board_comm.rx_msg.data_keyboard,sizeof(data_keyboard_rec));
+		memcpy(&data_keyboard_rec,&fdcan_board_comm.rx_msg.e.data_keyboard,sizeof(data_keyboard_rec));
 
-		memcpy(&gimbal_data_rec,&fdcan_board_comm.rx_msg.gimbal_data,sizeof(gimbal_data_rec));
+		memcpy(&gimbal_data_rec,&fdcan_board_comm.rx_msg.e.gimbal_data,sizeof(gimbal_data_rec));
 
-		memcpy(&vision_data_rec,&fdcan_board_comm.rx_msg.vision_data,sizeof(vision_data_rec));
+		memcpy(&vision_data_rec,&fdcan_board_comm.rx_msg.e.vision_data,sizeof(vision_data_rec));
 		
 		board_comm_online = 1;
 	}
@@ -54,10 +38,11 @@ void fdcan_board_comm_get(uint32_t id,uint8_t *pdata)
 
 void board_comm_container_set(void)
 {
+	//收到的所有消息推入
 	container_set(TAG_VTM_KEYBOARD_DATA, 	&data_keyboard_rec, sizeof(data_keyboard_rec), CONTAINER_TYPE_STRUCT);
 	container_set(TAG_GIMBAL_OUTPUT_DATA,   &gimbal_data_rec,   sizeof(gimbal_data_rec),   CONTAINER_TYPE_STRUCT);
 	container_set(TAG_TRACE_VISION_DATA,   	&vision_data_rec,   sizeof(vision_data_rec),   CONTAINER_TYPE_STRUCT);
-	//所有发送信息打包
+	//所有待发送信息打包
 	container_set(TAG_TRANSMIT_DATA, 		fdcan_board_comm.tx_msg.buff, FDCAN_BOARD_DATA_LEN,CONTAINER_TYPE_INT);
 }
 

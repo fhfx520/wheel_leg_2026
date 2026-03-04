@@ -36,6 +36,7 @@ void can_comm_init(void)
     can_filter.FilterID1 = JOINT_RS_REC_ID;
     can_filter.FilterID2 = JOINT_RB_REC_ID;
     can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;//To Fifo0
+	HAL_FDCAN_ConfigFilter(&hfdcan1, &can_filter);
 	
 	can_filter.IdType = FDCAN_STANDARD_ID;//STANDARD
     can_filter.FilterIndex = 1;
@@ -60,7 +61,7 @@ void can_comm_init(void)
     can_filter.FilterID2 = SUPERCAP_DATA_ID;
     can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;//通过过滤后给邮箱0
 	HAL_FDCAN_ConfigFilter(&hfdcan2, &can_filter);
-	//board
+	//board comm
     can_filter.IdType = FDCAN_STANDARD_ID;//标准帧
     can_filter.FilterIndex = 1;
     can_filter.FilterType = FDCAN_FILTER_DUAL;//等于过滤
@@ -118,15 +119,15 @@ void can_comm_init(void)
     fdcan_tx_message.MessageMarker = 0;
 	
     //driver init
-	dm_motor_init(&joint_motor[0], CAN_CHANNEL_1, JOINT_LB_CMD_ID, -0.370364666f, JOINT_LB_REC_ID);//LB -0.27579996
-	dm_motor_init(&joint_motor[1], CAN_CHANNEL_1, JOINT_LS_CMD_ID, 0.387432575f, JOINT_LS_REC_ID);//LS 0.564670026
-	dm_motor_init(&joint_motor[2], CAN_CHANNEL_1, JOINT_RB_CMD_ID, 4.57420731f, JOINT_RB_REC_ID);//RB 4.47119999
-	dm_motor_init(&joint_motor[3], CAN_CHANNEL_1, JOINT_RS_CMD_ID, 2.7925601f, JOINT_RS_REC_ID);//RS 2.62299991
+	dm_motor_init(&joint_motor[0], CAN_CHANNEL_1, JOINT_LB_CMD_ID, -0.313300014f, JOINT_LB_REC_ID);//LB -0.27579996 -0.313300014
+	dm_motor_init(&joint_motor[1], CAN_CHANNEL_1, JOINT_LS_CMD_ID, 5.52884054f, JOINT_LS_REC_ID);//LS 0.564670026 5.52884054
+	dm_motor_init(&joint_motor[2], CAN_CHANNEL_1, JOINT_RB_CMD_ID, 4.52866888f, JOINT_RB_REC_ID);//RB 4.47119999 4.52866888
+	dm_motor_init(&joint_motor[3], CAN_CHANNEL_1, JOINT_RS_CMD_ID, 2.3627491f, JOINT_RS_REC_ID);//RS 2.62299991 2.3627491
 	
-	dji_motor_init(&driver_motor[0], DJI_3508_MOTOR, CAN_CHANNEL_3, DRIVER_MOTOR_LEFT_ID , DJI_3508_TAURUS_REDUCTION_RATIO);
-    dji_motor_init(&driver_motor[1], DJI_3508_MOTOR, CAN_CHANNEL_3, DRIVER_MOTOR_RIGHT_ID, DJI_3508_TAURUS_REDUCTION_RATIO);
-	dji_motor_init(&yaw_motor, 		 DJI_6020_MOTOR, CAN_CHANNEL_3, YAW_MOTOR_ID    , DJI_6020_ORIGINAL_REDUCTION_RATIO);
-    dji_motor_init(&trigger_motor,   DJI_2006_MOTOR, CAN_CHANNEL_3, TRIGGER_MOTOR_ID, DJI_2006_ORIGINAL_REDUCTION_RATIO);
+//	dji_motor_init(&driver_motor[0], DJI_3508_MOTOR, CAN_CHANNEL_3, DRIVER_MOTOR_LEFT_ID , DJI_3508_WHEEL_TAURUS_REDUCTION_RATIO);
+//    dji_motor_init(&driver_motor[1], DJI_3508_MOTOR, CAN_CHANNEL_3, DRIVER_MOTOR_RIGHT_ID, DJI_3508_WHEEL_TAURUS_REDUCTION_RATIO);
+	dji_motor_init(&yaw_motor, 		 DJI_6020_MOTOR, CAN_CHANNEL_3, YAW_MOTOR_ID    	 , DJI_6020_ORIGINAL_REDUCTION_RATIO);
+    dji_motor_init(&trigger_motor,   DJI_3508_MOTOR, CAN_CHANNEL_3, TRIGGER_MOTOR_ID	 , DJI_3508_TRIGGER_TAURUS_REDUCTION_RATIO);
 }
 
 /*
@@ -142,11 +143,10 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 			dm_motor_get_data(rx_fifo0_message.Identifier, rx_fifo0_data);
         } else if (hfdcan->Instance == FDCAN2) {
 			HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO0, &fdcan_rx_fifo0_message, fdcan_rx_fifo0_data);
-			r_cnt++;
 			switch(fdcan_rx_fifo0_message.Identifier)
 			{
 				case IMU_ALL_ID :{imu_get_data(&chassis_imu, fdcan_rx_fifo0_message.Identifier, fdcan_rx_fifo0_data);break;}
-				case SUPERCAP_DATA_ID :{power_get_data(fdcan_rx_fifo0_data);break;}
+				case SUPERCAP_DATA_ID :{power_get_data(fdcan_rx_fifo0_data);r_cnt++;break;}
 				default : break;
 			}
         } else if (hfdcan->Instance == FDCAN3) {
@@ -175,7 +175,7 @@ void HAL_FDCAN_RxFifo1Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo1ITs)
 			HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO1, &rx_fifo1_message, rx_fifo1_data);
 			dji_motor_get_data(CAN_CHANNEL_3, rx_fifo1_message.Identifier, rx_fifo1_data);	
 			if(rx_fifo1_message.Identifier == YAW_MOTOR_ID)
-				memcpy(yaw_raw_data,rx_fifo1_data,8);
+				memcpy(fdcan_board_comm.tx_msg.e.gimbal_data.yaw_raw_data,rx_fifo1_data,8);
         }
         HAL_FDCAN_ActivateNotification(hfdcan, FDCAN_IT_RX_FIFO1_NEW_MESSAGE, 0);
     }

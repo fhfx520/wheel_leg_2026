@@ -3,7 +3,7 @@
 
 #include "stdint.h"
 
-#define SUPERCAP_DATA_ID  0x100
+#define SUPERCAP_DATA_ID  0x020
 #define SUPERCAP_STATE_ID 0x101
 
 typedef enum

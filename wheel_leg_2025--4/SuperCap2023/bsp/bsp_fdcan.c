@@ -117,10 +117,10 @@ void SuperCapMsgSendFdcan(float cap_voltage,float cap_current)
 {
 	uint8_t msg_uint8_t[12] = { 0 };
 	
-    Tx2Message.Identifier=0x100;                           //32位ID
+    Tx2Message.Identifier=0x020;                           //32位ID
     Tx2Message.IdType=FDCAN_STANDARD_ID;                   //标准ID
     Tx2Message.TxFrameType=FDCAN_DATA_FRAME;               //数据帧
-    Tx2Message.DataLength=FDCAN_DLC_BYTES_12;              //12字节数据长度
+    Tx2Message.DataLength=FDCAN_DLC_BYTES_64;              //12字节数据长度
     Tx2Message.ErrorStateIndicator=FDCAN_ESI_ACTIVE;       //主动错误状态发送     
     Tx2Message.BitRateSwitch=FDCAN_BRS_ON;                 //开启速率切换
     Tx2Message.FDFormat=FDCAN_FD_CAN;                	   //fdcan模式
@@ -168,7 +168,7 @@ void can_filter_init(void)
 		}
 	/* start the can transmit and receive */
 		HAL_FDCAN_Start(&hfdcan2);                               //??FDCAN
-    HAL_FDCAN_ActivateNotification(&hfdcan2,FDCAN_IT_RX_FIFO0_NEW_MESSAGE,0);
+//    HAL_FDCAN_ActivateNotification(&hfdcan2,FDCAN_IT_RX_FIFO0_NEW_MESSAGE,0);
 
 }
 
