@@ -53,6 +53,7 @@ FGT_sin_t FGT_sin_chassis;
 chassis_t chassis;
 
 float variable_rotate_vw;
+float imu_pitch_offset = 0.0361f;
 
 chassis_scale_t chassis_scale = {
     .remote = 1.0f/660*2.5f,
@@ -206,7 +207,8 @@ static void chassis_execute_fsm(void)
             wlr.ctrl_mode = 2;
             wlr.high_flag = 0;
             wlr.jump_flag = 0;
-            wlr.sky_flag = WLR_SKY_FOLDING; 
+			if(wlr.sky_flag == WLR_SKY_IDLE)
+				wlr.sky_flag = WLR_SKY_FOLDING; 
             break;
 		}
 
@@ -214,7 +216,8 @@ static void chassis_execute_fsm(void)
 		{
             wlr.ctrl_mode = 2;
             wlr.high_flag = 0;
-            wlr.jump_flag = WLR_SKY_EXTENDING; 
+            if(wlr.sky_flag == WLR_SKY_FOLDING) 
+				wlr.sky_flag = WLR_SKY_EXTENDING; 
             break;
 		}
         default:
@@ -223,8 +226,8 @@ static void chassis_execute_fsm(void)
     }
 
     if (g_robot_ctx.output.chassis == CHASSIS_HIGH) { 
-        if (g_robot_ctx.output.chassis_speed) chassis_scale.keyboard = 2.5f;
-        else chassis_scale.keyboard = 1.5f;
+        if (g_robot_ctx.output.chassis_speed) chassis_scale.keyboard = 2.7f;
+        else chassis_scale.keyboard = 2.0f;
     } else { 
         if (g_robot_ctx.output.chassis_speed) chassis_scale.keyboard = 2.5f;
         else chassis_scale.keyboard = 2.0f;
@@ -233,7 +236,7 @@ static void chassis_execute_fsm(void)
     if (supercap.volume_percent < 10 )  chassis_scale.keyboard = 1.5f;
     else if (supercap.volume_percent < 20 ) chassis_scale.keyboard = 2.0f;
 
-    if (g_robot_ctx.output.chassis == CHASSIS_HIGH) chassis_scale.remote = 1.0f/660*2.6f;
+    if (g_robot_ctx.output.chassis == CHASSIS_HIGH) chassis_scale.remote = 1.0f / 660 * 2.6f;
     else chassis_scale.remote = 1.0f/660*2.5f; 
 	
 	last_chassis_output = g_robot_ctx.output.chassis;
@@ -290,7 +293,7 @@ static void chassis_data_input(void)
             else                    
                 wlr.yaw_ref = (float)yaw_motor.ecd / 8192 * 2  * PI;  
 
-            wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 *PI;  
+            wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;  
             wlr.wz_ref = 0.0f;
             wlr.yaw_err = circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
             
@@ -319,8 +322,9 @@ static void chassis_data_input(void)
             else
                 chassis_rotate_ramp.min = -CHASSIS_ROTATE_SPEED;
             
-            variable_vw_generate(ramp_calc(&chassis_rotate_ramp , -(CHASSIS_ROTATE_SPEED + (power_control.judge_max_power - 40.0f)/25.0f)));
-            wlr.wz_ref = variable_rotate_vw;
+//            variable_vw_generate(ramp_calc(&chassis_rotate_ramp , -(CHASSIS_ROTATE_SPEED + (power_control.judge_max_power - 40.0f)/25.0f)));
+//            wlr.wz_ref = variable_rotate_vw;
+			wlr.wz_ref = ramp_calc(&chassis_rotate_ramp , -(CHASSIS_ROTATE_SPEED + (power_control.judge_max_power - 40.0f)/25.0f));
             break;
         }
         
@@ -362,11 +366,11 @@ static void chassis_data_input(void)
         if(spin_zero == 0) spin_zero = spin_limit;
         rotate_state_cnt++;
         if(fabs(spin_zero) < PI / 2.0f  ) {                 
-            if( fabs(circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, wlr.yaw_fdb, 2 * PI)) < 1.0f && rotate_state_cnt > 100){
+            if( fabs(circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, wlr.yaw_fdb, 2 * PI)) < 1.0f && rotate_state_cnt > 50){
                 rotate_ramp_flag = 0; spin_zero = 0; rotate_state_cnt = 0; rotate_chassis_mode = CHASSIS_STOP;        
             }
         }else{
-            if(fabs(circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI-PI, wlr.yaw_fdb, 2 * PI)) < 1.0f  && rotate_state_cnt > 100){
+            if(fabs(circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI, wlr.yaw_fdb, 2 * PI)) < 1.0f  && rotate_state_cnt > 50){
                 rotate_ramp_flag = 0; spin_zero = 0; rotate_state_cnt = 0;
             }
         }       
@@ -396,7 +400,7 @@ static void chassis_data_input(void)
     if(rotate_stop_flag) wlr.v_ref = 0.0f;
         
     wlr.roll_fdb    = -chassis_imu.rol;
-    wlr.pit_fdb     = -(chassis_imu.pit);
+    wlr.pit_fdb     = -(chassis_imu.pit + imu_pitch_offset);
     wlr.wy_fdb      = -chassis_imu.wy;
     wlr.wz_fdb      = -chassis_imu.wz;
     wlr.az_fdb      =  chassis_imu.az;
@@ -736,13 +740,6 @@ void chassis_task(void const *argu)
         
 		//底盘待发送数据打包
 		chassis_set_container();
-		
-		 dji_motor_set_torque(&driver_motor[0], 0);
-        dji_motor_set_torque(&driver_motor[1], 0);
-        dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, 0);
-        dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);
-		dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, 0);
-		dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
 		
         status.task.chassis = 1;
         osDelayUntil(&thread_wake_time, 2);

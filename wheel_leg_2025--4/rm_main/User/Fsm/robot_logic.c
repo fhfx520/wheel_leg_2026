@@ -61,9 +61,12 @@ static ShootState_e get_kb_shoot_mode(void) {
 
 #define KEY_SHIFT (1<<4)
 #define KEY_CTRL  (1<<5)
+#define KEY_Q  	  (1<<6)
 #define KEY_R     (1<<8)
 #define KEY_F     (1<<9)
 #define KEY_C     (1<<13)
+#define KEY_Z	  (1<<11)
+#define KEY_X	  (1<<12)
 
 // =========================================================================
 // REMOTE 模式子状态机
@@ -116,7 +119,7 @@ static void rem_ter_ready_execute(void) {
     
     if (g_robot_ctx.input.sw2 == RC_SW_UP) { fsm_change(&fsm_remote_sub, &state_rem_low); return; }
     if (g_robot_ctx.input.sw2 == RC_SW_MID) { fsm_change(&fsm_remote_sub, &state_rem_high); return; }
-    if (abs(g_robot_ctx.input.ch2) > 500) fsm_change(&fsm_remote_sub, &state_rem_ter_run);
+//    if (abs(g_robot_ctx.input.ch2) > 500) fsm_change(&fsm_remote_sub, &state_rem_ter_run);
 }
 static const FsmState_t state_rem_ter_ready = { .name = "REM_TER_RDY", .enter = rem_ter_ready_enter, .execute = rem_ter_ready_execute };
 
@@ -151,7 +154,7 @@ static void kb_low_execute(void) {
     if (check_key_trigger(KEY_F)) { fsm_change(&fsm_keyboard_sub, &state_kb_fight); return; }
     if (check_key_trigger(KEY_R)) { fsm_change(&fsm_keyboard_sub, &state_kb_spin); return; }
     if (check_key_trigger(KEY_C)) { fsm_change(&fsm_keyboard_sub, &state_kb_high); return; }
-    if (check_key_trigger(KEY_CTRL)) { fsm_change(&fsm_keyboard_sub, &state_kb_ter_ready); return; }
+	if (check_key_trigger(KEY_Z)) { fsm_change(&fsm_keyboard_sub, &state_kb_ter_ready); return; }
 }
 static const FsmState_t state_kb_low = { .name = "KB_LOW", .enter = kb_low_enter, .execute = kb_low_execute };
 
@@ -164,7 +167,7 @@ static void kb_fight_execute(void) {
 
     if (check_key_trigger(KEY_F)) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
     if (check_key_trigger(KEY_R)) { fsm_change(&fsm_keyboard_sub, &state_kb_spin); return; }
-    if (check_key_trigger(KEY_CTRL)) { fsm_change(&fsm_keyboard_sub, &state_kb_ter_ready); return; }
+//    if (check_key_trigger(KEY_Z)) { fsm_change(&fsm_keyboard_sub, &state_kb_ter_ready); return; }
 }
 static const FsmState_t state_kb_fight = { .name = "KB_FIGHT", .enter = kb_fight_enter, .execute = kb_fight_execute };
 
@@ -177,20 +180,20 @@ static void kb_spin_execute(void) {
 
     if (check_key_trigger(KEY_R)) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
     if (check_key_trigger(KEY_F)) { fsm_change(&fsm_keyboard_sub, &state_kb_fight); return; }
-    if (check_key_trigger(KEY_CTRL)) { fsm_change(&fsm_keyboard_sub, &state_kb_ter_ready); return; }
+//    if (check_key_trigger(KEY_Z)) { fsm_change(&fsm_keyboard_sub, &state_kb_ter_ready); return; }
 }
 static const FsmState_t state_kb_spin = { .name = "KB_SPIN", .enter = kb_spin_enter, .execute = kb_spin_execute };
 
 static void kb_high_enter(void) { g_robot_ctx.output.chassis = CHASSIS_HIGH; }
 static void kb_high_execute(void) {
     g_robot_ctx.output.chassis = CHASSIS_HIGH;
-    g_robot_ctx.output.chassis_speed = 0; 
+    g_robot_ctx.output.chassis_speed = (g_robot_ctx.input.kb.bit.SHIFT) ? 1 : 0; 
     g_robot_ctx.output.gimbal = get_kb_gimbal_mode();
     g_robot_ctx.output.shoot  = get_kb_shoot_mode(); 
 
     if (check_key_trigger(KEY_C)) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
    //if (check_key_trigger(KEY_R)) { fsm_change(&fsm_keyboard_sub, &state_kb_spin); return; } 高腿长不能小陀螺
-    if (check_key_trigger(KEY_CTRL)) { fsm_change(&fsm_keyboard_sub, &state_kb_ter_ready); return; }
+    if (check_key_trigger(KEY_Z)) { fsm_change(&fsm_keyboard_sub, &state_kb_ter_ready); return; }
 }
 static const FsmState_t state_kb_high = { .name = "KB_HIGH", .enter = kb_high_enter, .execute = kb_high_execute };
 
@@ -203,11 +206,15 @@ static void kb_ter_ready_execute(void) {
     g_robot_ctx.output.gimbal = get_kb_gimbal_mode();
     g_robot_ctx.output.shoot  = get_kb_shoot_mode(); 
     
-    if (check_key_trigger(KEY_C) || check_key_trigger(KEY_R)) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
-    if (g_robot_ctx.input.kb.bit.CTRL) {
-        g_robot_ctx.ctrl_tick++;
-        if (g_robot_ctx.ctrl_tick > 20) fsm_change(&fsm_keyboard_sub, &state_kb_ter_run);
-    } else { g_robot_ctx.ctrl_tick = 0; }
+//    if (check_key_trigger(KEY_C) || check_key_trigger(KEY_R)) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
+//    if (g_robot_ctx.input.kb.bit.CTRL) {
+//        g_robot_ctx.ctrl_tick++;
+//        if (g_robot_ctx.ctrl_tick > 20) fsm_change(&fsm_keyboard_sub, &state_kb_ter_run);
+//    } else { g_robot_ctx.ctrl_tick = 0; }
+	if (check_key_trigger(KEY_Z)) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
+	if (check_key_trigger(KEY_C)) { fsm_change(&fsm_keyboard_sub, &state_kb_high); return; }
+	if (check_key_trigger(KEY_X)) { fsm_change(&fsm_keyboard_sub, &state_kb_ter_run); return; }
+	
 }
 static const FsmState_t state_kb_ter_ready = { .name = "KB_TER_RDY", .enter = kb_ter_ready_enter, .execute = kb_ter_ready_execute };
 
@@ -216,7 +223,9 @@ static void kb_ter_run_execute(void) {
     g_robot_ctx.output.chassis = CHASSIS_TERRAIN_EXECUTING;
     g_robot_ctx.output.gimbal = get_kb_gimbal_mode();
     g_robot_ctx.output.shoot  = get_kb_shoot_mode();
-    if (!g_robot_ctx.input.kb.bit.CTRL) fsm_change(&fsm_keyboard_sub, &state_kb_ter_ready);
+//    if (!g_robot_ctx.input.kb.bit.CTRL) fsm_change(&fsm_keyboard_sub, &state_kb_ter_ready);
+	if (check_key_trigger(KEY_Z)) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
+	if (check_key_trigger(KEY_C)) { fsm_change(&fsm_keyboard_sub, &state_kb_high); return; }
 }
 static const FsmState_t state_kb_ter_run = { .name = "KB_TER_RUN", .enter = kb_ter_run_enter, .execute = kb_ter_run_execute };
 

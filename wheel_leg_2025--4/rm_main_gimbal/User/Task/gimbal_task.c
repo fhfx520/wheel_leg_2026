@@ -38,8 +38,8 @@ static void gimbal_init(void)
 {
     memset(&gimbal, 0, sizeof(gimbal_t));
 	
-	pid_init(&gimbal.pit_angle.pid, CHANG_I_RATE, 22.0f, 0.5f, 0, 25, 50);//17 0 0 
-    pid_init(&gimbal.pit_spd.pid, CHANG_I_RATE, 1.0f, 0.165f, 0, 2.5f, 7.0f);//0.52 0.165 
+	pid_init(&gimbal.pit_angle.pid, CHANG_I_RATE, 20.0f, 0.5f, 0, 25, 50);//17 0 0 
+    pid_init(&gimbal.pit_spd.pid, CHANG_I_RATE, 1.5f, 0.065f, 0, 2.5f, 7.0f);//0.52 0.165 
 	gimbal.pit_angle.pid.threshold_a = 0.0f;
 	gimbal.pit_angle.pid.threshold_b = 0.0f;
 	
@@ -218,7 +218,7 @@ void gimbal_task(void const *argu)
                    gimbal.yaw_angle.ref -= rc.ch1 * gimbal_scale.angle_remote;
                 }
 				if(!gimbal.start_up)
-					gimbal.starWt_cnt++;
+					gimbal.start_cnt++;
 				else
 					gimbal.start_cnt = 0;
 //								YawSMC.ref = gimbal_imu.yaw* 57.29577f + circle_error(gimbal.yaw_angle.ref* 57.29577f, gimbal_imu.yaw* 57.29577f, 360.0f);;

@@ -42,6 +42,6 @@ void comm_task(void const *argument)
 			vision_output_data();
 					
         taskEXIT_CRITICAL();
-        osDelayUntil(&thread_wake_time, 2);
+        osDelayUntil(&thread_wake_time, 1);
     }
 }

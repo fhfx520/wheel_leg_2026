@@ -66,6 +66,7 @@ void can_comm_init(void)
     can_filter.FilterIndex = 1;
     can_filter.FilterType = FDCAN_FILTER_DUAL;//等于过滤
     can_filter.FilterID1 = FDCAN_GIMBAL_TO_CHA_ID;
+	can_filter.FilterID2 = 0x016;
     can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO1;//通过过滤后给邮箱1
     HAL_FDCAN_ConfigFilter(&hfdcan2, &can_filter);  
 	
@@ -124,10 +125,10 @@ void can_comm_init(void)
 	dm_motor_init(&joint_motor[2], CAN_CHANNEL_1, JOINT_RB_CMD_ID, 4.52866888f, JOINT_RB_REC_ID);//RB 4.47119999 4.52866888
 	dm_motor_init(&joint_motor[3], CAN_CHANNEL_1, JOINT_RS_CMD_ID, 2.3627491f, JOINT_RS_REC_ID);//RS 2.62299991 2.3627491
 	
-//	dji_motor_init(&driver_motor[0], DJI_3508_MOTOR, CAN_CHANNEL_3, DRIVER_MOTOR_LEFT_ID , DJI_3508_WHEEL_TAURUS_REDUCTION_RATIO);
-//    dji_motor_init(&driver_motor[1], DJI_3508_MOTOR, CAN_CHANNEL_3, DRIVER_MOTOR_RIGHT_ID, DJI_3508_WHEEL_TAURUS_REDUCTION_RATIO);
+	dji_motor_init(&driver_motor[0], DJI_3508_MOTOR, CAN_CHANNEL_3, DRIVER_MOTOR_LEFT_ID , DJI_3508_WHEEL_TAURUS_REDUCTION_RATIO);
+    dji_motor_init(&driver_motor[1], DJI_3508_MOTOR, CAN_CHANNEL_3, DRIVER_MOTOR_RIGHT_ID, DJI_3508_WHEEL_TAURUS_REDUCTION_RATIO);
 	dji_motor_init(&yaw_motor, 		 DJI_6020_MOTOR, CAN_CHANNEL_3, YAW_MOTOR_ID    	 , DJI_6020_ORIGINAL_REDUCTION_RATIO);
-    dji_motor_init(&trigger_motor,   DJI_3508_MOTOR, CAN_CHANNEL_3, TRIGGER_MOTOR_ID	 , DJI_3508_TRIGGER_TAURUS_REDUCTION_RATIO);
+//    dji_motor_init(&trigger_motor,   DJI_3508_MOTOR, CAN_CHANNEL_3, TRIGGER_MOTOR_ID	 , DJI_3508_TRIGGER_TAURUS_REDUCTION_RATIO);
 }
 
 /*
@@ -170,7 +171,10 @@ void HAL_FDCAN_RxFifo1Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo1ITs)
 			dm_motor_get_data(rx_fifo1_message.Identifier, rx_fifo1_data);
         } else if (hfdcan->Instance == FDCAN2) {
 			HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO1, &fdcan_rx_fifo1_message, fdcan_rx_fifo1_data);
-			fdcan_board_comm_get(fdcan_rx_fifo1_message.Identifier, fdcan_rx_fifo1_data);
+			if(fdcan_rx_fifo1_message.Identifier == 0x016)
+				imu_get_data(&gimbal_imu, fdcan_rx_fifo1_message.Identifier, fdcan_rx_fifo1_data);
+			else
+				fdcan_board_comm_get(fdcan_rx_fifo1_message.Identifier, fdcan_rx_fifo1_data);
         } else if (hfdcan->Instance == FDCAN3) {
 			HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO1, &rx_fifo1_message, rx_fifo1_data);
 			dji_motor_get_data(CAN_CHANNEL_3, rx_fifo1_message.Identifier, rx_fifo1_data);	
