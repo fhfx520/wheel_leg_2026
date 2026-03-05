@@ -8,23 +8,17 @@
 #define KEY_CHASSIS_FIGHT_A     KB_A
 #define KEY_CHASSIS_FIGHT_D     KB_D
 #define KEY_CHASSIS_ROTATE      KB_R
-#define KEY_CHASSIS_PRONE    	KB_G
 
 #define KEY_VISION     			KB_Z
 
-#define KEY_CHASSIS_HEIGHT      KB_C
-#define KEY_CHASSIS_HEIGHT2     KB_X
 #define KEY_CHASSIS_POWER       KB_SHIFT
 
 #define KEY_GIMBAL_TURN_R       KB_E
 #define KEY_GIMBAL_TURN_L       KB_Q
 
 #define KEY_PRESS_VISION1       rc.kb.bit.B //大符
-#define KEY_PRESS_VISION2       rc.kb.bit.V //小符
+#define KEY_PRESS_VISION2       rc.kb.bit.G //小符
 #define KEY_PRESS_POWER         rc.kb.bit.SHIFT//高速
-#define KEY_PRESS_JUMP          rc.kb.bit.CTRL//跳跃
-
-//#define KEY_VISION              KB_B
 
 /*-----------------------------shoot-----------------------------*/
 //拨盘频率

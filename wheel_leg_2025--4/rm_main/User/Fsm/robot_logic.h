@@ -92,6 +92,8 @@ typedef struct {
     uint16_t last_key_code; 
     uint32_t ctrl_tick;     
     
+	//跳跃完成标志位
+	uint8_t sky_finish_flag;
 } RobotContext_t;
 
 extern RobotContext_t g_robot_ctx;

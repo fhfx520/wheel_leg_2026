@@ -28,7 +28,7 @@ static uint8_t  shoot_enable  = 1;  //单发使能标志
 static float trigger_ecd_error;
 
 //用于退蛋反转
-static uint32_t back_cnt = 0;
+uint32_t back_cnt = 0;
 static uint32_t err_cnt  = 0;
 static uint8_t back_flag = 0;
 
@@ -198,13 +198,13 @@ static void shoot_control(void)
             frequency_cnt++;
 			microcurrent_flag = 2;											//开始打弹无论如何直接结束预制，避免影响后续行为
             trigger_ecd_error = shoot.trigger_ecd.ref - shoot.trigger_ecd.fdb;
-           if ((series_shoot_enable() || 1) && !back_flag) { //一个周期打一颗
+           if ((series_shoot_enable()) && !back_flag) { //一个周期打一颗
                 frequency_cnt = 0;
 				shoot.trigger_ecd.ref -= 1 * TRIGGER_MOTOR_ECD_SERIES;		//1：5减速箱3508转向和2006相反
                 shoot.barrel.heat += 10;
             }
 			//卡蛋反转
-			if(ABS(trigger_motor.rx_current) > 7000 && ABS(trigger_motor.speed_rpm) < 100)
+			if(ABS(trigger_motor.rx_current) > 9000 && ABS(trigger_motor.speed_rpm) < 100)
 				back_cnt ++;
 			if (back_cnt > 200) {
 				back_flag = 1;
@@ -244,8 +244,8 @@ static void shoot_init(void)
     //发射器底层初始化
     pid_init(&shoot.fric_spd[0].pid, NONE, 0.0005f, 0, 0, 0, 0.8);
     pid_init(&shoot.fric_spd[1].pid, NONE, 0.0005f, 0, 0, 0, 0.8);
-	pid_init(&shoot.trigger_ecd.pid, NONE, 0.25f, 0.0f, 0.0f, 100, 5000);		//改成了3508参数
-    pid_init(&shoot.trigger_spd.pid, NONE, 0.00065f, 0.0000008f, 0, 0.3f, 5.0); //改成了3508参数
+	pid_init(&shoot.trigger_ecd.pid, NONE, 0.15f, 0.0f, 0.0f, 100, 5000);		//改成了3508参数
+    pid_init(&shoot.trigger_spd.pid, NONE, 0.0002f, 0.0000008f, 0, 0.3f, 5.0); //改成了3508参数
     //发射器模式初始化
     shoot.trigger_mode  = TRIGGER_MODE_PROTECT;
     shoot.fric_mode     = FRIC_MODE_PROTECT;
@@ -271,7 +271,7 @@ static void shoot_pid_calc(void)
     shoot.trigger_output = pid_calc(&shoot.trigger_spd.pid, shoot.trigger_spd.ref, shoot.trigger_spd.fdb);
 		
 	//牛牛卡了反转
-	if(ABS(trigger_motor.rx_current) > 7000 && ABS(trigger_motor.speed_rpm) < 100)
+	if(ABS(trigger_motor.rx_current) > 9000 && ABS(trigger_motor.speed_rpm) < 100)
 		shoot.trigger_output = 0;
 }
 
@@ -420,7 +420,6 @@ void shoot_task(void const *argu)
         shoot_control();
         shoot_pid_calc();
         shoot_data_output();
-        shoot_test();
 		vision_shoot_delay();
 		shoot_set_container();
         status.task.shoot = 1;

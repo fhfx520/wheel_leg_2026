@@ -117,8 +117,8 @@ static void chassis_init(void)
     memset(&chassis_y_ramp, 0, sizeof(ramp_t));
     wlr_init();
 
-    ramp_init(&chassis_x_ramp, 0.02f, -chassis_scale.keyboard, chassis_scale.keyboard);
-    ramp_init(&chassis_y_ramp, 0.02f, -chassis_scale.keyboard, chassis_scale.keyboard);
+    ramp_init(&chassis_x_ramp, 0.02f, -2.5f, 2.5f);
+    ramp_init(&chassis_y_ramp, 0.02f, -2.5f, 2.5f);
     ramp_init(&chassis_rotate_ramp, 0.02f, -2.0f * CHASSIS_ROTATE_SPEED, 2.0f * CHASSIS_ROTATE_SPEED);
 
     wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
@@ -163,6 +163,7 @@ static void chassis_execute_fsm(void)
             chassis.rescue_cnt_L = 0;
             chassis.rescue_cnt_R = 0;
             chassis.recover_flag = 0;
+			g_robot_ctx.sky_finish_flag = 0;
             break;
 		}
 
@@ -172,6 +173,7 @@ static void chassis_execute_fsm(void)
             wlr.high_flag = 0; 
             wlr.jump_flag = 0;
             wlr.sky_flag = WLR_SKY_IDLE;
+			g_robot_ctx.sky_finish_flag = 0;
 			if(last_chassis_output == CHASSIS_STOP)
 				chassis.recover_flag = 1;
             break;
@@ -183,6 +185,7 @@ static void chassis_execute_fsm(void)
             wlr.high_flag = 1; 
             wlr.jump_flag = 0;
             wlr.sky_flag = WLR_SKY_IDLE;
+			g_robot_ctx.sky_finish_flag = 0;
             break;
 		}
 
@@ -191,6 +194,8 @@ static void chassis_execute_fsm(void)
             wlr.ctrl_mode = 2;
             wlr.high_flag = 0; 
             rotate_flag = 1;   
+			wlr.sky_flag = WLR_SKY_IDLE;
+			g_robot_ctx.sky_finish_flag = 0;
             break;
 		}
 
@@ -199,6 +204,8 @@ static void chassis_execute_fsm(void)
             wlr.ctrl_mode = 2;
             wlr.high_flag = 0;
             wlr.jump_flag = 0;
+			wlr.sky_flag = WLR_SKY_IDLE;
+			g_robot_ctx.sky_finish_flag = 0;
             break;
 		}
 
@@ -207,6 +214,7 @@ static void chassis_execute_fsm(void)
             wlr.ctrl_mode = 2;
             wlr.high_flag = 0;
             wlr.jump_flag = 0;
+			g_robot_ctx.sky_finish_flag = 0;
 			if(wlr.sky_flag == WLR_SKY_IDLE)
 				wlr.sky_flag = WLR_SKY_FOLDING; 
             break;
@@ -218,6 +226,9 @@ static void chassis_execute_fsm(void)
             wlr.high_flag = 0;
             if(wlr.sky_flag == WLR_SKY_FOLDING) 
 				wlr.sky_flag = WLR_SKY_EXTENDING; 
+			//set跳跃完成标志位 用于fsm自动变回低腿长模式
+			if(wlr.sky_flag == WLR_SKY_STAND && !g_robot_ctx.sky_finish_flag)
+				g_robot_ctx.sky_finish_flag = 1;
             break;
 		}
         default:
@@ -226,15 +237,15 @@ static void chassis_execute_fsm(void)
     }
 
     if (g_robot_ctx.output.chassis == CHASSIS_HIGH) { 
-        if (g_robot_ctx.output.chassis_speed) chassis_scale.keyboard = 2.7f;
-        else chassis_scale.keyboard = 2.0f;
+        if (g_robot_ctx.output.chassis_speed) chassis_scale.keyboard = 2.3f;
+        else chassis_scale.keyboard = 1.8f;
     } else { 
         if (g_robot_ctx.output.chassis_speed) chassis_scale.keyboard = 2.5f;
         else chassis_scale.keyboard = 2.0f;
     }
 
-    if (supercap.volume_percent < 10 )  chassis_scale.keyboard = 1.5f;
-    else if (supercap.volume_percent < 20 ) chassis_scale.keyboard = 2.0f;
+    if (supercap.volume_percent < 10 )  chassis_scale.keyboard = 1.4f;
+    else if (supercap.volume_percent < 20 ) chassis_scale.keyboard = 1.7f;
 
     if (g_robot_ctx.output.chassis == CHASSIS_HIGH) chassis_scale.remote = 1.0f / 660 * 2.6f;
     else chassis_scale.remote = 1.0f/660*2.5f; 
@@ -394,7 +405,7 @@ static void chassis_data_input(void)
         wlr.jump_pre = 1;
     
     if (g_robot_ctx.output.chassis == CHASSIS_FIGHT){
-        wlr.v_ref = -chassis.output.vy;
+        wlr.v_ref = chassis.output.vy;
         wlr.s_ref += (wlr.v_ref * 0.001f * 2);
     }
     if(rotate_stop_flag) wlr.v_ref = 0.0f;
