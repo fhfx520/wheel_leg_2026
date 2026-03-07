@@ -53,7 +53,7 @@ FGT_sin_t FGT_sin_chassis;
 chassis_t chassis;
 
 float variable_rotate_vw;
-float imu_pitch_offset = 0.0556f;
+float imu_pitch_offset = 0.145f;
 
 chassis_scale_t chassis_scale = {
     .remote = 1.0f/660*2.5f,
@@ -339,6 +339,19 @@ static void chassis_data_input(void)
 //            variable_vw_generate(ramp_calc(&chassis_rotate_ramp , -(CHASSIS_ROTATE_SPEED + (power_control.judge_max_power - 40.0f)/25.0f)));
 //            wlr.wz_ref = variable_rotate_vw;
 			wlr.wz_ref = ramp_calc(&chassis_rotate_ramp , -(CHASSIS_ROTATE_SPEED + (power_control.judge_max_power - 40.0f)/25.0f));
+			
+			if (supercap.volume_percent < 35.0f)
+				wlr.wz_ref -= 3.5f;
+			else if (supercap.volume_percent < 40.0f)
+				wlr.wz_ref -= 3.0f;
+			else if (supercap.volume_percent < 45.0f)
+				wlr.wz_ref -= 2.5f;
+			else if (supercap.volume_percent < 50.0f)
+				wlr.wz_ref -= 2.0f;
+			else if (supercap.volume_percent < 55.0f)
+				wlr.wz_ref -= 1.5f;
+			else if (supercap.volume_percent < 60.0f)
+				wlr.wz_ref -= 1.0f;		
             break;
         }
         

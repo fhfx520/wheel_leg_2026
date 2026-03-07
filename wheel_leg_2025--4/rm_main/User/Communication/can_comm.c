@@ -128,7 +128,7 @@ void can_comm_init(void)
 	dji_motor_init(&driver_motor[0], DJI_3508_MOTOR, CAN_CHANNEL_3, DRIVER_MOTOR_LEFT_ID , DJI_3508_WHEEL_TAURUS_REDUCTION_RATIO);
     dji_motor_init(&driver_motor[1], DJI_3508_MOTOR, CAN_CHANNEL_3, DRIVER_MOTOR_RIGHT_ID, DJI_3508_WHEEL_TAURUS_REDUCTION_RATIO);
 	dji_motor_init(&yaw_motor, 		 DJI_6020_MOTOR, CAN_CHANNEL_3, YAW_MOTOR_ID    	 , DJI_6020_ORIGINAL_REDUCTION_RATIO);
-    dji_motor_init(&trigger_motor,   DJI_3508_MOTOR, CAN_CHANNEL_3, TRIGGER_MOTOR_ID	 , DJI_3508_TRIGGER_TAURUS_REDUCTION_RATIO);
+    dji_motor_init(&trigger_motor,   DJI_2006_MOTOR, CAN_CHANNEL_3, TRIGGER_MOTOR_ID	 , DJI_2006_ORIGINAL_REDUCTION_RATIO);
 }
 
 /*
@@ -199,7 +199,7 @@ void can_std_transmit(can_channel_e can_periph, uint32_t id, uint8_t *data)
 		can_tx_message.Identifier = id;
         HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &can_tx_message, data);
 	}
-    else if (can_periph == CAN_CHANNEL_2)
+    else if (can_periph == CAN_CHANNEL_2) 
 	{
 		fdcan_tx_message.Identifier = id;
         HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan2, &fdcan_tx_message, data);

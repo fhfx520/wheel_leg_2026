@@ -358,7 +358,7 @@
         <Ww>
           <count>40</count>
           <WinNumber>1</WinNumber>
-          <ItemText>fdcan_board_comm</ItemText>
+          <ItemText>fdcan_board_comm,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>41</count>
@@ -430,6 +430,16 @@
           <WinNumber>1</WinNumber>
           <ItemText>fdcan_board_comm.tx_msg,0x0A</ItemText>
         </Ww>
+        <Ww>
+          <count>55</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>send_cnt,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>56</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>vision</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
@@ -441,6 +451,21 @@
           <count>1</count>
           <WinNumber>2</WinNumber>
           <ItemText>pit_motor,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>2</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>ctrl_mode</ItemText>
+        </Ww>
+        <Ww>
+          <count>3</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>rc.mouse.r</ItemText>
+        </Ww>
+        <Ww>
+          <count>4</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>vision</ItemText>
         </Ww>
       </WatchWindow2>
       <MemoryWindow1>

@@ -687,14 +687,14 @@ static void handle_sky_state(void)
         x3_balance_zero = -0.1f;
         x5_balance_zero = 0.0f;
         wlr.sky_cnt++;
-        if (wlr.sky_cnt > 160) {
+        if (wlr.sky_cnt > 120) {
             wlr.sky_cnt = 0;
             wlr.sky_flag = WLR_SKY_LANDING;
         }
     } else if (wlr.sky_flag == WLR_SKY_LANDING) {
         wlr.high_set = 0.30f;
 		sky_height_ramp.out = wlr.high_set;
-        x3_balance_zero = 0.0f;
+        x3_balance_zero = -0.1f;
         x5_balance_zero = 0.0f;
 		wlr.sky_cnt++;
 		if((wlr.side[0].Fn_kal > 150.0f && wlr.side[1].Fn_kal > 150.0f) || (wlr.sky_cnt > 300))
@@ -748,7 +748,7 @@ static void update_leg_references(void)
 {
     tlm_gnd_roll_calc(&tlm, -(wlr.roll_fdb + IMU_Roll_balance_zero), vmc[0].L_fdb, vmc[1].L_fdb);		//计算地形倾角
     if (wlr.sky_flag != 0 || wlr.jump_flag != 0
-        || wlr_both_legs_flying() || chassis.recover_flag != 0) {
+        || wlr_both_legs_flying() || chassis.recover_flag != 0 || rotate_flag) {
         tlm.l_ref[0] = tlm.l_ref[1] = wlr.high_set;
     } else {
         tlm_leg_length_calc(&tlm, wlr.high_set, 0);							//根据地形倾角不断更新两腿腿长，调整到机身与地面平行
@@ -964,8 +964,8 @@ static void map_virtual_force(uint8_t index)
         wlr.side[index].Fy = ramp_calc(&Fy_ramp[index], Fy_temp);
     } 
 	else if (wlr.sky_flag == WLR_SKY_LANDING) {
-//         wlr.side[index].Fy = pid_calc(&pid_leg_length_fly[index], tlm.l_ref[index], vmc[index].L_fdb);
-		wlr.side[index].Fy = 100.0f;
+         wlr.side[index].Fy = pid_calc(&pid_leg_length_fly[index], tlm.l_ref[index], vmc[index].L_fdb);
+//		wlr.side[index].Fy = 100.0f;
     } 
 	else if (wlr.sky_flag == WLR_SKY_STAND) {
          wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 10.0f
@@ -1001,7 +1001,7 @@ static void apply_output_limits(void)
             lqr.U_ref[i] *= 0.0f;
         } else if ((wlr.crash_flag || wlr.jump_flag == WLR_JUMP_RECOVER_SHORT) && double_cnt > 0) {
             lqr.U_ref[i] *= 0.8f;
-        } else if (chassis.recover_flag >= 1 || wlr.sky_flag == WLR_SKY_AIR_FOLDING) {
+        } else if (chassis.recover_flag >= 1 || wlr.sky_flag == WLR_SKY_AIR_FOLDING || wlr.sky_flag == WLR_SKY_LANDING) {
             lqr.U_ref[i] *= 0.0f;
         }
 
@@ -1130,12 +1130,12 @@ void wlr_control(void)
     lqr.X_fdb[8] = x5_balance_zero + wlr.pit_fdb;		//wlr.pit_fdb = -chassis_imu.pit;
     lqr.X_fdb[9] = wlr.wy_fdb;
 	
-    lqr.X_fdb[4] = x3_balance_zero + (-PI / 2 + lqr.X_fdb[8] + vmc[0].q_fdb[0]) + Rotate_balance_zero;
+    lqr.X_fdb[4] = x3_balance_zero + (-PI / 2 + lqr.X_fdb[8] + vmc[0].q_fdb[0]) ;
     lqr.X_fdb[5] = lqr.X_fdb[9] + vmc[0].V_fdb.e.vw0_fdb;
     lqr.dot_leg_w[0] = (lqr.X_fdb[5] - lqr.last_leg_w[0]) / 0.002f;
     lqr.last_leg_w[0] = lqr.X_fdb[5];
     
-	lqr.X_fdb[6] = x3_balance_zero + (-PI / 2 + lqr.X_fdb[8] + vmc[1].q_fdb[0]) - Rotate_balance_zero;
+	lqr.X_fdb[6] = x3_balance_zero + (-PI / 2 + lqr.X_fdb[8] + vmc[1].q_fdb[0]) + Rotate_balance_zero;
     lqr.X_fdb[7] = lqr.X_fdb[9] + vmc[1].V_fdb.e.vw0_fdb;
     lqr.dot_leg_w[1] = (lqr.X_fdb[7] - lqr.last_leg_w[1]) / 0.002f;
     lqr.last_leg_w[1] = lqr.X_fdb[7];

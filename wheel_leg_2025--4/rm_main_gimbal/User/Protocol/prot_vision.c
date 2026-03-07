@@ -15,6 +15,7 @@ vision_tx_msg_t vision_tx_msg;
 uint8_t vis_e[2];
 uint32_t fire_Cnt;
 uint32_t shoot_Cnt;
+uint32_t send_cnt;
 void vision_get_data(uint8_t *data)
 {
     static vision_aim_status_e last_aim_status;
@@ -140,11 +141,12 @@ void vision_output_data(void)
 		imu_data_temp_buf = gimbal_imu.wz / PI * 180;
 		memcpy(&vision_tx_msg.imu_yaw_spd, &imu_data_temp_buf, 4);
 		//射击初速度
-		imu_data_temp_buf =  board_comm.rx_shoot_msg.data.shoot_speed;
-
+//		imu_data_temp_buf =  board_comm.rx_shoot_msg.data.shoot_speed;
+		imu_data_temp_buf = fdcan_board_comm.rx_msg.e.vision_data.shoot_speed;
 		memcpy(&vision_tx_msg.shoot_speed, &imu_data_temp_buf, 4);
 		
-		bias_time_temp_buf =  board_comm.rx_shoot_msg.data.vision_bias_time;
+//		bias_time_temp_buf =  board_comm.rx_shoot_msg.data.vision_bias_time;
+		bias_time_temp_buf = fdcan_board_comm.rx_msg.e.vision_data.vision_bias_time;
 		memcpy(&vision_tx_msg.bias_time, &bias_time_temp_buf, 4);
 		
 		
@@ -164,7 +166,7 @@ void vision_output_data(void)
     memcpy(vision_send_buf, &vision_tx_msg, sizeof(vision_tx_msg));
 		
     CDC_Transmit_HS(vision_send_buf, 30);
-
+	send_cnt++;
 }
 
 uint8_t vision_check_offline(void)

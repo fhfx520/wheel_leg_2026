@@ -187,6 +187,7 @@ void fdcan_board_comm_get(uint32_t id, uint8_t *data)
 		memcpy(&vision_data_rec,&fdcan_board_comm.rx_msg.e.vision_data,sizeof(vision_data_rec));
 		memcpy(&gimbal_data_rec,&fdcan_board_comm.rx_msg.e.gimbal_data,sizeof(gimbal_data_rec));
 		
+		robot_status.robot_id = judge_data_rec.camp;
 		board_comm_online = 1;
 	}
 }

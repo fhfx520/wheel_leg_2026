@@ -207,6 +207,8 @@ uint8_t dji_motor_check_offline(void)
     for (node = object_list.next; node != &(object_list); node = node->next) {
         object = list_entry(node, dji_motor_t, list);
         index++;
+		if(object->motor_type == DJI_2006_MOTOR)
+			continue;
         if (object->online == 1) {
             object->online = 0;
         } else {

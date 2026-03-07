@@ -115,7 +115,7 @@ static void rem_ter_ready_execute(void) {
     g_robot_ctx.output.gimbal  = GIMBAL_GYRO_STABILIZE;
     
     // [架枪模式集成] 左下且非右下 -> 连发 + 底盘急停锁死
-    if (rc_fsm_check(RC_LEFT_LD) && !rc_fsm_check(RC_RIGHT_RD)) {
+    if (rc_fsm_check(RC_LEFT_LD) && rc_fsm_check(RC_RIGHT_RD)) {
         g_robot_ctx.output.shoot   = SHOOT_SERIES; 
         g_robot_ctx.output.chassis = CHASSIS_STOP; 
     } else {
@@ -269,10 +269,10 @@ static void remote_execute(void) {
     g_robot_ctx.output.top_mode = TOP_MODE_REMOTE;
     
     // [全局异常检测] 如果在遥控模式下双摇杆内八/右下断电触发
-    if (rc_fsm_check(RC_LEFT_LD) && rc_fsm_check(RC_RIGHT_RD)) {
-        fsm_change(&g_top_fsm, &state_protect);
-        return;
-    }
+//    if (rc_fsm_check(RC_LEFT_LD) && rc_fsm_check(RC_RIGHT_RD)) {
+//        fsm_change(&g_top_fsm, &state_protect);
+//        return;
+//    }
 
     if (g_robot_ctx.input.sw1 == RC_SW_UP) { fsm_change(&g_top_fsm, &state_protect); return; }
     if (g_robot_ctx.input.sw1 == RC_SW_DOWN) { fsm_change(&g_top_fsm, &state_keyboard); return; }

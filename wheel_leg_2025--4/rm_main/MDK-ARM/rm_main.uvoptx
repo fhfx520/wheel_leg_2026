@@ -263,167 +263,167 @@
         <Ww>
           <count>21</count>
           <WinNumber>1</WinNumber>
-          <ItemText>\\rm_main\../User/Communication/container.c\g_instance-&gt;head-&gt;tag_id</ItemText>
+          <ItemText>gimbal_get_vision_data_container</ItemText>
         </Ww>
         <Ww>
           <count>22</count>
           <WinNumber>1</WinNumber>
-          <ItemText>gimbal_get_vision_data_container</ItemText>
+          <ItemText>fdcan_board_comm.tx_msg,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>23</count>
           <WinNumber>1</WinNumber>
-          <ItemText>fdcan_board_comm.tx_msg,0x0A</ItemText>
+          <ItemText>fdcan_tx_message</ItemText>
         </Ww>
         <Ww>
           <count>24</count>
           <WinNumber>1</WinNumber>
-          <ItemText>fdcan_tx_message</ItemText>
+          <ItemText>g_robot_ctx,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>25</count>
           <WinNumber>1</WinNumber>
-          <ItemText>g_robot_ctx,0x0A</ItemText>
+          <ItemText>status,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>26</count>
           <WinNumber>1</WinNumber>
-          <ItemText>status,0x0A</ItemText>
+          <ItemText>yaw_motor,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>27</count>
           <WinNumber>1</WinNumber>
-          <ItemText>yaw_motor,0x0A</ItemText>
+          <ItemText>trigger_motor,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>28</count>
           <WinNumber>1</WinNumber>
-          <ItemText>trigger_motor,0x0A</ItemText>
+          <ItemText>fdcan_rx_fifo0_data</ItemText>
         </Ww>
         <Ww>
           <count>29</count>
           <WinNumber>1</WinNumber>
-          <ItemText>fdcan_rx_fifo0_data</ItemText>
+          <ItemText>vmc</ItemText>
         </Ww>
         <Ww>
           <count>30</count>
           <WinNumber>1</WinNumber>
-          <ItemText>vmc</ItemText>
+          <ItemText>\\rm_main\../User/Drivers/drv_dm_motor.c\joint_motor[0].zero_point</ItemText>
         </Ww>
         <Ww>
           <count>31</count>
           <WinNumber>1</WinNumber>
-          <ItemText>\\rm_main\../User/Drivers/drv_dm_motor.c\joint_motor[0].zero_point</ItemText>
+          <ItemText>\\rm_main\../User/Drivers/drv_dm_motor.c\joint_motor[1].zero_point</ItemText>
         </Ww>
         <Ww>
           <count>32</count>
           <WinNumber>1</WinNumber>
-          <ItemText>\\rm_main\../User/Drivers/drv_dm_motor.c\joint_motor[1].zero_point</ItemText>
+          <ItemText>lock_flag</ItemText>
         </Ww>
         <Ww>
           <count>33</count>
           <WinNumber>1</WinNumber>
-          <ItemText>lock_flag</ItemText>
+          <ItemText>gimbal.yaw_output</ItemText>
         </Ww>
         <Ww>
           <count>34</count>
           <WinNumber>1</WinNumber>
-          <ItemText>gimbal.yaw_output</ItemText>
+          <ItemText>\\rm_main\../User/Model/leg_vmc.c\vmc[1]</ItemText>
         </Ww>
         <Ww>
           <count>35</count>
           <WinNumber>1</WinNumber>
-          <ItemText>\\rm_main\../User/Model/leg_vmc.c\vmc[1]</ItemText>
+          <ItemText>chassis,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>36</count>
           <WinNumber>1</WinNumber>
-          <ItemText>chassis,0x0A</ItemText>
+          <ItemText>pid_leg_recover</ItemText>
         </Ww>
         <Ww>
           <count>37</count>
           <WinNumber>1</WinNumber>
-          <ItemText>pid_leg_recover</ItemText>
+          <ItemText>pid_L_test</ItemText>
         </Ww>
         <Ww>
           <count>38</count>
           <WinNumber>1</WinNumber>
-          <ItemText>pid_L_test</ItemText>
+          <ItemText>wlr</ItemText>
         </Ww>
         <Ww>
           <count>39</count>
           <WinNumber>1</WinNumber>
-          <ItemText>wlr</ItemText>
+          <ItemText>gimbal.yaw_output</ItemText>
         </Ww>
         <Ww>
           <count>40</count>
           <WinNumber>1</WinNumber>
-          <ItemText>gimbal.yaw_output</ItemText>
+          <ItemText>status.board_comm,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>41</count>
           <WinNumber>1</WinNumber>
-          <ItemText>status.board_comm,0x0A</ItemText>
+          <ItemText>motor_msg</ItemText>
         </Ww>
         <Ww>
           <count>42</count>
           <WinNumber>1</WinNumber>
-          <ItemText>motor_msg</ItemText>
+          <ItemText>gimbal_stable.feedback_alpha_speed</ItemText>
         </Ww>
         <Ww>
           <count>43</count>
           <WinNumber>1</WinNumber>
-          <ItemText>gimbal_stable.feedback_alpha_speed</ItemText>
+          <ItemText>gimbal_stable.feedback_beta_speed</ItemText>
         </Ww>
         <Ww>
           <count>44</count>
           <WinNumber>1</WinNumber>
-          <ItemText>gimbal_stable.feedback_beta_speed</ItemText>
+          <ItemText>gimbal_imu</ItemText>
         </Ww>
         <Ww>
           <count>45</count>
           <WinNumber>1</WinNumber>
-          <ItemText>gimbal_imu</ItemText>
+          <ItemText>gimbal.yaw_ecd.ref</ItemText>
         </Ww>
         <Ww>
           <count>46</count>
           <WinNumber>1</WinNumber>
-          <ItemText>gimbal.yaw_ecd.ref</ItemText>
+          <ItemText>gimbal_get_gimbal_data_container</ItemText>
         </Ww>
         <Ww>
           <count>47</count>
           <WinNumber>1</WinNumber>
-          <ItemText>gimbal_get_gimbal_data_container</ItemText>
+          <ItemText>gimbal_data_rec,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>48</count>
           <WinNumber>1</WinNumber>
-          <ItemText>gimbal_data_rec,0x0A</ItemText>
+          <ItemText>g_robot_ctx.output.gimbal</ItemText>
         </Ww>
         <Ww>
           <count>49</count>
           <WinNumber>1</WinNumber>
-          <ItemText>g_robot_ctx.output.gimbal</ItemText>
+          <ItemText>gimbal</ItemText>
         </Ww>
         <Ww>
           <count>50</count>
           <WinNumber>1</WinNumber>
-          <ItemText>gimbal</ItemText>
+          <ItemText>tlm,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>51</count>
           <WinNumber>1</WinNumber>
-          <ItemText>tlm,0x0A</ItemText>
+          <ItemText>chassis_scale.keyboard</ItemText>
         </Ww>
         <Ww>
           <count>52</count>
           <WinNumber>1</WinNumber>
-          <ItemText>chassis_scale.keyboard</ItemText>
+          <ItemText>shoot,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>53</count>
           <WinNumber>1</WinNumber>
-          <ItemText>shoot,0x0A</ItemText>
+          <ItemText>back_cnt</ItemText>
         </Ww>
         <Ww>
           <count>54</count>
@@ -433,7 +433,7 @@
         <Ww>
           <count>55</count>
           <WinNumber>1</WinNumber>
-          <ItemText>back_cnt</ItemText>
+          <ItemText>shoot_get_vision_data_container</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>
@@ -491,6 +491,56 @@
           <count>10</count>
           <WinNumber>2</WinNumber>
           <ItemText>try2</ItemText>
+        </Ww>
+        <Ww>
+          <count>11</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>gimbal</ItemText>
+        </Ww>
+        <Ww>
+          <count>12</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>lock_flag</ItemText>
+        </Ww>
+        <Ww>
+          <count>13</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>status,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>14</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>mmmmm,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>15</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>shoot</ItemText>
+        </Ww>
+        <Ww>
+          <count>16</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>shoot_get_vision_data_container</ItemText>
+        </Ww>
+        <Ww>
+          <count>17</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>shoot_get_vision_data_container.vision_enanle</ItemText>
+        </Ww>
+        <Ww>
+          <count>18</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>vision_data_rec</ItemText>
+        </Ww>
+        <Ww>
+          <count>19</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>g_robot_ctx</ItemText>
+        </Ww>
+        <Ww>
+          <count>20</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>supercap,0x0A</ItemText>
         </Ww>
       </WatchWindow2>
       <MemoryWindow1>

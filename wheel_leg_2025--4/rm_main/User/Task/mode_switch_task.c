@@ -151,7 +151,7 @@ void mode_switch_task(void const *argu)
 		if(status.dji_motor)
 			lock_flag = 0;
 		//决定键鼠数据来源
-		decide_to_use_Witch_KbData();
+//		decide_to_use_Witch_KbData();
 		//运行 FSM 大脑 解锁后激活 否则一直保护
         robot_logic_update((lock_flag == 1) ? (const RC_Ctrl_t*)&rc : NULL);
 		//遥控数据打包发送
