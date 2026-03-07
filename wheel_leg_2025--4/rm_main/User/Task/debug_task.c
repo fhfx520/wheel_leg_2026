@@ -242,6 +242,10 @@ void log_scope_data_pkg(void)
 			log_scope_get_data(power_control.judge_max_power);
 			log_scope_get_data(shoot.trigger_ecd.ref);
 			log_scope_get_data(shoot.trigger_ecd.fdb);
+			log_scope_get_data(shoot.trigger_spd.pid.i_out);
+			log_scope_get_data(wlr.roll_fdb);
+			log_scope_get_data(wlr.pit_fdb);
+			log_scope_get_data(wlr.wz_fdb);
 		}
         default:break;
     }

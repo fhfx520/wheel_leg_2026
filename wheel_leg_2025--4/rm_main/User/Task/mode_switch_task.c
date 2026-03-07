@@ -148,6 +148,8 @@ void mode_switch_task(void const *argu)
             remote_reset();
 			sw1_mode_handler();
         }
+		if(status.dji_motor)
+			lock_flag = 0;
 		//决定键鼠数据来源
 		decide_to_use_Witch_KbData();
 		//运行 FSM 大脑 解锁后激活 否则一直保护

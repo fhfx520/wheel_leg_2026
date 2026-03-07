@@ -292,6 +292,7 @@ static void keyboard_execute(void) {
 		fsm_change(&g_top_fsm, &state_remote); 
 		return; 
 	}
+	//kb全局状态检测
     fsm_run(&fsm_keyboard_sub);
 }
 const FsmState_t state_keyboard = { .name = "KEYBOARD", .enter = keyboard_enter, .execute = keyboard_execute };

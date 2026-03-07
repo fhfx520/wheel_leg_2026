@@ -423,7 +423,7 @@
         <Ww>
           <count>53</count>
           <WinNumber>1</WinNumber>
-          <ItemText>shoot</ItemText>
+          <ItemText>shoot,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>54</count>
@@ -441,6 +441,56 @@
           <count>0</count>
           <WinNumber>2</WinNumber>
           <ItemText>wheel_diff</ItemText>
+        </Ww>
+        <Ww>
+          <count>1</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>\\rm_main\../User/Drivers/drv_dm_motor.c\joint_motor</ItemText>
+        </Ww>
+        <Ww>
+          <count>2</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>\\rm_main\../User/Protocol/prot_imu.c\chassis_imu</ItemText>
+        </Ww>
+        <Ww>
+          <count>3</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>\\rm_main\../User/Drivers/drv_dji_motor.c\trigger_motor,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>4</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>back_cnt,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>5</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>robot_status,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>6</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>motor_msg</ItemText>
+        </Ww>
+        <Ww>
+          <count>7</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>power_heat_data,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>8</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>wz_ramp</ItemText>
+        </Ww>
+        <Ww>
+          <count>9</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>try1</ItemText>
+        </Ww>
+        <Ww>
+          <count>10</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>try2</ItemText>
         </Ww>
       </WatchWindow2>
       <MemoryWindow1>

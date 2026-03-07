@@ -53,12 +53,15 @@ FGT_sin_t FGT_sin_chassis;
 chassis_t chassis;
 
 float variable_rotate_vw;
-float imu_pitch_offset = 0.0361f;
+float imu_pitch_offset = 0.0556f;
 
 chassis_scale_t chassis_scale = {
     .remote = 1.0f/660*2.5f,
     .keyboard = 3.0f
 };
+
+float try1,try2;
+
 
 // 恢复你本来的代码
 static void chassis_ramp(void)
@@ -119,7 +122,7 @@ static void chassis_init(void)
 
     ramp_init(&chassis_x_ramp, 0.02f, -2.5f, 2.5f);
     ramp_init(&chassis_y_ramp, 0.02f, -2.5f, 2.5f);
-    ramp_init(&chassis_rotate_ramp, 0.02f, -2.0f * CHASSIS_ROTATE_SPEED, 2.0f * CHASSIS_ROTATE_SPEED);
+    ramp_init(&chassis_rotate_ramp, 0.06f, -2.0f * CHASSIS_ROTATE_SPEED, 2.0f * CHASSIS_ROTATE_SPEED);
 
     wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
     wlr.yaw_offset = 1.7f;
@@ -377,11 +380,13 @@ static void chassis_data_input(void)
         if(spin_zero == 0) spin_zero = spin_limit;
         rotate_state_cnt++;
         if(fabs(spin_zero) < PI / 2.0f  ) {                 
-            if( fabs(circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, wlr.yaw_fdb, 2 * PI)) < 1.0f && rotate_state_cnt > 50){
+            if( circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, wlr.yaw_fdb, 2 * PI) < 1.25f 
+				&& circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, wlr.yaw_fdb, 2 * PI) > 0.0f && rotate_state_cnt > 50){
                 rotate_ramp_flag = 0; spin_zero = 0; rotate_state_cnt = 0; rotate_chassis_mode = CHASSIS_STOP;        
             }
         }else{
-            if(fabs(circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI, wlr.yaw_fdb, 2 * PI)) < 1.0f  && rotate_state_cnt > 50){
+            if(circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI, wlr.yaw_fdb, 2 * PI) < 1.25f 
+				&& circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI, wlr.yaw_fdb, 2 * PI) > 0.0f && rotate_state_cnt > 50){
                 rotate_ramp_flag = 0; spin_zero = 0; rotate_state_cnt = 0;
             }
         }       
