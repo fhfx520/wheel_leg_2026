@@ -445,7 +445,7 @@
         <Ww>
           <count>1</count>
           <WinNumber>2</WinNumber>
-          <ItemText>\\rm_main\../User/Drivers/drv_dm_motor.c\joint_motor</ItemText>
+          <ItemText>\\rm_main\../User/Drivers/drv_dm_motor.c\joint_motor,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>2</count>

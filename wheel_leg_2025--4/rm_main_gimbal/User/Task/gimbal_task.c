@@ -203,8 +203,8 @@ void gimbal_task(void const *argu)
 //					gimbal.yaw_angle.ref = gimbal_imu.yaw - (float)yaw_motor.ecd / 8192 * 2 * PI +  (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI ;	
 //				gimbal.yaw_angle.ref = gimbal.yaw_angle.fdb;
 
-//                gimbal.pit_angle.ref = 0.55;
-				gimbal.pit_angle.ref = 0.0f;
+                gimbal.pit_angle.ref = 0.55;
+//				gimbal.pit_angle.ref = 0.0f;
                 gimbal.pit_output = 0;
                 gimbal.yaw_output = 0;
                 break;

@@ -939,7 +939,7 @@ static void map_virtual_force(uint8_t index)
         wlr.side[index].Fy = pid_calc(&pid_leg_length_fly[index], tlm.l_ref[index], vmc[index].L_fdb) - 30.0f;
     } 
 	else if (chassis.recover_flag == 1 && chassis.rescue_inter_flag == 2) {		//进入翻倒自起立 && 进入收腿阶段
-        Fy_temp = pid_calc(&pid_leg_recover[index], wlr.recover_length, vmc[index].L_fdb) - 45.0f;
+        Fy_temp = pid_calc(&pid_leg_recover[index], wlr.recover_length, vmc[index].L_fdb) - 50.0f;
         wlr.side[index].Fy = ramp_calc(&Fy_ramp[index], Fy_temp);
     } 
 	else if (chassis.recover_flag > 1 && wlr.jump_flag != 0 && 0) {
@@ -1018,7 +1018,7 @@ void wlr_init(void)
 	wlr.high_set = LegLengthNormal;
 	wlr.crash_flag = 0;
 	wlr.K_adapt = -0.0f;
-    wlr.recover_length = 0.14f;
+    wlr.recover_length = 0.13f;
     
 	ramp_init(&height_ramp, 0.001f, LegLengthMin, LegLengthMax);			//日常腿长斜坡
 	ramp_init(&sky_height_ramp, 0.002f, LegLengthMin, LegLengthMax);		//空中腿长斜坡
@@ -1037,7 +1037,7 @@ void wlr_init(void)
 		vmc_init_five(&vmc[i], LegLengthParam_five);
 		//PID参数初始化      
         pid_init(&pid_leg_sky_cover[i], NONE, 1800, 1.5f, 0.0f,150,500);		    //空中收腿专用pid
-		pid_init(&pid_leg_sky_jump[i],  NONE,2000, 2.0, 10000.0f, 150.0, 500);			    //跳跃专用pid
+		pid_init(&pid_leg_sky_jump[i],  NONE,2200, 3.0, 0.0f, 150.0, 500);			//跳跃专用pid
 		pid_init(&pid_leg_recover[i], NONE, 1500, 1.5f, 20000.0f, 100, 300);		//起身专用pid
         pid_init(&pid_leg_length_fly[i], NONE, 800, 0.0, 20000, 0, 200);			//离地腿长/缓冲腿长pid
         pid_init(&pid_L_test[i], NONE, 800, 2.0, 60000, 70, 300);					//日常腿长pid

@@ -115,10 +115,11 @@ static void rem_ter_ready_execute(void) {
     g_robot_ctx.output.gimbal  = GIMBAL_GYRO_STABILIZE;
     
     // [架枪模式集成] 左下且非右下 -> 连发 + 底盘急停锁死
-    if (rc_fsm_check(RC_LEFT_LD) && rc_fsm_check(RC_RIGHT_RD)) {
+    if (rc_fsm_check(RC_LEFT_LD)) {
         g_robot_ctx.output.shoot   = SHOOT_SERIES; 
         g_robot_ctx.output.chassis = CHASSIS_STOP; 
-    } else {
+    }
+	else {
         g_robot_ctx.output.shoot   = SHOOT_SINGLE;  
     }
     
@@ -197,8 +198,9 @@ static void kb_high_execute(void) {
     g_robot_ctx.output.shoot  = get_kb_shoot_mode(); 
 
     if (check_key_trigger(KEY_C)) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
-   //if (check_key_trigger(KEY_R)) { fsm_change(&fsm_keyboard_sub, &state_kb_spin); return; } 高腿长不能小陀螺
+    if (check_key_trigger(KEY_R)) { fsm_change(&fsm_keyboard_sub, &state_kb_spin); return; } //高腿长不能小陀螺
     if (check_key_trigger(KEY_F)) { fsm_change(&fsm_keyboard_sub, &state_kb_ter_ready); return; }
+	if (check_key_trigger(KEY_A) || check_key_trigger(KEY_D)) { fsm_change(&fsm_keyboard_sub, &state_kb_fight); return; }
 }
 static const FsmState_t state_kb_high = { .name = "KB_HIGH", .enter = kb_high_enter, .execute = kb_high_execute };
 

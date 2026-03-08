@@ -151,9 +151,9 @@ static uint8_t series_shoot_enable(void)
             || (ctrl_mode == KEYBOARD_MODE && rc.mouse.l && rc.mouse.r && vision.shoot_enable)
             || (ctrl_mode == KEYBOARD_MODE && rc.mouse.l && rc.mouse.r && shoot_get_vision_data_container.vision_enanle)
             || (ctrl_mode == KEYBOARD_MODE && rc.mouse.l && rc.mouse.r == 0)
-        )
+        )    
 				
-        && shoot.barrel.heat_remain >= MIN_HEAT  //热量控制
+        && (shoot.barrel.heat_remain >= MIN_HEAT)  //热量控制
         && frequency_cnt * SHOOT_PERIOD >= shoot.trigger_period  //射频控制
         && ABS(trigger_ecd_error) <  TRIGGER_MOTOR_ECD_SERIES  //拨盘误差控制		
     );
@@ -242,8 +242,8 @@ static void shoot_init(void)
     //发射器底层初始化
     pid_init(&shoot.fric_spd[0].pid, NONE, 0.0005f, 0, 0, 0, 0.8);
     pid_init(&shoot.fric_spd[1].pid, NONE, 0.0005f, 0, 0, 0, 0.8);
-    pid_init(&shoot.trigger_ecd.pid, NONE, 0.1f, 0, 0.0f, 0, 10000);
-    pid_init(&shoot.trigger_spd.pid, NONE, 0.0001f, 0.00005f, 0, 0.1f, 1.8f);
+    pid_init(&shoot.trigger_ecd.pid, NONE, 0.12f, 0, 0.0f, 0, 10000);
+    pid_init(&shoot.trigger_spd.pid, NONE, 0.0001f, 0.00005f, 0, 0.2f, 1.8f);
     //发射器模式初始化
     shoot.trigger_mode  = TRIGGER_MODE_PROTECT;
     shoot.fric_mode     = FRIC_MODE_PROTECT;
@@ -299,7 +299,9 @@ static void shoot_param_update(void)
     //更新模拟裁判系统数据
     shoot.barrel.heat -= shoot.barrel.cooling_rate * SHOOT_PERIOD * 0.001f;  //当前枪管(理论)热量
     if (shoot.barrel.heat < 0) shoot.barrel.heat = 0;
-    shoot.barrel.heat_remain = shoot.barrel.heat_max - shoot.barrel.heat;  //当前枪管(理论)剩余热量
+//    shoot.barrel.heat_remain = shoot.barrel.heat_max - shoot.barrel.heat;  //当前枪管(理论)剩余热量
+	shoot.barrel.heat_remain = ((robot_status.shooter_barrel_heat_limit - power_heat_data.shooter_17mm_barrel_heat) / 3.0f + 
+								(shoot.barrel.heat_max - shoot.barrel.heat) / 3.0f * 2.0f);//枪管(理论)剩余热量
 //	shoot.barrel.heat_remain = 100;
 }
 
