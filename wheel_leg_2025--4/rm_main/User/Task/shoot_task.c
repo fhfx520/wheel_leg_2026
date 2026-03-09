@@ -1,427 +1,3 @@
-#include "shoot_task.h"
-#include "mode_switch_task.h"
-#include "control_def.h"
-#include "drv_dji_motor.h"
-#include "prot_judge.h"
-#include "prot_dr16.h"
-#include "prot_vision.h"
-#include "data_buffer.h"
-#include "cmsis_os.h"
-#include "status_task.h"
-#include "math_lib.h"
-#include "board_comm.h"
-#include "robot_logic.h"
-#include "mode_switch_task.h"
-#include "container.h"
-
-#define SHOOT_SPEED_NUM 15
-#ifndef ABS
-#define ABS(x) ((x>0)? (x): (-(x)))//32818
-#endif
-#define TRIGGER_MOTOR_ECD_SINGLE   (58975.0f)  //拨盘一颗子弹转过的编码值 8192 * 5 * 2 / 10 = 8192.0f
-#define TRIGGER_MOTOR_ECD_SERIES   (58975.0f)  //拨盘一颗子弹转过的编码值 8192 * 5 * 2 / 10 = 8192.0f
-
-float MIN_HEAT = 50;        //热量控制裕量
-
-static uint16_t frequency_cnt = 0;	//射击周期计算
-static uint8_t  shoot_enable  = 1;  //单发使能标志
-static float trigger_ecd_error;
-
-//用于退蛋反转
-uint32_t back_cnt = 0;
-static uint32_t err_cnt  = 0;
-static uint8_t back_flag = 0;
-
-shoot_t shoot;
-//static buffer_t *shoot_speed_buffer;
-
-
-//**********************添加预制弹位*************************//
-
-uint8_t microcurrent_flag = 0;		//预制标志位，如果暂时不需要用直接改成2就行了
-float micro_t = 0;					//微电流力矩
-float micro_t_test = 0;				//测试用
-
-/*
-* @brief	微电流（微小力矩）预制弹位，目前可用于dji3508电机，通过微小力矩推动到限位，
-			退小弹位，保证每次拨弹位置一致，可以保证每次打弹精度
- * @prarm[in] void
- * @return    void
-*/
-static void microcurrent_pre_fabricated_firing_position(void)
-{
-	static uint8_t microcurrent_cnt = 10;	//判断抵限位
-	static uint8_t microcurrent_wait_cnt = 100;//给予退弹位时间
-	static uint16_t microcurrent_out_cnt = 15000;//预制时间超过30s直接退出
-	
-	if(microcurrent_flag == 0)	//小力矩推动阶段,缓慢抵达限位处
-	{
-		if(ABS(trigger_motor.speed_rpm) < 60)	//防止力矩持续给力导致速度过快顶过限位	
-			micro_t = 0.30;
-		else
-			micro_t = 0.05f;
-		
-		shoot.trigger_ecd.ref = trigger_motor.total_ecd;//trigger stop下的ref和fbd一样，防止中途退出预制导致拨盘爆炸	
-		
-		if(ABS(trigger_motor.rx_current) > 3300 && ABS(trigger_motor.speed_rpm) < 2 && microcurrent_flag == 0) //判断是否抵住限位
-		{
-			if(microcurrent_cnt > 0)
-				microcurrent_cnt--;
-			else{									//第一阶段结束，进入第二阶段	
-				micro_t = 0;
-				microcurrent_flag = 1;	
-				shoot.trigger_ecd.ref += 2000.0f;	//退大约四分之一颗弹位	
-			}
-		}		
-	}
-	else if(microcurrent_flag == 1){	//重新回到pid位置环控制，往后退一小段位置
-		if(microcurrent_wait_cnt > 0)	//给予退弹位时间
-			microcurrent_wait_cnt--;
-		else
-			microcurrent_flag = 2;				//标志预制成功退出
-	}
-	
-	
-	if (microcurrent_out_cnt > 0)//预制时间超过30s直接退出
-		microcurrent_out_cnt--;
-	else
-		microcurrent_flag = 2;
-	
-}
-//**********************添加预制弹位结束*********************//
-
-
-vision_data_t shoot_get_vision_data_container;
-
-static vision_tx_data_t shoot_set_vision_data_container;
-
-// 收到vision数据：
-static void vision_data_cb(uint32_t tag_id, void* data, size_t len) {
-	if(data == NULL || len != sizeof(vision_data_t))
-	return;
-    memcpy(&shoot_get_vision_data_container,(vision_data_t*)data,len);
-	
-}
-
-// --- 回调配置表  ---
-static const ContainerBusCfg mb_callback[] = {
-    { TAG_TRACE_VISION_DATA, vision_data_cb, NULL }
-};
-
-void shoot_set_container(void)
-{
-	shoot_set_vision_data_container.shoot_speed = shoot_data.initial_speed;
-	shoot_set_vision_data_container.vision_bias_time = vision_send_time;
-	shoot_set_vision_data_container.vision_ID = ID_judge;
-	container_set(TAG_SHOOT_VISION_DATA,&shoot_set_vision_data_container,sizeof(shoot_set_vision_data_container),CONTAINER_TYPE_STRUCT);
-}
-
-
-static uint8_t single_shoot_reset(void)
-{
-    return (
-        (rc.mouse.l == 0 && ctrl_mode == KEYBOARD_MODE)
-        || (ABS(rc.ch3) < 10 && ctrl_mode == REMOTER_MODE)
-    );
-}
-
-static uint8_t single_shoot_enable(void)
-{
-    return (
-        shoot_enable
-        && shoot.barrel.heat_remain >= MIN_HEAT
-        && ((rc.mouse.l && ctrl_mode == KEYBOARD_MODE) || (rc.ch3 > 500 && ctrl_mode == REMOTER_MODE))
-        && ABS(trigger_ecd_error) < 0.1f * TRIGGER_MOTOR_ECD_SINGLE
-    );
-}
-
-static uint8_t series_shoot_enable(void)
-{
-	if(rc.kb.bit.G)
-		shoot.trigger_period  = 60;
-	else if (rc_fsm_check(RC_LEFT_LD) && rc_fsm_check(RC_RIGHT_LU) )
-		shoot.trigger_period  = 100;
-	else
-		shoot.trigger_period = TRIGGER_PERIOD;
-    return (
-        ( (ctrl_mode == REMOTER_MODE && shoot_get_vision_data_container.vision_enanle) //&& ( rc_fsm_check(RC_LEFT_LD) && rc_fsm_check(RC_RIGHT_RD) ) ) //开启视觉连发
-			|| (ctrl_mode == REMOTER_MODE && rc.sw2 == RC_DN && rc_fsm_check(RC_LEFT_LD) && !rc_fsm_check(RC_RIGHT_RD)  )  //开启遥控连发
-			|| (ctrl_mode == KEYBOARD_MODE && rc.mouse.l && rc.mouse.r && rc.kb.bit.G)//直接射	
-            || (ctrl_mode == KEYBOARD_MODE && rc.mouse.l && rc.mouse.r && shoot_get_vision_data_container.vision_enanle)
-            || (ctrl_mode == KEYBOARD_MODE && rc.mouse.l && rc.mouse.r == 0)
-        )    
-				
-        && (shoot.barrel.heat_remain >= MIN_HEAT)  //热量控制
-        && frequency_cnt * SHOOT_PERIOD >= shoot.trigger_period  //射频控制
-        && ABS(trigger_ecd_error) <  TRIGGER_MOTOR_ECD_SERIES  //拨盘误差控制		
-    );
-}
-uint8_t last_enable;
-int32_t mmmmm;
-static void shoot_control(void)
-{
-    switch (shoot.trigger_mode) {
-        case TRIGGER_MODE_PROTECT: { //拨盘保护模式，保持惯性，无力
-            frequency_cnt = 0; //计时变量置0，打出当前一发，禁止
-            shoot.barrel.shoot_period = 0;
-            shoot.trigger_ecd.ref = trigger_motor.total_ecd;
-            shoot.trigger_spd.pid.i_out = 0;
-            shoot.trigger_output = 0;
-            break;
-        }
-        case TRIGGER_MODE_STOP: { //拨盘停止模式，保持静止，有力
-            frequency_cnt = 0; //计时变量置0，打出当前一发，禁止
-            shoot.barrel.shoot_period = 0;
-            
-            shoot.trigger_ecd.ref = trigger_motor.total_ecd;
-            shoot.trigger_spd.pid.i_out = 0;
-            break;
-        }
-        case TRIGGER_MODE_SINGLE: { //拨盘单发模式，连续开枪请求，只响应一次
-            frequency_cnt++;
-            trigger_ecd_error = shoot.trigger_ecd.ref - shoot.trigger_ecd.fdb;
-            if (single_shoot_reset()) {
-                shoot_enable = 1;
-            }
-            if (single_shoot_enable()) { //热量控制
-                shoot_enable = 0;
-                shoot.trigger_ecd.ref += TRIGGER_MOTOR_ECD_SINGLE;
-                shoot.barrel.heat += 10;
-            }
-            break;
-        }
-        case TRIGGER_MODE_SERIES: { //拨盘连发模式，连续开枪请求，连续响应
-            frequency_cnt++;
-            trigger_ecd_error = shoot.trigger_ecd.ref - shoot.trigger_ecd.fdb;
-           if (series_shoot_enable() && !back_flag) { //一个周期打一颗
-                frequency_cnt = 0;
-			    mmmmm++;
-				shoot.trigger_ecd.ref += 1 * TRIGGER_MOTOR_ECD_SERIES;
-                shoot.barrel.heat += 10;
-            }
-			//卡蛋反转
-			if(ABS(trigger_motor.rx_current) > 7000 && ABS(trigger_motor.speed_rpm) < 100 )
-				back_cnt ++;
-			if (back_cnt > 200) {
-				back_flag = 1;
-				err_cnt ++;
-				shoot.trigger_ecd.ref = trigger_motor.total_ecd - TRIGGER_MOTOR_ECD_SERIES;
-				if (err_cnt > 200) {
-					back_cnt = 0;
-					err_cnt = 0;
-					back_flag = 0;
-				}
-			}
-            break;
-        }
-        default:break;
-    }
-    switch (shoot.fric_mode) {
-        case FRIC_MODE_PROTECT:
-        case FRIC_MODE_STOP: {
-            shoot.fric_spd[0].ref = 0;
-            shoot.fric_spd[1].ref = 0;
-            break;
-        }
-        case FRIC_MODE_RUN: {
-            shoot.fric_spd[0].ref = -shoot.fric_speed_set;
-            shoot.fric_spd[1].ref = shoot.fric_speed_set;
-            break;
-        }
-        default:break;
-    }
-		
-		last_enable = vision.shoot_enable;
-}
-
-static void shoot_init(void)
-{
-    memset(&shoot, 0, sizeof(shoot_t));
-    //发射器底层初始化
-    pid_init(&shoot.fric_spd[0].pid, NONE, 0.0005f, 0, 0, 0, 0.8);
-    pid_init(&shoot.fric_spd[1].pid, NONE, 0.0005f, 0, 0, 0, 0.8);
-    pid_init(&shoot.trigger_ecd.pid, NONE, 0.12f, 0, 0.0f, 0, 10000);
-    pid_init(&shoot.trigger_spd.pid, NONE, 0.0001f, 0.00005f, 0, 0.2f, 1.8f);
-    //发射器模式初始化
-    shoot.trigger_mode  = TRIGGER_MODE_PROTECT;
-    shoot.fric_mode     = FRIC_MODE_PROTECT;
-    //枪管参数初始化
-    shoot.trigger_period 		= TRIGGER_PERIOD;
-    shoot.fric_speed_set 		= 780;
-    shoot.barrel.cooling_rate   = 10;
-    shoot.barrel.heat_max       = 50;
-    //历史射速反馈缓存区
-//    shoot_speed_buffer = buffer_create(SHOOT_SPEED_NUM, sizeof(float));
-	container_bus_init(mb_callback, sizeof(mb_callback)/sizeof(ContainerBusCfg));
-}
-
-static void shoot_pid_calc(void)
-{
-    for (int i = 0; i < 2; i++) {
-        shoot.fric_spd[i].fdb = fric_motor[i].velocity;
-        shoot.fric_output[i] = pid_calc(&shoot.fric_spd[i].pid, shoot.fric_spd[i].ref, shoot.fric_spd[i].fdb);
-    }
-    shoot.trigger_ecd.fdb = trigger_motor.total_ecd;
-    shoot.trigger_spd.ref = pid_calc(&shoot.trigger_ecd.pid, shoot.trigger_ecd.ref, shoot.trigger_ecd.fdb);
-    shoot.trigger_spd.fdb = trigger_motor.speed_rpm;
-    shoot.trigger_output = pid_calc(&shoot.trigger_spd.pid, shoot.trigger_spd.ref, shoot.trigger_spd.fdb);
-		
-	//牛牛卡了反转
-	if(ABS(trigger_motor.rx_current) > 7000 && ABS(trigger_motor.speed_rpm) < 100)
-		shoot.trigger_output = 0;
-}
-
-static void shoot_data_output(void)
-{
-    if (shoot.fric_mode == FRIC_MODE_PROTECT) {
-        dji_motor_set_torque(&fric_motor[0], 0);
-        dji_motor_set_torque(&fric_motor[1], 0);
-    } else {
-        dji_motor_set_torque(&fric_motor[0], shoot.fric_output[0]);
-        dji_motor_set_torque(&fric_motor[1], shoot.fric_output[1]);
-    }
-    if (shoot.trigger_mode == TRIGGER_MODE_PROTECT) {
-        dji_motor_set_torque(&trigger_motor, 0);
-    } else {
-        dji_motor_set_torque(&trigger_motor, shoot.trigger_output);
-    }
-}
-
-static void shoot_param_update(void)
-{
-    //更新裁判系统数据
-    if (robot_status.shooter_barrel_heat_limit != 0) {
-        shoot.barrel.heat_max = robot_status.shooter_barrel_heat_limit;//枪管热量上限
-        shoot.barrel.cooling_rate = robot_status.shooter_barrel_cooling_value;//枪管冷却速率
-    }
-    //更新模拟裁判系统数据
-    shoot.barrel.heat -= shoot.barrel.cooling_rate * SHOOT_PERIOD * 0.001f;  //当前枪管(理论)热量
-    if (shoot.barrel.heat < 0) shoot.barrel.heat = 0;
-//    shoot.barrel.heat_remain = shoot.barrel.heat_max - shoot.barrel.heat;  //当前枪管(理论)剩余热量
-	shoot.barrel.heat_remain = ((robot_status.shooter_barrel_heat_limit - power_heat_data.shooter_17mm_barrel_heat) / 3.0f + 
-								(shoot.barrel.heat_max - shoot.barrel.heat) / 3.0f * 2.0f);//枪管(理论)剩余热量
-//	shoot.barrel.heat_remain = 100;
-}
-
-static void shoot_test(void) {
-//    static float last_shoot_speed;
-//    shoot.barrel.bullet_spd.fdb = shoot_data.initial_speed;
-//    if (ABS(shoot.barrel.bullet_spd.fdb - last_shoot_speed) > 1e-5f) {
-//        ++shoot.barrel.shoot_cnt;//统计发射子弹数
-//        buffer_put_noprotect(shoot_speed_buffer, &shoot.barrel.bullet_spd.fdb);
-//        float vision_data_array[SHOOT_SPEED_NUM] = {0};
-//        uint32_t real_num = ubf_pop_into_array_new2old(shoot_speed_buffer, vision_data_array, 0, SHOOT_SPEED_NUM);
-//        arm_var_f32(vision_data_array, real_num, &shoot.barrel.bullet_spd.std);  //计算数据方差
-//        shoot.barrel.bullet_spd.std = sqrt(shoot.barrel.bullet_spd.std);
-//        last_shoot_speed = shoot.barrel.bullet_spd.fdb;
-//    }
-}
-
-static void shoot_mode_switch(void)
-{
-    /* 1. 更新裁判系统参数 (保持原样) */
-    shoot_param_update();
-
-    /* 2. 射频切换 (复刻你原版的右键高频逻辑) */
-    if (ctrl_mode == KEYBOARD_MODE && rc.mouse.r)
-        shoot.trigger_period = TRIGGER_PERIOD2;
-    else
-        shoot.trigger_period = TRIGGER_PERIOD;
-
-    /* 3. 解析 FSM 大脑的组合状态 */
-    switch (g_robot_ctx.output.shoot) {
-        case SHOOT_PROTECT:{
-            shoot.fric_mode = FRIC_MODE_STOP;
-            shoot.trigger_mode = TRIGGER_MODE_PROTECT;
-            break;}
-            
-        case SHOOT_STOP:{
-            shoot.fric_mode = FRIC_MODE_STOP;
-            shoot.trigger_mode = TRIGGER_MODE_STOP;
-            break;}
-            
-        case SHOOT_SINGLE:{
-            shoot.fric_mode = FRIC_MODE_RUN;
-            shoot.trigger_mode = TRIGGER_MODE_SINGLE;
-            break;}
-            
-        case SHOOT_SERIES:{
-            shoot.fric_mode = FRIC_MODE_RUN;
-            shoot.trigger_mode = TRIGGER_MODE_SERIES;
-            break;}
-            
-        default:{
-            shoot.fric_mode = FRIC_MODE_STOP;
-            shoot.trigger_mode = TRIGGER_MODE_PROTECT;
-            break;}
-    }
-
-    /* 4. 视觉模式切换 (保留你原版的键位掩码判断) */
-    if (ctrl_mode == KEYBOARD_MODE) {
-        if (KEY_PRESS_VISION2) {
-            vision.tx.data.aiming_mode = 2;
-        } else if (KEY_PRESS_VISION1) {
-            vision.tx.data.aiming_mode = 1;
-        } else {
-            vision.tx.data.aiming_mode = 0;
-        }
-    } else {
-        vision.tx.data.aiming_mode = 0;
-    }
-
-    /* 5. 裁判系统掉电保护 (保留你原版的安全逻辑) */
-    if (ctrl_mode == KEYBOARD_MODE) {
-        if (!robot_status.power_management_shooter_output) {
-            shoot.fric_mode = FRIC_MODE_PROTECT;
-            shoot.trigger_mode = TRIGGER_MODE_STOP;
-        }
-    }
-}
-
-int last_tri_ref;
-float last_shoot_speed;
-float vision_send_time;
-static void vision_shoot_delay(void){
-	
-	 static uint8_t bias_time_check;
-	 static float bias_time_cnt;
-	
-	if( shoot.trigger_ecd.ref - last_tri_ref >=  0.8F * TRIGGER_MOTOR_ECD_SERIES )
-		bias_time_check = 1;
-	
-	if(bias_time_check){
-		bias_time_cnt++;
-		if( fabs(shoot_data.initial_speed - last_shoot_speed) > 1e-3 ){
-			vision_send_time = median_filter(bias_time_cnt * 2.0f);
-			bias_time_cnt = 0;
-			bias_time_check = 0;
-		}
-	}	
-	last_tri_ref = shoot.trigger_ecd.ref;
-	last_shoot_speed = shoot_data.initial_speed;
-}
-
-void shoot_task(void const *argu)
-{
-    uint32_t thread_wake_time = osKernelSysTick();
-    shoot_init();
-    for(;;)
-    {
-        thread_wake_time = osKernelSysTick();
-//        taskENTER_CRITICAL();
-		vision_num();		//用于板间通信传输数据，但云台未使用
-        shoot_mode_switch();    /* 发射器模式切换 */
-        shoot_control();
-        shoot_pid_calc();
-        shoot_data_output();
-		vision_shoot_delay();
-		shoot_set_container();
-        status.task.shoot = 1;
-//        taskEXIT_CRITICAL();
-        osDelayUntil(&thread_wake_time, 2);
-    }
-}
-
 //#include "shoot_task.h"
 //#include "mode_switch_task.h"
 //#include "control_def.h"
@@ -433,14 +9,17 @@ void shoot_task(void const *argu)
 //#include "cmsis_os.h"
 //#include "status_task.h"
 //#include "math_lib.h"
-
+//#include "board_comm.h"
+//#include "robot_logic.h"
+//#include "mode_switch_task.h"
+//#include "container.h"
 
 //#define SHOOT_SPEED_NUM 15
 //#ifndef ABS
 //#define ABS(x) ((x>0)? (x): (-(x)))//32818
 //#endif
-//#define TRIGGER_MOTOR_ECD_SINGLE   (58975.0f)  //拨盘一颗子弹转过的编码值 8191 * 36 / 8 = 36859.5f
-//#define TRIGGER_MOTOR_ECD_SERIES   (58975.0f)  //拨盘一颗子弹转过的编码值 8191 * 36 / 8 = 36859.5f
+//#define TRIGGER_MOTOR_ECD_SINGLE   (58975.0f)  //拨盘一颗子弹转过的编码值 8192 * 5 * 2 / 10 = 8192.0f
+//#define TRIGGER_MOTOR_ECD_SERIES   (58975.0f)  //拨盘一颗子弹转过的编码值 8192 * 5 * 2 / 10 = 8192.0f
 
 //float MIN_HEAT = 50;        //热量控制裕量
 
@@ -449,12 +28,94 @@ void shoot_task(void const *argu)
 //static float trigger_ecd_error;
 
 ////用于退蛋反转
-//static uint32_t back_cnt = 0;
+//uint32_t back_cnt = 0;
 //static uint32_t err_cnt  = 0;
 //static uint8_t back_flag = 0;
 
 //shoot_t shoot;
 ////static buffer_t *shoot_speed_buffer;
+
+
+////**********************添加预制弹位*************************//
+
+//uint8_t microcurrent_flag = 0;		//预制标志位，如果暂时不需要用直接改成2就行了
+//float micro_t = 0;					//微电流力矩
+//float micro_t_test = 0;				//测试用
+
+///*
+//* @brief	微电流（微小力矩）预制弹位，目前可用于dji3508电机，通过微小力矩推动到限位，
+//			退小弹位，保证每次拨弹位置一致，可以保证每次打弹精度
+// * @prarm[in] void
+// * @return    void
+//*/
+//static void microcurrent_pre_fabricated_firing_position(void)
+//{
+//	static uint8_t microcurrent_cnt = 10;	//判断抵限位
+//	static uint8_t microcurrent_wait_cnt = 100;//给予退弹位时间
+//	static uint16_t microcurrent_out_cnt = 15000;//预制时间超过30s直接退出
+//	
+//	if(microcurrent_flag == 0)	//小力矩推动阶段,缓慢抵达限位处
+//	{
+//		if(ABS(trigger_motor.speed_rpm) < 60)	//防止力矩持续给力导致速度过快顶过限位	
+//			micro_t = 0.30;
+//		else
+//			micro_t = 0.05f;
+//		
+//		shoot.trigger_ecd.ref = trigger_motor.total_ecd;//trigger stop下的ref和fbd一样，防止中途退出预制导致拨盘爆炸	
+//		
+//		if(ABS(trigger_motor.rx_current) > 3300 && ABS(trigger_motor.speed_rpm) < 2 && microcurrent_flag == 0) //判断是否抵住限位
+//		{
+//			if(microcurrent_cnt > 0)
+//				microcurrent_cnt--;
+//			else{									//第一阶段结束，进入第二阶段	
+//				micro_t = 0;
+//				microcurrent_flag = 1;	
+//				shoot.trigger_ecd.ref += 2000.0f;	//退大约四分之一颗弹位	
+//			}
+//		}		
+//	}
+//	else if(microcurrent_flag == 1){	//重新回到pid位置环控制，往后退一小段位置
+//		if(microcurrent_wait_cnt > 0)	//给予退弹位时间
+//			microcurrent_wait_cnt--;
+//		else
+//			microcurrent_flag = 2;				//标志预制成功退出
+//	}
+//	
+//	
+//	if (microcurrent_out_cnt > 0)//预制时间超过30s直接退出
+//		microcurrent_out_cnt--;
+//	else
+//		microcurrent_flag = 2;
+//	
+//}
+////**********************添加预制弹位结束*********************//
+
+
+//vision_data_t shoot_get_vision_data_container;
+
+//static vision_tx_data_t shoot_set_vision_data_container;
+
+//// 收到vision数据：
+//static void vision_data_cb(uint32_t tag_id, void* data, size_t len) {
+//	if(data == NULL || len != sizeof(vision_data_t))
+//	return;
+//    memcpy(&shoot_get_vision_data_container,(vision_data_t*)data,len);
+//	
+//}
+
+//// --- 回调配置表  ---
+//static const ContainerBusCfg mb_callback[] = {
+//    { TAG_TRACE_VISION_DATA, vision_data_cb, NULL }
+//};
+
+//void shoot_set_container(void)
+//{
+//	shoot_set_vision_data_container.shoot_speed = shoot_data.initial_speed;
+//	shoot_set_vision_data_container.vision_bias_time = vision_send_time;
+//	shoot_set_vision_data_container.vision_ID = ID_judge;
+//	container_set(TAG_SHOOT_VISION_DATA,&shoot_set_vision_data_container,sizeof(shoot_set_vision_data_container),CONTAINER_TYPE_STRUCT);
+//}
+
 
 //static uint8_t single_shoot_reset(void)
 //{
@@ -482,21 +143,21 @@ void shoot_task(void const *argu)
 //		shoot.trigger_period  = 100;
 //	else
 //		shoot.trigger_period = TRIGGER_PERIOD;
-//	
 //    return (
-//        ( (ctrl_mode == REMOTER_MODE && vision.shoot_enable) //&& ( rc_fsm_check(RC_LEFT_LD) && rc_fsm_check(RC_RIGHT_RD) ) ) //开启视觉连发
+//        ( (ctrl_mode == REMOTER_MODE && shoot_get_vision_data_container.vision_enanle) //&& ( rc_fsm_check(RC_LEFT_LD) && rc_fsm_check(RC_RIGHT_RD) ) ) //开启视觉连发
 //			|| (ctrl_mode == REMOTER_MODE && rc.sw2 == RC_DN && rc_fsm_check(RC_LEFT_LD) && !rc_fsm_check(RC_RIGHT_RD)  )  //开启遥控连发
 //			|| (ctrl_mode == KEYBOARD_MODE && rc.mouse.l && rc.mouse.r && rc.kb.bit.G)//直接射	
-//            || (ctrl_mode == KEYBOARD_MODE && rc.mouse.l && rc.mouse.r && vision.shoot_enable)
+//            || (ctrl_mode == KEYBOARD_MODE && rc.mouse.l && rc.mouse.r && shoot_get_vision_data_container.vision_enanle)
 //            || (ctrl_mode == KEYBOARD_MODE && rc.mouse.l && rc.mouse.r == 0)
-//        )
+//        )    
 //				
-//        && shoot.barrel.heat_remain >= MIN_HEAT  //热量控制
+//        && (shoot.barrel.heat_remain >= MIN_HEAT)  //热量控制
 //        && frequency_cnt * SHOOT_PERIOD >= shoot.trigger_period  //射频控制
 //        && ABS(trigger_ecd_error) <  TRIGGER_MOTOR_ECD_SERIES  //拨盘误差控制		
 //    );
 //}
 //uint8_t last_enable;
+//int32_t mmmmm;
 //static void shoot_control(void)
 //{
 //    switch (shoot.trigger_mode) {
@@ -534,11 +195,12 @@ void shoot_task(void const *argu)
 //            trigger_ecd_error = shoot.trigger_ecd.ref - shoot.trigger_ecd.fdb;
 //           if (series_shoot_enable() && !back_flag) { //一个周期打一颗
 //                frequency_cnt = 0;
+//			    mmmmm++;
 //				shoot.trigger_ecd.ref += 1 * TRIGGER_MOTOR_ECD_SERIES;
 //                shoot.barrel.heat += 10;
 //            }
 //			//卡蛋反转
-//			if(ABS(trigger_motor.rx_current) > 7000 && ABS(trigger_motor.speed_rpm) < 100)
+//			if(ABS(trigger_motor.rx_current) > 7000 && ABS(trigger_motor.speed_rpm) < 100 )
 //				back_cnt ++;
 //			if (back_cnt > 200) {
 //				back_flag = 1;
@@ -578,8 +240,8 @@ void shoot_task(void const *argu)
 //    //发射器底层初始化
 //    pid_init(&shoot.fric_spd[0].pid, NONE, 0.0005f, 0, 0, 0, 0.8);
 //    pid_init(&shoot.fric_spd[1].pid, NONE, 0.0005f, 0, 0, 0, 0.8);
-//    pid_init(&shoot.trigger_ecd.pid, NONE, 0.1f, 0, 0.0f, 0, 10000);
-//    pid_init(&shoot.trigger_spd.pid, NONE, 0.00005f, 0.00005f, 0, 0.0f, 1.8f);
+//    pid_init(&shoot.trigger_ecd.pid, NONE, 0.12f, 0, 0.0f, 0, 10000);
+//    pid_init(&shoot.trigger_spd.pid, NONE, 0.0001f, 0.00005f, 0, 0.2f, 1.8f);
 //    //发射器模式初始化
 //    shoot.trigger_mode  = TRIGGER_MODE_PROTECT;
 //    shoot.fric_mode     = FRIC_MODE_PROTECT;
@@ -590,6 +252,7 @@ void shoot_task(void const *argu)
 //    shoot.barrel.heat_max       = 50;
 //    //历史射速反馈缓存区
 ////    shoot_speed_buffer = buffer_create(SHOOT_SPEED_NUM, sizeof(float));
+//	container_bus_init(mb_callback, sizeof(mb_callback)/sizeof(ContainerBusCfg));
 //}
 
 //static void shoot_pid_calc(void)
@@ -636,7 +299,7 @@ void shoot_task(void const *argu)
 //    if (shoot.barrel.heat < 0) shoot.barrel.heat = 0;
 ////    shoot.barrel.heat_remain = shoot.barrel.heat_max - shoot.barrel.heat;  //当前枪管(理论)剩余热量
 //	shoot.barrel.heat_remain = ((robot_status.shooter_barrel_heat_limit - power_heat_data.shooter_17mm_barrel_heat) / 3.0f + 
-//								(shoot.barrel.heat_max - shoot.barrel.heat) / 3.0f *2.0f);//枪管(理论)剩余热量
+//								(shoot.barrel.heat_max - shoot.barrel.heat) / 3.0f * 2.0f);//枪管(理论)剩余热量
 ////	shoot.barrel.heat_remain = 100;
 //}
 
@@ -656,76 +319,62 @@ void shoot_task(void const *argu)
 
 //static void shoot_mode_switch(void)
 //{
-//    /* 更新裁判系统参数 */
+//    /* 1. 更新裁判系统参数 (保持原样) */
 //    shoot_param_update();
-//    /* 模式切换 */
-//    switch (ctrl_mode) {
-//        case PROTECT_MODE: {
-//            shoot.trigger_period = TRIGGER_PERIOD;
+
+//    /* 2. 射频切换 (复刻你原版的右键高频逻辑) */
+//    if (ctrl_mode == KEYBOARD_MODE && rc.mouse.r)
+//        shoot.trigger_period = TRIGGER_PERIOD2;
+//    else
+//        shoot.trigger_period = TRIGGER_PERIOD;
+
+//    /* 3. 解析 FSM 大脑的组合状态 */
+//    switch (g_robot_ctx.output.shoot) {
+//        case SHOOT_PROTECT:{
 //            shoot.fric_mode = FRIC_MODE_STOP;
 //            shoot.trigger_mode = TRIGGER_MODE_PROTECT;
-//            break;
+//            break;}
+//            
+//        case SHOOT_STOP:{
+//            shoot.fric_mode = FRIC_MODE_STOP;
+//            shoot.trigger_mode = TRIGGER_MODE_STOP;
+//            break;}
+//            
+//        case SHOOT_SINGLE:{
+//            shoot.fric_mode = FRIC_MODE_RUN;
+//            shoot.trigger_mode = TRIGGER_MODE_SINGLE;
+//            break;}
+//            
+//        case SHOOT_SERIES:{
+//            shoot.fric_mode = FRIC_MODE_RUN;
+//            shoot.trigger_mode = TRIGGER_MODE_SERIES;
+//            break;}
+//            
+//        default:{
+//            shoot.fric_mode = FRIC_MODE_STOP;
+//            shoot.trigger_mode = TRIGGER_MODE_PROTECT;
+//            break;}
+//    }
+
+//    /* 4. 视觉模式切换 (保留你原版的键位掩码判断) */
+//    if (ctrl_mode == KEYBOARD_MODE) {
+//        if (KEY_PRESS_VISION2) {
+//            vision.tx.data.aiming_mode = 2;
+//        } else if (KEY_PRESS_VISION1) {
+//            vision.tx.data.aiming_mode = 1;
+//        } else {
+//            vision.tx.data.aiming_mode = 0;
 //        }
-//        case REMOTER_MODE: {
-//            shoot.trigger_period = TRIGGER_PERIOD;
-//            /* 摩擦轮和拨盘模式切换 */
-//            switch (rc.sw2) {
-//                case RC_UP: {
-//                    shoot.fric_mode = FRIC_MODE_STOP;
-//                    shoot.trigger_mode = TRIGGER_MODE_STOP;
-//                    break;
-//                }
-//                case RC_MI: {
-//                    shoot.fric_mode = FRIC_MODE_RUN;
-//                    shoot.trigger_mode = TRIGGER_MODE_SINGLE;
-////                    shoot.fric_mode = FRIC_MODE_STOP;//调试
-////                    shoot.trigger_mode = TRIGGER_MODE_STOP;                    
-//                    break;
-//                }
-//                case RC_DN: {
-//                    shoot.fric_mode = FRIC_MODE_RUN;
-//                    shoot.trigger_mode = TRIGGER_MODE_SERIES;                
-//                    break;
-//                }
-//                default: break;
-//            }
-////            if  ( ! ( rc_fsm_check(RC_LEFT_LD) ) ) { //遥控器注释发射
-////                shoot.fric_mode = FRIC_MODE_STOP;//调试用
-////                shoot.trigger_mode = TRIGGER_MODE_PROTECT;
-////            }
-//            break;
+//    } else {
+//        vision.tx.data.aiming_mode = 0;
+//    }
+
+//    /* 5. 裁判系统掉电保护 (保留你原版的安全逻辑) */
+//    if (ctrl_mode == KEYBOARD_MODE) {
+//        if (!robot_status.power_management_shooter_output) {
+//            shoot.fric_mode = FRIC_MODE_PROTECT;
+//            shoot.trigger_mode = TRIGGER_MODE_STOP;
 //        }
-//        case KEYBOARD_MODE: {
-//            /* 射频切换 */
-//            if (rc.mouse.r)
-//                shoot.trigger_period = TRIGGER_PERIOD2;
-//            else
-//                shoot.trigger_period = TRIGGER_PERIOD;
-//            /* 摩擦轮模式切换 */
-//            if (robot_status.power_management_shooter_output) {  //发射机构得到供电 
-//                shoot.fric_mode = FRIC_MODE_RUN;  //开关摩擦轮         
-//            } else {
-//                shoot.fric_mode = FRIC_MODE_PROTECT;  //摩擦轮断电，软件保护，禁用摩擦轮
-//            }
-//            /* 视觉模式切换 */
-//            if (KEY_PRESS_VISION2) {
-//                vision.tx.data.aiming_mode = 2;
-//            } else if (KEY_PRESS_VISION1) {
-//                vision.tx.data.aiming_mode = 1;
-//            } else {
-//                vision.tx.data.aiming_mode = 0;
-//            }
-//            /* 拨盘模式切换 */
-//            if (shoot.fric_mode != FRIC_MODE_RUN) {
-//                shoot.trigger_mode = TRIGGER_MODE_STOP;
-//            } else if (vision.tx.data.aiming_mode != 0) {
-//                shoot.trigger_mode = TRIGGER_MODE_SINGLE;
-//            } else {
-//                shoot.trigger_mode = TRIGGER_MODE_SERIES;
-//            }
-//            break;
-//        }
-//        default: break;
 //    }
 //}
 
@@ -760,15 +409,369 @@ void shoot_task(void const *argu)
 //    {
 //        thread_wake_time = osKernelSysTick();
 ////        taskENTER_CRITICAL();
+//		vision_num();		//用于板间通信传输数据，但云台未使用
 //        shoot_mode_switch();    /* 发射器模式切换 */
 //        shoot_control();
 //        shoot_pid_calc();
 //        shoot_data_output();
-//        shoot_test();
 //		vision_shoot_delay();
+//		shoot_set_container();
 //        status.task.shoot = 1;
 ////        taskEXIT_CRITICAL();
 //        osDelayUntil(&thread_wake_time, 2);
 //    }
 //}
+
+#include "shoot_task.h"
+#include "mode_switch_task.h"
+#include "control_def.h"
+#include "drv_dji_motor.h"
+#include "prot_judge.h"
+#include "prot_dr16.h"
+#include "prot_vision.h"
+#include "data_buffer.h"
+#include "cmsis_os.h"
+#include "status_task.h"
+#include "math_lib.h"
+
+
+#define SHOOT_SPEED_NUM 15
+#ifndef ABS
+#define ABS(x) ((x>0)? (x): (-(x)))//32818
+#endif
+#define TRIGGER_MOTOR_ECD_SINGLE   (58975.0f)  //拨盘一颗子弹转过的编码值 8191 * 36 / 8 = 36859.5f
+#define TRIGGER_MOTOR_ECD_SERIES   (58975.0f)  //拨盘一颗子弹转过的编码值 8191 * 36 / 8 = 36859.5f
+
+float MIN_HEAT = 50;        //热量控制裕量
+
+static uint16_t frequency_cnt = 0;	//射击周期计算
+static uint8_t  shoot_enable  = 1;  //单发使能标志
+static float trigger_ecd_error;
+
+//用于退蛋反转
+static uint32_t back_cnt = 0;
+static uint32_t err_cnt  = 0;
+static uint8_t back_flag = 0;
+
+shoot_t shoot;
+//static buffer_t *shoot_speed_buffer;
+
+static uint8_t single_shoot_reset(void)
+{
+    return (
+        (rc.mouse.l == 0 && ctrl_mode == KEYBOARD_MODE)
+        || (ABS(rc.ch3) < 10 && ctrl_mode == REMOTER_MODE)
+    );
+}
+
+static uint8_t single_shoot_enable(void)
+{
+    return (
+        shoot_enable
+        && shoot.barrel.heat_remain >= MIN_HEAT
+        && ((rc.mouse.l && ctrl_mode == KEYBOARD_MODE) || (rc.ch3 > 500 && ctrl_mode == REMOTER_MODE))
+        && ABS(trigger_ecd_error) < 0.1f * TRIGGER_MOTOR_ECD_SINGLE
+    );
+}
+
+static uint8_t series_shoot_enable(void)
+{
+	if(rc.kb.bit.G)
+		shoot.trigger_period  = 60;
+	else if (rc_fsm_check(RC_LEFT_LD) && rc_fsm_check(RC_RIGHT_LU) )
+		shoot.trigger_period  = 100;
+	else
+		shoot.trigger_period = TRIGGER_PERIOD;
+	
+    return (
+        ( (ctrl_mode == REMOTER_MODE && vision.shoot_enable) //&& ( rc_fsm_check(RC_LEFT_LD) && rc_fsm_check(RC_RIGHT_RD) ) ) //开启视觉连发
+			|| (ctrl_mode == REMOTER_MODE && rc.sw2 == RC_DN && rc_fsm_check(RC_LEFT_LD) && !rc_fsm_check(RC_RIGHT_RD)  )  //开启遥控连发
+			|| (ctrl_mode == KEYBOARD_MODE && rc.mouse.l && rc.mouse.r && rc.kb.bit.G)//直接射	
+            || (ctrl_mode == KEYBOARD_MODE && rc.mouse.l && rc.mouse.r && vision.shoot_enable)
+            || (ctrl_mode == KEYBOARD_MODE && rc.mouse.l && rc.mouse.r == 0)
+        )
+				
+        && ((shoot.barrel.heat_remain >= MIN_HEAT) || 1)  //热量控制
+        && frequency_cnt * SHOOT_PERIOD >= shoot.trigger_period  //射频控制
+        && ABS(trigger_ecd_error) <  TRIGGER_MOTOR_ECD_SERIES  //拨盘误差控制		
+    );
+}
+uint8_t last_enable;
+static void shoot_control(void)
+{
+    switch (shoot.trigger_mode) {
+        case TRIGGER_MODE_PROTECT: { //拨盘保护模式，保持惯性，无力
+            frequency_cnt = 0; //计时变量置0，打出当前一发，禁止
+            shoot.barrel.shoot_period = 0;
+            shoot.trigger_ecd.ref = trigger_motor.total_ecd;
+            shoot.trigger_spd.pid.i_out = 0;
+            shoot.trigger_output = 0;
+            break;
+        }
+        case TRIGGER_MODE_STOP: { //拨盘停止模式，保持静止，有力
+            frequency_cnt = 0; //计时变量置0，打出当前一发，禁止
+            shoot.barrel.shoot_period = 0;
+            
+            shoot.trigger_ecd.ref = trigger_motor.total_ecd;
+            shoot.trigger_spd.pid.i_out = 0;
+            break;
+        }
+        case TRIGGER_MODE_SINGLE: { //拨盘单发模式，连续开枪请求，只响应一次
+            frequency_cnt++;
+            trigger_ecd_error = shoot.trigger_ecd.ref - shoot.trigger_ecd.fdb;
+            if (single_shoot_reset()) {
+                shoot_enable = 1;
+            }
+            if (single_shoot_enable()) { //热量控制
+                shoot_enable = 0;
+                shoot.trigger_ecd.ref += TRIGGER_MOTOR_ECD_SINGLE;
+                shoot.barrel.heat += 10;
+            }
+            break;
+        }
+        case TRIGGER_MODE_SERIES: { //拨盘连发模式，连续开枪请求，连续响应
+            frequency_cnt++;
+            trigger_ecd_error = shoot.trigger_ecd.ref - shoot.trigger_ecd.fdb;
+           if (series_shoot_enable() && !back_flag) { //一个周期打一颗
+                frequency_cnt = 0;
+				shoot.trigger_ecd.ref += 1 * TRIGGER_MOTOR_ECD_SERIES;
+                shoot.barrel.heat += 10;
+            }
+			//卡蛋反转
+			if(ABS(trigger_motor.rx_current) > 7000 && ABS(trigger_motor.speed_rpm) < 100)
+				back_cnt ++;
+			if (back_cnt > 200) {
+				back_flag = 1;
+				err_cnt ++;
+				shoot.trigger_ecd.ref = trigger_motor.total_ecd - TRIGGER_MOTOR_ECD_SERIES;
+				if (err_cnt > 200) {
+					back_cnt = 0;
+					err_cnt = 0;
+					back_flag = 0;
+				}
+			}
+            break;
+        }
+        default:break;
+    }
+    switch (shoot.fric_mode) {
+        case FRIC_MODE_PROTECT:
+        case FRIC_MODE_STOP: {
+            shoot.fric_spd[0].ref = 0;
+            shoot.fric_spd[1].ref = 0;
+            break;
+        }
+        case FRIC_MODE_RUN: {
+            shoot.fric_spd[0].ref = -shoot.fric_speed_set;
+            shoot.fric_spd[1].ref = shoot.fric_speed_set;
+            break;
+        }
+        default:break;
+    }
+		
+		last_enable = vision.shoot_enable;
+}
+
+static void shoot_init(void)
+{
+    memset(&shoot, 0, sizeof(shoot_t));
+    //发射器底层初始化
+    pid_init(&shoot.fric_spd[0].pid, NONE, 0.0005f, 0, 0, 0, 0.8);
+    pid_init(&shoot.fric_spd[1].pid, NONE, 0.0005f, 0, 0, 0, 0.8);
+    pid_init(&shoot.trigger_ecd.pid, NONE, 0.1f, 0, 0.0f, 0, 10000);
+    pid_init(&shoot.trigger_spd.pid, NONE, 0.00005f, 0.00005f, 0, 0.0f, 1.8f);
+    //发射器模式初始化
+    shoot.trigger_mode  = TRIGGER_MODE_PROTECT;
+    shoot.fric_mode     = FRIC_MODE_PROTECT;
+    //枪管参数初始化
+    shoot.trigger_period 		= TRIGGER_PERIOD;
+    shoot.fric_speed_set 		= 780;
+    shoot.barrel.cooling_rate   = 10;
+    shoot.barrel.heat_max       = 50;
+    //历史射速反馈缓存区
+//    shoot_speed_buffer = buffer_create(SHOOT_SPEED_NUM, sizeof(float));
+}
+
+static void shoot_pid_calc(void)
+{
+    for (int i = 0; i < 2; i++) {
+        shoot.fric_spd[i].fdb = fric_motor[i].velocity;
+        shoot.fric_output[i] = pid_calc(&shoot.fric_spd[i].pid, shoot.fric_spd[i].ref, shoot.fric_spd[i].fdb);
+    }
+    shoot.trigger_ecd.fdb = trigger_motor.total_ecd;
+    shoot.trigger_spd.ref = pid_calc(&shoot.trigger_ecd.pid, shoot.trigger_ecd.ref, shoot.trigger_ecd.fdb);
+    shoot.trigger_spd.fdb = trigger_motor.speed_rpm;
+    shoot.trigger_output = pid_calc(&shoot.trigger_spd.pid, shoot.trigger_spd.ref, shoot.trigger_spd.fdb);
+		
+	//牛牛卡了反转
+	if(ABS(trigger_motor.rx_current) > 7000 && ABS(trigger_motor.speed_rpm) < 100)
+		shoot.trigger_output = 0;
+}
+
+static void shoot_data_output(void)
+{
+    if (shoot.fric_mode == FRIC_MODE_PROTECT) {
+        dji_motor_set_torque(&fric_motor[0], 0);
+        dji_motor_set_torque(&fric_motor[1], 0);
+    } else {
+        dji_motor_set_torque(&fric_motor[0], shoot.fric_output[0]);
+        dji_motor_set_torque(&fric_motor[1], shoot.fric_output[1]);
+    }
+    if (shoot.trigger_mode == TRIGGER_MODE_PROTECT) {
+        dji_motor_set_torque(&trigger_motor, 0);
+    } else {
+        dji_motor_set_torque(&trigger_motor, shoot.trigger_output);
+    }
+}
+
+static void shoot_param_update(void)
+{
+    //更新裁判系统数据
+    if (robot_status.shooter_barrel_heat_limit != 0) {
+        shoot.barrel.heat_max = robot_status.shooter_barrel_heat_limit;//枪管热量上限
+        shoot.barrel.cooling_rate = robot_status.shooter_barrel_cooling_value;//枪管冷却速率
+    }
+    //更新模拟裁判系统数据
+    shoot.barrel.heat -= shoot.barrel.cooling_rate * SHOOT_PERIOD * 0.001f;  //当前枪管(理论)热量
+    if (shoot.barrel.heat < 0) shoot.barrel.heat = 0;
+//    shoot.barrel.heat_remain = shoot.barrel.heat_max - shoot.barrel.heat;  //当前枪管(理论)剩余热量
+	shoot.barrel.heat_remain = ((robot_status.shooter_barrel_heat_limit - power_heat_data.shooter_17mm_barrel_heat) / 3.0f + 
+								(shoot.barrel.heat_max - shoot.barrel.heat) / 3.0f *2.0f);//枪管(理论)剩余热量
+//	shoot.barrel.heat_remain = 100;
+}
+
+static void shoot_test(void) {
+//    static float last_shoot_speed;
+//    shoot.barrel.bullet_spd.fdb = shoot_data.initial_speed;
+//    if (ABS(shoot.barrel.bullet_spd.fdb - last_shoot_speed) > 1e-5f) {
+//        ++shoot.barrel.shoot_cnt;//统计发射子弹数
+//        buffer_put_noprotect(shoot_speed_buffer, &shoot.barrel.bullet_spd.fdb);
+//        float vision_data_array[SHOOT_SPEED_NUM] = {0};
+//        uint32_t real_num = ubf_pop_into_array_new2old(shoot_speed_buffer, vision_data_array, 0, SHOOT_SPEED_NUM);
+//        arm_var_f32(vision_data_array, real_num, &shoot.barrel.bullet_spd.std);  //计算数据方差
+//        shoot.barrel.bullet_spd.std = sqrt(shoot.barrel.bullet_spd.std);
+//        last_shoot_speed = shoot.barrel.bullet_spd.fdb;
+//    }
+}
+
+static void shoot_mode_switch(void)
+{
+    /* 更新裁判系统参数 */
+    shoot_param_update();
+    /* 模式切换 */
+    switch (ctrl_mode) {
+        case PROTECT_MODE: {
+            shoot.trigger_period = TRIGGER_PERIOD;
+            shoot.fric_mode = FRIC_MODE_STOP;
+            shoot.trigger_mode = TRIGGER_MODE_PROTECT;
+            break;
+        }
+        case REMOTER_MODE: {
+            shoot.trigger_period = TRIGGER_PERIOD;
+            /* 摩擦轮和拨盘模式切换 */
+            switch (rc.sw2) {
+                case RC_UP: {
+                    shoot.fric_mode = FRIC_MODE_STOP;
+                    shoot.trigger_mode = TRIGGER_MODE_STOP;
+                    break;
+                }
+                case RC_MI: {
+                    shoot.fric_mode = FRIC_MODE_RUN;
+                    shoot.trigger_mode = TRIGGER_MODE_SINGLE;
+//                    shoot.fric_mode = FRIC_MODE_STOP;//调试
+//                    shoot.trigger_mode = TRIGGER_MODE_STOP;                    
+                    break;
+                }
+                case RC_DN: {
+                    shoot.fric_mode = FRIC_MODE_RUN;
+                    shoot.trigger_mode = TRIGGER_MODE_SERIES;                
+                    break;
+                }
+                default: break;
+            }
+//            if  ( ! ( rc_fsm_check(RC_LEFT_LD) ) ) { //遥控器注释发射
+//                shoot.fric_mode = FRIC_MODE_STOP;//调试用
+//                shoot.trigger_mode = TRIGGER_MODE_PROTECT;
+//            }
+            break;
+        }
+        case KEYBOARD_MODE: {
+            /* 射频切换 */
+            if (rc.mouse.r)
+                shoot.trigger_period = TRIGGER_PERIOD2;
+            else
+                shoot.trigger_period = TRIGGER_PERIOD;
+            /* 摩擦轮模式切换 */
+            if (robot_status.power_management_shooter_output) {  //发射机构得到供电 
+                shoot.fric_mode = FRIC_MODE_RUN;  //开关摩擦轮         
+            } else {
+                shoot.fric_mode = FRIC_MODE_PROTECT;  //摩擦轮断电，软件保护，禁用摩擦轮
+            }
+            /* 视觉模式切换 */
+            if (KEY_PRESS_VISION2) {
+                vision.tx.data.aiming_mode = 2;
+            } else if (KEY_PRESS_VISION1) {
+                vision.tx.data.aiming_mode = 1;
+            } else {
+                vision.tx.data.aiming_mode = 0;
+            }
+            /* 拨盘模式切换 */
+            if (shoot.fric_mode != FRIC_MODE_RUN) {
+                shoot.trigger_mode = TRIGGER_MODE_STOP;
+            } else if (vision.tx.data.aiming_mode != 0) {
+                shoot.trigger_mode = TRIGGER_MODE_SINGLE;
+            } else {
+                shoot.trigger_mode = TRIGGER_MODE_SERIES;
+            }
+            break;
+        }
+        default: break;
+    }
+}
+
+int last_tri_ref;
+float last_shoot_speed;
+float vision_send_time;
+static void vision_shoot_delay(void){
+	
+	 static uint8_t bias_time_check;
+	 static float bias_time_cnt;
+	
+	if( shoot.trigger_ecd.ref - last_tri_ref >=  0.8F * TRIGGER_MOTOR_ECD_SERIES )
+		bias_time_check = 1;
+	
+	if(bias_time_check){
+		bias_time_cnt++;
+		if( fabs(shoot_data.initial_speed - last_shoot_speed) > 1e-3 ){
+			vision_send_time = median_filter(bias_time_cnt * 2.0f);
+			bias_time_cnt = 0;
+			bias_time_check = 0;
+		}
+	}	
+	last_tri_ref = shoot.trigger_ecd.ref;
+	last_shoot_speed = shoot_data.initial_speed;
+}
+
+
+uint32_t hz;
+void shoot_task(void const *argu)
+{
+    uint32_t thread_wake_time = osKernelSysTick();
+    shoot_init();
+    for(;;)
+    {
+        thread_wake_time = osKernelSysTick();
+//        taskENTER_CRITICAL();
+        shoot_mode_switch();    /* 发射器模式切换 */
+        shoot_control();
+        shoot_pid_calc();
+        shoot_data_output();
+        shoot_test();
+		vision_shoot_delay();
+		hz++;
+        status.task.shoot = 1;
+//        taskEXIT_CRITICAL();
+        osDelayUntil(&thread_wake_time, 2);
+    }
+}
 
