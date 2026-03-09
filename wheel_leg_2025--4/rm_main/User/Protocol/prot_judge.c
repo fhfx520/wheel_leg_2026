@@ -1,5 +1,6 @@
 #include "prot_judge.h"
 #include "shoot_task.h"
+#include "ui_interface.h"
 #include "cmsis_os.h"
 #include "string.h"
 #include "crc.h"
@@ -81,8 +82,8 @@ uint8_t judge_get_data(uint8_t *data)
                         case ID_event_data                   : memcpy(&event_data                  , (data + 7), LEN_event_data                  );break;
                         case ID_referee_warning              : memcpy(&referee_warning             , (data + 7), LEN_referee_warning             );break;
                         case ID_dart_info                    : memcpy(&dart_info                   , (data + 7), LEN_dart_info                   );break;
-                        case ID_robot_status                 : memcpy(&robot_status                , (data + 7), LEN_robot_status                );break;
-                        case ID_power_heat_data              : memcpy(&power_heat_data             , (data + 7), LEN_power_heat_data             );break;
+                        case ID_robot_status                 : memcpy(&robot_status                , (data + 7), LEN_robot_status                );ui_self_id = robot_status.robot_id;break;
+                        case ID_power_heat_data              : memcpy(&power_heat_data             , (data + 7), LEN_power_heat_data             );shoot.barrel.heat = power_heat_data.shooter_17mm_barrel_heat;break;
                         case ID_robot_pos                    : memcpy(&robot_pos                   , (data + 7), LEN_robot_pos                   );break;
                         case ID_buff                         : memcpy(&buff                        , (data + 7), LEN_buff                        );break;
 //                        case ID_air_support_data             : memcpy(&air_support_data            , (data + 7), LEN_air_support_data            );break;

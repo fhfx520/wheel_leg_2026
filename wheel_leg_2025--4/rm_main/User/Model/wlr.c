@@ -697,7 +697,7 @@ static void handle_sky_state(void)
         x3_balance_zero = -0.1f;
         x5_balance_zero = 0.0f;
 		wlr.sky_cnt++;
-		if((wlr.side[0].Fn_kal > 150.0f && wlr.side[1].Fn_kal > 150.0f) || (wlr.sky_cnt > 300))
+		if((wlr.side[0].Fn_kal > 150.0f && wlr.side[1].Fn_kal > 150.0f) || (wlr.sky_cnt > 150))
 		{
 			wlr.sky_cnt = 0;
 			wlr.sky_flag = WLR_SKY_STAND;

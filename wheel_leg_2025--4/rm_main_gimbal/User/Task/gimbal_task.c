@@ -38,8 +38,8 @@ static void gimbal_init(void)
 {
     memset(&gimbal, 0, sizeof(gimbal_t));
 	
-	pid_init(&gimbal.pit_angle.pid, CHANG_I_RATE, 20.0f, 0.5f, 0, 25, 50);//17 0 0 
-    pid_init(&gimbal.pit_spd.pid, CHANG_I_RATE, 1.5f, 0.065f, 0, 2.5f, 7.0f);//0.52 0.165 
+	pid_init(&gimbal.pit_angle.pid, CHANG_I_RATE, 20.0f, 0.6f, 0, 25, 50);//17 0 0 
+    pid_init(&gimbal.pit_spd.pid, CHANG_I_RATE, 1.0f, 0.01f, 0, 3.0f, 7.0f);//0.52 0.165 
 	gimbal.pit_angle.pid.threshold_a = 0.0f;
 	gimbal.pit_angle.pid.threshold_b = 0.0f;
 	
@@ -182,7 +182,7 @@ void gimbal_task(void const *argu)
         thread_wake_time = osKernelSysTick();
         taskENTER_CRITICAL();
         switch (ctrl_mode) {
-            case PROTECT_MODE: {
+            case PROTECT_MODE: {	
                 gimbal.start_up = 0;//保护模式下，起身标志位置零
 				gimbal.start_cnt = 0;//保护模式下，起身计数置零
                 gimbal.yaw_ecd.ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;

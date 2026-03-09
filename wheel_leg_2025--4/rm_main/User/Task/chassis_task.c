@@ -772,6 +772,7 @@ void chassis_task(void const *argu)
         
         // 5. 将算好的力矩下发到电机
         chassis_data_output();
+		
         
 		//底盘待发送数据打包
 		chassis_set_container();
