@@ -137,6 +137,7 @@ void mode_switch_task(void const *argu)
 
     robot_logic_init();
     for (;;) {
+		remote_reset();
         if (!lock_flag) {
             if (game_status.game_progress == 4) {//比赛中直接解锁
                 lock_flag = 1;

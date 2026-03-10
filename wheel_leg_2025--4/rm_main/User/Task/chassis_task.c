@@ -167,6 +167,7 @@ static void chassis_execute_fsm(void)
             chassis.rescue_cnt_R = 0;
             chassis.recover_flag = 0;
 			g_robot_ctx.sky_finish_flag = 0;
+			g_robot_ctx.jump_finish_flag = 0;
             break;
 		}
 
@@ -177,6 +178,7 @@ static void chassis_execute_fsm(void)
             wlr.jump_flag = 0;
             wlr.sky_flag = WLR_SKY_IDLE;
 			g_robot_ctx.sky_finish_flag = 0;
+			g_robot_ctx.jump_finish_flag = 0;
 			if(last_chassis_output == CHASSIS_STOP)
 				chassis.recover_flag = 1;
             break;
@@ -189,6 +191,7 @@ static void chassis_execute_fsm(void)
             wlr.jump_flag = 0;
             wlr.sky_flag = WLR_SKY_IDLE;
 			g_robot_ctx.sky_finish_flag = 0;
+			g_robot_ctx.jump_finish_flag = 0;
             break;
 		}
 
@@ -199,6 +202,7 @@ static void chassis_execute_fsm(void)
             rotate_flag = 1;   
 			wlr.sky_flag = WLR_SKY_IDLE;
 			g_robot_ctx.sky_finish_flag = 0;
+			g_robot_ctx.jump_finish_flag = 0;
             break;
 		}
 
@@ -209,6 +213,7 @@ static void chassis_execute_fsm(void)
             wlr.jump_flag = 0;
 			wlr.sky_flag = WLR_SKY_IDLE;
 			g_robot_ctx.sky_finish_flag = 0;
+			g_robot_ctx.jump_finish_flag = 0;
             break;
 		}
 
@@ -216,8 +221,9 @@ static void chassis_execute_fsm(void)
 		{
             wlr.ctrl_mode = 2;
             wlr.high_flag = 0;
-            wlr.jump_flag = 0;
+            wlr.jump_flag = WLR_JUMP_IDLE;
 			g_robot_ctx.sky_finish_flag = 0;
+			g_robot_ctx.jump_finish_flag = 0;
 			if(wlr.sky_flag == WLR_SKY_IDLE)
 				wlr.sky_flag = WLR_SKY_FOLDING; 
             break;
@@ -227,6 +233,7 @@ static void chassis_execute_fsm(void)
 		{
             wlr.ctrl_mode = 2;
             wlr.high_flag = 0;
+			wlr.jump_flag = WLR_JUMP_IDLE;
             if(wlr.sky_flag == WLR_SKY_FOLDING) 
 				wlr.sky_flag = WLR_SKY_EXTENDING; 
 			//set跳跃完成标志位 用于fsm自动变回低腿长模式
@@ -241,7 +248,8 @@ static void chassis_execute_fsm(void)
 			wlr.sky_flag = WLR_SKY_IDLE;
 			if(wlr.jump_flag == WLR_JUMP_IDLE) 
 				wlr.jump_flag = WLR_JUMP_ASCEND; 
-			
+			if(wlr.jump_flag == WLR_JUMP_RECOVER_LONG && !g_robot_ctx.jump_finish_flag)
+				g_robot_ctx.jump_finish_flag = 1;
 			break;
 		}
         default:
@@ -265,6 +273,9 @@ static void chassis_execute_fsm(void)
         if (g_robot_ctx.output.chassis_speed) chassis_scale.keyboard = 2.5f;
         else chassis_scale.keyboard = 2.0f;
     }
+	if(g_robot_ctx.output.chassis == CHASSIS_ASCEND){
+		chassis_scale.keyboard = 1.5f;
+	}
 
     if (supercap.volume_percent < 10 )  chassis_scale.keyboard = 1.4f;
     else if (supercap.volume_percent < 20 ) chassis_scale.keyboard = 1.7f;
@@ -298,13 +309,9 @@ static void chassis_data_input(void)
         chassis.input.vy =  g_robot_ctx.input.ch3 * chassis_scale.remote;
     } 
     else if (g_robot_ctx.output.top_mode == TOP_MODE_KEYBOARD) { 
-        if(!wlr.jump_flag) {
             chassis_ramp();
             chassis.input.vx = -chassis_x_ramp.out;
             chassis.input.vy =  chassis_y_ramp.out;
-        } else {
-            chassis.input.vx = 0;
-        }
     }
 
     // ================= 旋转控制算法 (完全替换旧模式) =================

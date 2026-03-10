@@ -655,11 +655,11 @@ static void handle_jump_state(void)
 	}
 	else if(wlr.jump_flag == WLR_JUMP_RECOVER_SHORT)
 	{
-		 wlr.high_set = 0.12f;
+		 wlr.high_set = wlr.recover_length;
 		 if (fabs(wlr.high_set - vmc[0].L_fdb) < 0.06f && fabs(wlr.high_set - vmc[1].L_fdb) < 0.06f) {
             wlr.jump_flag = WLR_JUMP_RECOVER_LONG;
             wlr.crash_flag = 0;
-            height_ramp.out = 0.12f;
+            height_ramp.out = wlr.recover_length;
         }
 	}
 	else if(wlr.jump_flag == WLR_JUMP_RECOVER_LONG)
@@ -982,6 +982,11 @@ static void map_virtual_force(uint8_t index)
         wlr.side[index].Fy = pid_calc(&pid_rotate_leg[index], tlm.l_ref[index], vmc[index].L_fdb)
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
     }
+	else if(wlr.jump_flag == WLR_JUMP_ASCEND)
+	{
+		wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 30.0f
+                              + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
+	}
 	else if (wlr.sky_flag == WLR_SKY_FOLDING) {
         wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) + 30.0f
 								+ WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
