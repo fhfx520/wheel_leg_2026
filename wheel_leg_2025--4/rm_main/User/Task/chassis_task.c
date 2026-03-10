@@ -248,7 +248,7 @@ static void chassis_execute_fsm(void)
 			wlr.sky_flag = WLR_SKY_IDLE;
 			if(wlr.jump_flag == WLR_JUMP_IDLE) 
 				wlr.jump_flag = WLR_JUMP_ASCEND; 
-			if(wlr.jump_flag == WLR_JUMP_RECOVER_LONG && !g_robot_ctx.jump_finish_flag)
+			if(wlr.jump_flag == WLR_JUMP_RECOVER_SHORT && !g_robot_ctx.jump_finish_flag)
 				g_robot_ctx.jump_finish_flag = 1;
 			break;
 		}
@@ -274,7 +274,7 @@ static void chassis_execute_fsm(void)
         else chassis_scale.keyboard = 2.0f;
     }
 	if(g_robot_ctx.output.chassis == CHASSIS_ASCEND){
-		chassis_scale.keyboard = 1.5f;
+		chassis_scale.keyboard = 2.0f;
 	}
 
     if (supercap.volume_percent < 10 )  chassis_scale.keyboard = 1.4f;
@@ -327,7 +327,9 @@ static void chassis_data_input(void)
         case CHASSIS_LOW:
         case CHASSIS_HIGH:
         case CHASSIS_TERRAIN_READY:
-        case CHASSIS_TERRAIN_EXECUTING: { // 整合了原版的所有 FOLLOW 和 PRONE
+        case CHASSIS_TERRAIN_EXECUTING:
+		case CHASSIS_ASCEND:
+		case CHASSIS_EXECUTING_FOLLOW_ASCEND:			{ // 整合了原版的所有 FOLLOW 和 PRONE
             if (gimbal.start_up)    
                 wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
             else                    
@@ -791,7 +793,7 @@ void chassis_task(void const *argu)
         chassis_data_input();
         
         // 4. 恢复你本来的执行逻辑结构
-        if(g_robot_ctx.output.chassis != CHASSIS_STOP)
+        if(g_robot_ctx.output.chassis != CHASSIS_STOP || 1)
             wlr_control();
         else
             chassis_init(); // 恢复你的原有保护调用

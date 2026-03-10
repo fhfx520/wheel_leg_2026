@@ -639,12 +639,12 @@ static void handle_jump_state(void)
 		 x3_balance_zero = x3_balance_zero_normal;
          x5_balance_zero = 0.0f;
 		 wlr.jump_run++;
-		 if(fabsf(lqr.X_fdb[4]) > 0.30f && fabsf(lqr.X_fdb[6]) > 0.30f && wlr.jump_run > 400) {
+		 if(fabsf(lqr.X_fdb[4]) > 0.60f && fabsf(lqr.X_fdb[6]) > 0.60f && wlr.jump_run > 200) {
 			wlr.high_set = 0.35f;
 			wlr.v_ref = 0;
 			wlr.crash_flag = 1;
 		 }
-		 if((fabs(lqr.X_fdb[4]) > 1.40f && fabs(lqr.X_fdb[6]) > 1.40f && wlr.crash_flag))
+		 if((fabs(lqr.X_fdb[4]) > 1.20f && fabs(lqr.X_fdb[6]) > 1.20f && wlr.crash_flag))
 		 {
 			wlr.jump_flag = WLR_JUMP_RECOVER_SHORT;
 			wlr.crash_flag = 0;
@@ -653,19 +653,25 @@ static void handle_jump_state(void)
 			chassis.rescue_inter_flag = 2;
 		 }
 	}
-	else if(wlr.jump_flag == WLR_JUMP_RECOVER_SHORT)
-	{
-		 wlr.high_set = wlr.recover_length;
-		 if (fabs(wlr.high_set - vmc[0].L_fdb) < 0.06f && fabs(wlr.high_set - vmc[1].L_fdb) < 0.06f) {
-            wlr.jump_flag = WLR_JUMP_RECOVER_LONG;
-            wlr.crash_flag = 0;
-            height_ramp.out = wlr.recover_length;
-        }
-	}
-	else if(wlr.jump_flag == WLR_JUMP_RECOVER_LONG)
-	{
-		wlr.high_set = ramp_calc(&height_ramp, 0.18f);
-	}
+//	else if(wlr.jump_flag == WLR_JUMP_RECOVER_SHORT)
+//	{
+//		 wlr.high_set = wlr.recover_length;
+//		 if (fabs(wlr.high_set - vmc[0].L_fdb) < 0.1f && fabs(wlr.high_set - vmc[1].L_fdb) < 0.1f) {
+//			 wlr.jump_cnt++;
+//			 if(wlr.jump_cnt > 50)
+//			 {
+//				 wlr.jump_flag = WLR_JUMP_RECOVER_LONG;
+//				 wlr.crash_flag = 0;
+//				 height_ramp.out = wlr.recover_length;
+//				 pid_leg_recover[0].i_out = 0;
+//				 pid_leg_recover[1].i_out = 0;
+//			 }
+//        }
+//	}
+//	else if(wlr.jump_flag == WLR_JUMP_RECOVER_LONG)
+//	{
+//		wlr.high_set = ramp_calc(&height_ramp, 0.18f);
+//	}
 }
 
 static void handle_sky_state(void)
@@ -1035,7 +1041,7 @@ static void apply_output_limits(void)
         data_limit(&lqr.U_ref[i], -4.0f, 4.0f);
         
 
-        if (wlr.crash_flag || wlr.jump_flag == WLR_JUMP_RECOVER_SHORT || wlr.jump_flag == WLR_JUMP_RECOVER_LONG) {
+        if (wlr.crash_flag || wlr.jump_flag == WLR_JUMP_RECOVER_SHORT) {
             lqr.U_ref[i] *= 0.0f;
         } else if ((wlr.crash_flag || wlr.jump_flag == WLR_JUMP_RECOVER_SHORT) && double_cnt > 0) {
             lqr.U_ref[i] *= 0.8f;
