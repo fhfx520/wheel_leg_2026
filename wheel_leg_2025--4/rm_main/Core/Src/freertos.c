@@ -36,7 +36,7 @@
 #include "ui_task.h"
 #include "tim.h"
 #include "board_comm_task.h"
-
+#include "container_task.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -67,6 +67,7 @@ osThreadId DebugTaskHandle;
 osThreadId BoardCommTaskHandle;
 /* USER CODE END Variables */
 osThreadId StartTaskHandle;
+osThreadId ContainerTaskHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -169,6 +170,9 @@ void MX_FREERTOS_Init(void) {
   
   osThreadDef(BoardCommTask, board_comm_task, osPriorityHigh, 0, 256);
   BoardCommTaskHandle = osThreadCreate(osThread(BoardCommTask), NULL);
+  
+  osThreadDef(ContainerTask, container_task, osPriorityLow, 0, 256);
+  ContainerTaskHandle = osThreadCreate(osThread(ContainerTask), NULL);
   /* USER CODE END RTOS_THREADS */
 
 }

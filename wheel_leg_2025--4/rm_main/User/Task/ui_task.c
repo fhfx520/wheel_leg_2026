@@ -29,6 +29,7 @@ void ui_init(void)
 	ui_init_g_1();
 	ui_init_g_2();
 	ui_init_g_3();
+	ui_init_g_4();
 }
 
 void ui_update(void)
@@ -56,22 +57,23 @@ void ui_update(void)
 	
 	float yaw_err;
     yaw_err = circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, (float)yaw_motor.ecd / 8192 * 2 * PI, 2 * PI);
-    armour_center = yaw_err * 180.0f / PI;
-	ui_g_2_head_position->start_angle = armour_center - 15.0f; 
+    armour_center = -1.0f * yaw_err * 180.0f / PI + 180.0f;
+	ui_g_2_head_position->start_angle = armour_center - 15.0f;     
 	if(ui_g_2_head_position->start_angle < 0.0f)
         ui_g_2_head_position->start_angle += 360.0f;
     if(ui_g_2_head_position->start_angle > 360.0f)
         ui_g_2_head_position->start_angle -= 360.0f;
     ui_g_2_head_position->end_angle = armour_center + 15.0f; 	
     if(ui_g_2_head_position->end_angle < 0.0f)
-        ui_g_2_head_position->end_angle +=360.0f;
+        ui_g_2_head_position->end_angle += 360.0f;
     if(ui_g_2_head_position->end_angle > 360.0f)
-        ui_g_2_head_position->end_angle -=360.0f;
+        ui_g_2_head_position->end_angle -= 360.0f;
 	ui_update_g_2();
 	
 	if(last_status_high != wlr.high_flag)
 		lowhz_cnt += 50;
-			
+	if(wlr.side[0].fly_flag == 1 && wlr.side[1].fly_flag == 1)
+		lowhz_cnt += 50;
 	last_status_high = wlr.high_flag;
 	
 	if(lowhz_cnt > 0){
@@ -83,8 +85,12 @@ void ui_update(void)
 		else
 			strcpy(ui_g_3_high_flag->string, "Man");
 		ui_update_g_3();
+		if(wlr.side[0].fly_flag == 1 && wlr.side[1].fly_flag == 1)
+			strcpy(ui_g_4_fly_flag->string, "off_land");
+		else
+			strcpy(ui_g_4_fly_flag->string, "	");
+		ui_update_g_4();
 	}
-	
 }
 
 uint32_t ui_update_cnt = 0;
@@ -104,7 +110,7 @@ void ui_task(void const* argument)
 		ui_update_cnt++;
         if (game_status.game_progress == 0 || game_status.game_progress == 1 || game_status.game_progress == 5) 
 		{
-			if(ui_update_cnt % 50 == 0)
+			if(ui_update_cnt % 20 == 0)
 				ui_update();
 			else
 				ui_init();

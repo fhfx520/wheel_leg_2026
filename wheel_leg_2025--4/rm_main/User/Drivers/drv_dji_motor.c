@@ -187,7 +187,7 @@ void dji_motor_output_data(void)
 //			continue;
         for (int i = 0; i < 4; i++) {
             if (motor_send_flag[can_channel][i] == 1) {
-				if(status.dji_motor != 2 && status.dji_motor != 3)
+				if((status.dji_motor != 2 && status.dji_motor != 3) || trigger_motor.online == 1)
                     can_std_transmit(can_channel, motor_msg[can_channel][i].id, motor_msg[can_channel][i].data);
                     motor_send_flag[can_channel][i] = 0;
             }

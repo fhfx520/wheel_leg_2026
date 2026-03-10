@@ -53,7 +53,9 @@ typedef enum {
     CHASSIS_LOW_SPIN,           
     CHASSIS_HIGH,               
     CHASSIS_TERRAIN_READY,      
-    CHASSIS_TERRAIN_EXECUTING   
+    CHASSIS_TERRAIN_EXECUTING,
+	CHASSIS_ASCEND,
+	CHASSIS_EXECUTING_FOLLOW_ASCEND,
 } ChassisState_e;
 
 typedef enum { 

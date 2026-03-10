@@ -573,7 +573,7 @@ static void reset_jump_state(void)
 
 static void handle_jump_state(void)
 {
-    if (wlr.jump_flag == WLR_JUMP_ASCEND && wlr.jump_pre) {
+    if (wlr.jump_flag == WLR_JUMP_ASCEND && (wlr.jump_pre || 1) ){
 //        if (double_cnt <= 0) {
 ////			sky_height_ramp.out = wlr.high_set;
 //            wlr.v_ref = ramp_calc(&jump_ramp, -1.5f);
@@ -581,7 +581,7 @@ static void handle_jump_state(void)
 //            wlr.v_ref = ramp_calc(&jump_ramp, -0.8f);
 //        }
         wlr.jump_cnt++;
-        if (wlr.jump_cnt > 100) {
+        if (wlr.jump_cnt > 30) {
             if (double_cnt <= 0) {
                 wlr.high_set = ramp_calc(&height_ramp, 0.35f);
 				wlr.v_ref = ramp_calc(&jump_ramp, -1.5f);
@@ -880,7 +880,7 @@ static void update_fly_state(uint8_t index, float yaw_err)
 //        && wlr.jump_flag == WLR_JUMP_IDLE && double_cnt <= 0 && chassis.recover_flag == 0
 //        && wlr.sky_over == 0 && wlr.sky_flag == WLR_SKY_IDLE && KEY_PRESS_POWER && yaw_err < 0.5f) {
 
-    if ( fabs(lqr.X_ref[1]) > 1.0  &&  fabs(chassis_imu.pit) < 0.50f &&  wlr.side[index].Fn_kal < 155.0f && rotate_flag == 0 && wlr.high_flag == 1 && chassis.recover_flag == 0
+    if ( fabs(chassis_imu.pit) < 0.50f &&  wlr.side[index].Fn_kal < 155.0f && rotate_flag == 0 && wlr.high_flag == 1 && chassis.recover_flag == 0
 		&& (wlr.sky_flag == WLR_SKY_IDLE) && (wlr.sky_flag == WLR_JUMP_IDLE) && (yaw_err < 0.5f || 1))  {
         wlr.side[index].fly_cnt += 30;
     } else if (wlr.side[index].fly_cnt > 0) {

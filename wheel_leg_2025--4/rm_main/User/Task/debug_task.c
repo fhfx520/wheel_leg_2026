@@ -22,7 +22,7 @@
 #include "mode_switch_task.h"
 
 #define row_debug 2 * 10
-uint8_t debug_wave = 18;
+uint8_t debug_wave = 7;
 float test_hex = 1;
 extern FGT_sin_t FGT_sin_chassis;
 extern  uint16_t quadrant_cnt;
@@ -118,8 +118,8 @@ void log_scope_data_pkg(void)
 //            log_scope_get_data(wlr.high_set);
             log_scope_get_data(wlr.side[0].fly_flag);
             log_scope_get_data(wlr.side[1].fly_flag);
-//			log_scope_get_data(wlr.side[0].Fn_kal);
-//            log_scope_get_data(wlr.side[1].Fn_kal);
+			log_scope_get_data(wlr.side[0].Fn_kal);
+            log_scope_get_data(wlr.side[1].Fn_kal);
 //			log_scope_get_data(lqr.X_diff[8]);
 //            log_scope_get_data(lqr.X_diff[9]);
 //			log_scope_get_data(lqr.X_diff[4]);
@@ -232,20 +232,21 @@ void log_scope_data_pkg(void)
 			break;
 		}
 		case 18:{
-			log_scope_get_data(wlr.v_ref);
-			log_scope_get_data(wlr.v_fdb);
-			log_scope_get_data(supercap.volage);
-			log_scope_get_data(supercap.volume_percent);
-			log_scope_get_data(supercap.current);
-			log_scope_get_data(power_control.judge_power_buffer);
-			log_scope_get_data(power_control.total_power_wheel);
-			log_scope_get_data(power_control.judge_max_power);
-			log_scope_get_data(shoot.trigger_ecd.ref);
-			log_scope_get_data(shoot.trigger_ecd.fdb);
-			log_scope_get_data(trigger_motor.ecd);
-			log_scope_get_data(wlr.roll_fdb);
-			log_scope_get_data(wlr.pit_fdb);
-			log_scope_get_data(wlr.wz_fdb);
+//			log_scope_get_data(wlr.v_ref);
+//			log_scope_get_data(wlr.v_fdb);
+//			log_scope_get_data(supercap.volage);
+//			log_scope_get_data(supercap.volume_percent);
+//			log_scope_get_data(supercap.current);
+//			log_scope_get_data(power_control.judge_power_buffer);
+//			log_scope_get_data(power_control.total_power_wheel);
+//			log_scope_get_data(power_control.judge_max_power);
+//			log_scope_get_data(shoot.trigger_ecd.ref);
+//			log_scope_get_data(shoot.trigger_ecd.fdb);
+//			log_scope_get_data(trigger_motor.ecd);
+//			log_scope_get_data(wlr.roll_fdb);
+//			log_scope_get_data(wlr.pit_fdb);
+//			log_scope_get_data(wlr.wz_fdb);
+//			log_scope_get_data(shoot.trigger_mode);
 		}
         default:break;
     }

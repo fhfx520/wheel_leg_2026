@@ -7,14 +7,13 @@
 
 #include <stdio.h>
 #include "ui_types.h"
-#include "prot_judge.h"
 
 extern int ui_self_id;
 
 void print_message(const uint8_t* message, int length);
 
 // User Code Begin
-#define SEND_MESSAGE(message, length) judge_send_data(message, length)
+#define SEND_MESSAGE(message, length) print_message(message, length)
 // User Code End
 
 void ui_proc_1_frame(ui_1_frame_t *msg);

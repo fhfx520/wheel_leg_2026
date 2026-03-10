@@ -29,6 +29,8 @@ static const FsmState_t state_rem_spin;
 static const FsmState_t state_rem_high;
 static const FsmState_t state_rem_ter_ready;
 static const FsmState_t state_rem_ter_run;
+static const FsmState_t state_rem_ascend;
+static const FsmState_t state_rem_double_ter_run;
 
 static const FsmState_t state_kb_low;
 static const FsmState_t state_kb_high;
@@ -36,6 +38,9 @@ static const FsmState_t state_kb_fight;
 static const FsmState_t state_kb_spin; 
 static const FsmState_t state_kb_ter_ready;
 static const FsmState_t state_kb_ter_run;
+static const FsmState_t state_kb_ascend;
+static const FsmState_t state_kb_double_ter_run;
+
 
 static FsmMachine_t fsm_remote_sub;   
 static FsmMachine_t fsm_keyboard_sub; 
@@ -146,6 +151,24 @@ static void rem_ter_run_execute(void) {
     if (abs(g_robot_ctx.input.ch2) <= 500) fsm_change(&fsm_remote_sub, &state_rem_ter_ready);
 }
 static const FsmState_t state_rem_ter_run = { .name = "REM_TER_RUN", .enter = rem_ter_run_enter, .execute = rem_ter_run_execute };
+
+static void rem_ascend_enter(void) { g_robot_ctx.output.chassis = CHASSIS_ASCEND; }
+static void rem_ascend_execute(void) {
+    g_robot_ctx.output.chassis = CHASSIS_ASCEND;
+    g_robot_ctx.output.gimbal  = GIMBAL_GYRO_STABILIZE;
+    
+    if (rc_fsm_check(RC_LEFT_LD) && !rc_fsm_check(RC_RIGHT_RD)) {
+        g_robot_ctx.output.shoot   = SHOOT_SERIES;
+        g_robot_ctx.output.chassis = CHASSIS_STOP; 
+    } else {
+        g_robot_ctx.output.shoot   = SHOOT_SINGLE;
+    }
+    
+    if (g_robot_ctx.input.sw2 == RC_SW_UP) { fsm_change(&fsm_remote_sub, &state_rem_low); return; }
+    if (g_robot_ctx.input.sw2 == RC_SW_MID) { fsm_change(&fsm_remote_sub, &state_rem_high); return; }
+    if (abs(g_robot_ctx.input.ch2) <= 500) fsm_change(&fsm_remote_sub, &state_rem_ter_ready);
+}
+static const FsmState_t state_rem_ascend = { .name = "REM_ASCEND", .enter = rem_ascend_enter, .execute = rem_ascend_execute };
 
 // =========================================================================
 // KEYBOARD 模式子状态机 

@@ -34,5 +34,11 @@ void ui_init_g_3();
 void ui_update_g_3();
 void ui_remove_g_3();
 
+extern ui_interface_string_t *ui_g_4_fly_flag;
+
+void ui_init_g_4();
+void ui_update_g_4();
+void ui_remove_g_4();
+
 
 #endif // UI_g_H

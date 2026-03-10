@@ -225,6 +225,7 @@ static void chassis_execute_fsm(void)
 
         case CHASSIS_TERRAIN_EXECUTING:
 		{
+			static uint8_t jump_cnt;
             wlr.ctrl_mode = 2;
             wlr.high_flag = 0;
             if(wlr.sky_flag == WLR_SKY_FOLDING) 
@@ -232,6 +233,15 @@ static void chassis_execute_fsm(void)
 			//set跳跃完成标志位 用于fsm自动变回低腿长模式
 			if(wlr.sky_flag == WLR_SKY_STAND && !g_robot_ctx.sky_finish_flag)
 				g_robot_ctx.sky_finish_flag = 1;
+			if(wlr.sky_flag == WLR_SKY_STAND && g_robot_ctx.sky_finish_flag)
+				jump_cnt++;
+			if(jump_cnt > 5)
+			{
+				jump_cnt = 0;
+				wlr.sky_flag = WLR_SKY_IDLE;
+				wlr.jump_flag = WLR_JUMP_ASCEND;
+			}
+				
             break;
 		}
         default:

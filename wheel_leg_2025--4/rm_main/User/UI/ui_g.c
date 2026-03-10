@@ -33,40 +33,40 @@ void _ui_init_g_1_0() {
     ui_g_1_left_big_leg->layer = 0;
     ui_g_1_left_big_leg->color = 2;
     ui_g_1_left_big_leg->start_x = 639;
-    ui_g_1_left_big_leg->start_y = 480;
+    ui_g_1_left_big_leg->start_y = 460;
     ui_g_1_left_big_leg->width = 5;
     ui_g_1_left_big_leg->end_x = 535;
-    ui_g_1_left_big_leg->end_y = 480;
+    ui_g_1_left_big_leg->end_y = 460;
 
     ui_g_1_left_small_leg->figure_type = 0;
     ui_g_1_left_small_leg->operate_type = 1;
     ui_g_1_left_small_leg->layer = 0;
     ui_g_1_left_small_leg->color = 2;
-    ui_g_1_left_small_leg->start_x = 461;
-    ui_g_1_left_small_leg->start_y = 402;
+    ui_g_1_left_small_leg->start_x = 463;
+    ui_g_1_left_small_leg->start_y = 384;
     ui_g_1_left_small_leg->width = 5;
-    ui_g_1_left_small_leg->end_x = 533;
-    ui_g_1_left_small_leg->end_y = 479;
+    ui_g_1_left_small_leg->end_x = 535;
+    ui_g_1_left_small_leg->end_y = 461;
 
     ui_g_1_right_big_leg->figure_type = 0;
     ui_g_1_right_big_leg->operate_type = 1;
     ui_g_1_right_big_leg->layer = 0;
     ui_g_1_right_big_leg->color = 2;
-    ui_g_1_right_big_leg->start_x = 1280;
-    ui_g_1_right_big_leg->start_y = 480;
+    ui_g_1_right_big_leg->start_x = 1283;
+    ui_g_1_right_big_leg->start_y = 460;
     ui_g_1_right_big_leg->width = 5;
-    ui_g_1_right_big_leg->end_x = 1389;
-    ui_g_1_right_big_leg->end_y = 480;
+    ui_g_1_right_big_leg->end_x = 1392;
+    ui_g_1_right_big_leg->end_y = 460;
 
     ui_g_1_right_small_leg->figure_type = 0;
     ui_g_1_right_small_leg->operate_type = 1;
     ui_g_1_right_small_leg->layer = 0;
     ui_g_1_right_small_leg->color = 2;
-    ui_g_1_right_small_leg->start_x = 1447;
-    ui_g_1_right_small_leg->start_y = 392;
+    ui_g_1_right_small_leg->start_x = 1450;
+    ui_g_1_right_small_leg->start_y = 374;
     ui_g_1_right_small_leg->width = 5;
-    ui_g_1_right_small_leg->end_x = 1384;
-    ui_g_1_right_small_leg->end_y = 479;
+    ui_g_1_right_small_leg->end_x = 1387;
+    ui_g_1_right_small_leg->end_y = 461;
 
     ui_g_1_supercap->figure_type = 1;
     ui_g_1_supercap->operate_type = 1;
@@ -155,20 +155,20 @@ void _ui_init_g_2_0() {
     ui_g_2_current_velocity->operate_type = 1;
     ui_g_2_current_velocity->layer = 0;
     ui_g_2_current_velocity->color = 6;
-    ui_g_2_current_velocity->start_x = 1037;
-    ui_g_2_current_velocity->start_y = 758;
-    ui_g_2_current_velocity->width = 4;
-    ui_g_2_current_velocity->font_size = 40;
+    ui_g_2_current_velocity->start_x = 914;
+    ui_g_2_current_velocity->start_y = 761;
+    ui_g_2_current_velocity->width = 3;
+    ui_g_2_current_velocity->font_size = 30;
     ui_g_2_current_velocity->number = 2500;
 
     ui_g_2_target_velocity->figure_type = 5;
     ui_g_2_target_velocity->operate_type = 1;
     ui_g_2_target_velocity->layer = 0;
     ui_g_2_target_velocity->color = 3;
-    ui_g_2_target_velocity->start_x = 781;
-    ui_g_2_target_velocity->start_y = 758;
-    ui_g_2_target_velocity->width = 4;
-    ui_g_2_target_velocity->font_size = 40;
+    ui_g_2_target_velocity->start_x = 1285;
+    ui_g_2_target_velocity->start_y = 823;
+    ui_g_2_target_velocity->width = 3;
+    ui_g_2_target_velocity->font_size = 30;
     ui_g_2_target_velocity->number = 2500;
 
     ui_g_2_head_position->figure_type = 4;
@@ -269,5 +269,57 @@ void ui_update_g_3() {
 
 void ui_remove_g_3() {
     _ui_remove_g_3_0();
+}
+
+
+ui_string_frame_t ui_g_4_0;
+ui_interface_string_t* ui_g_4_fly_flag = &(ui_g_4_0.option);
+
+void _ui_init_g_4_0() {
+    ui_g_4_0.option.figure_name[0] = 0;
+    ui_g_4_0.option.figure_name[1] = 3;
+    ui_g_4_0.option.figure_name[2] = 0;
+    ui_g_4_0.option.operate_type = 1;
+
+    ui_g_4_fly_flag->figure_type = 7;
+    ui_g_4_fly_flag->operate_type = 1;
+    ui_g_4_fly_flag->layer = 0;
+    ui_g_4_fly_flag->color = 6;
+    ui_g_4_fly_flag->start_x = 806;
+    ui_g_4_fly_flag->start_y = 357;
+    ui_g_4_fly_flag->width = 4;
+    ui_g_4_fly_flag->font_size = 40;
+    ui_g_4_fly_flag->str_length = 8;
+    strcpy(ui_g_4_fly_flag->string, "off_land");
+
+
+    ui_proc_string_frame(&ui_g_4_0);
+    SEND_MESSAGE((uint8_t *) &ui_g_4_0, sizeof(ui_g_4_0));
+}
+
+void _ui_update_g_4_0() {
+    ui_g_4_0.option.operate_type = 2;
+
+    ui_proc_string_frame(&ui_g_4_0);
+    SEND_MESSAGE((uint8_t *) &ui_g_4_0, sizeof(ui_g_4_0));
+}
+
+void _ui_remove_g_4_0() {
+    ui_g_4_0.option.operate_type = 3;
+
+    ui_proc_string_frame(&ui_g_4_0);
+    SEND_MESSAGE((uint8_t *) &ui_g_4_0, sizeof(ui_g_4_0));
+}
+
+void ui_init_g_4() {
+    _ui_init_g_4_0();
+}
+
+void ui_update_g_4() {
+    _ui_update_g_4_0();
+}
+
+void ui_remove_g_4() {
+    _ui_remove_g_4_0();
 }
 

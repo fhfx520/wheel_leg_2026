@@ -1119,6 +1119,11 @@
               <FilePath>..\User\Task\ui_task.c</FilePath>
             </File>
             <File>
+              <FileName>container_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Task\container_task.c</FilePath>
+            </File>
+            <File>
               <FileName>control_def.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\User\Task\control_def.h</FilePath>
