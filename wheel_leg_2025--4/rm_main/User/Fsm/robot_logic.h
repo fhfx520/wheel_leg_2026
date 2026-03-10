@@ -96,6 +96,7 @@ typedef struct {
     
 	//跳跃完成标志位
 	uint8_t sky_finish_flag;
+	uint8_t jump_finish_flag;
 } RobotContext_t;
 
 extern RobotContext_t g_robot_ctx;

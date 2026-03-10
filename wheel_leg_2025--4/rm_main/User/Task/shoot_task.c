@@ -146,7 +146,7 @@ static uint8_t series_shoot_enable(void)
     return (
         ( (ctrl_mode == REMOTER_MODE && shoot_get_vision_data_container.vision_enanle) //&& ( rc_fsm_check(RC_LEFT_LD) && rc_fsm_check(RC_RIGHT_RD) ) ) //开启视觉连发
 			|| (ctrl_mode == REMOTER_MODE && rc.sw2 == RC_DN && rc_fsm_check(RC_LEFT_LD) && !rc_fsm_check(RC_RIGHT_RD)  )  //开启遥控连发
-			|| (ctrl_mode == KEYBOARD_MODE && rc.mouse.l && rc.mouse.r && rc.kb.bit.G)//直接射	
+//			|| (ctrl_mode == KEYBOARD_MODE && rc.mouse.l && rc.mouse.r && rc.kb.bit.G)//直接射	
             || (ctrl_mode == KEYBOARD_MODE && rc.mouse.l && rc.mouse.r && shoot_get_vision_data_container.vision_enanle)
             || (ctrl_mode == KEYBOARD_MODE && rc.mouse.l && rc.mouse.r == 0)
         )    

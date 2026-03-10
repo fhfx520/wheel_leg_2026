@@ -496,7 +496,7 @@ static void update_leg_height_and_balance(float yaw_error)
 {
     if (wlr.high_flag == 2) {
         wlr.high_set = ramp_calc(&height_ramp, LegLengthHigh2);
-        x3_balance_zero = 0.08f;
+        x3_balance_zero = x3_balance_zero_normal;
     } else if (wlr.high_flag == 1) {
         if (wlr_both_legs_flying()) {
             wlr.high_set = 0.35f;
@@ -573,66 +573,99 @@ static void reset_jump_state(void)
 
 static void handle_jump_state(void)
 {
-    if (wlr.jump_flag == WLR_JUMP_ASCEND && (wlr.jump_pre || 1) ){
-//        if (double_cnt <= 0) {
-////			sky_height_ramp.out = wlr.high_set;
-//            wlr.v_ref = ramp_calc(&jump_ramp, -1.5f);
+//    if (wlr.jump_flag == WLR_JUMP_ASCEND && (wlr.jump_pre || 1) ){
+////        if (double_cnt <= 0) {
+//////			sky_height_ramp.out = wlr.high_set;
+////            wlr.v_ref = ramp_calc(&jump_ramp, -1.5f);
+////        } else {
+////            wlr.v_ref = ramp_calc(&jump_ramp, -0.8f);
+////        }
+//        wlr.jump_cnt++;
+//        if (wlr.jump_cnt > 30) {
+//            if (double_cnt <= 0) {
+//                wlr.high_set = ramp_calc(&height_ramp, 0.35f);
+//				wlr.v_ref = ramp_calc(&jump_ramp, -1.5f);
+//            } else {
+//                wlr.high_set = ramp_calc(&height_ramp, 0.28f);
+//            }
+//            wlr.jump_run++;
 //        } else {
-//            wlr.v_ref = ramp_calc(&jump_ramp, -0.8f);
+//            jump_ramp.out = wlr.v_fdb;
 //        }
-        wlr.jump_cnt++;
-        if (wlr.jump_cnt > 30) {
-            if (double_cnt <= 0) {
-                wlr.high_set = ramp_calc(&height_ramp, 0.35f);
-				wlr.v_ref = ramp_calc(&jump_ramp, -1.5f);
-            } else {
-                wlr.high_set = ramp_calc(&height_ramp, 0.28f);
-            }
-            wlr.jump_run++;
-        } else {
-            jump_ramp.out = wlr.v_fdb;
-        }
 
-        if (double_cnt <= 0 && wlr.jump_run > 400) {
-			wlr.v_ref = ramp_calc(&jump_ramp, -1.5f);
-            if (fabsf(lqr.X_fdb[4]) > 0.30f && fabsf(lqr.X_fdb[6]) > 0.30f) {
-                wlr.high_set = 0.35f;
-                wlr.v_ref = 0;
-                wlr.crash_flag = 1;
-            }
-        } else if (double_cnt > 0 && wlr.jump_run > 400) {
-            if (fabsf(lqr.X_fdb[4]) > 0.20f && fabsf(lqr.X_fdb[6]) > 0.20f) {
-                wlr.high_set = 0.12f;
-                wlr.v_ref = 0;
-                wlr.crash_flag = 1;
-                wlr.jump2_over = 1;
-            }
-        }
+//        if (double_cnt <= 0 && wlr.jump_run > 400) {
+//			wlr.v_ref = ramp_calc(&jump_ramp, -1.5f);
+//            if (fabsf(lqr.X_fdb[4]) > 0.30f && fabsf(lqr.X_fdb[6]) > 0.30f) {
+//                wlr.high_set = 0.35f;
+//                wlr.v_ref = 0;
+//                wlr.crash_flag = 1;
+//            }
+//        } else if (double_cnt > 0 && wlr.jump_run > 400) {
+//            if (fabsf(lqr.X_fdb[4]) > 0.20f && fabsf(lqr.X_fdb[6]) > 0.20f) {
+//                wlr.high_set = 0.12f;
+//                wlr.v_ref = 0;
+//                wlr.crash_flag = 1;
+//                wlr.jump2_over = 1;
+//            }
+//        }
 
-        if ((fabs(lqr.X_fdb[4]) > 1.40f && fabs(lqr.X_fdb[6]) > 1.40f && wlr.crash_flag && double_cnt <= 0)
-            || (fabs(lqr.X_fdb[4]) > 1.50f && fabs(lqr.X_fdb[6]) > 1.50f && wlr.crash_flag && double_cnt > 0)) {
-            if (wlr.crash_flag) {
-                wlr.jump_flag = WLR_JUMP_RECOVER_SHORT;
-                wlr.crash_flag = 0;
-                wlr.high_flag = 0;
-                chassis.recover_flag = 1;
-                chassis.rescue_inter_flag = 2;
-            }
-        }
-    } else if (wlr.jump_flag == WLR_JUMP_RECOVER_SHORT) {
-        wlr.high_set = 0.12f;
-        double_cnt = 3000;
-        if (fabs(wlr.high_set - vmc[0].L_fdb) < 0.06f && fabs(wlr.high_set - vmc[1].L_fdb) < 0.06f) {
+//        if ((fabs(lqr.X_fdb[4]) > 1.40f && fabs(lqr.X_fdb[6]) > 1.40f && wlr.crash_flag && double_cnt <= 0)
+//            || (fabs(lqr.X_fdb[4]) > 1.50f && fabs(lqr.X_fdb[6]) > 1.50f && wlr.crash_flag && double_cnt > 0)) {
+//            if (wlr.crash_flag) {
+//                wlr.jump_flag = WLR_JUMP_RECOVER_SHORT;
+//                wlr.crash_flag = 0;
+//                wlr.high_flag = 0;
+//                chassis.recover_flag = 1;
+//                chassis.rescue_inter_flag = 2;
+//            }
+//        }
+//    } else if (wlr.jump_flag == WLR_JUMP_RECOVER_SHORT) {
+//        wlr.high_set = 0.12f;
+//        double_cnt = 3000;
+//        if (fabs(wlr.high_set - vmc[0].L_fdb) < 0.06f && fabs(wlr.high_set - vmc[1].L_fdb) < 0.06f) {
+//            wlr.jump_flag = WLR_JUMP_RECOVER_LONG;
+//            wlr.crash_flag = 0;
+//            height_ramp.out = 0.12f;
+//        } else if (wlr.jump_flag == WLR_JUMP_RECOVER_LONG) {
+//            wlr.high_set = 0.12f;
+//        }
+//    }
+//    if (double_cnt) {
+//        double_cnt--;
+//    }
+	if(wlr.jump_flag == WLR_JUMP_ASCEND)
+	{
+		 wlr.high_set = ramp_calc(&height_ramp, 0.35f);
+		 x3_balance_zero = x3_balance_zero_normal;
+         x5_balance_zero = 0.0f;
+		 wlr.jump_run++;
+		 if(fabsf(lqr.X_fdb[4]) > 0.30f && fabsf(lqr.X_fdb[6]) > 0.30f && wlr.jump_run > 400) {
+			wlr.high_set = 0.35f;
+			wlr.v_ref = 0;
+			wlr.crash_flag = 1;
+		 }
+		 if((fabs(lqr.X_fdb[4]) > 1.40f && fabs(lqr.X_fdb[6]) > 1.40f && wlr.crash_flag))
+		 {
+			wlr.jump_flag = WLR_JUMP_RECOVER_SHORT;
+			wlr.crash_flag = 0;
+			wlr.high_flag = 0;
+			chassis.recover_flag = 1;
+			chassis.rescue_inter_flag = 2;
+		 }
+	}
+	else if(wlr.jump_flag == WLR_JUMP_RECOVER_SHORT)
+	{
+		 wlr.high_set = 0.12f;
+		 if (fabs(wlr.high_set - vmc[0].L_fdb) < 0.06f && fabs(wlr.high_set - vmc[1].L_fdb) < 0.06f) {
             wlr.jump_flag = WLR_JUMP_RECOVER_LONG;
             wlr.crash_flag = 0;
             height_ramp.out = 0.12f;
-        } else if (wlr.jump_flag == WLR_JUMP_RECOVER_LONG) {
-            wlr.high_set = 0.12f;
         }
-    }
-    if (double_cnt) {
-        double_cnt--;
-    }
+	}
+	else if(wlr.jump_flag == WLR_JUMP_RECOVER_LONG)
+	{
+		wlr.high_set = ramp_calc(&height_ramp, 0.18f);
+	}
 }
 
 static void handle_sky_state(void)

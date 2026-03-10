@@ -225,7 +225,6 @@ static void chassis_execute_fsm(void)
 
         case CHASSIS_TERRAIN_EXECUTING:
 		{
-			static uint8_t jump_cnt;
             wlr.ctrl_mode = 2;
             wlr.high_flag = 0;
             if(wlr.sky_flag == WLR_SKY_FOLDING) 
@@ -233,20 +232,30 @@ static void chassis_execute_fsm(void)
 			//set跳跃完成标志位 用于fsm自动变回低腿长模式
 			if(wlr.sky_flag == WLR_SKY_STAND && !g_robot_ctx.sky_finish_flag)
 				g_robot_ctx.sky_finish_flag = 1;
-			if(wlr.sky_flag == WLR_SKY_STAND && g_robot_ctx.sky_finish_flag)
-				jump_cnt++;
-			if(jump_cnt > 5)
-			{
-				jump_cnt = 0;
-				wlr.sky_flag = WLR_SKY_IDLE;
-				wlr.jump_flag = WLR_JUMP_ASCEND;
-			}
-				
             break;
 		}
+		case CHASSIS_ASCEND:
+		{
+			wlr.ctrl_mode = 2;
+			wlr.high_flag = 0;
+			wlr.sky_flag = WLR_SKY_IDLE;
+			if(wlr.jump_flag == WLR_JUMP_IDLE) 
+				wlr.jump_flag = WLR_JUMP_ASCEND; 
+			
+			break;
+		}
         default:
-            wlr.ctrl_mode = 0;
+		{
+            wlr.ctrl_mode = 0; 
+            wlr.high_flag = 0;
+            wlr.jump_flag = 0;
+            wlr.sky_flag = WLR_SKY_IDLE;
+            chassis.rescue_cnt_L = 0;
+            chassis.rescue_cnt_R = 0;
+            chassis.recover_flag = 0;
+			g_robot_ctx.sky_finish_flag = 0;
             break;
+		}
     }
 
     if (g_robot_ctx.output.chassis == CHASSIS_HIGH) { 
@@ -428,15 +437,15 @@ static void chassis_data_input(void)
         wlr.yaw_ref = wlr.yaw_fdb;
     }
     
-    wlr.yaw_err = circle_error(wlr.yaw_ref,wlr.yaw_fdb, 2 * PI);
-    if (wlr.jump_flag && !wlr.jump_pre) {
-        wlr.wz_ref = 6.0f; wlr.yaw_err = 0;
-    }
-    wlr.yaw_ref = wlr.yaw_fdb + 1.0f * wlr.yaw_err;
+//    wlr.yaw_err = circle_error(wlr.yaw_ref,wlr.yaw_fdb, 2 * PI);
+//    if (wlr.jump_flag && !wlr.jump_pre) {
+//        wlr.wz_ref = 6.0f; wlr.yaw_err = 0;
+//    }
+//    wlr.yaw_ref = wlr.yaw_fdb + 1.0f * wlr.yaw_err;
     wlr.v_ref = chassis.output.vx;
-    
-    if (wlr.jump_flag && !wlr.jump_pre && ((fabs(circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, wlr.yaw_fdb, 2 * PI)) < 0.2f)))
-        wlr.jump_pre = 1;
+//    
+//    if (wlr.jump_flag && !wlr.jump_pre && ((fabs(circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, wlr.yaw_fdb, 2 * PI)) < 0.2f)))
+//        wlr.jump_pre = 1;
     
     if (g_robot_ctx.output.chassis == CHASSIS_FIGHT){
         wlr.v_ref = chassis.output.vy;
