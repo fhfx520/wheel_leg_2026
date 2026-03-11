@@ -3,7 +3,7 @@
 <title>Static Call Graph - [rm_main\rm_main.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image rm_main\rm_main.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Wed Mar 11 04:53:04 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Thu Mar 12 01:06:49 2026
 <BR><P>
 <H3>Maximum Stack Usage =        848 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -2023,13 +2023,13 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[190]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DMA_Abort_IT
 <LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DMA_Abort
+<LI><a href="#[1b7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_ErrorCallback
+<LI><a href="#[1ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_EndTransmit_IT
+<LI><a href="#[1b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_EndRxTransfer
 <LI><a href="#[1bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UARTEx_RxFifoFullCallback
 <LI><a href="#[1bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UARTEx_TxFifoEmptyCallback
 <LI><a href="#[1b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UARTEx_WakeupCallback
 <LI><a href="#[1b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UARTEx_RxEventCallback
-<LI><a href="#[1b7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_ErrorCallback
-<LI><a href="#[1ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_EndTransmit_IT
-<LI><a href="#[1b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_EndRxTransfer
 </UL>
 <BR>[Called By]<UL><LI><a href="#[a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART10_IRQHandler
 <LI><a href="#[62]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART6_IRQHandler
@@ -5309,7 +5309,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(.rodata..L__const.MX_FREERTOS_Init.os_thread_def_UITask)
 </UL>
-<P><STRONG><a name="[343]"></a>ui_update</STRONG> (Thumb, 1932 bytes, Stack size 48 bytes, ui_task.o(.text.ui_update))
+<P><STRONG><a name="[343]"></a>ui_update</STRONG> (Thumb, 2060 bytes, Stack size 48 bytes, ui_task.o(.text.ui_update))
 <BR><BR>[Stack]<UL><LI>Max Depth = 204<LI>Call Chain = ui_update &rArr; ui_update_g_4 &rArr; _ui_update_g_4_0 &rArr; judge_send_data &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vListInsertEnd
 </UL>
 <BR>[Calls]<UL><LI><a href="#[302]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;circle_error (via Veneer)
@@ -5595,7 +5595,7 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_task
 </UL>
 
-<P><STRONG><a name="[310]"></a>chassis_execute_fsm</STRONG> (Thumb, 962 bytes, Stack size 12 bytes, chassis_task.o(.text.chassis_execute_fsm))
+<P><STRONG><a name="[310]"></a>chassis_execute_fsm</STRONG> (Thumb, 1172 bytes, Stack size 12 bytes, chassis_task.o(.text.chassis_execute_fsm))
 <BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = chassis_execute_fsm
 </UL>
 <BR>[Called By]<UL><LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_task
@@ -5888,8 +5888,8 @@ Local Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[311]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[319]"></a>handle_jump_state</STRONG> (Thumb, 336 bytes, Stack size 8 bytes, wlr.o(.text.handle_jump_state))
-<BR><BR>[Stack]<UL><LI>Max Depth = 36<LI>Call Chain = handle_jump_state &rArr; ramp_calc &rArr; data_limit
+<P><STRONG><a name="[319]"></a>handle_jump_state</STRONG> (Thumb, 576 bytes, Stack size 16 bytes, wlr.o(.text.handle_jump_state))
+<BR><BR>[Stack]<UL><LI>Max Depth = 44<LI>Call Chain = handle_jump_state &rArr; ramp_calc &rArr; data_limit
 </UL>
 <BR>[Calls]<UL><LI><a href="#[2b7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_calc (via Veneer)
 </UL>
@@ -5947,7 +5947,7 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[311]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[31b]"></a>map_virtual_force</STRONG> (Thumb, 1868 bytes, Stack size 24 bytes, wlr.o(.text.map_virtual_force))
+<P><STRONG><a name="[31b]"></a>map_virtual_force</STRONG> (Thumb, 1888 bytes, Stack size 24 bytes, wlr.o(.text.map_virtual_force))
 <BR><BR>[Stack]<UL><LI>Max Depth = 264<LI>Call Chain = map_virtual_force &rArr; vmc_inverse_solution_five &rArr; aMartix_Mul
 </UL>
 <BR>[Calls]<UL><LI><a href="#[284]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_calc (via Veneer)
@@ -6271,8 +6271,8 @@ Local Symbols
 <P><STRONG><a name="[b5]"></a>UART_DMARxHalfCplt</STRONG> (Thumb, 54 bytes, Stack size 16 bytes, stm32h7xx_hal_uart.o(.text.UART_DMARxHalfCplt))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = UART_DMARxHalfCplt &rArr; HAL_UARTEx_RxEventCallback
 </UL>
-<BR>[Calls]<UL><LI><a href="#[1b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UARTEx_RxEventCallback
-<LI><a href="#[1eb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_RxHalfCpltCallback
+<BR>[Calls]<UL><LI><a href="#[1eb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_RxHalfCpltCallback
+<LI><a href="#[1b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UARTEx_RxEventCallback
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> stm32h7xx_hal_uart.o(.text.UART_Start_Receive_DMA)
 </UL>
@@ -6852,6 +6852,7 @@ Local Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 4<LI>Call Chain = check_key_trigger
 </UL>
 <BR>[Called By]<UL><LI><a href="#[c6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ascend_execute
+<LI><a href="#[d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ter_run_execute
 <LI><a href="#[d0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ter_ready_execute
 <LI><a href="#[ca]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_high_execute
 <LI><a href="#[ce]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_spin_execute
@@ -6914,10 +6915,11 @@ Local Symbols
 <P><STRONG><a name="[d1]"></a>kb_ter_run_enter</STRONG> (Thumb, 14 bytes, Stack size 0 bytes, robot_logic.o(.text.kb_ter_run_enter))
 <BR>[Address Reference Count : 1]<UL><LI> robot_logic.o(.rodata.state_kb_ter_run)
 </UL>
-<P><STRONG><a name="[d2]"></a>kb_ter_run_execute</STRONG> (Thumb, 70 bytes, Stack size 16 bytes, robot_logic.o(.text.kb_ter_run_execute))
+<P><STRONG><a name="[d2]"></a>kb_ter_run_execute</STRONG> (Thumb, 116 bytes, Stack size 16 bytes, robot_logic.o(.text.kb_ter_run_execute))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = kb_ter_run_execute &rArr; fsm_change
 </UL>
-<BR>[Calls]<UL><LI><a href="#[266]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;get_kb_shoot_mode
+<BR>[Calls]<UL><LI><a href="#[268]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;check_key_trigger
+<LI><a href="#[266]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;get_kb_shoot_mode
 <LI><a href="#[265]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;get_kb_gimbal_mode
 <LI><a href="#[267]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fsm_change
 </UL>

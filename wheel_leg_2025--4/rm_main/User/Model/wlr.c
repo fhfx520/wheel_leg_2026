@@ -635,6 +635,8 @@ static void handle_jump_state(void)
 //    }
 	if(wlr.jump_flag == WLR_JUMP_ASCEND)
 	{
+		 Fy_ramp[0].out = Fy_ramp[1].out= 0;
+		 pid_leg_recover[0].i_out = 0,pid_leg_recover[1].i_out = 0;
 		 wlr.high_set = ramp_calc(&height_ramp, 0.35f);
 		 x3_balance_zero = x3_balance_zero_normal;
          x5_balance_zero = 0.0f;
@@ -644,7 +646,7 @@ static void handle_jump_state(void)
 			wlr.v_ref = 0;
 			wlr.crash_flag = 1;
 		 }
-		 if((fabs(lqr.X_fdb[4]) > 1.20f && fabs(lqr.X_fdb[6]) > 1.20f && wlr.crash_flag))
+		 if((fabs(lqr.X_fdb[4]) > 0.80f && fabs(lqr.X_fdb[6]) > 0.80f && wlr.crash_flag))
 		 {
 			wlr.jump_flag = WLR_JUMP_RECOVER_SHORT;
 			wlr.crash_flag = 0;
@@ -653,21 +655,21 @@ static void handle_jump_state(void)
 			chassis.rescue_inter_flag = 2;
 		 }
 	}
-//	else if(wlr.jump_flag == WLR_JUMP_RECOVER_SHORT)
-//	{
-//		 wlr.high_set = wlr.recover_length;
-//		 if (fabs(wlr.high_set - vmc[0].L_fdb) < 0.1f && fabs(wlr.high_set - vmc[1].L_fdb) < 0.1f) {
-//			 wlr.jump_cnt++;
-//			 if(wlr.jump_cnt > 50)
-//			 {
-//				 wlr.jump_flag = WLR_JUMP_RECOVER_LONG;
-//				 wlr.crash_flag = 0;
-//				 height_ramp.out = wlr.recover_length;
-//				 pid_leg_recover[0].i_out = 0;
-//				 pid_leg_recover[1].i_out = 0;
-//			 }
-//        }
-//	}
+	else if(wlr.jump_flag == WLR_JUMP_RECOVER_SHORT)
+	{
+		 wlr.high_set = wlr.recover_length;
+		 if (fabs(wlr.high_set - vmc[0].L_fdb) < 0.05f && fabs(wlr.high_set - vmc[1].L_fdb) < 0.05f) {
+			 wlr.jump_cnt++;
+			 if(wlr.jump_cnt > 50)
+			 {
+				 wlr.jump_flag = WLR_JUMP_RECOVER_LONG;
+				 wlr.crash_flag = 0;
+				 height_ramp.out = wlr.recover_length;
+				 pid_leg_recover[0].i_out = 0;
+				 pid_leg_recover[1].i_out = 0;
+			 }
+        }
+	}
 //	else if(wlr.jump_flag == WLR_JUMP_RECOVER_LONG)
 //	{
 //		wlr.high_set = ramp_calc(&height_ramp, 0.18f);
@@ -733,7 +735,7 @@ static void handle_sky_state(void)
     } else if (wlr.sky_flag == WLR_SKY_LANDING) {
         wlr.high_set = 0.30f;
 		sky_height_ramp.out = wlr.high_set;
-        x3_balance_zero = -0.1f;
+        x3_balance_zero = -0.15f;
         x5_balance_zero = 0.0f;
 		wlr.sky_cnt++;
 		if((wlr.side[0].Fn_kal > 150.0f && wlr.side[1].Fn_kal > 150.0f) || (wlr.sky_cnt > 150))
@@ -744,7 +746,7 @@ static void handle_sky_state(void)
     } 
 	else if(wlr.sky_flag == WLR_SKY_STAND)
 	{
-		wlr.high_set = ramp_calc(&sky_height_ramp, 0.18f);
+		wlr.high_set = ramp_calc(&sky_height_ramp, 0.25f);
 		x3_balance_zero = x3_balance_zero_normal;
         x5_balance_zero = 0.0f;
 	}
@@ -977,7 +979,7 @@ static void map_virtual_force(uint8_t index)
         && wlr.sky_flag == WLR_SKY_IDLE && !chassis.recover_flag) {	// && 未进入翻倒自起立 && 跳跃未完成
         wlr.side[index].Fy = pid_calc(&pid_leg_length_fly[index], tlm.l_ref[index], vmc[index].L_fdb) - 30.0f;
     } 
-	else if (chassis.recover_flag == 1 && chassis.rescue_inter_flag == 2) {		//进入翻倒自起立 && 进入收腿阶段
+	else if ((chassis.recover_flag == 1 && chassis.rescue_inter_flag == 2) || wlr.jump_flag == WLR_JUMP_RECOVER_SHORT) {		//进入翻倒自起立 && 进入收腿阶段
         Fy_temp = pid_calc(&pid_leg_recover[index], wlr.recover_length, vmc[index].L_fdb) - 50.0f;
         wlr.side[index].Fy = ramp_calc(&Fy_ramp[index], Fy_temp);
     } 
@@ -1082,7 +1084,7 @@ void wlr_init(void)
 		//PID参数初始化      
         pid_init(&pid_leg_sky_cover[i], NONE, 1800, 1.5f, 0.0f,150,500);		    //空中收腿专用pid
 		pid_init(&pid_leg_sky_jump[i],  NONE,2200, 3.0, 0.0f, 150.0, 500);			//跳跃专用pid
-		pid_init(&pid_leg_recover[i], NONE, 1500, 1.5f, 20000.0f, 100, 300);		//起身专用pid
+		pid_init(&pid_leg_recover[i], NONE, 1800, 1.5f, 20000.0f, 150, 400);		//起身专用pid
         pid_init(&pid_leg_length_fly[i], NONE, 800, 0.0, 20000, 0, 200);			//离地腿长/缓冲腿长pid
         pid_init(&pid_L_test[i], NONE, 800, 2.0, 60000, 70, 300);					//日常腿长pid
 		pid_init(&pid_rescue[i], NONE, 2.0f, 0.5f, 0, 45, 50);						//翻倒起身腿转速pid

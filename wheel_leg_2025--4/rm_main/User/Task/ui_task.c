@@ -21,6 +21,8 @@ static uint8_t last_status_high;
 static uint8_t last_status_vision_online;
 static uint8_t last_status_ID_choice;
 static uint8_t last_status_ID_aiming;
+static uint8_t fly_flag;
+static uint8_t fly_cnt;
 
 float armour_center;
 
@@ -71,9 +73,16 @@ void ui_update(void)
 	ui_update_g_2();
 	
 	if(last_status_high != wlr.high_flag)
-		lowhz_cnt += 50;
+		lowhz_cnt += 20;
 	if(wlr.side[0].fly_flag == 1 && wlr.side[1].fly_flag == 1)
-		lowhz_cnt += 50;
+	{
+		fly_cnt += 20;
+//		lowhz_cnt += 25;
+	}
+	if(lowhz_cnt > 40)
+		lowhz_cnt = 40;
+	if(fly_cnt > 40)
+		fly_cnt = 40;
 	last_status_high = wlr.high_flag;
 	
 	if(lowhz_cnt > 0){
@@ -85,10 +94,17 @@ void ui_update(void)
 		else
 			strcpy(ui_g_3_high_flag->string, "Man");
 		ui_update_g_3();
-		if(wlr.side[0].fly_flag == 1 && wlr.side[1].fly_flag == 1)
-			strcpy(ui_g_4_fly_flag->string, "off_land");
-		else
-			strcpy(ui_g_4_fly_flag->string, "	");
+	}
+	if(fly_cnt >= 10)
+	{
+		fly_cnt--;
+		strcpy(ui_g_4_fly_flag->string, "off_land");
+		ui_update_g_4();
+	}
+	else if(fly_cnt < 10 && fly_cnt > 0)
+	{
+		fly_cnt--;	
+		strcpy(ui_g_4_fly_flag->string, "        ");
 		ui_update_g_4();
 	}
 }

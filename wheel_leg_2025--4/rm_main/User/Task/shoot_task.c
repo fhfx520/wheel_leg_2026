@@ -21,6 +21,8 @@
 #define TRIGGER_MOTOR_ECD_SINGLE   (58975.0f)  //拨盘一颗子弹转过的编码值 8192 * 5 * 2 / 10 = 8192.0f
 #define TRIGGER_MOTOR_ECD_SERIES   (58975.0f)  //拨盘一颗子弹转过的编码值 8192 * 5 * 2 / 10 = 8192.0f
 
+static float Heat_ShootPeriod_calc(void);
+
 float MIN_HEAT = 50;        //热量控制裕量
 
 static uint16_t frequency_cnt = 0;	//射击周期计算
@@ -399,6 +401,19 @@ static void vision_shoot_delay(void){
 	}	
 	last_tri_ref = shoot.trigger_ecd.ref;
 	last_shoot_speed = shoot_data.initial_speed;
+}
+
+//根据当前热量线性控制射频
+static float Heat_ShootPeriod_calc(void)
+{
+	//16 = k * max + (shoot.barrel.cooling_rate / 10.0f) * 1000.0f
+	//k = 16.0f / (heat + (shoot.barrel.cooling_rate / 10.0f) * 1000.0f)
+	//剩余热量为0->射频 = 冷却射频 	 冷却速率 / 10（每发弹热量） = 冷却弹量/s * 1000 = 冷却射频
+	//剩余热量为max->射频 = 最大 16->70Hz 416rpm = 4160shot/min = 69.3shot/s = 70hz
+	//最大射频再加入判断条件：随最大热量而变化
+	//线性函数：
+	return (40.0f / (shoot.barrel.heat_max + (shoot.barrel.cooling_rate / 10.0f) * 1000.0f) * shoot.barrel.heat_remain 
+		+ (shoot.barrel.cooling_rate / 10.0f) * 1000.0f);
 }
 
 void shoot_task(void const *argu)

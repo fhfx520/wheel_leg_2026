@@ -290,7 +290,7 @@ void _ui_init_g_4_0() {
     ui_g_4_fly_flag->width = 4;
     ui_g_4_fly_flag->font_size = 40;
     ui_g_4_fly_flag->str_length = 8;
-    strcpy(ui_g_4_fly_flag->string, "off_land");
+    strcpy(ui_g_4_fly_flag->string, "        ");
 
 
     ui_proc_string_frame(&ui_g_4_0);

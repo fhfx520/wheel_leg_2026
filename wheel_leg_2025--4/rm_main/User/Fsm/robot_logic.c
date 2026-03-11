@@ -269,6 +269,7 @@ static void kb_ter_run_execute(void) {
     g_robot_ctx.output.shoot  = get_kb_shoot_mode();
 
 	if (g_robot_ctx.sky_finish_flag) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
+	if (check_key_trigger(KEY_V) || check_key_trigger(KEY_F)) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
 }
 static const FsmState_t state_kb_ter_run = { .name = "KB_TER_RUN", .enter = kb_ter_run_enter, .execute = kb_ter_run_execute };
 
@@ -283,7 +284,7 @@ static void kb_ascend_execute(void) {
 	if (check_key_trigger(KEY_C)) { fsm_change(&fsm_keyboard_sub, &state_kb_high); return;}
 	if (check_key_trigger(KEY_F)) { fsm_change(&fsm_keyboard_sub, &state_kb_ter_ready); return;}
 }
-static const FsmState_t state_kb_ascend = { .name = "KB_ASCEND_RUN", .enter = kb_ascend_enter, .execute = kb_ascend_execute };
+static const FsmState_t state_kb_ascend = { .name = "KB_ASCEND", .enter = kb_ascend_enter, .execute = kb_ascend_execute };
 
 static void kb_double_ter_enter(void) { g_robot_ctx.output.chassis = CHASSIS_EXECUTING_FOLLOW_ASCEND; }
 static void kb_double_ter_execute(void) {
@@ -291,7 +292,8 @@ static void kb_double_ter_execute(void) {
     g_robot_ctx.output.gimbal = get_kb_gimbal_mode();
     g_robot_ctx.output.shoot  = get_kb_shoot_mode();
 
-	if (g_robot_ctx.sky_finish_flag) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
+	if (g_robot_ctx.sky_finish_flag && g_robot_ctx.jump_finish_flag) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
+	if (check_key_trigger(KEY_F) || check_key_trigger(KEY_G)) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
 }
 static const FsmState_t state_kb_double_ter_run = { .name = "KB_DOUBLE_TER_RUN", .enter = kb_double_ter_enter, .execute = kb_double_ter_execute };
 

@@ -252,6 +252,21 @@ static void chassis_execute_fsm(void)
 				g_robot_ctx.jump_finish_flag = 1;
 			break;
 		}
+		case CHASSIS_EXECUTING_FOLLOW_ASCEND:
+		{
+			wlr.ctrl_mode = 2;
+			wlr.high_flag = 0;
+			if(wlr.sky_flag == WLR_SKY_FOLDING) 
+				wlr.sky_flag = WLR_SKY_EXTENDING; 
+			else if(wlr.sky_flag == WLR_SKY_STAND && !g_robot_ctx.sky_finish_flag)
+				g_robot_ctx.sky_finish_flag = 1;
+			if(g_robot_ctx.sky_finish_flag && wlr.jump_flag == WLR_JUMP_IDLE)
+				wlr.jump_flag = WLR_JUMP_ASCEND; 
+			else if(wlr.jump_flag == WLR_JUMP_RECOVER_SHORT && !g_robot_ctx.jump_finish_flag)
+				g_robot_ctx.jump_finish_flag = 1;
+			
+			break;
+		}
         default:
 		{
             wlr.ctrl_mode = 0; 
@@ -704,10 +719,14 @@ static void chassis_data_output(void)
 				chassis_self_rescue();
             if(chassis.recover_flag != 1) {
 				if(wlr.crash_flag){	  
-					dm_motor_set_control_para(&joint_motor[0], 0, -5.0, 0, 5, 0);
-					dm_motor_set_control_para(&joint_motor[1], 0, 0,    0, 0, 0);	
-					dm_motor_set_control_para(&joint_motor[2], 0, 5.0,  0, 5, 0);
-					dm_motor_set_control_para(&joint_motor[3], 0, 0,    0, 0, 0);
+//					dm_motor_set_control_para(&joint_motor[0], 0, 4, 0, 10, 0);
+//					dm_motor_set_control_para(&joint_motor[1], 0, 0,    0, 0, 0);	
+//					dm_motor_set_control_para(&joint_motor[2], 0, -4,  0, 10, 0);
+//					dm_motor_set_control_para(&joint_motor[3], 0, 0,    0, 0, 0);
+					dm_motor_set_control_para(&joint_motor[0], 0, -2, 0, 20, 0);
+					dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 20, 0);
+					dm_motor_set_control_para(&joint_motor[2], 0, 2, 0, 20, 0);
+					dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 20, 0);  
 				}
 				else if(wlr.joint_all_online){
 					dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, wlr.side[0].T1);
