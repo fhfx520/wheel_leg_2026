@@ -22,7 +22,7 @@
 #include "mode_switch_task.h"
 
 #define row_debug 2 * 10
-uint8_t debug_wave = 7;
+uint8_t debug_wave = 12;
 float test_hex = 1;
 extern FGT_sin_t FGT_sin_chassis;
 extern  uint16_t quadrant_cnt;
@@ -188,7 +188,7 @@ void log_scope_data_pkg(void)
 //            log_scope_get_data(power_heat_data.chassis_voltage);
             log_scope_get_data(power_heat_data.buffer_energy);
             log_scope_get_data(supercap.volage);
-            log_scope_get_data(power_control.power_scale);
+            log_scope_get_data(power_control.total_power_wheel);
             break;
         } case 13: {//超电调试
             log_scope_get_data(supercap.volage);
