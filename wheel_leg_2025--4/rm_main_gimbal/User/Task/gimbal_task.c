@@ -39,7 +39,7 @@ static void gimbal_init(void)
     memset(&gimbal, 0, sizeof(gimbal_t));
 	
 	pid_init(&gimbal.pit_angle.pid, CHANG_I_RATE, 25.0f, 0.6f, 0, 25, 50);//17 0 0 
-    pid_init(&gimbal.pit_spd.pid, CHANG_I_RATE, 1.5f, 0.01f, 0, 3.0f, 7.0f);//0.52 0.165 
+    pid_init(&gimbal.pit_spd.pid, CHANG_I_RATE, 2.0f, 0.01f, 0, 3.0f, 7.0f);//0.52 0.165 
 	gimbal.pit_angle.pid.threshold_a = 0.0f;
 	gimbal.pit_angle.pid.threshold_b = 0.0f;
 	

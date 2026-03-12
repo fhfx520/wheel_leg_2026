@@ -652,7 +652,8 @@ static void handle_jump_state(void)
 			wlr.crash_flag = 0;
 			wlr.high_flag = 0;
 			chassis.recover_flag = 1;
-			chassis.rescue_inter_flag = 2;
+			chassis.rescue_cnt_R = chassis.rescue_cnt_L = 70;
+//			chassis.rescue_inter_flag = 2;
 		 }
 	}
 	else if(wlr.jump_flag == WLR_JUMP_RECOVER_SHORT)

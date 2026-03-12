@@ -27,163 +27,181 @@ Project File Date:  03/12/2026
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 6 (build 750)', folder: 'D:\KEIL5\ARM\ARMCC\Bin'
 Rebuild target 'SuperCap2023'
-compiling gpio.c...
-../Inc/main.h(31): error:  #5: cannot open source input file "stm32g4xx_hal.h": No such file or directory
-  #include "stm32g4xx_hal.h"
-../Src/gpio.c: 0 warnings, 1 error
-compiling adc.c...
-../Inc/main.h(31): error:  #5: cannot open source input file "stm32g4xx_hal.h": No such file or directory
-  #include "stm32g4xx_hal.h"
-../Src/adc.c: 0 warnings, 1 error
-compiling stm32g4xx_hal_msp.c...
-../Inc/main.h(31): error:  #5: cannot open source input file "stm32g4xx_hal.h": No such file or directory
-  #include "stm32g4xx_hal.h"
-../Src/stm32g4xx_hal_msp.c: 0 warnings, 1 error
-compiling tim.c...
-../Inc/main.h(31): error:  #5: cannot open source input file "stm32g4xx_hal.h": No such file or directory
-  #include "stm32g4xx_hal.h"
-../Src/tim.c: 0 warnings, 1 error
 assembling startup_stm32g474xx.s...
-compiling stm32g4xx_it.c...
-../Inc/main.h(31): error:  #5: cannot open source input file "stm32g4xx_hal.h": No such file or directory
-  #include "stm32g4xx_hal.h"
-../Src/stm32g4xx_it.c: 0 warnings, 1 error
-compiling fdcan.c...
-../Inc/main.h(31): error:  #5: cannot open source input file "stm32g4xx_hal.h": No such file or directory
-  #include "stm32g4xx_hal.h"
-../Src/fdcan.c: 0 warnings, 1 error
-compiling dma.c...
-"no source": Error:  #5: cannot open source input file "../Src/dma.c": No such file or directory
-../Src/dma.c: 0 warnings, 1 error
-compiling usart.c...
-../Inc/main.h(31): error:  #5: cannot open source input file "stm32g4xx_hal.h": No such file or directory
-  #include "stm32g4xx_hal.h"
-../Src/usart.c: 0 warnings, 1 error
+compiling tim.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+../Src/tim.c: 1 warning, 0 errors
 compiling hrtim.c...
-../Inc/main.h(31): error:  #5: cannot open source input file "stm32g4xx_hal.h": No such file or directory
-  #include "stm32g4xx_hal.h"
-../Src/hrtim.c: 0 warnings, 1 error
-compiling main.c...
-../Inc/main.h(31): error:  #5: cannot open source input file "stm32g4xx_hal.h": No such file or directory
-  #include "stm32g4xx_hal.h"
-../Src/main.c: 0 warnings, 1 error
-compiling bsp_adc.c...
-../Inc/main.h(31): error:  #5: cannot open source input file "stm32g4xx_hal.h": No such file or directory
-  #include "stm32g4xx_hal.h"
-..\bsp\bsp_adc.c: 0 warnings, 1 error
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+../Src/hrtim.c: 1 warning, 0 errors
+compiling usart.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+../Src/usart.c: 1 warning, 0 errors
+compiling fdcan.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+../Src/fdcan.c: 1 warning, 0 errors
 compiling system_stm32g4xx.c...
-D:\KEIL5\keli_pkg\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include\stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
   #define __FPU_PRESENT             1U       /*!< FPU present                                   */
-D:\KEIL5\keli_pkg\ARM\CMSIS\6.2.0\CMSIS\Core\Include\cmsis_compiler.h(279): error:  #35: #error directive: Unknown compiler.
-    #error Unknown compiler.
-../Src/system_stm32g4xx.c: 1 warning, 1 error
+../Src/system_stm32g4xx.c: 1 warning, 0 errors
+compiling dma.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+../Src/dma.c: 1 warning, 0 errors
+compiling gpio.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+../Src/gpio.c: 1 warning, 0 errors
+compiling adc.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+../Src/adc.c: 1 warning, 0 errors
+compiling stm32g4xx_it.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+../Src/stm32g4xx_it.c: 1 warning, 0 errors
+compiling stm32g4xx_hal_msp.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+../Src/stm32g4xx_hal_msp.c: 1 warning, 0 errors
+compiling bsp_adc.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+..\bsp\bsp_adc.c: 1 warning, 0 errors
 compiling bsp_judge.c...
-../Inc/main.h(31): error:  #5: cannot open source input file "stm32g4xx_hal.h": No such file or directory
-  #include "stm32g4xx_hal.h"
-..\bsp\bsp_judge.c: 0 warnings, 1 error
-compiling bsp_uart.c...
-../Inc/main.h(31): error:  #5: cannot open source input file "stm32g4xx_hal.h": No such file or directory
-  #include "stm32g4xx_hal.h"
-..\bsp\bsp_uart.c: 0 warnings, 1 error
-compiling bsp_fdcan.c...
-../Inc/main.h(31): error:  #5: cannot open source input file "stm32g4xx_hal.h": No such file or directory
-  #include "stm32g4xx_hal.h"
-..\bsp\bsp_fdcan.c: 0 warnings, 1 error
-compiling filter.c...
-../Inc/main.h(31): error:  #5: cannot open source input file "stm32g4xx_hal.h": No such file or directory
-  #include "stm32g4xx_hal.h"
-..\math\filter.c: 0 warnings, 1 error
-compiling KalmanFilter.c...
-D:\KEIL5\keli_pkg\ARM\CMSIS\6.2.0\CMSIS\Core\Include\cmsis_compiler.h(279): error:  #35: #error directive: Unknown compiler.
-    #error Unknown compiler.
-..\math\KalmanFilter.c: 0 warnings, 1 error
-compiling pid.c...
-../Inc/main.h(31): error:  #5: cannot open source input file "stm32g4xx_hal.h": No such file or directory
-  #include "stm32g4xx_hal.h"
-..\math\pid.c: 0 warnings, 1 error
-compiling data_scope.c...
-"no source": Error:  #5: cannot open source input file "..\math\data_scope.c": No such file or directory
-..\math\data_scope.c: 0 warnings, 1 error
-compiling crc.c...
-../Inc/main.h(31): error:  #5: cannot open source input file "stm32g4xx_hal.h": No such file or directory
-  #include "stm32g4xx_hal.h"
-..\math\crc.c: 0 warnings, 1 error
-compiling debug.c...
-"no source": Error:  #5: cannot open source input file "..\app\debug.c": No such file or directory
-..\app\debug.c: 0 warnings, 1 error
-compiling power_ctrl_task.c...
-D:\KEIL5\keli_pkg\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include\stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
   #define __FPU_PRESENT             1U       /*!< FPU present                                   */
-D:\KEIL5\keli_pkg\ARM\CMSIS\6.2.0\CMSIS\Core\Include\cmsis_compiler.h(279): error:  #35: #error directive: Unknown compiler.
-    #error Unknown compiler.
-..\app\power_ctrl_task.c: 1 warning, 1 error
-compiling stm32g4xx_hal_adc.c...
-"no source": Error:  #5: cannot open source input file "../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_adc.c": No such file or directory
-../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_adc.c: 0 warnings, 1 error
-compiling stm32g4xx_hal_adc_ex.c...
-"no source": Error:  #5: cannot open source input file "../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_adc_ex.c": No such file or directory
-../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_adc_ex.c: 0 warnings, 1 error
+..\bsp\bsp_judge.c: 1 warning, 0 errors
+compiling bsp_uart.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+..\bsp\bsp_uart.c: 1 warning, 0 errors
+compiling main.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+../Src/main.c: 1 warning, 0 errors
+compiling KalmanFilter.c...
 compiling stm32g4xx_ll_adc.c...
-"no source": Error:  #5: cannot open source input file "../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_adc.c": No such file or directory
-../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_adc.c: 0 warnings, 1 error
-compiling stm32g4xx_hal.c...
-"no source": Error:  #5: cannot open source input file "../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.c": No such file or directory
-../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.c: 0 warnings, 1 error
-compiling stm32g4xx_hal_rcc.c...
-"no source": Error:  #5: cannot open source input file "../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc.c": No such file or directory
-../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc.c: 0 warnings, 1 error
-compiling stm32g4xx_hal_rcc_ex.c...
-"no source": Error:  #5: cannot open source input file "../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc_ex.c": No such file or directory
-../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc_ex.c: 0 warnings, 1 error
+compiling data_scope.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+..\math\data_scope.c: 1 warning, 0 errors
+compiling pid.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+..\math\pid.c: 1 warning, 0 errors
+compiling crc.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+..\math\crc.c: 1 warning, 0 errors
 compiling stm32g4xx_hal_flash.c...
-"no source": Error:  #5: cannot open source input file "../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash.c": No such file or directory
-../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash.c: 0 warnings, 1 error
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash.c: 1 warning, 0 errors
+compiling filter.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+..\math\filter.c: 1 warning, 0 errors
+compiling stm32g4xx_hal_rcc.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc.c: 1 warning, 0 errors
+compiling stm32g4xx_hal.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.c: 1 warning, 0 errors
+compiling bsp_fdcan.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+..\bsp\bsp_fdcan.c: 1 warning, 0 errors
 compiling stm32g4xx_hal_flash_ex.c...
-"no source": Error:  #5: cannot open source input file "../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash_ex.c": No such file or directory
-../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash_ex.c: 0 warnings, 1 error
-compiling stm32g4xx_hal_flash_ramfunc.c...
-"no source": Error:  #5: cannot open source input file "../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash_ramfunc.c": No such file or directory
-../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash_ramfunc.c: 0 warnings, 1 error
-compiling stm32g4xx_hal_gpio.c...
-"no source": Error:  #5: cannot open source input file "../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_gpio.c": No such file or directory
-../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_gpio.c: 0 warnings, 1 error
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash_ex.c: 1 warning, 0 errors
+compiling power_ctrl_task.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+..\app\power_ctrl_task.c: 1 warning, 0 errors
+compiling debug.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+..\app\debug.c: 1 warning, 0 errors
+compiling stm32g4xx_hal_adc_ex.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_adc_ex.c: 1 warning, 0 errors
+compiling stm32g4xx_hal_rcc_ex.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc_ex.c: 1 warning, 0 errors
+compiling stm32g4xx_hal_adc.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_adc.c: 1 warning, 0 errors
 compiling stm32g4xx_hal_exti.c...
-"no source": Error:  #5: cannot open source input file "../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_exti.c": No such file or directory
-../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_exti.c: 0 warnings, 1 error
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_exti.c: 1 warning, 0 errors
 compiling stm32g4xx_hal_dma.c...
-"no source": Error:  #5: cannot open source input file "../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dma.c": No such file or directory
-../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dma.c: 0 warnings, 1 error
-compiling stm32g4xx_hal_dma_ex.c...
-"no source": Error:  #5: cannot open source input file "../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dma_ex.c": No such file or directory
-../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dma_ex.c: 0 warnings, 1 error
-compiling stm32g4xx_hal_pwr.c...
-"no source": Error:  #5: cannot open source input file "../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr.c": No such file or directory
-../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr.c: 0 warnings, 1 error
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dma.c: 1 warning, 0 errors
 compiling stm32g4xx_hal_cortex.c...
-"no source": Error:  #5: cannot open source input file "../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_cortex.c": No such file or directory
-../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_cortex.c: 0 warnings, 1 error
-compiling stm32g4xx_hal_pwr_ex.c...
-"no source": Error:  #5: cannot open source input file "../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr_ex.c": No such file or directory
-../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr_ex.c: 0 warnings, 1 error
-compiling stm32g4xx_hal_fdcan.c...
-"no source": Error:  #5: cannot open source input file "../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_fdcan.c": No such file or directory
-../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_fdcan.c: 0 warnings, 1 error
-compiling stm32g4xx_hal_tim.c...
-"no source": Error:  #5: cannot open source input file "../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim.c": No such file or directory
-../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim.c: 0 warnings, 1 error
-compiling stm32g4xx_hal_hrtim.c...
-"no source": Error:  #5: cannot open source input file "../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_hrtim.c": No such file or directory
-../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_hrtim.c: 0 warnings, 1 error
-compiling stm32g4xx_hal_tim_ex.c...
-"no source": Error:  #5: cannot open source input file "../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim_ex.c": No such file or directory
-../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim_ex.c: 0 warnings, 1 error
-compiling stm32g4xx_hal_uart.c...
-"no source": Error:  #5: cannot open source input file "../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart.c": No such file or directory
-../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart.c: 0 warnings, 1 error
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_cortex.c: 1 warning, 0 errors
+compiling stm32g4xx_hal_pwr.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr.c: 1 warning, 0 errors
+compiling stm32g4xx_hal_gpio.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_gpio.c: 1 warning, 0 errors
 compiling stm32g4xx_hal_uart_ex.c...
-"no source": Error:  #5: cannot open source input file "../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart_ex.c": No such file or directory
-../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart_ex.c: 0 warnings, 1 error
-"SuperCap2023\SuperCap2023.axf" - 44 Error(s), 2 Warning(s).
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart_ex.c: 1 warning, 0 errors
+compiling stm32g4xx_hal_dma_ex.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dma_ex.c: 1 warning, 0 errors
+compiling stm32g4xx_hal_flash_ramfunc.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash_ramfunc.c: 1 warning, 0 errors
+compiling stm32g4xx_hal_tim_ex.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim_ex.c: 1 warning, 0 errors
+compiling stm32g4xx_hal_fdcan.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_fdcan.c: 1 warning, 0 errors
+compiling stm32g4xx_hal_uart.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart.c: 1 warning, 0 errors
+compiling stm32g4xx_hal_pwr_ex.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr_ex.c: 1 warning, 0 errors
+compiling stm32g4xx_hal_tim.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim.c: 1 warning, 0 errors
+compiling stm32g4xx_hal_hrtim.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_hrtim.c: 1 warning, 0 errors
+linking...
+Program Size: Code=41706 RO-data=1390 RW-data=1076 ZI-data=4748  
+FromELF: creating hex file...
+"SuperCap2023\SuperCap2023.axf" - 0 Error(s), 42 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -207,8 +225,7 @@ Package Vendor: Keil
 
    * Component: ARM::CMSIS:CORE@6.1.1
       Include file:  CMSIS/Core/Include/tz_context.h
-Target not created.
-Build Time Elapsed:  00:00:02
+Build Time Elapsed:  00:00:29
 </pre>
 </body>
 </html>

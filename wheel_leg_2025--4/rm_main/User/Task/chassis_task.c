@@ -261,7 +261,10 @@ static void chassis_execute_fsm(void)
 			else if(wlr.sky_flag == WLR_SKY_STAND && !g_robot_ctx.sky_finish_flag)
 				g_robot_ctx.sky_finish_flag = 1;
 			if(g_robot_ctx.sky_finish_flag && wlr.jump_flag == WLR_JUMP_IDLE)
+			{
+				wlr.sky_flag = WLR_SKY_IDLE;
 				wlr.jump_flag = WLR_JUMP_ASCEND; 
+			}
 			else if(wlr.jump_flag == WLR_JUMP_RECOVER_SHORT && !g_robot_ctx.jump_finish_flag)
 				g_robot_ctx.jump_finish_flag = 1;
 			
