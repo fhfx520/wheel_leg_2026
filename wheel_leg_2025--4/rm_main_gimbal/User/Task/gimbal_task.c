@@ -234,10 +234,10 @@ void gimbal_task(void const *argu)
                 } else {
                     //一键调头
                     if(key_scan_clear(KEY_GIMBAL_TURN_R)) {
-                        gimbal.yaw_angle.ref -= PI/2;
+                        gimbal.yaw_angle.ref -= PI / 2;
                     } 
                     else if (key_scan_clear(KEY_GIMBAL_TURN_L)) {
-                        gimbal.yaw_angle.ref += PI/2;
+                        gimbal.yaw_angle.ref += PI / 2;
                     }
                     gimbal.pit_angle.ref += rc.mouse.y * gimbal_scale.angle_keyboard ;
                     gimbal.yaw_angle.ref -= rc.mouse.x * gimbal_scale.angle_keyboard;

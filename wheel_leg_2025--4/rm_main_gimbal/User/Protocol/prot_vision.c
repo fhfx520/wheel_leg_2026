@@ -33,7 +33,7 @@ void vision_get_data(uint8_t *data)
     vision.rx_status = NORMAL;
     vision.rx_repeat_cnt = 0;
     vision.rx[1].data.cnt = vision.rx[0].data.cnt;
-		vision.trace_id = vision.rx[0].data.trace_id;
+	vision.trace_id = vision.rx[0].data.trace_id;
     
     NAN_PROCESS(vision.rx[0].data.yaw, vision.rx[1].data.yaw);
     NAN_PROCESS(vision.rx[0].data.pit, vision.rx[1].data.pit);

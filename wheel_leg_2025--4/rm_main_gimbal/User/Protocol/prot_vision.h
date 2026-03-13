@@ -51,14 +51,14 @@ typedef struct
             float yaw;
             float pit;
             float dis;
-						float dis2;
+			float dis2;
             float fire;
             float pos;
             uint8_t empty;
             uint8_t cnt : 6;
             uint8_t ist_flag :1;
             uint8_t aim_flag :1;
-						uint8_t trace_id;
+			uint8_t trace_id;
             uint8_t eof;
         } data;
     } rx[2];

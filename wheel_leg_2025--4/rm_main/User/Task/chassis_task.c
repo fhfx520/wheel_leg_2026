@@ -60,8 +60,13 @@ chassis_scale_t chassis_scale = {
     .keyboard = 3.0f
 };
 
-float try1,try2;
+static uint8_t check_key_trigger(uint16_t key_mask) {
+    if ((g_robot_ctx.input.kb.key_code & key_mask) && 
+       !(g_robot_ctx.last_key_code & key_mask)) return 1;
+    return 0;
+}
 
+#define KEY_CTRL  (1<<5)
 
 // 恢复你本来的代码
 static void chassis_ramp(void)
@@ -357,11 +362,12 @@ static void chassis_data_input(void)
             wlr.wz_ref = 0.0f;
             wlr.yaw_err = circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
             
-            if (wlr.yaw_err > PI / 2 || wlr.yaw_err < - PI / 2) {
+            if (wlr.yaw_err > PI / 2 || wlr.yaw_err < - PI / 2 || (check_key_trigger(KEY_CTRL) && wlr.direction == 0)) {
                 wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI ;
                 wlr.direction = 1;
             }
-            else if(wlr.yaw_err < PI / 2 || wlr.yaw_err > - PI / 2) {
+            else if(wlr.yaw_err < PI / 2 || wlr.yaw_err > - PI / 2 || (check_key_trigger(KEY_CTRL) && wlr.direction == 1)) {
+				wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI ;
                 wlr.direction = 0;
             }
             chassis_rotate_ramp.out =0;

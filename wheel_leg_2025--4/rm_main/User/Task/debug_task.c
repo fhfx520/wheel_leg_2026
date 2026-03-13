@@ -35,6 +35,7 @@ extern float F_test[2];
 extern float F_wy[2];
 extern float variable_rotate_vw;
 extern int32_t Last_cnt;
+extern chassis_scale_t chassis_scale;
 void log_scope_data_pkg(void)
 {
     switch(debug_wave) {
@@ -189,6 +190,7 @@ void log_scope_data_pkg(void)
             log_scope_get_data(power_heat_data.buffer_energy);
             log_scope_get_data(supercap.volage);
             log_scope_get_data(power_control.total_power_wheel);
+			log_scope_get_data(chassis_scale.keyboard);
             break;
         } case 13: {//超电调试
             log_scope_get_data(supercap.volage);

@@ -13,16 +13,27 @@
 #include "math_lib.h"
 #include "control_def.h"
 #include "drv_dji_motor.h"
+#include "chassis_task.h"
 
 us_time_t ui_time;
 int32_t lowhz_cnt;
 
 static uint8_t last_status_high;
+static uint8_t last_status_jump;
+static uint8_t last_status_sky;
 static uint8_t last_status_vision_online;
 static uint8_t last_status_ID_choice;
 static uint8_t last_status_ID_aiming;
 static uint8_t fly_flag;
 static uint8_t fly_cnt;
+
+static int8_t ui_sign_function(void)
+{
+	return (!wlr.direction ? 1 : -1);
+}
+
+
+extern chassis_scale_t chassis_scale;
 
 float armour_center;
 
@@ -36,25 +47,25 @@ void ui_init(void)
 
 void ui_update(void)
 {	
-	ui_g_1_left_big_leg->end_x = ui_g_1_left_big_leg->start_x - (vmc[((!wlr.direction) ? 1 : 0)].mp_fdb.xd * 300);
-	ui_g_1_left_big_leg->end_y = ui_g_1_left_big_leg->start_y - (vmc[((!wlr.direction) ? 1 : 0)].mp_fdb.yd * 300);
+	ui_g_1_left_big_leg->end_x = ui_g_1_left_big_leg->start_x - ui_sign_function() * (vmc[((!wlr.direction) ? 1 : 0)].mp_fdb.xd * 300);
+	ui_g_1_left_big_leg->end_y = ui_g_1_left_big_leg->start_y - ui_sign_function() * (vmc[((!wlr.direction) ? 1 : 0)].mp_fdb.yd * 300);
 	ui_g_1_left_small_leg->start_x = ui_g_1_left_big_leg->end_x;
 	ui_g_1_left_small_leg->start_y = ui_g_1_left_big_leg->end_y;
-	ui_g_1_left_small_leg->end_x = ui_g_1_left_big_leg->start_x - (vmc[((!wlr.direction) ? 1 : 0)].mp_fdb.xc * 300);
-	ui_g_1_left_small_leg->end_y = ui_g_1_left_big_leg->start_y - (vmc[((!wlr.direction) ? 1 : 0)].mp_fdb.yc * 300);
+	ui_g_1_left_small_leg->end_x = ui_g_1_left_big_leg->start_x - ui_sign_function() * (vmc[((!wlr.direction) ? 1 : 0)].mp_fdb.xc * 300);
+	ui_g_1_left_small_leg->end_y = ui_g_1_left_big_leg->start_y - ui_sign_function() * (vmc[((!wlr.direction) ? 1 : 0)].mp_fdb.yc * 300);
 	
-	ui_g_1_right_big_leg->end_x = ui_g_1_right_big_leg->start_x - (vmc[((!wlr.direction) ? 0 : 1)].mp_fdb.xd * 300);
-	ui_g_1_right_big_leg->end_y = ui_g_1_right_big_leg->start_y - (vmc[((!wlr.direction) ? 0 : 1)].mp_fdb.yd * 300);
+	ui_g_1_right_big_leg->end_x = ui_g_1_right_big_leg->start_x + ui_sign_function() * (vmc[((!wlr.direction) ? 0 : 1)].mp_fdb.xd * 300);
+	ui_g_1_right_big_leg->end_y = ui_g_1_right_big_leg->start_y + ui_sign_function() * (vmc[((!wlr.direction) ? 0 : 1)].mp_fdb.yd * 300);
 	ui_g_1_right_small_leg->start_x = ui_g_1_right_big_leg->end_x;
 	ui_g_1_right_small_leg->start_y = ui_g_1_right_big_leg->end_y;
-	ui_g_1_right_small_leg->end_x = ui_g_1_right_big_leg->start_x - (vmc[((!wlr.direction) ? 0 : 1)].mp_fdb.xc * 300);
-	ui_g_1_right_small_leg->end_y = ui_g_1_right_big_leg->start_y - (vmc[((!wlr.direction) ? 0 : 1)].mp_fdb.yc * 300);
+	ui_g_1_right_small_leg->end_x = ui_g_1_right_big_leg->start_x + ui_sign_function() * (vmc[((!wlr.direction) ? 0 : 1)].mp_fdb.xc * 300);
+	ui_g_1_right_small_leg->end_y = ui_g_1_right_big_leg->start_y + ui_sign_function() * (vmc[((!wlr.direction) ? 0 : 1)].mp_fdb.yc * 300);
 	
 	ui_g_1_supercap_capcity->end_x = ui_g_1_supercap_capcity->start_x + (570.0f) * (supercap.volume_percent / 100.0f);
 	ui_g_1_supcap_voltage->number = (int)(supercap.volage * 1000.0f) / 100 * 100;
 	ui_update_g_1();
 	
-	ui_g_2_target_velocity->number = (int)(wlr.v_ref * 1000.0f) / 100 * 100;
+	ui_g_2_target_velocity->number = (int)(chassis_scale.keyboard * 1000.0f) / 100 * 100;
 	ui_g_2_current_velocity->number = (int)(wlr.v_fdb * 1000.0f) / 100 * 100;
 	
 	float yaw_err;
@@ -74,20 +85,31 @@ void ui_update(void)
 	
 	if(last_status_high != wlr.high_flag)
 		lowhz_cnt += 20;
+	if(last_status_jump != wlr.jump_flag && wlr.jump_flag == WLR_JUMP_ASCEND)
+		lowhz_cnt += 20;
+	if(last_status_sky != wlr.sky_flag && wlr.sky_flag == WLR_SKY_FOLDING)
+		lowhz_cnt += 20;
+	if(last_status_sky != wlr.sky_flag && wlr.sky_flag >= WLR_SKY_EXTENDING)
+		lowhz_cnt += 20;
 	if(wlr.side[0].fly_flag == 1 && wlr.side[1].fly_flag == 1)
-	{
 		fly_cnt += 20;
-//		lowhz_cnt += 25;
-	}
-	if(lowhz_cnt > 40)
-		lowhz_cnt = 40;
+	if(lowhz_cnt > 60)
+		lowhz_cnt = 60;
 	if(fly_cnt > 40)
 		fly_cnt = 40;
 	last_status_high = wlr.high_flag;
+	last_status_jump = wlr.jump_flag;
+	last_status_sky = wlr.sky_flag;
 	
 	if(lowhz_cnt > 0){
 		lowhz_cnt--;
-		if (wlr.high_flag == 0)
+		if(wlr.jump_flag == WLR_JUMP_ASCEND)
+			strcpy(ui_g_3_high_flag->string, "High");
+		else if(wlr.sky_flag == WLR_SKY_FOLDING)
+			strcpy(ui_g_3_high_flag->string, "Short");
+		else if(wlr.sky_flag > WLR_SKY_FOLDING)
+			strcpy(ui_g_3_high_flag->string, "Fly");
+		else if (wlr.high_flag == 0)
 			strcpy(ui_g_3_high_flag->string, "Low");
 		else if (wlr.high_flag == 1)
 			strcpy(ui_g_3_high_flag->string, "Mid");
@@ -95,13 +117,13 @@ void ui_update(void)
 			strcpy(ui_g_3_high_flag->string, "Man");
 		ui_update_g_3();
 	}
-	if(fly_cnt >= 10)
+	if(fly_cnt >= 15)
 	{
 		fly_cnt--;
 		strcpy(ui_g_4_fly_flag->string, "off_land");
 		ui_update_g_4();
 	}
-	else if(fly_cnt < 10 && fly_cnt > 0)
+	else if(fly_cnt < 15 && fly_cnt > 0)
 	{
 		fly_cnt--;	
 		strcpy(ui_g_4_fly_flag->string, "        ");

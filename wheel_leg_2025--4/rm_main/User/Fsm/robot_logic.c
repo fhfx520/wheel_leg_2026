@@ -257,8 +257,7 @@ static void kb_ter_ready_execute(void) {
 	if (check_key_trigger(KEY_C)) { fsm_change(&fsm_keyboard_sub, &state_kb_high); return; }
 	if (check_key_trigger(KEY_V)) { fsm_change(&fsm_keyboard_sub, &state_kb_ter_run); return; }
 	if (check_key_trigger(KEY_Z)) { fsm_change(&fsm_keyboard_sub, &state_kb_ascend); return; }
-	if (check_key_trigger(KEY_G)) { fsm_change(&fsm_keyboard_sub, &state_kb_double_ter_run); return; }
-	
+//	if (check_key_trigger(KEY_G)) { fsm_change(&fsm_keyboard_sub, &state_kb_double_ter_run); return; }
 }
 static const FsmState_t state_kb_ter_ready = { .name = "KB_TER_RDY", .enter = kb_ter_ready_enter, .execute = kb_ter_ready_execute };
 
