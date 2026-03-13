@@ -517,13 +517,13 @@ static void update_leg_height_and_balance(float yaw_error)
 		DO_LAST(wlr_both_legs_flying(),Last_cnt){     
 			if(wlr.direction == 0){
 				if(lqr.X_fdb[1] <= 0)
-					x3_balance_zero = x3_balance_zero_normal - 0.13f;
+					x3_balance_zero = x3_balance_zero_normal - 0.05f;
 				else
 					x3_balance_zero = x3_balance_zero_normal + 0.25f;	
 			}
 			else{
 				if(lqr.X_fdb[1] <= 0)
-					x3_balance_zero = x3_balance_zero_normal - 0.13f;
+					x3_balance_zero = x3_balance_zero_normal - 0.05f;
 				else
 					x3_balance_zero = x3_balance_zero_normal + 0.25f;	
 			}
@@ -533,10 +533,13 @@ static void update_leg_height_and_balance(float yaw_error)
         if (wlr_both_legs_flying()) {
             wlr.high_set = ramp_calc(&height_ramp, LegLengthFly);
             x3_balance_zero = 0.0f;
-        } else if (wlr.jump_flag == WLR_JUMP_IDLE && wlr.sky_flag == WLR_SKY_IDLE) {
+        } else if (wlr.jump_flag == WLR_JUMP_IDLE && wlr.sky_flag == WLR_SKY_IDLE && !wlr.energy_flag) {
             wlr.high_set = ramp_calc(&height_ramp, LegLengthNormal);
             x3_balance_zero = x3_balance_zero_normal;
         }
+		else if (wlr.energy_flag) {
+			wlr.high_set = 0.12f;
+		}
 		x5_balance_zero = 0.00f;
     }
 

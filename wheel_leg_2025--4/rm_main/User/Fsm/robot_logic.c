@@ -40,6 +40,7 @@ static const FsmState_t state_kb_ter_ready;
 static const FsmState_t state_kb_ter_run;
 static const FsmState_t state_kb_ascend;
 static const FsmState_t state_kb_double_ter_run;
+static const FsmState_t state_kb_energy;
 
 
 static FsmMachine_t fsm_remote_sub;   
@@ -295,6 +296,16 @@ static void kb_double_ter_execute(void) {
 //	if (check_key_trigger(KEY_F) || check_key_trigger(KEY_G)) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
 }
 static const FsmState_t state_kb_double_ter_run = { .name = "KB_DOUBLE_TER_RUN", .enter = kb_double_ter_enter, .execute = kb_double_ter_execute };
+
+static void kb_energy_enter(void) { g_robot_ctx.output.chassis = CHASSIS_EXECUTING_FOLLOW_ASCEND; }
+static void kb_energy_execute(void) {
+    g_robot_ctx.output.chassis = CHASSIS_ENERGY;
+    g_robot_ctx.output.gimbal = get_kb_gimbal_mode();
+    g_robot_ctx.output.shoot  = get_kb_shoot_mode();
+
+	
+}
+static const FsmState_t state_kb_energy = { .name = "KB_ENERGY", .enter = kb_energy_enter, .execute = kb_energy_execute };
 
 // =========================================================================
 // TOP LEVEL 大模式实现

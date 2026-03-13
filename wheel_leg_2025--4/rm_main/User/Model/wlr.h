@@ -83,6 +83,7 @@ typedef struct
 	
 	uint16_t s_wait;//定点wait
 	uint8_t direction;//当前前进方向 0为膝关节反向 1为膝关节正向
+	uint8_t energy_flag;
     //单侧控制参数
     struct
     {

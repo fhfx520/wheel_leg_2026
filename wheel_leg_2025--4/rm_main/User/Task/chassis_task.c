@@ -160,13 +160,14 @@ float gain_diff = 0.25f;
 static void chassis_execute_fsm(void)
 {
     rotate_flag = 0;
+	wlr.energy_flag = 0;
 
     switch (g_robot_ctx.output.chassis) {
         case CHASSIS_STOP:
 		{
             wlr.ctrl_mode = 0; 
             wlr.high_flag = 0;
-            wlr.jump_flag = 0;
+            wlr.jump_flag = WLR_JUMP_IDLE;
             wlr.sky_flag = WLR_SKY_IDLE;
             chassis.rescue_cnt_L = 0;
             chassis.rescue_cnt_R = 0;
@@ -180,7 +181,7 @@ static void chassis_execute_fsm(void)
 		{
             wlr.ctrl_mode = 2; 
             wlr.high_flag = 0; 
-            wlr.jump_flag = 0;
+            wlr.jump_flag = WLR_JUMP_IDLE;
             wlr.sky_flag = WLR_SKY_IDLE;
 			g_robot_ctx.sky_finish_flag = 0;
 			g_robot_ctx.jump_finish_flag = 0;
@@ -193,7 +194,7 @@ static void chassis_execute_fsm(void)
 		{
             wlr.ctrl_mode = 2;
             wlr.high_flag = 1; 
-            wlr.jump_flag = 0;
+            wlr.jump_flag = WLR_JUMP_IDLE;
             wlr.sky_flag = WLR_SKY_IDLE;
 			g_robot_ctx.sky_finish_flag = 0;
 			g_robot_ctx.jump_finish_flag = 0;
@@ -205,6 +206,7 @@ static void chassis_execute_fsm(void)
             wlr.ctrl_mode = 2;
             wlr.high_flag = 0; 
             rotate_flag = 1;   
+			wlr.jump_flag = WLR_JUMP_IDLE;
 			wlr.sky_flag = WLR_SKY_IDLE;
 			g_robot_ctx.sky_finish_flag = 0;
 			g_robot_ctx.jump_finish_flag = 0;
@@ -246,6 +248,7 @@ static void chassis_execute_fsm(void)
 				g_robot_ctx.sky_finish_flag = 1;
             break;
 		}
+		
 		case CHASSIS_ASCEND:
 		{
 			wlr.ctrl_mode = 2;
@@ -257,6 +260,7 @@ static void chassis_execute_fsm(void)
 				g_robot_ctx.jump_finish_flag = 1;
 			break;
 		}
+		
 		case CHASSIS_EXECUTING_FOLLOW_ASCEND:
 		{
 			wlr.ctrl_mode = 2;
@@ -275,6 +279,17 @@ static void chassis_execute_fsm(void)
 			
 			break;
 		}
+		
+		case CHASSIS_ENERGY:
+		{
+			wlr.ctrl_mode = 2;
+			wlr.high_flag = 0;
+			wlr.sky_flag = WLR_SKY_IDLE;
+			wlr.jump_flag = WLR_JUMP_IDLE;
+			wlr.energy_flag = 1;
+			break;
+		}
+		
         default:
 		{
             wlr.ctrl_mode = 0; 
@@ -412,6 +427,12 @@ static void chassis_data_input(void)
 				wlr.wz_ref += 2.0f;
             break;
         }
+		case CHASSIS_ENERGY:
+		{
+			wlr.yaw_ref = wlr.yaw_fdb;
+			wlr.wz_ref = 0.0f;
+			break;
+		}
         
         // UNFOLLOW 已经按照你的要求完全删除
         

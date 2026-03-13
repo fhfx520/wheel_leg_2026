@@ -56,6 +56,7 @@ typedef enum {
     CHASSIS_TERRAIN_EXECUTING,
 	CHASSIS_ASCEND,
 	CHASSIS_EXECUTING_FOLLOW_ASCEND,
+	CHASSIS_ENERGY,
 } ChassisState_e;
 
 typedef enum { 

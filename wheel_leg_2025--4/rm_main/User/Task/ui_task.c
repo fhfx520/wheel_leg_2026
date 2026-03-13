@@ -59,23 +59,24 @@ void ui_init(void)
 	ui_init_g_2();
 	ui_init_g_3();
 	ui_init_g_4();
+	ui_init_g_5();
 }
 
 void ui_update(void)
 {	
 	ui_g_1_left_big_leg->end_x = ui_g_1_left_big_leg->start_x - ui_sign_function() * (vmc[((!wlr.direction) ? 1 : 0)].mp_fdb.xd * 300);
-	ui_g_1_left_big_leg->end_y = ui_g_1_left_big_leg->start_y - ui_sign_function() * (vmc[((!wlr.direction) ? 1 : 0)].mp_fdb.yd * 300);
+	ui_g_1_left_big_leg->end_y = ui_g_1_left_big_leg->start_y - (vmc[((!wlr.direction) ? 1 : 0)].mp_fdb.yd * 300);
 	ui_g_1_left_small_leg->start_x = ui_g_1_left_big_leg->end_x;
 	ui_g_1_left_small_leg->start_y = ui_g_1_left_big_leg->end_y;
 	ui_g_1_left_small_leg->end_x = ui_g_1_left_big_leg->start_x - ui_sign_function() * (vmc[((!wlr.direction) ? 1 : 0)].mp_fdb.xc * 300);
-	ui_g_1_left_small_leg->end_y = ui_g_1_left_big_leg->start_y - ui_sign_function() * (vmc[((!wlr.direction) ? 1 : 0)].mp_fdb.yc * 300);
+	ui_g_1_left_small_leg->end_y = ui_g_1_left_big_leg->start_y - (vmc[((!wlr.direction) ? 1 : 0)].mp_fdb.yc * 300);
 	
 	ui_g_1_right_big_leg->end_x = ui_g_1_right_big_leg->start_x + ui_sign_function() * (vmc[((!wlr.direction) ? 0 : 1)].mp_fdb.xd * 300);
-	ui_g_1_right_big_leg->end_y = ui_g_1_right_big_leg->start_y + ui_sign_function() * (vmc[((!wlr.direction) ? 0 : 1)].mp_fdb.yd * 300);
+	ui_g_1_right_big_leg->end_y = ui_g_1_right_big_leg->start_y - (vmc[((!wlr.direction) ? 0 : 1)].mp_fdb.yd * 300);
 	ui_g_1_right_small_leg->start_x = ui_g_1_right_big_leg->end_x;
 	ui_g_1_right_small_leg->start_y = ui_g_1_right_big_leg->end_y;
 	ui_g_1_right_small_leg->end_x = ui_g_1_right_big_leg->start_x + ui_sign_function() * (vmc[((!wlr.direction) ? 0 : 1)].mp_fdb.xc * 300);
-	ui_g_1_right_small_leg->end_y = ui_g_1_right_big_leg->start_y + ui_sign_function() * (vmc[((!wlr.direction) ? 0 : 1)].mp_fdb.yc * 300);
+	ui_g_1_right_small_leg->end_y = ui_g_1_right_big_leg->start_y - (vmc[((!wlr.direction) ? 0 : 1)].mp_fdb.yc * 300);
 	
 	ui_g_1_supercap_capcity->end_x = ui_g_1_supercap_capcity->start_x + (570.0f) * (supercap.volume_percent / 100.0f);
 	ui_g_1_supcap_voltage->number = (int)(supercap.volage * 1000.0f) / 100 * 100;
@@ -123,17 +124,17 @@ void ui_update(void)
 	if(lowhz_cnt > 0){
 		lowhz_cnt--;
 		if(wlr.jump_flag == WLR_JUMP_ASCEND)
-			strcpy(ui_g_3_high_flag->string, "High");
+			strcpy(ui_g_3_high_flag->string, "High ");
 		else if(wlr.sky_flag == WLR_SKY_FOLDING)
 			strcpy(ui_g_3_high_flag->string, "Short");
 		else if(wlr.sky_flag > WLR_SKY_FOLDING)
-			strcpy(ui_g_3_high_flag->string, "Fly");
+			strcpy(ui_g_3_high_flag->string, "Fly  ");
 		else if (wlr.high_flag == 0)
-			strcpy(ui_g_3_high_flag->string, "Low");
+			strcpy(ui_g_3_high_flag->string, "Low  ");
 		else if (wlr.high_flag == 1)
-			strcpy(ui_g_3_high_flag->string, "Mid");
+			strcpy(ui_g_3_high_flag->string, "Mid  ");
 		else
-			strcpy(ui_g_3_high_flag->string, "Man");
+			strcpy(ui_g_3_high_flag->string, "Man  ");
 		ui_update_g_3();
 	}
 	if(fly_cnt >= 15)
