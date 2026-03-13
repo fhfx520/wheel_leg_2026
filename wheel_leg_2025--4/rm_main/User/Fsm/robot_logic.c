@@ -73,7 +73,7 @@ static ShootState_e get_kb_shoot_mode(void) {
 #define KEY_Q  	  (1<<6)
 #define KEY_R     (1<<8)
 #define KEY_F     (1<<9)
-#define KEY_G     (1<<10)
+//#define KEY_G     (1<<10)
 #define KEY_Z	  (1<<11)
 #define KEY_X	  (1<<12)
 #define KEY_C     (1<<13)
@@ -292,7 +292,7 @@ static void kb_double_ter_execute(void) {
     g_robot_ctx.output.shoot  = get_kb_shoot_mode();
 
 	if (g_robot_ctx.sky_finish_flag && g_robot_ctx.jump_finish_flag) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
-	if (check_key_trigger(KEY_F) || check_key_trigger(KEY_G)) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
+//	if (check_key_trigger(KEY_F) || check_key_trigger(KEY_G)) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
 }
 static const FsmState_t state_kb_double_ter_run = { .name = "KB_DOUBLE_TER_RUN", .enter = kb_double_ter_enter, .execute = kb_double_ter_execute };
 

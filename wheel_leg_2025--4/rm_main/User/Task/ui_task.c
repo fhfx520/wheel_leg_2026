@@ -14,6 +14,8 @@
 #include "control_def.h"
 #include "drv_dji_motor.h"
 #include "chassis_task.h"
+#include "board_comm.h"
+#include "container.h"
 
 us_time_t ui_time;
 int32_t lowhz_cnt;
@@ -26,6 +28,20 @@ static uint8_t last_status_ID_choice;
 static uint8_t last_status_ID_aiming;
 static uint8_t fly_flag;
 static uint8_t fly_cnt;
+
+static vision_data_t ui_get_vision_data_container;
+
+// 收到vision数据：
+static void vision_data_cb(uint32_t tag_id, void* data, size_t len) {
+	if(data == NULL || len != sizeof(vision_data_t))
+		return;
+    memcpy(&ui_get_vision_data_container,(vision_data_t*)data,len);
+}
+
+// --- 回调配置表  ---
+static const ContainerBusCfg mb_callback[] = {
+    { TAG_TRACE_VISION_DATA, vision_data_cb, NULL },
+};
 
 static int8_t ui_sign_function(void)
 {
@@ -81,6 +97,9 @@ void ui_update(void)
         ui_g_2_head_position->end_angle += 360.0f;
     if(ui_g_2_head_position->end_angle > 360.0f)
         ui_g_2_head_position->end_angle -= 360.0f;
+	
+	ui_g_2_vision_order_id->number = ID_judge;
+	ui_g_2_vision_trice_id->number = ui_get_vision_data_container.vision_trace_id;
 	ui_update_g_2();
 	
 	if(last_status_high != wlr.high_flag)
@@ -136,6 +155,7 @@ void ui_task(void const* argument)
 {
     uint32_t thread_wake_time = osKernelSysTick();
     ui_init();
+	container_bus_init(mb_callback, sizeof(mb_callback)/sizeof(ContainerBusCfg));
     for(int i = 0; i < 30; i++) {
         thread_wake_time = osKernelSysTick();
         ui_init();

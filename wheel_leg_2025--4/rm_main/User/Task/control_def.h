@@ -9,7 +9,7 @@
 #define KEY_CHASSIS_FIGHT_D     KB_D
 #define KEY_CHASSIS_ROTATE      KB_R
 
-#define KEY_VISION     			KB_Z
+#define KEY_VISION     			KB_G
 
 #define KEY_CHASSIS_POWER       KB_SHIFT
 
