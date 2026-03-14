@@ -101,6 +101,10 @@ void ui_update(void)
 	
 	ui_g_2_vision_order_id->number = ID_judge;
 	ui_g_2_vision_trice_id->number = ui_get_vision_data_container.vision_trace_id;
+	ui_g_2_current_shoot_mode->start_y = (wlr.energy_flag ? 638 : 673);
+	
+	ui_g_2_vision_frame->color = (ui_get_vision_data_container.vision_trace_id ? (ui_get_vision_data_container.vision_enanle ? 4 : 1) : 8);
+	
 	ui_update_g_2();
 	
 	if(last_status_high != wlr.high_flag)
@@ -149,6 +153,8 @@ void ui_update(void)
 		strcpy(ui_g_4_fly_flag->string, "        ");
 		ui_update_g_4();
 	}
+	
+	
 }
 
 uint32_t ui_update_cnt = 0;

@@ -174,6 +174,8 @@ static void chassis_execute_fsm(void)
             chassis.recover_flag = 0;
 			g_robot_ctx.sky_finish_flag = 0;
 			g_robot_ctx.jump_finish_flag = 0;
+			chassis.recover_flag = 0;
+			chassis.rescue_inter_flag = 0;
             break;
 		}
 
@@ -300,6 +302,8 @@ static void chassis_execute_fsm(void)
             chassis.rescue_cnt_R = 0;
             chassis.recover_flag = 0;
 			g_robot_ctx.sky_finish_flag = 0;
+			chassis.recover_flag = 0;
+			chassis.rescue_inter_flag = 0;
             break;
 		}
     }

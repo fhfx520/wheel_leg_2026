@@ -288,6 +288,13 @@ float K_Array_Leg_015[4][10] =
 {0.828513, 1.97044, 4.40068, 1.23965, -6.95988, -0.491726, 17.8717, 1.56178, -8.50666, -1.53403}
 };
 
+float K_Array_Energy[4][10] = 
+{{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+{0, 0, 0, 0, 34.2222, 3.22149, -14.0909, -0.889731, 0, 0},
+{0, 0, 0, 0, -14.0909, -0.889731, 34.2222, 3.22149, 0, 0}
+};
+
 float K_Array_Land[4][10] = 
 {{0, -3.09417, 0,0, -17.002, -2.25729, -4.68966, -0.890387, 0, 0},
 {0, -3.09417, 0, 0, -4.68966, -0.890387, -17.002, -2.25729, 0, 0},
@@ -539,6 +546,7 @@ static void update_leg_height_and_balance(float yaw_error)
         }
 		else if (wlr.energy_flag) {
 			wlr.high_set = 0.12f;
+			x3_balance_zero = x3_balance_zero_normal + 0.3f;
 		}
 		x5_balance_zero = 0.00f;
     }
@@ -834,6 +842,9 @@ static void select_control_matrix(void)
 	else if (rotate_flag == 1 || rotate_ramp_flag == 1) {					//小陀螺
         aMartix_Cover(lqr.K, (float*)K_Array_Leg_rotate, 4, 10);
     } 
+	else if(wlr.energy_flag) {
+		aMartix_Cover(lqr.K, (float*)K_Array_Energy, 4, 10);
+	}
 	else if (wlr.jump_flag == WLR_JUMP_ASCEND) {
         aMartix_Cover(lqr.K, (float*)K_Array_Leg_030, 4, 10);
     } 
@@ -1021,6 +1032,9 @@ static void map_virtual_force(uint8_t index)
          wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 10.0f
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
     } 
+	else if (wlr.energy_flag){
+		wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 10.0f;
+	}
 	else if (wlr.high_flag == 1){
         wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - ff_Fy_1
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
@@ -1047,7 +1061,7 @@ static void apply_output_limits(void)
         data_limit(&lqr.U_ref[i], -4.0f, 4.0f);
         
 
-        if (wlr.crash_flag || wlr.jump_flag == WLR_JUMP_RECOVER_SHORT) {
+        if (wlr.crash_flag || wlr.jump_flag == WLR_JUMP_RECOVER_SHORT || wlr.energy_flag) {
             lqr.U_ref[i] *= 0.0f;
         } else if ((wlr.crash_flag || wlr.jump_flag == WLR_JUMP_RECOVER_SHORT) && double_cnt > 0) {
             lqr.U_ref[i] *= 0.8f;

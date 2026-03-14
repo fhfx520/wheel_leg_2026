@@ -149,6 +149,8 @@ void vision_output_data(void)
 		bias_time_temp_buf = fdcan_board_comm.rx_msg.e.vision_data.vision_bias_time;
 		memcpy(&vision_tx_msg.bias_time, &bias_time_temp_buf, 4);
 		
+		vision_tx_msg.ID = fdcan_board_comm.rx_msg.e.vision_data.vision_ID;
+		
 		
 
     vision_tx_msg.mode_msg.shooter_speed = 3;

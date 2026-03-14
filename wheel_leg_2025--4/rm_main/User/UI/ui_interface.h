@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include "ui_types.h"
 #include "prot_judge.h"
+
 extern int ui_self_id;
 
 void print_message(const uint8_t* message, int length);

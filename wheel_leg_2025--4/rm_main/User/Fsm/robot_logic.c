@@ -79,6 +79,7 @@ static ShootState_e get_kb_shoot_mode(void) {
 #define KEY_X	  (1<<12)
 #define KEY_C     (1<<13)
 #define KEY_V     (1<<14)
+#define KEY_B     (1<<15)
 
 // =========================================================================
 // REMOTE 模式子状态机
@@ -203,6 +204,7 @@ static void kb_low_execute(void) {
     if (check_key_trigger(KEY_C)) { fsm_change(&fsm_keyboard_sub, &state_kb_high); return; }
 	if (check_key_trigger(KEY_F)) { fsm_change(&fsm_keyboard_sub, &state_kb_ter_ready); return; }
 	if (check_key_trigger(KEY_Z)) { fsm_change(&fsm_keyboard_sub, &state_kb_ascend); return; }
+	if (check_key_trigger(KEY_B)) { fsm_change(&fsm_keyboard_sub, &state_kb_energy); return; }
 }
 static const FsmState_t state_kb_low = { .name = "KB_LOW", .enter = kb_low_enter, .execute = kb_low_execute };
 
@@ -297,13 +299,13 @@ static void kb_double_ter_execute(void) {
 }
 static const FsmState_t state_kb_double_ter_run = { .name = "KB_DOUBLE_TER_RUN", .enter = kb_double_ter_enter, .execute = kb_double_ter_execute };
 
-static void kb_energy_enter(void) { g_robot_ctx.output.chassis = CHASSIS_EXECUTING_FOLLOW_ASCEND; }
+static void kb_energy_enter(void) { g_robot_ctx.output.chassis = CHASSIS_ENERGY; }
 static void kb_energy_execute(void) {
     g_robot_ctx.output.chassis = CHASSIS_ENERGY;
     g_robot_ctx.output.gimbal = get_kb_gimbal_mode();
     g_robot_ctx.output.shoot  = get_kb_shoot_mode();
 
-	
+	if (check_key_trigger(KEY_B)) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
 }
 static const FsmState_t state_kb_energy = { .name = "KB_ENERGY", .enter = kb_energy_enter, .execute = kb_energy_execute };
 

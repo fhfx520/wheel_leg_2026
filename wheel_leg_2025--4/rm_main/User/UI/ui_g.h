@@ -24,6 +24,7 @@ extern ui_interface_number_t *ui_g_2_current_velocity;
 extern ui_interface_number_t *ui_g_2_target_velocity;
 extern ui_interface_arc_t *ui_g_2_head_position;
 extern ui_interface_number_t *ui_g_2_vision_trice_id;
+extern ui_interface_rect_t *ui_g_2_vision_frame;
 extern ui_interface_number_t *ui_g_2_vision_order_id;
 extern ui_interface_round_t *ui_g_2_current_shoot_mode;
 
@@ -43,7 +44,6 @@ void ui_init_g_4();
 void ui_update_g_4();
 void ui_remove_g_4();
 
-extern ui_interface_rect_t *ui_g_5_vision_frame;
 extern ui_interface_string_t *ui_g_5_shoot_mode_aim;
 extern ui_interface_string_t *ui_g_5_shoot_mode_energy;
 
