@@ -102,11 +102,16 @@ static void gimbal_pid_calc(void)
         gimbal.start_up = 1;
 	
     gimbal.yaw_spd.ref = pid_calc(&gimbal.yaw_angle.pid, gimbal.yaw_angle.fdb + yaw_err, gimbal.yaw_angle.fdb);    
+	
+	//起身先转pitch yaw阻尼
+	if((!(fabsf(gimbal.pit_angle.ref - gimbal.pit_angle.fdb) < 0.03f) && !gimbal.start_up) && gimbal.start_cnt < 200)
+		 gimbal.yaw_spd.ref = 0.0f;
+	
     gimbal.yaw_spd.fdb = gimbal_imu.wz;
     gimbal.yaw_output = pid_calc(&gimbal.yaw_spd.pid, gimbal.yaw_spd.ref, gimbal.yaw_spd.fdb);//SMC
-	//起身先转pitch
-	if((!(fabsf(gimbal.pit_angle.ref - gimbal.pit_angle.fdb) < 0.03f) && !gimbal.start_up) && gimbal.start_cnt < 200)
-		gimbal.yaw_output = 0.0f;
+//	//起身先转pitch
+//	if((!(fabsf(gimbal.pit_angle.ref - gimbal.pit_angle.fdb) < 0.03f) && !gimbal.start_up) && gimbal.start_cnt < 200)
+//		gimbal.yaw_output = 0.0f;
 		
 //		if (gimbal.start_up == 0 && fabs(yaw_err)  > 0.03f)//-------------------->无云台控制下注释
 //       gimbal.yaw_output  *= 0.1f;

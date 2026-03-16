@@ -9,7 +9,7 @@
 #define KEY_CHASSIS_FIGHT_D     KB_D
 #define KEY_CHASSIS_ROTATE      KB_R
 
-#define KEY_VISION     			KB_G
+#define KEY_VISION     			KB_X
 
 #define KEY_CHASSIS_POWER       KB_SHIFT
 
@@ -31,7 +31,7 @@
 #define SUPERCAP_CHAGER_VOLAGE    23.6f
 #define SUPERCAP_DISCHAGER_VOLAGE	13.5f //超级电容放电电压下限
 
-#define CHASSIS_YAW_OFFSET  2976		//7427
+#define CHASSIS_YAW_OFFSET  3037		//7427
 #define CHASSIS_YAW_FIGHT   ((CHASSIS_YAW_OFFSET + 8192/4) % 8192)
 #define CHASSIS_ROTATE_SPEED  11.0f //rad/s --- 7.5
 

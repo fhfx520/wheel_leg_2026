@@ -78,7 +78,7 @@ const float Hinge_gas_Lengh = 0.0481f;//大小腿转轴到气弹簧固定支座�
 	
 
 float x3_balance_zero = 0.08f, x5_balance_zero = 0.040f;//腿摆角角度偏置   负值：腿摆角向膝关节方向偏	正值：腿摆角向膝关节反方向偏
-const float x3_balance_zero_normal = 0.01f; //车头朝前正常情况偏置
+const float x3_balance_zero_normal = 0.03f; //车头朝前正常情况偏置
 
 float Normal_balance_zero 		 = 0.08f  ;
 float High_balance_zero 		 = 0.10f   ; 

@@ -33,7 +33,6 @@ extern float yw_ddot;
 extern float Fwy;
 extern float F_test[2];
 extern float F_wy[2];
-extern float variable_rotate_vw;
 extern int32_t Last_cnt;
 extern chassis_scale_t chassis_scale;
 void log_scope_data_pkg(void)
@@ -229,7 +228,6 @@ void log_scope_data_pkg(void)
 			log_scope_get_data(wlr.yaw_fdb);
 			log_scope_get_data(wlr.yaw_ref);
 			log_scope_get_data(chassis_imu.pit);
-			log_scope_get_data(variable_rotate_vw);
 			log_scope_get_data(lqr.U_ref[0]);
 			break;
 		}

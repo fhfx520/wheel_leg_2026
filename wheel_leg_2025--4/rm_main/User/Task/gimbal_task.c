@@ -37,6 +37,8 @@ gimbal_scale_t gimbal_scale = {
 gimbal_t gimbal;
 gimbal_stable_t gimbal_stable;
 
+extern gimbal_data_t gimbal_data_rec;
+
 static gimbal_data_t gimbal_get_gimbal_data_container;
 static vision_data_t gimbal_get_vision_data_container;
 
@@ -269,7 +271,7 @@ static void gimbal_execute_fsm(void)
 		case GIMBAL_MOUSE_CONTROL:
 		case GIMBAL_AUTO_AIM:
 		{
-			gimbal.yaw_output = gimbal_get_gimbal_data_container.yaw_output;
+			gimbal.yaw_output = gimbal_data_rec.yaw_output;
 		}break;
 		default : break;
 	}

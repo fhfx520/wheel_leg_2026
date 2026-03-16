@@ -52,8 +52,8 @@ kalman_filter_t kal_fusion_vel;
 FGT_sin_t FGT_sin_chassis;
 chassis_t chassis;
 
-float variable_rotate_vw;
-float imu_pitch_offset = 0.115f;
+float imu_pitch_offset = 0.0100252042f;
+float up_ready;
 
 chassis_scale_t chassis_scale = {
     .remote = 1.0f/660*2.5f,
@@ -87,12 +87,12 @@ static void chassis_ramp(void)
     }
 }
 
-static void variable_vw_generate(float target_speed)
+static float variable_vw_generate(float target_speed)
 {
     static uint32_t dwt_count;
     static float t;
     t += DWT_GetDeltaT(&dwt_count);
-    variable_rotate_vw = target_speed * fabsf(sinf(1.5f * PI * t + PI / 3.0f));
+    return (target_speed * fabsf(sinf(1.5f * PI * t + PI / 3.0f)));
 }
 
 static void Fusion_Vel_Acc_Init(void)
@@ -172,10 +172,11 @@ static void chassis_execute_fsm(void)
             chassis.rescue_cnt_L = 0;
             chassis.rescue_cnt_R = 0;
             chassis.recover_flag = 0;
-			g_robot_ctx.sky_finish_flag = 0;
-			g_robot_ctx.jump_finish_flag = 0;
 			chassis.recover_flag = 0;
 			chassis.rescue_inter_flag = 0;
+			up_ready=0;
+			g_robot_ctx.sky_finish_flag = 0;
+			g_robot_ctx.jump_finish_flag = 0;
             break;
 		}
 
@@ -338,7 +339,9 @@ ChassisState_e last_chassis_mode = CHASSIS_STOP;   // [修改] 替换为 FSM 类
 // 完全基于 FSM ChassisState_e 进行解算
 // ==============================================================================
 static void chassis_data_input(void)
-{
+{	
+	static float base_yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
+	
     spin_limit = circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, (float)yaw_motor.ecd / 8192 * 2 * PI, 2 * PI);
 
     // 1. 速度输入算算 (基于大模式)
@@ -362,6 +365,7 @@ static void chassis_data_input(void)
         case CHASSIS_STOP: {
             wlr.yaw_ref = (float)yaw_motor.ecd / 8192 * 2 * PI;
             wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;
+			base_yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
             wlr.wz_ref = 0;
             break;
         }
@@ -376,16 +380,24 @@ static void chassis_data_input(void)
                 wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
             else                    
                 wlr.yaw_ref = (float)yaw_motor.ecd / 8192 * 2  * PI;  
-
+			
+			if(key_scan_clear(KB_CTRL) && gimbal.start_up)
+				base_yaw_ref -= PI;
+			if(base_yaw_ref < 0) base_yaw_ref += 2 * PI;
+			else if(base_yaw_ref > 2 * PI) base_yaw_ref -= 2 * PI;
+			
             wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;  
             wlr.wz_ref = 0.0f;
-            wlr.yaw_err = circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
+			if(gimbal.start_up)
+				wlr.yaw_err = circle_error(base_yaw_ref, wlr.yaw_fdb, 2 * PI);
+			else 
+				wlr.yaw_err = 0.0f;
             
-            if (wlr.yaw_err > PI / 2 || wlr.yaw_err < - PI / 2 || (check_key_trigger(KEY_CTRL) && wlr.direction == 0)) {
+            if (wlr.yaw_err > PI / 2 || wlr.yaw_err < - PI / 2) {
                 wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI ;
                 wlr.direction = 1;
             }
-            else if(wlr.yaw_err < PI / 2 || wlr.yaw_err > - PI / 2 || (check_key_trigger(KEY_CTRL) && wlr.direction == 1)) {
+            else if(wlr.yaw_err < PI / 2 || wlr.yaw_err > - PI / 2 ) {
 				wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI ;
                 wlr.direction = 0;
             }
@@ -429,6 +441,9 @@ static void chassis_data_input(void)
 				wlr.wz_ref += 2.5f;	
 			else if (supercap.volume_percent < 70.0f)
 				wlr.wz_ref += 2.0f;
+			
+			if(g_robot_ctx.input.kb.bit.SHIFT)//按住shift开启变速小陀螺
+				wlr.wz_ref = variable_vw_generate(wlr.wz_ref);
             break;
         }
 		case CHASSIS_ENERGY:
@@ -717,6 +732,7 @@ static void chassis_self_rescue(void)
 		chassis.rescue_cnt_L = 0;
 		chassis.rescue_cnt_R = 0;
 		chassis.recover_flag = 2; 
+//		chassis.recover_flag = 0; 
 		chassis.rescue_inter_flag = 0;
 		wlr.high_flag = 0;
 		up_ready=0;
@@ -850,7 +866,7 @@ void chassis_task(void const *argu)
             wlr_control();
         else
             chassis_init(); // 恢复你的原有保护调用
-        
+		
         // 5. 将算好的力矩下发到电机
         chassis_data_output();
 		

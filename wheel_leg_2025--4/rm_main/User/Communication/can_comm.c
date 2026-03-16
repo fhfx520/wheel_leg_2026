@@ -120,8 +120,8 @@ void can_comm_init(void)
     fdcan_tx_message.MessageMarker = 0;
 	
     //driver init 0.01993943
-	dm_motor_init(&joint_motor[0], CAN_CHANNEL_1, JOINT_LB_CMD_ID, -0.343880326f, JOINT_LB_REC_ID);//LB -0.27579996 -0.313300014
-	dm_motor_init(&joint_motor[1], CAN_CHANNEL_1, JOINT_LS_CMD_ID, 5.53948498f, JOINT_LS_REC_ID);//LS 0.564670026 5.52884054
+	dm_motor_init(&joint_motor[0], CAN_CHANNEL_1, JOINT_LB_CMD_ID, -0.328541428f, JOINT_LB_REC_ID);//LB -0.27579996 -0.313300014
+	dm_motor_init(&joint_motor[1], CAN_CHANNEL_1, JOINT_LS_CMD_ID, 4.9667263f, JOINT_LS_REC_ID);//LS 0.564670026 5.52884054
 	dm_motor_init(&joint_motor[2], CAN_CHANNEL_1, JOINT_RB_CMD_ID, 4.54015017f, JOINT_RB_REC_ID);//RB 4.47119999 4.52866888
 	dm_motor_init(&joint_motor[3], CAN_CHANNEL_1, JOINT_RS_CMD_ID, 2.38268852f, JOINT_RS_REC_ID);//RS 2.62299991 2.3627491
 	
