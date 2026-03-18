@@ -217,6 +217,7 @@ static void kb_fight_execute(void) {
 
     if (check_key_trigger(KEY_W) || check_key_trigger(KEY_S)) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
     if (check_key_trigger(KEY_R)) { fsm_change(&fsm_keyboard_sub, &state_kb_spin); return; }
+	if (check_key_trigger(KEY_B)) { fsm_change(&fsm_keyboard_sub, &state_kb_energy); return; }
 }
 static const FsmState_t state_kb_fight = { .name = "KB_FIGHT", .enter = kb_fight_enter, .execute = kb_fight_execute };
 

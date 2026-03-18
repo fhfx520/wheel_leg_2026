@@ -78,7 +78,7 @@ const float Hinge_gas_Lengh = 0.0481f;//大小腿转轴到气弹簧固定支座�
 	
 
 float x3_balance_zero = 0.08f, x5_balance_zero = 0.040f;//腿摆角角度偏置   负值：腿摆角向膝关节方向偏	正值：腿摆角向膝关节反方向偏
-const float x3_balance_zero_normal = 0.03f; //车头朝前正常情况偏置
+const float x3_balance_zero_normal = 0.02f; //车头朝前正常情况偏置
 
 float Normal_balance_zero 		 = 0.08f  ;
 float High_balance_zero 		 = 0.10f   ; 
@@ -415,6 +415,7 @@ pid_t pid_leg_length_fly[2];
 pid_t pid_roll;
 pid_t pid_L_test[2];
 pid_t pid_rotate_leg[2];
+pid_t pid_energy_leg[2];
 static float wlr_fn_calc(float az, float Fy_fdb, float T0_fdb, float L0[3], float theta[3])
 {
     Fwy = Fy_fdb * cosf(theta[0]) + T0_fdb * sinf(theta[0]) / L0[0];//轮子受到腿部机构竖直方向的作用力
@@ -663,7 +664,7 @@ static void handle_jump_state(void)
 			wlr.crash_flag = 0;
 			wlr.high_flag = 0;
 			chassis.recover_flag = 1;
-			chassis.rescue_cnt_R = chassis.rescue_cnt_L = 70;
+			chassis.rescue_cnt_R = chassis.rescue_cnt_L = 150;
 //			chassis.rescue_inter_flag = 2;
 		 }
 	}
@@ -725,7 +726,7 @@ static void handle_sky_state(void)
 		
     } else if (wlr.sky_flag == WLR_SKY_EXTENDING) {
         wlr.high_set = 0.35f;
-        x3_balance_zero = 0.1f;
+        x3_balance_zero = 0.15f;
         x5_balance_zero = 0.1f;
         if (fabs(0.30f - vmc[0].L_fdb) < 0.02f && fabs(0.30f - vmc[1].L_fdb) < 0.02f) {
             wlr.sky_cnt++;
@@ -758,12 +759,26 @@ static void handle_sky_state(void)
     } 
 	else if(wlr.sky_flag == WLR_SKY_STAND)
 	{
-		wlr.high_set = ramp_calc(&sky_height_ramp, 0.25f);
-		x3_balance_zero = x3_balance_zero_normal;
+		wlr.high_set = ramp_calc(&sky_height_ramp, 0.18f);
+		DO_LAST(!wlr.sky_cnt,100){
+			wlr.sky_cnt++;
+			data_limit(&wlr.v_ref,-1.0f,1.0f);
+			x3_balance_zero = x3_balance_zero_normal - 0.13f;
+		};
         x5_balance_zero = 0.0f;
+		if(wlr.sky_cnt >= 100)
+		{
+			x3_balance_zero = x3_balance_zero_normal;
+			wlr.sky_over = 1;
+		}
 	}
 	else if(wlr.sky_flag == WLR_SKY_IDLE) {
+		wlr.sky_over = 0;
+		wlr.sky_cnt = 0;
 		sky_height_ramp.out = 0.23f;
+		x3_balance_zero = x3_balance_zero_normal;
+		x5_balance_zero = 0.0f;
+		
 	}
 	
 //	if (wlr.jump_flag == WLR_JUMP_IDLE && wlr.sky_flag == WLR_SKY_IDLE) {
@@ -936,12 +951,12 @@ static void update_fly_state(uint8_t index, float yaw_err)
 //        && wlr.jump_flag == WLR_JUMP_IDLE && double_cnt <= 0 && chassis.recover_flag == 0
 //        && wlr.sky_over == 0 && wlr.sky_flag == WLR_SKY_IDLE && KEY_PRESS_POWER && yaw_err < 0.5f) {
 
-    if ( fabs(chassis_imu.pit) < 0.50f &&  wlr.side[index].Fn_kal < 155.0f && rotate_flag == 0 && wlr.high_flag == 1 && chassis.recover_flag == 0
+    if ( fabs(chassis_imu.pit) < 0.50f &&  wlr.side[index].Fn_kal < 160.0f && rotate_flag == 0 && wlr.high_flag == 1 && chassis.recover_flag == 0
 		&& (wlr.sky_flag == WLR_SKY_IDLE) && (wlr.sky_flag == WLR_JUMP_IDLE) && (yaw_err < 0.5f || 1))  {
         wlr.side[index].fly_cnt += 30;
     } else if (wlr.side[index].fly_cnt > 0) {
         wlr.side[index].fly_cnt -= 5;
-        if (wlr.side[index].Fn_kal > 160.0f) {
+        if (wlr.side[index].Fn_kal > 165.0f) {
             wlr.side[index].fly_cnt -= 40;
         }
         if (wlr.side[index].fly_cnt < 0) {
@@ -1033,7 +1048,7 @@ static void map_virtual_force(uint8_t index)
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
     } 
 	else if (wlr.energy_flag){
-		wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 10.0f;
+		wlr.side[index].Fy = pid_calc(&pid_energy_leg[index], tlm.l_ref[index], vmc[index].L_fdb);
 	}
 	else if (wlr.high_flag == 1){
         wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - ff_Fy_1
@@ -1107,6 +1122,7 @@ void wlr_init(void)
         pid_init(&pid_L_test[i], NONE, 800, 2.0, 60000, 70, 300);					//日常腿长pid
 		pid_init(&pid_rescue[i], NONE, 2.0f, 0.5f, 0, 45, 50);						//翻倒起身腿转速pid
 		pid_init(&pid_rotate_leg[i], NONE, 1500.0f, 0.0f, 40000.0f, 0, 300);		
+		pid_init(&pid_energy_leg[i], NONE, 1000.0f, 0.0f, 40000.0f, 0, 300);
 	}
 	pid_init(&pid_roll, NONE, 400, 0, 10000, 0, 50);								//roll偏移支持力补偿
 	//卡尔曼滤波器初始化

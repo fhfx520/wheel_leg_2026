@@ -8,7 +8,7 @@
 #define FDCAN_CHA_TO_GIMBAL_ID		 0x001
 #define FDCAN_GIMBAL_TO_CHA_ID		 0x011
 
-
+#define TAG_VTM_REMOTE_DATA     0x05
 #define TAG_VTM_KEYBOARD_DATA 	0x10
 #define TAG_GIMBAL_OUTPUT_DATA 	0x20
 #define TAG_TRACE_VISION_DATA	0x30
@@ -78,6 +78,20 @@ typedef struct
         uint8_t buff[FDCAN_BOARD_DATA_LEN];
 		struct
 		{
+			struct //8bytes
+			{
+				uint16_t channel_0 : 11;
+				uint16_t channel_1 : 11;
+				uint16_t channel_2 : 11;
+				uint16_t channel_3 : 11;
+				uint8_t sw		   :  2;
+				uint8_t pause_key  :  1;
+				uint8_t left_key   :  1;
+				uint8_t right_key  :  1;
+				uint16_t dial	   : 11;
+				uint8_t trigger	   :  1;
+				uint8_t empty	   :  3;
+			} data_remote;
 			struct //10bytes
 			{
 				struct
@@ -107,7 +121,7 @@ typedef struct
 				uint8_t vision_online;
 			}vision_data;//视觉数据
 			//保留
-			uint8_t reserved[FDCAN_BOARD_DATA_LEN - 16];
+			uint8_t reserved[FDCAN_BOARD_DATA_LEN - 24];
 		} e;
     } rx_msg;
 	
@@ -129,6 +143,21 @@ typedef struct
 		} e;
 	} tx_msg;
 }fdcan_board_comm_t;
+
+typedef struct //8bytes
+{
+	uint16_t channel_0 : 11;
+	uint16_t channel_1 : 11;
+	uint16_t channel_2 : 11;
+	uint16_t channel_3 : 11;
+	uint8_t sw		   :  2;
+	uint8_t pause_key  :  1;
+	uint8_t left_key   :  1;
+	uint8_t right_key  :  1;
+	uint16_t dial	   : 11;
+	uint8_t trigger	   :  1;
+	uint8_t empty	   :  3;
+} data_remote_t;
 
 typedef struct
 {

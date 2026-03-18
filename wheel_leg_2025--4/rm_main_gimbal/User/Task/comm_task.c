@@ -20,7 +20,7 @@ void comm_task(void const *argument)
 
 //∆Ù”√–¬≤¶≈Ã4005
 //	start_MG4005_motor(&hfdcan3,SHOOT_CAN_ID_MG4005);//0x142
-	dm_motor_set_control_cmd(&pit_motor, CMD_RESET_MODE);
+//	dm_motor_set_control_cmd(&pit_motor, CMD_RESET_MODE);
 
 //	dm_motor_init(&trigger_motor_2325, CAN_CHANNEL_3, 0x01, 0.0f, 0x00);//B 3.480
     for (;;)

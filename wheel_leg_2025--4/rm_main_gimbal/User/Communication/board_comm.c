@@ -145,6 +145,8 @@ void board_comm_send_data(void){
 //fdcan板间通信下发数据
 void fdcan_board_comm_send(void)
 {
+	//vtm遥控数据
+	memcpy(&fdcan_board_comm.tx_msg.e.data_remote,&vtm.vtm_data.remote_data,sizeof(vtm.vtm_data.remote_data));
 //	//图传链路键鼠数据
 	memcpy(&fdcan_board_comm.tx_msg.e.data_keyboard.mouse_data,&vtm.vtm_data.mouse_data,sizeof(vtm.vtm_data.mouse_data));
 	fdcan_board_comm.tx_msg.e.data_keyboard.key_code = vtm.vtm_data.kb.key_code;

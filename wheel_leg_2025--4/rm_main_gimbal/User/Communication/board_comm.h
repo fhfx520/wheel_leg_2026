@@ -200,6 +200,20 @@ typedef struct
         uint8_t buff[FDCAN_BOARD_DATA_LEN];
 		struct
 		{
+			struct 
+			{
+				uint16_t channel_0 : 11;
+				uint16_t channel_1 : 11;
+				uint16_t channel_2 : 11;
+				uint16_t channel_3 : 11;
+				uint8_t sw		   :  2;
+				uint8_t pause_key  :  1;
+				uint8_t left_key   :  1;
+				uint8_t right_key  :  1;
+				uint16_t dial	   : 11;
+				uint8_t trigger	   :  1;
+				uint8_t empty	   :  3;
+			} data_remote;
 			struct //10bytes
 			{
 				struct
@@ -229,7 +243,7 @@ typedef struct
 				uint8_t vision_online;
 			}vision_data;//视觉数据
 			//保留
-			uint8_t reserved[FDCAN_BOARD_DATA_LEN - 16];
+			uint8_t reserved[FDCAN_BOARD_DATA_LEN - 24];
 		} e;
     } tx_msg;
 	union

@@ -3,6 +3,7 @@
 #include "prot_judge.h"
 #include "string.h"
 #include "data_log.h"
+#include "prot_vtm.h"
 
 #define DEBUG_DATA_LEN 10
 #define JUDGE_DATA_LEN 150
@@ -10,6 +11,7 @@
 uint8_t dr16_dma_rx_buf[DR16_DATA_LEN];
 uint8_t debug_dma_rx_buf[DEBUG_DATA_LEN];
 uint8_t judge_data_rx_buf[JUDGE_DATA_LEN];
+uint8_t vtm_data_rx_buf[VTM_DATA_LEN];
 
 /*
  * @brief  串口初始化，开启空闲中断并开始DMA接收数据
@@ -17,21 +19,26 @@ uint8_t judge_data_rx_buf[JUDGE_DATA_LEN];
  */
 void usart_comm_init(void)
 {
-    __HAL_UART_CLEAR_IDLEFLAG(&DEBUG_HUART);
-    __HAL_UART_ENABLE_IT(&DEBUG_HUART, UART_IT_IDLE);
-    HAL_UART_Receive_DMA(&DEBUG_HUART, debug_dma_rx_buf, DEBUG_DATA_LEN);
-    log_init(&DEBUG_HUART);
+//    __HAL_UART_CLEAR_IDLEFLAG(&DEBUG_HUART);
+//    __HAL_UART_ENABLE_IT(&DEBUG_HUART, UART_IT_IDLE);
+//    HAL_UART_Receive_DMA(&DEBUG_HUART, debug_dma_rx_buf, DEBUG_DATA_LEN);
+//    log_init(&DEBUG_HUART);
 	
 	__HAL_UART_CLEAR_IDLEFLAG(&JUDGE_HUART);
     __HAL_UART_ENABLE_IT(&JUDGE_HUART, UART_IT_IDLE);
     HAL_UART_Receive_DMA(&JUDGE_HUART, judge_data_rx_buf, JUDGE_DATA_LEN);
     judge_init(&JUDGE_HUART);
 	
+	__HAL_UART_CLEAR_IDLEFLAG(&VTM_HUART);
+    __HAL_UART_ENABLE_IT(&VTM_HUART, UART_IT_IDLE);
+    HAL_UART_Receive_DMA(&VTM_HUART, vtm_data_rx_buf, VTM_DATA_LEN);
+    judge_init(&VTM_HUART);
 	
-	//1111添加遥控器
-	  __HAL_UART_CLEAR_IDLEFLAG(&DBUS_HUART);
-    __HAL_UART_ENABLE_IT(&DBUS_HUART, UART_IT_IDLE);
-    HAL_UART_Receive_DMA(&DBUS_HUART, dr16_dma_rx_buf, DR16_DATA_LEN);
+	
+//	//1111添加遥控器
+//	  __HAL_UART_CLEAR_IDLEFLAG(&DBUS_HUART);
+//    __HAL_UART_ENABLE_IT(&DBUS_HUART, UART_IT_IDLE);
+//    HAL_UART_Receive_DMA(&DBUS_HUART, dr16_dma_rx_buf, DR16_DATA_LEN);
 	
 	
 }
@@ -45,23 +52,28 @@ void usart_user_handler(UART_HandleTypeDef *huart)
     if (__HAL_UART_GET_FLAG(huart, UART_FLAG_IDLE) != RESET) {
         __HAL_UART_CLEAR_IDLEFLAG(huart);
         HAL_UART_AbortReceive(huart);
+		if(huart == &VTM_HUART)
+		{
+			vtm_get_data(vtm_data_rx_buf);
+			HAL_UART_Receive_DMA(&VTM_HUART, vtm_data_rx_buf, VTM_DATA_LEN);
+		}
         
-//            if (huart == &DEBUG_HUART) {
-//            ;
-//            }
-//        }  
+////            if (huart == &DEBUG_HUART) {
+////            ;
+////            }
+////        }  
 
-//1111加了遥控器的中断
-        if (huart == &DBUS_HUART) {
-            dr16_get_data(&rc, dr16_dma_rx_buf);
-            HAL_UART_Receive_DMA(huart, dr16_dma_rx_buf, DR16_DATA_LEN);
-//        } else if (huart == &JUDGE_HUART) {
-//            judge_get_data(judge_data_rx_buf);
-//            HAL_UART_Receive_DMA(huart, judge_data_rx_buf, JUDGE_DATA_LEN);
-        } else if (huart == &DEBUG_HUART) {
-						dr16_get_data(&rc,debug_dma_rx_buf);
-						HAL_UART_Receive_DMA(huart, debug_dma_rx_buf, DEBUG_DATA_LEN);
-        }
+////1111加了遥控器的中断
+//        if (huart == &DBUS_HUART) {
+//            dr16_get_data(&rc, dr16_dma_rx_buf);
+//            HAL_UART_Receive_DMA(huart, dr16_dma_rx_buf, DR16_DATA_LEN);
+////        } else if (huart == &JUDGE_HUART) {
+////            judge_get_data(judge_data_rx_buf);
+////            HAL_UART_Receive_DMA(huart, judge_data_rx_buf, JUDGE_DATA_LEN);
+//        } else if (huart == &DEBUG_HUART) {
+//						dr16_get_data(&rc,debug_dma_rx_buf);
+//						HAL_UART_Receive_DMA(huart, debug_dma_rx_buf, DEBUG_DATA_LEN);
+//        }
     }
 
 }

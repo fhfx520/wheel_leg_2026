@@ -350,7 +350,7 @@
         <Ww>
           <count>6</count>
           <WinNumber>2</WinNumber>
-          <ItemText>shoot</ItemText>
+          <ItemText>shoot,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>7</count>
@@ -406,6 +406,41 @@
           <count>17</count>
           <WinNumber>2</WinNumber>
           <ItemText>gimbal.start_up</ItemText>
+        </Ww>
+        <Ww>
+          <count>18</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>\\rm_main\../User/Model/leg_vmc.c\vmc[0].quadrant</ItemText>
+        </Ww>
+        <Ww>
+          <count>19</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>\\rm_main\../User/Model/leg_vmc.c\vmc[1].quadrant</ItemText>
+        </Ww>
+        <Ww>
+          <count>20</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>data_keyboard_rec</ItemText>
+        </Ww>
+        <Ww>
+          <count>21</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>modesw_get_remote_data_container</ItemText>
+        </Ww>
+        <Ww>
+          <count>22</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>data_remote_rec,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>23</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>vtm,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>24</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>\\rm_main\../User/Task/shoot_task.c\shoot.trigger_period</ItemText>
         </Ww>
       </WatchWindow2>
       <MemoryWindow1>

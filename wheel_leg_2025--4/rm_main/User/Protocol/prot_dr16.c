@@ -22,6 +22,7 @@
 //#define RC_RIGHT_LD_CH_VALUE ( rc.ch2 < -500 && rc.ch1 < -500 )   //居左下
 
 dr16_t rc;
+dr16_t vtm;
 int kb_status[15] = {0};
 
 /*

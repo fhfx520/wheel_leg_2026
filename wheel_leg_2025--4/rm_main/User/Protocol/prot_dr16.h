@@ -202,6 +202,7 @@ typedef enum
 } rc_key_status_e;
 
 extern dr16_t rc;
+extern dr16_t vtm;
 extern int kb_status[15];
 
 uint8_t dr16_get_data(dr16_t *rc, uint8_t *data);

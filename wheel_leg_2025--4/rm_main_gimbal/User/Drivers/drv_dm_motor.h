@@ -20,10 +20,10 @@
 //#define KD_MAX 5.0f
 //#define T_MIN -54.0f    // N*m 18
 //#define T_MAX 54.0f
-#define P_MIN -12.5f   // Radians
-#define P_MAX 12.5f
-#define V_MIN -200.0f    // Rad/s
-#define V_MAX 200.0f
+#define P_MIN -12.56637f   // Radians
+#define P_MAX 12.56637f
+#define V_MIN -30.0f    // Rad/s
+#define V_MAX 30.0f
 #define KP_MIN 0.0f     // N*m/rad
 #define KP_MAX 500.0f
 #define KD_MIN 0.0f     // N*m/rad/s

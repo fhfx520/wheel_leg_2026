@@ -51,7 +51,7 @@ static int8_t ui_sign_function(void)
 
 extern chassis_scale_t chassis_scale;
 
-float armour_center;
+float armour_center,start_angle,end_angle;
 
 void ui_init(void)
 {
@@ -87,17 +87,21 @@ void ui_update(void)
 	
 	float yaw_err;
     yaw_err = circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, (float)yaw_motor.ecd / 8192 * 2 * PI, 2 * PI);
-    armour_center = -1.0f * yaw_err * 180.0f / PI + 180.0f;
-	ui_g_2_head_position->start_angle = armour_center - 15.0f;     
-	if(ui_g_2_head_position->start_angle < 0.0f)
-        ui_g_2_head_position->start_angle += 360.0f;
-    if(ui_g_2_head_position->start_angle > 360.0f)
-        ui_g_2_head_position->start_angle -= 360.0f;
-    ui_g_2_head_position->end_angle = armour_center + 15.0f; 	
-    if(ui_g_2_head_position->end_angle < 0.0f)
-        ui_g_2_head_position->end_angle += 360.0f;
-    if(ui_g_2_head_position->end_angle > 360.0f)
-        ui_g_2_head_position->end_angle -= 360.0f;
+    armour_center = yaw_err * 180.0f / PI;
+	
+	start_angle = armour_center - 30.0f;
+	if(start_angle < 0.0f)
+        start_angle += 360.0f;
+    if(start_angle > 360.0f)
+        start_angle -= 360.0f;
+	ui_g_2_head_position->start_angle = start_angle;     
+
+	end_angle = armour_center + 30.0f;
+	if(end_angle < 0.0f)
+        end_angle += 360.0f;
+    if(end_angle > 360.0f)
+        end_angle -= 360.0f;
+    ui_g_2_head_position->end_angle = end_angle; 	
 	
 	ui_g_2_vision_order_id->number = ID_judge;
 	ui_g_2_vision_trice_id->number = ui_get_vision_data_container.vision_trace_id;
@@ -119,8 +123,8 @@ void ui_update(void)
 		fly_cnt += 20;
 	if(lowhz_cnt > 60)
 		lowhz_cnt = 60;
-	if(fly_cnt > 40)
-		fly_cnt = 40;
+	if(fly_cnt > 20)
+		fly_cnt = 20;
 	last_status_high = wlr.high_flag;
 	last_status_jump = wlr.jump_flag;
 	last_status_sky = wlr.sky_flag;
@@ -141,15 +145,14 @@ void ui_update(void)
 			strcpy(ui_g_3_high_flag->string, "Man  ");
 		ui_update_g_3();
 	}
-	if(fly_cnt >= 15)
+	if(fly_cnt > 0)
 	{
 		fly_cnt--;
 		strcpy(ui_g_4_fly_flag->string, "off_land");
 		ui_update_g_4();
 	}
-	else if(fly_cnt < 15 && fly_cnt > 0)
+	else
 	{
-		fly_cnt--;	
 		strcpy(ui_g_4_fly_flag->string, "        ");
 		ui_update_g_4();
 	}

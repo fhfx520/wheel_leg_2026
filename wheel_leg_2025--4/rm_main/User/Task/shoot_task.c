@@ -23,7 +23,7 @@
 
 static float Heat_ShootPeriod_calc(void);
 
-float MIN_HEAT = 50;        //热量控制裕量
+float MIN_HEAT = 30;        //热量控制裕量
 
 static uint16_t frequency_cnt = 0;	//射击周期计算
 static uint8_t  shoot_enable  = 1;  //单发使能标志
@@ -143,8 +143,8 @@ static uint8_t series_shoot_enable(void)
 		shoot.trigger_period  = 60;
 	else if (rc_fsm_check(RC_LEFT_LD) && rc_fsm_check(RC_RIGHT_LU) )
 		shoot.trigger_period  = 100;
-	else
-		shoot.trigger_period = TRIGGER_PERIOD;
+//	else
+//		shoot.trigger_period = TRIGGER_PERIOD;
     return (
         ( (ctrl_mode == REMOTER_MODE && shoot_get_vision_data_container.vision_enanle) //&& ( rc_fsm_check(RC_LEFT_LD) && rc_fsm_check(RC_RIGHT_RD) ) ) //开启视觉连发
 			|| (ctrl_mode == REMOTER_MODE && rc.sw2 == RC_DN && rc_fsm_check(RC_LEFT_LD) && !rc_fsm_check(RC_RIGHT_RD)  )  //开启遥控连发
@@ -299,9 +299,11 @@ static void shoot_param_update(void)
     //更新模拟裁判系统数据
     shoot.barrel.heat -= shoot.barrel.cooling_rate * SHOOT_PERIOD * 0.001f;  //当前枪管(理论)热量
     if (shoot.barrel.heat < 0) shoot.barrel.heat = 0;
-    shoot.barrel.heat_remain = shoot.barrel.heat_max - shoot.barrel.heat;  //当前枪管(理论)剩余热量
-//	shoot.barrel.heat_remain = ((robot_status.shooter_barrel_heat_limit - power_heat_data.shooter_17mm_barrel_heat) / 3.0f + 
-//								(shoot.barrel.heat_max - shoot.barrel.heat) / 3.0f * 2.0f);//枪管(理论)剩余热量
+//    shoot.barrel.heat_remain = shoot.barrel.heat_max - shoot.barrel.heat;  //当前枪管(理论)剩余热量
+	shoot.barrel.heat_remain = ((robot_status.shooter_barrel_heat_limit - power_heat_data.shooter_17mm_barrel_heat) / 3.0f * 1.0f + 
+								(shoot.barrel.heat_max - shoot.barrel.heat) / 3.0f * 2.0f);//枪管(理论)剩余热量
+	if(fabsf(shoot.barrel.heat - power_heat_data.shooter_17mm_barrel_heat) > 100)
+		shoot.barrel.heat = power_heat_data.shooter_17mm_barrel_heat;
 //	shoot.barrel.heat_remain = 100;
 }
 
@@ -326,9 +328,9 @@ static void shoot_mode_switch(void)
 
     /* 2. 射频切换 (复刻你原版的右键高频逻辑) */
     if (ctrl_mode == KEYBOARD_MODE && rc.mouse.r)
-        shoot.trigger_period = TRIGGER_PERIOD2;
+        shoot.trigger_period = Heat_ShootPeriod_calc();
     else
-        shoot.trigger_period = TRIGGER_PERIOD;
+        shoot.trigger_period = Heat_ShootPeriod_calc();
 
     /* 3. 解析 FSM 大脑的组合状态 */
     switch (g_robot_ctx.output.shoot) {
@@ -406,14 +408,11 @@ static void vision_shoot_delay(void){
 //根据当前热量线性控制射频
 static float Heat_ShootPeriod_calc(void)
 {
-	//16 = k * max + (shoot.barrel.cooling_rate / 10.0f) * 1000.0f
-	//k = 16.0f / (heat + (shoot.barrel.cooling_rate / 10.0f) * 1000.0f)
-	//剩余热量为0->射频 = 冷却射频 	 冷却速率 / 10（每发弹热量） = 冷却弹量/s * 1000 = 冷却射频
-	//剩余热量为max->射频 = 最大 16->70Hz 416rpm = 4160shot/min = 69.3shot/s = 70hz
+	//剩余热量为0->射频 = 0 
+	//剩余热量为max->射频 = 40
 	//最大射频再加入判断条件：随最大热量而变化
 	//线性函数：
-	return (40.0f / (shoot.barrel.heat_max + (shoot.barrel.cooling_rate / 10.0f) * 1000.0f) * shoot.barrel.heat_remain 
-		+ (shoot.barrel.cooling_rate / 10.0f) * 1000.0f);
+	return ((40.0f / shoot.barrel.heat_max) * shoot.barrel.heat_remain);
 }
 
 void shoot_task(void const *argu)

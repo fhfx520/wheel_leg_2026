@@ -50,10 +50,12 @@ void dm_motor_init(dm_motor_t *motor, can_channel_e can_channel, uint32_t id, fl
     motor->can_id = id;
     motor->zero_point = zero_point;
     motor->mst_id = mst_id;
-	dm_motor_set_control_cmd(motor, CMD_ENABLE_MODE);
+	for (int i = 0; i < 10; i++)
+		dm_motor_set_control_cmd(motor, CMD_RESET_MODE);
+//	dm_motor_set_control_cmd(motor, CMD_ENABLE_MODE);
 	HAL_Delay(100);
-//    dm_motor_set_control_para(motor, 0, 0, 0, 0, 0);
-//    dm_motor_output_single_data(motor);
+    dm_motor_set_control_para(motor, 0, 0, 0, 0, 0);
+    dm_motor_output_single_data(motor);
     HAL_Delay(1);
     list_add(&(motor->list), &object_list);
 }

@@ -247,8 +247,10 @@ static void chassis_execute_fsm(void)
             if(wlr.sky_flag == WLR_SKY_FOLDING) 
 				wlr.sky_flag = WLR_SKY_EXTENDING; 
 			//set跳跃完成标志位 用于fsm自动变回低腿长模式
-			if(wlr.sky_flag == WLR_SKY_STAND && !g_robot_ctx.sky_finish_flag)
+			if(wlr.sky_flag == WLR_SKY_STAND && wlr.sky_over && !g_robot_ctx.sky_finish_flag)
+			{
 				g_robot_ctx.sky_finish_flag = 1;
+			}
             break;
 		}
 		
@@ -381,17 +383,10 @@ static void chassis_data_input(void)
             else                    
                 wlr.yaw_ref = (float)yaw_motor.ecd / 8192 * 2  * PI;  
 			
-			if(key_scan_clear(KB_CTRL) && gimbal.start_up)
-				base_yaw_ref -= PI;
-			if(base_yaw_ref < 0) base_yaw_ref += 2 * PI;
-			else if(base_yaw_ref > 2 * PI) base_yaw_ref -= 2 * PI;
-			
             wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;  
             wlr.wz_ref = 0.0f;
-			if(gimbal.start_up)
-				wlr.yaw_err = circle_error(base_yaw_ref, wlr.yaw_fdb, 2 * PI);
-			else 
-				wlr.yaw_err = 0.0f;
+
+			wlr.yaw_err = circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
             
             if (wlr.yaw_err > PI / 2 || wlr.yaw_err < - PI / 2) {
                 wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI ;
@@ -582,8 +577,8 @@ static void chassis_self_rescue(void)
 	right_T = pid_calc(&pid_rescue[1], right_speed, (wlr.side[1].w1));
 		
 	//第四象限卡台阶
-	if ((vmc[0].quadrant ==4 || vmc[1].quadrant == 4) && chassis.rescue_inter_flag != 1)
-		rescue_cnt ++;
+//	if ((vmc[0].quadrant ==4 || vmc[1].quadrant == 4) && chassis.rescue_inter_flag != 1)
+//		rescue_cnt ++;
 		
 //    if (!chassis.rescue_inter_flag && fabs(chassis_imu.pit) > 1.0f && fabs(chassis_imu.rol) < 0.1f)
 //        chassis.rescue_inter_flag = 3;//3阶段 ----整车翻倒且保护天鹅颈
@@ -674,6 +669,20 @@ static void chassis_self_rescue(void)
 				dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
 			}
 			
+			//第四象限卡台阶
+			if(vmc[0].quadrant == 4 && chassis.rescue_cnt_L > 500)
+			{
+				dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, 0);//0.03 0.5
+				dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);
+				rescue_cnt++;
+			}
+			if(vmc[1].quadrant == 4 && chassis.rescue_cnt_R > 500)
+			{
+				dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, 0);//0.03 0.5
+				dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
+				rescue_cnt++;
+			}
+			
 			if(vmc[0].quadrant == 1 && vmc[1].quadrant == 1)
 				up_ready++;
 			if(up_ready > 100)
@@ -715,13 +724,13 @@ static void chassis_self_rescue(void)
     dji_motor_set_torque(&driver_motor[1], 0);
 	
 	//第四象限卡台阶 暂时注释
-	if (rescue_cnt > 5000 && (vmc[0].quadrant ==4 || vmc[1].quadrant == 4) && chassis.rescue_inter_flag != 2  && 0 ) {
+	if (rescue_cnt > 50 && (vmc[0].quadrant ==4 || vmc[1].quadrant == 4) && chassis.rescue_inter_flag != 2 ) {
 		if (chassis_imu.pit < -0.25f) { 
-			dji_motor_set_torque(&driver_motor[0], -2);
-			dji_motor_set_torque(&driver_motor[1], 2);			
+			dji_motor_set_torque(&driver_motor[0], -1);
+			dji_motor_set_torque(&driver_motor[1], 1);			
 		}else {			
-			dji_motor_set_torque(&driver_motor[0], 2);
-			dji_motor_set_torque(&driver_motor[1], -2);
+			dji_motor_set_torque(&driver_motor[0], 1);
+			dji_motor_set_torque(&driver_motor[1], -1);
 		}
 	}
 	

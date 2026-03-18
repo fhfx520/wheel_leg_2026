@@ -43,10 +43,10 @@ static void gimbal_init(void)
 	gimbal.pit_angle.pid.threshold_a = 0.0f;
 	gimbal.pit_angle.pid.threshold_b = 0.0f;
 	
-	pid_init(&gimbal.yaw_angle.pid, CHANG_I_RATE,25.0f, 0.1f, 0.0f, 50, 100);//尝试云台补偿算法
+	pid_init(&gimbal.yaw_angle.pid, CHANG_I_RATE,25.0f, 0.2f, 0.0f, 50, 100);//尝试云台补偿算法
     pid_init(&gimbal.yaw_spd.pid, CHANG_I_RATE, 8000.0f, 0.00f, 0, 10000.0f, 25000.0f);
-	gimbal.yaw_angle.pid.threshold_a = 0.002f;
-	gimbal.yaw_angle.pid.threshold_b = 0.3f; 
+	gimbal.yaw_angle.pid.threshold_a = 0.015f;
+	gimbal.yaw_angle.pid.threshold_b = 0.1f; 
 	
     pid_init(&gimbal.yaw_ecd.pid, NONE, 10.0f, 0, 0, 0.0f, 30.0f);
 	pid_init(&gimbal.yaw_spd_ecd.pid, NONE, 6000.0f, 10.00f, 0, 1000.0f, 25000.0f);
@@ -104,7 +104,7 @@ static void gimbal_pid_calc(void)
     gimbal.yaw_spd.ref = pid_calc(&gimbal.yaw_angle.pid, gimbal.yaw_angle.fdb + yaw_err, gimbal.yaw_angle.fdb);    
 	
 	//起身先转pitch yaw阻尼
-	if((!(fabsf(gimbal.pit_angle.ref - gimbal.pit_angle.fdb) < 0.03f) && !gimbal.start_up) && gimbal.start_cnt < 200)
+	if((!(fabsf(gimbal.pit_angle.ref - gimbal.pit_angle.fdb) < 0.08f) && !gimbal.start_up) && gimbal.start_cnt < 200)
 		 gimbal.yaw_spd.ref = 0.0f;
 	
     gimbal.yaw_spd.fdb = gimbal_imu.wz;
@@ -139,6 +139,7 @@ static void gimbal_data_output(void)
     if(gimbal_imu.online == 0 || yaw_motor.online == 0){
 //    dji_motor_set_torque(&pit_motor, 0);
 		dji_motor_set_torque(&yaw_motor, 0);     
+		gimbal.yaw_output = 0.0f;
 		dm_motor_set_control_para(&pit_motor,0,0,0,0,0);
     }       
     else{
