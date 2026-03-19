@@ -20,9 +20,10 @@
 #include "gimbal_task.h"
 #include "chassis_task.h"
 #include "mode_switch_task.h"
+#include "board_comm.h"
 
 #define row_debug 2 * 10
-uint8_t debug_wave = 12;
+uint8_t debug_wave = 18;
 float test_hex = 1;
 extern FGT_sin_t FGT_sin_chassis;
 extern  uint16_t quadrant_cnt;
@@ -35,6 +36,8 @@ extern float F_test[2];
 extern float F_wy[2];
 extern int32_t Last_cnt;
 extern chassis_scale_t chassis_scale;
+extern uint8_t global_back_flag;
+extern vision_data_t vision_data_rec;
 void log_scope_data_pkg(void)
 {
     switch(debug_wave) {
@@ -247,6 +250,16 @@ void log_scope_data_pkg(void)
 //			log_scope_get_data(wlr.pit_fdb);
 //			log_scope_get_data(wlr.wz_fdb);
 //			log_scope_get_data(shoot.trigger_mode);
+			log_scope_get_data(trigger_motor.rx_current);
+			log_scope_get_data(trigger_motor.speed_rpm);
+			log_scope_get_data(global_back_flag);
+			log_scope_get_data(shoot.trigger_ecd.ref);
+			log_scope_get_data(shoot.trigger_ecd.fdb);
+			log_scope_get_data(shoot.barrel.heat_remain);
+			log_scope_get_data(power_heat_data.shooter_17mm_barrel_heat);
+			log_scope_get_data(shoot.barrel.heat);
+			log_scope_get_data(vision_data_rec.vision_enanle);
+			log_scope_get_data(rc.mouse.l);
 		}
         default:break;
     }

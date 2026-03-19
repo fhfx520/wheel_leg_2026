@@ -23,7 +23,7 @@
 
 static float Heat_ShootPeriod_calc(void);
 
-float MIN_HEAT = 30;        //热量控制裕量
+float MIN_HEAT = 40;        //热量控制裕量
 
 static uint16_t frequency_cnt = 0;	//射击周期计算
 static uint8_t  shoot_enable  = 1;  //单发使能标志
@@ -37,7 +37,7 @@ static uint8_t back_flag = 0;
 shoot_t shoot;
 //static buffer_t *shoot_speed_buffer;
 
-
+uint8_t global_back_flag;
 //**********************添加预制弹位*************************//
 
 uint8_t microcurrent_flag = 0;		//预制标志位，如果暂时不需要用直接改成2就行了
@@ -153,7 +153,7 @@ static uint8_t series_shoot_enable(void)
             || (ctrl_mode == KEYBOARD_MODE && rc.mouse.l && rc.mouse.r == 0)
         )    
 				
-        && (shoot.barrel.heat_remain >= MIN_HEAT)  //热量控制
+        && ((shoot.barrel.heat_remain >= MIN_HEAT))  //热量控制
         && frequency_cnt * SHOOT_PERIOD >= shoot.trigger_period  //射频控制
         && ABS(trigger_ecd_error) <  TRIGGER_MOTOR_ECD_SERIES  //拨盘误差控制		
     );
@@ -234,6 +234,7 @@ static void shoot_control(void)
     }
 		
 		last_enable = vision.shoot_enable;
+	global_back_flag = back_flag;
 }
 
 static void shoot_init(void)
@@ -242,7 +243,7 @@ static void shoot_init(void)
     //发射器底层初始化
     pid_init(&shoot.fric_spd[0].pid, NONE, 0.0005f, 0, 0, 0, 0.8);
     pid_init(&shoot.fric_spd[1].pid, NONE, 0.0005f, 0, 0, 0, 0.8);
-    pid_init(&shoot.trigger_ecd.pid, NONE, 0.1f, 0, 0.0f, 0, 10000);
+    pid_init(&shoot.trigger_ecd.pid, NONE, 0.12f, 0, 0.0f, 0, 10000);
     pid_init(&shoot.trigger_spd.pid, NONE, 0.0015f, 0.00005f, 0, 0.18f, 1.8f);
     //发射器模式初始化
     shoot.trigger_mode  = TRIGGER_MODE_PROTECT;
@@ -302,7 +303,9 @@ static void shoot_param_update(void)
 //    shoot.barrel.heat_remain = shoot.barrel.heat_max - shoot.barrel.heat;  //当前枪管(理论)剩余热量
 	shoot.barrel.heat_remain = ((robot_status.shooter_barrel_heat_limit - power_heat_data.shooter_17mm_barrel_heat) / 3.0f * 1.0f + 
 								(shoot.barrel.heat_max - shoot.barrel.heat) / 3.0f * 2.0f);//枪管(理论)剩余热量
-	if(fabsf(shoot.barrel.heat - power_heat_data.shooter_17mm_barrel_heat) > 100)
+//	if(fabsf(shoot.barrel.heat - power_heat_data.shoo2'ter_17mm_barrel_heat) > 100)
+//		shoot.barrel.heat = power_heat_data.shooter_17mm_barrel_heat;
+	if(shoot.trigger_mode != TRIGGER_MODE_SERIES || (ctrl_mode == KEYBOARD_MODE && !rc.mouse.l))
 		shoot.barrel.heat = power_heat_data.shooter_17mm_barrel_heat;
 //	shoot.barrel.heat_remain = 100;
 }
@@ -329,6 +332,8 @@ static void shoot_mode_switch(void)
     /* 2. 射频切换 (复刻你原版的右键高频逻辑) */
     if (ctrl_mode == KEYBOARD_MODE && rc.mouse.r)
         shoot.trigger_period = Heat_ShootPeriod_calc();
+	else if(ctrl_mode == REMOTER_MODE && rc_fsm_check(RC_LEFT_LD) && rc_fsm_check(RC_RIGHT_RD))
+		shoot.trigger_period = 100;
     else
         shoot.trigger_period = Heat_ShootPeriod_calc();
 
@@ -412,7 +417,7 @@ static float Heat_ShootPeriod_calc(void)
 	//剩余热量为max->射频 = 40
 	//最大射频再加入判断条件：随最大热量而变化
 	//线性函数：
-	return ((40.0f / shoot.barrel.heat_max) * shoot.barrel.heat_remain);
+	return ((60.0f / shoot.barrel.heat_max) * shoot.barrel.heat_remain);
 }
 
 void shoot_task(void const *argu)
