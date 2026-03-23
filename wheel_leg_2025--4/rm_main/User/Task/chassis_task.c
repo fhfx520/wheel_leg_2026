@@ -52,7 +52,7 @@ kalman_filter_t kal_fusion_vel;
 FGT_sin_t FGT_sin_chassis;
 chassis_t chassis;
 
-float imu_pitch_offset = 0.0100252042f;
+float imu_pitch_offset = 0.023f;
 float up_ready;
 
 chassis_scale_t chassis_scale = {

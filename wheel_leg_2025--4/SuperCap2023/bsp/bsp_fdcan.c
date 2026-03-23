@@ -160,12 +160,12 @@ void can_filter_init(void)
     FDCAN2_RXFilter.FilterIndex=0;                                  //?????                   
     FDCAN2_RXFilter.FilterType=FDCAN_FILTER_MASK;                   //?????
     FDCAN2_RXFilter.FilterConfig=FDCAN_FILTER_TO_RXFIFO0;           //???0???FIFO0  
-    FDCAN2_RXFilter.FilterID1=0x0000;                               //32?ID
-    FDCAN2_RXFilter.FilterID2=0x0000;                               //??FDCAN?????????,???32???
+    FDCAN2_RXFilter.FilterID1=0x800;                               //32?ID
+    FDCAN2_RXFilter.FilterID2=0x7FF;                               //??FDCAN?????????,???32???
     if(HAL_FDCAN_ConfigFilter(&hfdcan2,&FDCAN2_RXFilter)!=HAL_OK) 	//??????
-		{
-			Error_Handler();
-		}
+	{
+		Error_Handler();
+	}
 	/* start the can transmit and receive */
 		HAL_FDCAN_Start(&hfdcan2);                               //??FDCAN
 //    HAL_FDCAN_ActivateNotification(&hfdcan2,FDCAN_IT_RX_FIFO0_NEW_MESSAGE,0);

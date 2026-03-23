@@ -3,7 +3,7 @@
 <title>Static Call Graph - [rm_main\rm_main.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image rm_main\rm_main.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Fri Mar 20 05:59:13 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Sun Mar 22 05:10:47 2026
 <BR><P>
 <H3>Maximum Stack Usage =        848 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -5727,8 +5727,8 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;shoot_task
 </UL>
 
-<P><STRONG><a name="[339]"></a>shoot_mode_switch</STRONG> (Thumb, 456 bytes, Stack size 16 bytes, shoot_task.o(.text.shoot_mode_switch))
-<BR><BR>[Stack]<UL><LI>Max Depth = 20<LI>Call Chain = shoot_mode_switch &rArr; rc_fsm_check
+<P><STRONG><a name="[339]"></a>shoot_mode_switch</STRONG> (Thumb, 520 bytes, Stack size 16 bytes, shoot_task.o(.text.shoot_mode_switch))
+<BR><BR>[Stack]<UL><LI>Max Depth = 28<LI>Call Chain = shoot_mode_switch &rArr; Heat_ShootPeriod_calc
 </UL>
 <BR>[Calls]<UL><LI><a href="#[2c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rc_fsm_check (via Veneer)
 <LI><a href="#[33b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heat_ShootPeriod_calc
@@ -5775,8 +5775,10 @@ Local Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[339]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;shoot_mode_switch
 </UL>
 
-<P><STRONG><a name="[33b]"></a>Heat_ShootPeriod_calc</STRONG> (Thumb, 44 bytes, Stack size 0 bytes, shoot_task.o(.text.Heat_ShootPeriod_calc))
-<BR><BR>[Called By]<UL><LI><a href="#[339]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;shoot_mode_switch
+<P><STRONG><a name="[33b]"></a>Heat_ShootPeriod_calc</STRONG> (Thumb, 128 bytes, Stack size 12 bytes, shoot_task.o(.text.Heat_ShootPeriod_calc))
+<BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = Heat_ShootPeriod_calc
+</UL>
+<BR>[Called By]<UL><LI><a href="#[339]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;shoot_mode_switch
 </UL>
 
 <P><STRONG><a name="[335]"></a>single_shoot_reset</STRONG> (Thumb, 138 bytes, Stack size 12 bytes, shoot_task.o(.text.single_shoot_reset))

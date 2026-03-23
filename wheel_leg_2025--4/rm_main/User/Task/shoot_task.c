@@ -21,7 +21,7 @@
 #define TRIGGER_MOTOR_ECD_SINGLE   (58975.0f)  //拨盘一颗子弹转过的编码值 8192 * 5 * 2 / 10 = 8192.0f
 #define TRIGGER_MOTOR_ECD_SERIES   (58975.0f)  //拨盘一颗子弹转过的编码值 8192 * 5 * 2 / 10 = 8192.0f
 
-static float Heat_ShootPeriod_calc(void);
+static float Heat_ShootPeriod_calc(uint8_t trice_id);
 
 float MIN_HEAT = 40;        //热量控制裕量
 
@@ -331,11 +331,13 @@ static void shoot_mode_switch(void)
 
     /* 2. 射频切换 (复刻你原版的右键高频逻辑) */
     if (ctrl_mode == KEYBOARD_MODE && rc.mouse.r)
-        shoot.trigger_period = Heat_ShootPeriod_calc();
+	{
+        shoot.trigger_period = (Heat_ShootPeriod_calc(shoot_get_vision_data_container.vision_trace_id) > 200.0f ? 200.0f : Heat_ShootPeriod_calc(shoot_get_vision_data_container.vision_trace_id));
+	}
 	else if(ctrl_mode == REMOTER_MODE && rc_fsm_check(RC_LEFT_LD) && rc_fsm_check(RC_RIGHT_RD))
 		shoot.trigger_period = 100;
     else
-        shoot.trigger_period = Heat_ShootPeriod_calc();
+        shoot.trigger_period = 60;
 
     /* 3. 解析 FSM 大脑的组合状态 */
     switch (g_robot_ctx.output.shoot) {
@@ -411,13 +413,16 @@ static void vision_shoot_delay(void){
 }
 
 //根据当前热量线性控制射频
-static float Heat_ShootPeriod_calc(void)
+static float Heat_ShootPeriod_calc(uint8_t trice_id)
 {
 	//剩余热量为0->射频 = 0 
 	//剩余热量为max->射频 = 40
 	//最大射频再加入判断条件：随最大热量而变化
 	//线性函数：
-	return ((60.0f / shoot.barrel.heat_max) * shoot.barrel.heat_remain);
+	if(trice_id == 1)
+		return ((100.0f / shoot.barrel.heat_max) * shoot.barrel.heat_remain);
+	else
+		return ((125.0f / shoot.barrel.heat_max) * shoot.barrel.heat_remain);
 }
 
 void shoot_task(void const *argu)

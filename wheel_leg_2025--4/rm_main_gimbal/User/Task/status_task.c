@@ -18,7 +18,7 @@ status_t status;
 int iwdg_test = 1;
 void status_task(void const* argument)
 {
-//	MX_IWDG1_Init();
+	MX_IWDG1_Init();
     for(;;)
     {
         if (status.task.comm == 1 &&

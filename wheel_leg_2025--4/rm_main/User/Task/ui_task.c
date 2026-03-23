@@ -170,7 +170,7 @@ void ui_task(void const* argument)
         thread_wake_time = osKernelSysTick();
         ui_init();
         osDelayUntil(&thread_wake_time, 1);
-    }
+    }	
     for(;;)
     {
         thread_wake_time = osKernelSysTick();
