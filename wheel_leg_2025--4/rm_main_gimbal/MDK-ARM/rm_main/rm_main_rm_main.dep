@@ -850,10 +850,10 @@ I (..\Drivers\CMSIS\Include\cmsis_compiler.h)(0x668BF20A)
 I (..\User\Protocol\prot_vision.h)(0x69B46340)
 I (..\User\Task\shoot_task.h)(0x694E97F8)
 I (..\User\Math\pid.h)(0x68B5ADB6)
-I (..\User\Drivers\drv_dji_motor.h)(0x69B46340)
+I (..\User\Drivers\drv_dji_motor.h)(0x69C138C2)
 I (..\User\Communication\can_comm.h)(0x69B46340)
 I (..\User\Support\data_list.h)(0x68B5ADB6)
-I (..\User\Drivers\drv_dm_motor.h)(0x69B96B27)
+I (..\User\Drivers\drv_dm_motor.h)(0x69C13926)
 I (..\User\Protocol\prot_judge.h)(0x69B46340)
 I (..\User\Protocol\prot_power.h)(0x68B5ADB6)
 I (..\User\Protocol\prot_imu.h)(0x69B46340)
@@ -884,7 +884,7 @@ I (..\Middlewares\Third_Party\FreeRTOS\Source\include\semphr.h)(0x668BF20C)
 I (..\Middlewares\Third_Party\FreeRTOS\Source\include\event_groups.h)(0x668BF20C)
 I (..\User\Protocol\prot_vision.h)(0x69B46340)
 I (..\User\Protocol\prot_power.h)(0x68B5ADB6)
-I (..\User\Drivers\drv_dji_motor.h)(0x69B46340)
+I (..\User\Drivers\drv_dji_motor.h)(0x69C138C2)
 I (..\User\Communication\can_comm.h)(0x69B46340)
 I (..\Drivers\CMSIS\Device\ST\STM32H7xx\Include\stm32h7xx.h)(0x668BF298)
 I (..\Drivers\CMSIS\Device\ST\STM32H7xx\Include\stm32h723xx.h)(0x668BF298)
@@ -924,7 +924,7 @@ I (..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_pcd.h)(0x668BF298)
 I (..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_ll_usb.h)(0x668BF298)
 I (..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_pcd_ex.h)(0x668BF298)
 I (..\User\Support\data_list.h)(0x68B5ADB6)
-I (..\User\Drivers\drv_dm_motor.h)(0x69B96B27)
+I (..\User\Drivers\drv_dm_motor.h)(0x69C13926)
 I (..\User\Protocol\prot_dr16.h)(0x68B5ADB6)
 I (..\User\Task\status_task.h)(0x69B46340)
 I (..\User\Communication\board_comm.h)(0x69B9C164)
@@ -1068,7 +1068,7 @@ I (..\Middlewares\Third_Party\FreeRTOS\Source\include\queue.h)(0x668BF20C)
 I (..\Middlewares\Third_Party\FreeRTOS\Source\include\semphr.h)(0x668BF20C)
 I (..\Middlewares\Third_Party\FreeRTOS\Source\include\event_groups.h)(0x668BF20C)
 I (..\User\Task\mode_switch_task.h)(0x68B5ADB6)
-I (..\User\Drivers\drv_dji_motor.h)(0x69B46340)
+I (..\User\Drivers\drv_dji_motor.h)(0x69C138C2)
 I (..\User\Communication\can_comm.h)(0x69B46340)
 I (..\Drivers\CMSIS\Device\ST\STM32H7xx\Include\stm32h7xx.h)(0x668BF298)
 I (..\Drivers\CMSIS\Device\ST\STM32H7xx\Include\stm32h723xx.h)(0x668BF298)
@@ -1108,7 +1108,7 @@ I (..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_pcd.h)(0x668BF298)
 I (..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_ll_usb.h)(0x668BF298)
 I (..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_pcd_ex.h)(0x668BF298)
 I (..\User\Support\data_list.h)(0x68B5ADB6)
-I (..\User\Drivers\drv_dm_motor.h)(0x69B96B27)
+I (..\User\Drivers\drv_dm_motor.h)(0x69C13926)
 I (..\User\Protocol\prot_dr16.h)(0x68B5ADB6)
 I (..\User\Protocol\prot_imu.h)(0x69B46340)
 I (..\User\Protocol\prot_judge.h)(0x69B46340)
@@ -1121,11 +1121,11 @@ I (..\User\Protocol\prot_vision.h)(0x69B46340)
 I (..\Core\Inc\iwdg.h)(0x698D905F)
 I (..\User\Communication\board_comm.h)(0x69B9C164)
 I (..\User\Protocol\prot_vtm.h)(0x69B46340)
-F (..\User\Task\gimbal_task.c)(0x69B970A2)(-xc -std=gnu11 --target=arm-arm-none-eabi -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-4 -O1 -fno-function-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Drivers/CMSIS/Include -I ../Core/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../User/Communication -I ../User/Drivers -I ../User/Protocol -I ../User/Math/DSP/Include -I ../User/Math -I ../User/Support -I ../User/Middle -I ../User/Task-I./RTE/_rm_main-ID:/KEIL5/keli_pkg/ARM/CMSIS/6.2.0/CMSIS/Core/Include-ID:/KEIL5/keli_pkg/Keil/STM32H7xx_DFP/3.1.1/Drivers/CMSIS/Device/ST/STM32H7xx/Include-D__UVISION_VERSION="543" -DSTM32H723xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32H723xx -DARM_MATH_CM7 -D__TARGET_FPU_VFP-o rm_main/gimbal_task.o -MMD)
+F (..\User\Task\gimbal_task.c)(0x69C14578)(-xc -std=gnu11 --target=arm-arm-none-eabi -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-4 -O1 -fno-function-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Drivers/CMSIS/Include -I ../Core/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../User/Communication -I ../User/Drivers -I ../User/Protocol -I ../User/Math/DSP/Include -I ../User/Math -I ../User/Support -I ../User/Middle -I ../User/Task-I./RTE/_rm_main-ID:/KEIL5/keli_pkg/ARM/CMSIS/6.2.0/CMSIS/Core/Include-ID:/KEIL5/keli_pkg/Keil/STM32H7xx_DFP/3.1.1/Drivers/CMSIS/Device/ST/STM32H7xx/Include-D__UVISION_VERSION="543" -DSTM32H723xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32H723xx -DARM_MATH_CM7 -D__TARGET_FPU_VFP-o rm_main/gimbal_task.o -MMD)
 I (..\User\Task\mode_switch_task.h)(0x68B5ADB6)
 I (..\User\Task\status_task.h)(0x69B46340)
 I (..\User\Task\control_def.h)(0x69BE03E6)
-I (..\User\Drivers\drv_dji_motor.h)(0x69B46340)
+I (..\User\Drivers\drv_dji_motor.h)(0x69C138C2)
 I (..\User\Communication\can_comm.h)(0x69B46340)
 I (..\Drivers\CMSIS\Device\ST\STM32H7xx\Include\stm32h7xx.h)(0x668BF298)
 I (..\Drivers\CMSIS\Device\ST\STM32H7xx\Include\stm32h723xx.h)(0x668BF298)
@@ -1191,13 +1191,14 @@ I (..\Core\Inc\main.h)(0x698D9061)
 I (..\User\Task\gimbal_task.h)(0x69846547)
 I (..\User\Math\pid.h)(0x68B5ADB6)
 I (..\User\Math\smc.h)(0x68B5ADB6)
-I (..\User\Drivers\drv_dm_motor.h)(0x69B96B27)
+I (..\User\Drivers\drv_dm_motor.h)(0x69C13926)
+I (..\User\Math\gimbal_decoupling.h)(0x696917CA)
 F (..\User\Task\shoot_task.c)(0x69B46340)(-xc -std=gnu11 --target=arm-arm-none-eabi -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-4 -O1 -fno-function-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Drivers/CMSIS/Include -I ../Core/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../User/Communication -I ../User/Drivers -I ../User/Protocol -I ../User/Math/DSP/Include -I ../User/Math -I ../User/Support -I ../User/Middle -I ../User/Task-I./RTE/_rm_main-ID:/KEIL5/keli_pkg/ARM/CMSIS/6.2.0/CMSIS/Core/Include-ID:/KEIL5/keli_pkg/Keil/STM32H7xx_DFP/3.1.1/Drivers/CMSIS/Device/ST/STM32H7xx/Include-D__UVISION_VERSION="543" -DSTM32H723xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32H723xx -DARM_MATH_CM7 -D__TARGET_FPU_VFP-o rm_main/shoot_task.o -MMD)
 I (..\User\Task\shoot_task.h)(0x694E97F8)
 I (..\User\Math\pid.h)(0x68B5ADB6)
 I (..\User\Task\mode_switch_task.h)(0x68B5ADB6)
 I (..\User\Task\control_def.h)(0x69BE03E6)
-I (..\User\Drivers\drv_dji_motor.h)(0x69B46340)
+I (..\User\Drivers\drv_dji_motor.h)(0x69C138C2)
 I (..\User\Communication\can_comm.h)(0x69B46340)
 I (..\Drivers\CMSIS\Device\ST\STM32H7xx\Include\stm32h7xx.h)(0x668BF298)
 I (..\Drivers\CMSIS\Device\ST\STM32H7xx\Include\stm32h723xx.h)(0x668BF298)
@@ -1263,9 +1264,9 @@ I (..\User\Task\status_task.h)(0x69B46340)
 I (..\User\Math\math_lib.h)(0x68B5ADB6)
 I (..\User\Drivers\bsp_LK_Motor_MG4005.h)(0x692FFDFA)
 I (..\Core\Inc\fdcan.h)(0x698D905F)
-I (..\User\Drivers\drv_dm_motor.h)(0x69B96B27)
+I (..\User\Drivers\drv_dm_motor.h)(0x69C13926)
 F (..\User\Task\control_def.h)(0x69BE03E6)()
-F (..\User\Communication\can_comm.c)(0x69BBBB81)(-xc -std=gnu11 --target=arm-arm-none-eabi -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-4 -O1 -fno-function-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Drivers/CMSIS/Include -I ../Core/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../User/Communication -I ../User/Drivers -I ../User/Protocol -I ../User/Math/DSP/Include -I ../User/Math -I ../User/Support -I ../User/Middle -I ../User/Task-I./RTE/_rm_main-ID:/KEIL5/keli_pkg/ARM/CMSIS/6.2.0/CMSIS/Core/Include-ID:/KEIL5/keli_pkg/Keil/STM32H7xx_DFP/3.1.1/Drivers/CMSIS/Device/ST/STM32H7xx/Include-D__UVISION_VERSION="543" -DSTM32H723xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32H723xx -DARM_MATH_CM7 -D__TARGET_FPU_VFP-o rm_main/can_comm.o -MMD)
+F (..\User\Communication\can_comm.c)(0x69C13A8C)(-xc -std=gnu11 --target=arm-arm-none-eabi -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-4 -O1 -fno-function-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Drivers/CMSIS/Include -I ../Core/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../User/Communication -I ../User/Drivers -I ../User/Protocol -I ../User/Math/DSP/Include -I ../User/Math -I ../User/Support -I ../User/Middle -I ../User/Task-I./RTE/_rm_main-ID:/KEIL5/keli_pkg/ARM/CMSIS/6.2.0/CMSIS/Core/Include-ID:/KEIL5/keli_pkg/Keil/STM32H7xx_DFP/3.1.1/Drivers/CMSIS/Device/ST/STM32H7xx/Include-D__UVISION_VERSION="543" -DSTM32H723xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32H723xx -DARM_MATH_CM7 -D__TARGET_FPU_VFP-o rm_main/can_comm.o -MMD)
 I (..\User\Communication\can_comm.h)(0x69B46340)
 I (..\Drivers\CMSIS\Device\ST\STM32H7xx\Include\stm32h7xx.h)(0x668BF298)
 I (..\Drivers\CMSIS\Device\ST\STM32H7xx\Include\stm32h723xx.h)(0x668BF298)
@@ -1304,7 +1305,7 @@ I (..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_uart_ex.h)(0x668BF298)
 I (..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_pcd.h)(0x668BF298)
 I (..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_ll_usb.h)(0x668BF298)
 I (..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_pcd_ex.h)(0x668BF298)
-I (..\User\Drivers\drv_dji_motor.h)(0x69B46340)
+I (..\User\Drivers\drv_dji_motor.h)(0x69C138C2)
 I (..\User\Support\data_list.h)(0x68B5ADB6)
 I (..\User\Drivers\drv_ht_motor.h)(0x68B5ADB6)
 I (..\User\Protocol\prot_imu.h)(0x69B46340)
@@ -1313,7 +1314,7 @@ I (..\Core\Inc\fdcan.h)(0x698D905F)
 I (..\Core\Inc\main.h)(0x698D9061)
 I (..\User\Math\DSP\Include\arm_math.h)(0x68B5ADB6)
 I (..\Drivers\CMSIS\Include\cmsis_compiler.h)(0x668BF20A)
-I (..\User\Drivers\drv_dm_motor.h)(0x69B96B27)
+I (..\User\Drivers\drv_dm_motor.h)(0x69C13926)
 I (..\User\Protocol\prot_vision.h)(0x69B46340)
 I (..\User\Communication\board_comm.h)(0x69B9C164)
 I (..\User\Drivers\bsp_LK_Motor_MG4005.h)(0x692FFDFA)
@@ -1364,7 +1365,7 @@ I (..\User\Protocol\prot_dr16.h)(0x68B5ADB6)
 I (..\User\Protocol\prot_judge.h)(0x69B46340)
 I (..\User\Support\data_log.h)(0x68B5ADB6)
 I (..\User\Protocol\prot_vtm.h)(0x69B46340)
-F (..\User\Communication\board_comm.c)(0x69BA99AA)(-xc -std=gnu11 --target=arm-arm-none-eabi -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-4 -O1 -fno-function-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Drivers/CMSIS/Include -I ../Core/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../User/Communication -I ../User/Drivers -I ../User/Protocol -I ../User/Math/DSP/Include -I ../User/Math -I ../User/Support -I ../User/Middle -I ../User/Task-I./RTE/_rm_main-ID:/KEIL5/keli_pkg/ARM/CMSIS/6.2.0/CMSIS/Core/Include-ID:/KEIL5/keli_pkg/Keil/STM32H7xx_DFP/3.1.1/Drivers/CMSIS/Device/ST/STM32H7xx/Include-D__UVISION_VERSION="543" -DSTM32H723xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32H723xx -DARM_MATH_CM7 -D__TARGET_FPU_VFP-o rm_main/board_comm.o -MMD)
+F (..\User\Communication\board_comm.c)(0x69C13AAA)(-xc -std=gnu11 --target=arm-arm-none-eabi -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-4 -O1 -fno-function-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Drivers/CMSIS/Include -I ../Core/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../User/Communication -I ../User/Drivers -I ../User/Protocol -I ../User/Math/DSP/Include -I ../User/Math -I ../User/Support -I ../User/Middle -I ../User/Task-I./RTE/_rm_main-ID:/KEIL5/keli_pkg/ARM/CMSIS/6.2.0/CMSIS/Core/Include-ID:/KEIL5/keli_pkg/Keil/STM32H7xx_DFP/3.1.1/Drivers/CMSIS/Device/ST/STM32H7xx/Include-D__UVISION_VERSION="543" -DSTM32H723xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32H723xx -DARM_MATH_CM7 -D__TARGET_FPU_VFP-o rm_main/board_comm.o -MMD)
 I (..\User\Communication\board_comm.h)(0x69B9C164)
 I (..\Drivers\CMSIS\Device\ST\STM32H7xx\Include\stm32h7xx.h)(0x668BF298)
 I (..\Drivers\CMSIS\Device\ST\STM32H7xx\Include\stm32h723xx.h)(0x668BF298)
@@ -1458,8 +1459,8 @@ I (..\Middlewares\Third_Party\FreeRTOS\Source\include\semphr.h)(0x668BF20C)
 I (..\Middlewares\Third_Party\FreeRTOS\Source\include\queue.h)(0x668BF20C)
 I (..\Middlewares\Third_Party\FreeRTOS\Source\include\task.h)(0x668BF20C)
 I (..\Middlewares\Third_Party\FreeRTOS\Source\include\list.h)(0x668BF20C)
-F (..\User\Drivers\drv_dji_motor.c)(0x69B46340)(-xc -std=gnu11 --target=arm-arm-none-eabi -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-4 -O1 -fno-function-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Drivers/CMSIS/Include -I ../Core/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../User/Communication -I ../User/Drivers -I ../User/Protocol -I ../User/Math/DSP/Include -I ../User/Math -I ../User/Support -I ../User/Middle -I ../User/Task-I./RTE/_rm_main-ID:/KEIL5/keli_pkg/ARM/CMSIS/6.2.0/CMSIS/Core/Include-ID:/KEIL5/keli_pkg/Keil/STM32H7xx_DFP/3.1.1/Drivers/CMSIS/Device/ST/STM32H7xx/Include-D__UVISION_VERSION="543" -DSTM32H723xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32H723xx -DARM_MATH_CM7 -D__TARGET_FPU_VFP-o rm_main/drv_dji_motor.o -MMD)
-I (..\User\Drivers\drv_dji_motor.h)(0x69B46340)
+F (..\User\Drivers\drv_dji_motor.c)(0x69C136B3)(-xc -std=gnu11 --target=arm-arm-none-eabi -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-4 -O1 -fno-function-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Drivers/CMSIS/Include -I ../Core/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../User/Communication -I ../User/Drivers -I ../User/Protocol -I ../User/Math/DSP/Include -I ../User/Math -I ../User/Support -I ../User/Middle -I ../User/Task-I./RTE/_rm_main-ID:/KEIL5/keli_pkg/ARM/CMSIS/6.2.0/CMSIS/Core/Include-ID:/KEIL5/keli_pkg/Keil/STM32H7xx_DFP/3.1.1/Drivers/CMSIS/Device/ST/STM32H7xx/Include-D__UVISION_VERSION="543" -DSTM32H723xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32H723xx -DARM_MATH_CM7 -D__TARGET_FPU_VFP-o rm_main/drv_dji_motor.o -MMD)
+I (..\User\Drivers\drv_dji_motor.h)(0x69C138C2)
 I (..\User\Communication\can_comm.h)(0x69B46340)
 I (..\Drivers\CMSIS\Device\ST\STM32H7xx\Include\stm32h7xx.h)(0x668BF298)
 I (..\Drivers\CMSIS\Device\ST\STM32H7xx\Include\stm32h723xx.h)(0x668BF298)
@@ -1501,7 +1502,7 @@ I (..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_pcd_ex.h)(0x668BF298)
 I (..\User\Support\data_list.h)(0x68B5ADB6)
 I (..\User\Task\status_task.h)(0x69B46340)
 F (..\User\Drivers\drv_dm_motor.c)(0x69B9684D)(-xc -std=gnu11 --target=arm-arm-none-eabi -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-4 -O1 -fno-function-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Drivers/CMSIS/Include -I ../Core/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../User/Communication -I ../User/Drivers -I ../User/Protocol -I ../User/Math/DSP/Include -I ../User/Math -I ../User/Support -I ../User/Middle -I ../User/Task-I./RTE/_rm_main-ID:/KEIL5/keli_pkg/ARM/CMSIS/6.2.0/CMSIS/Core/Include-ID:/KEIL5/keli_pkg/Keil/STM32H7xx_DFP/3.1.1/Drivers/CMSIS/Device/ST/STM32H7xx/Include-D__UVISION_VERSION="543" -DSTM32H723xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32H723xx -DARM_MATH_CM7 -D__TARGET_FPU_VFP-o rm_main/drv_dm_motor.o -MMD)
-I (..\User\Drivers\drv_dm_motor.h)(0x69B96B27)
+I (..\User\Drivers\drv_dm_motor.h)(0x69C13926)
 I (..\User\Communication\can_comm.h)(0x69B46340)
 I (..\Drivers\CMSIS\Device\ST\STM32H7xx\Include\stm32h7xx.h)(0x668BF298)
 I (..\Drivers\CMSIS\Device\ST\STM32H7xx\Include\stm32h723xx.h)(0x668BF298)
@@ -1813,7 +1814,7 @@ I (..\Core\Inc\usart.h)(0x698D9060)
 I (..\Core\Inc\main.h)(0x698D9061)
 I (..\User\Math\DSP\Include\arm_math.h)(0x68B5ADB6)
 I (..\Drivers\CMSIS\Include\cmsis_compiler.h)(0x668BF20A)
-I (..\User\Drivers\drv_dji_motor.h)(0x69B46340)
+I (..\User\Drivers\drv_dji_motor.h)(0x69C138C2)
 I (..\User\Support\data_list.h)(0x68B5ADB6)
 F (..\User\Protocol\prot_vision.c)(0x69B53111)(-xc -std=gnu11 --target=arm-arm-none-eabi -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-4 -O1 -fno-function-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Drivers/CMSIS/Include -I ../Core/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../User/Communication -I ../User/Drivers -I ../User/Protocol -I ../User/Math/DSP/Include -I ../User/Math -I ../User/Support -I ../User/Middle -I ../User/Task-I./RTE/_rm_main-ID:/KEIL5/keli_pkg/ARM/CMSIS/6.2.0/CMSIS/Core/Include-ID:/KEIL5/keli_pkg/Keil/STM32H7xx_DFP/3.1.1/Drivers/CMSIS/Device/ST/STM32H7xx/Include-D__UVISION_VERSION="543" -DSTM32H723xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32H723xx -DARM_MATH_CM7 -D__TARGET_FPU_VFP-o rm_main/prot_vision.o -MMD)
 I (..\User\Protocol\prot_vision.h)(0x69B46340)
@@ -1978,6 +1979,11 @@ I (..\Drivers\CMSIS\Include\cmsis_armclang.h)(0x668BF20A)
 I (..\User\Math\KNN.h)(0x68B5ADB6)
 F (..\User\Math\SMC.c)(0x68B5ADB6)(-xc -std=gnu11 --target=arm-arm-none-eabi -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-4 -O1 -fno-function-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Drivers/CMSIS/Include -I ../Core/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../User/Communication -I ../User/Drivers -I ../User/Protocol -I ../User/Math/DSP/Include -I ../User/Math -I ../User/Support -I ../User/Middle -I ../User/Task-I./RTE/_rm_main-ID:/KEIL5/keli_pkg/ARM/CMSIS/6.2.0/CMSIS/Core/Include-ID:/KEIL5/keli_pkg/Keil/STM32H7xx_DFP/3.1.1/Drivers/CMSIS/Device/ST/STM32H7xx/Include-D__UVISION_VERSION="543" -DSTM32H723xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32H723xx -DARM_MATH_CM7 -D__TARGET_FPU_VFP-o rm_main/smc.o -MMD)
 I (..\User\Math\smc.h)(0x68B5ADB6)
+F (..\User\Math\gimbal_decoupling.c)(0x69693F1F)(-xc -std=gnu11 --target=arm-arm-none-eabi -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-4 -O1 -fno-function-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Drivers/CMSIS/Include -I ../Core/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../User/Communication -I ../User/Drivers -I ../User/Protocol -I ../User/Math/DSP/Include -I ../User/Math -I ../User/Support -I ../User/Middle -I ../User/Task-I./RTE/_rm_main-ID:/KEIL5/keli_pkg/ARM/CMSIS/6.2.0/CMSIS/Core/Include-ID:/KEIL5/keli_pkg/Keil/STM32H7xx_DFP/3.1.1/Drivers/CMSIS/Device/ST/STM32H7xx/Include-D__UVISION_VERSION="543" -DSTM32H723xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32H723xx -DARM_MATH_CM7 -D__TARGET_FPU_VFP-o rm_main/gimbal_decoupling.o -MMD)
+I (..\User\Math\gimbal_decoupling.h)(0x696917CA)
+I (..\User\Math\DSP\Include\arm_math.h)(0x68B5ADB6)
+I (..\Drivers\CMSIS\Include\cmsis_compiler.h)(0x668BF20A)
+I (..\Drivers\CMSIS\Include\cmsis_armclang.h)(0x668BF20A)
 F (..\User\Support\data_list.h)(0x68B5ADB6)()
 F (..\User\Support\data_buffer.c)(0x68B5ADB6)(-xc -std=gnu11 --target=arm-arm-none-eabi -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__MICROLIB -gdwarf-4 -O1 -fno-function-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Drivers/CMSIS/Include -I ../Core/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../User/Communication -I ../User/Drivers -I ../User/Protocol -I ../User/Math/DSP/Include -I ../User/Math -I ../User/Support -I ../User/Middle -I ../User/Task-I./RTE/_rm_main-ID:/KEIL5/keli_pkg/ARM/CMSIS/6.2.0/CMSIS/Core/Include-ID:/KEIL5/keli_pkg/Keil/STM32H7xx_DFP/3.1.1/Drivers/CMSIS/Device/ST/STM32H7xx/Include-D__UVISION_VERSION="543" -DSTM32H723xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32H723xx -DARM_MATH_CM7 -D__TARGET_FPU_VFP-o rm_main/data_buffer.o -MMD)
 I (..\User\Support\data_buffer.h)(0x68B5ADB6)

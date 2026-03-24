@@ -14,6 +14,7 @@
 #include "status_task.h"
 #include "smc.h"
 #include "drv_dm_motor.h"
+#include "gimbal_decoupling.h"
 
 float yaw_err_up;
 FGT_agl_t yaw_test = {
@@ -33,6 +34,9 @@ gimbal_scale_t gimbal_scale = {
     .angle_keyboard = 0.00003f
 };
 gimbal_t gimbal;
+
+float body_vector[3];
+float rotate_data[3][3];
 
 static void gimbal_init(void)
 {
@@ -178,6 +182,13 @@ static void gimbal_get_vision_data(void)
         }
         default: break;
     }
+}
+
+void gimbal_inverse_calc(decoupling_t *dp)
+{
+	dp->imu_mea_vector[0] = gimbal_imu.yaw;
+	dp->imu_mea_vector[1] = gimbal_imu.pit;
+	
 }
 
 void gimbal_task(void const *argu)

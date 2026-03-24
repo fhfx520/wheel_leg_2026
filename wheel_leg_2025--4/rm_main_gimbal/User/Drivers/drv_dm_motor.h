@@ -4,22 +4,13 @@
 #include "can_comm.h"
 #include "data_list.h"
 
-#define DM_MOTOR_ID         0x00//ÐÂ²¦ÅÌ
+#define PIT_MOTOR_CMD_ID	0x05
+#define PIT_MOTOR_REC_ID	0x15
 
 #define CMD_MOTOR_MODE      0x01
 #define CMD_RESET_MODE      0x02
 #define CMD_ENABLE_MODE     0x03
 
-//#define P_MIN 0.0f    // Radians
-//#define P_MAX 25.132f
-//#define V_MIN -45.0f    // Rad/s
-//#define V_MAX 45.0f
-//#define KP_MIN 0.0f     // N*m/rad
-//#define KP_MAX 500.0f
-//#define KD_MIN 0.0f     // N*m/rad/s
-//#define KD_MAX 5.0f
-//#define T_MIN -54.0f    // N*m 18
-//#define T_MAX 54.0f
 #define P_MIN -12.56637f   // Radians
 #define P_MAX 12.56637f
 #define V_MIN -30.0f    // Rad/s

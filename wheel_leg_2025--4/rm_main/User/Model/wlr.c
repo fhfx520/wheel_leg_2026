@@ -951,7 +951,7 @@ static void update_fly_state(uint8_t index, float yaw_err)
 //        && wlr.jump_flag == WLR_JUMP_IDLE && double_cnt <= 0 && chassis.recover_flag == 0
 //        && wlr.sky_over == 0 && wlr.sky_flag == WLR_SKY_IDLE && KEY_PRESS_POWER && yaw_err < 0.5f) {
 
-    if ( fabs(chassis_imu.pit) < 0.50f &&  wlr.side[index].Fn_kal < 160.0f && rotate_flag == 0 && wlr.high_flag == 1 && chassis.recover_flag == 0
+    if ( fabs(chassis_imu.pit) < 0.50f &&  wlr.side[index].Fn_kal < 155.0f && rotate_flag == 0 && wlr.high_flag == 1 && chassis.recover_flag == 0
 		&& (wlr.sky_flag == WLR_SKY_IDLE) && (wlr.sky_flag == WLR_JUMP_IDLE) && (yaw_err < 0.5f || 1))  {
         wlr.side[index].fly_cnt += 30;
     } else if (wlr.side[index].fly_cnt > 0) {
@@ -1259,6 +1259,7 @@ void wlr_control(void)
     update_motion_reference();					//更新不同运动状态下，状态变量的值
 
     aMartix_Add(1, lqr.X_ref, -1, lqr.X_fdb, lqr.X_diff, 10, 1);
+	lqr.X_diff[2] = circle_error(lqr.X_ref[2],lqr.X_fdb[2],2 * PI);
 	
     if (g_robot_ctx.output.chassis  == CHASSIS_LOW_SPIN) {
         data_limit(&lqr.X_diff[1], -3.0f, 3.0f);

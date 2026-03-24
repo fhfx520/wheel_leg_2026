@@ -39,7 +39,8 @@
 #define DJI_6020_ORIGINAL_REDUCTION_RATIO 1
 
 #define YAW_MOTOR_ID		  0x205
-
+#define FRIC_MOTOR_LEFT_ID	  0x201
+#define FRIC_MOTOR_RIGHT_ID	  0x203
 typedef struct
 {
     uint32_t id;

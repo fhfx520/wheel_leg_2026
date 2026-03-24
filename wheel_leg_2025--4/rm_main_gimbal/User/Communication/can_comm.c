@@ -36,15 +36,6 @@ void can_comm_init(void)
     can_filter.FilterID2 = IMU_ALL_ID;
     can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO1;//通过过滤后给邮箱1
     HAL_FDCAN_ConfigFilter(&hfdcan1, &can_filter);
-    
-//	//板间通信
-//    can_filter.IdType = FDCAN_STANDARD_ID;//标准帧
-//    can_filter.FilterIndex = 0;
-//    can_filter.FilterType = FDCAN_FILTER_DUAL;//范围过滤
-//    can_filter.FilterID1 = 0x001;
-//    can_filter.FilterID2 = 0x001;
-//    can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO1;//通过过滤后给邮箱1
-//    HAL_FDCAN_ConfigFilter(&hfdcan1, &can_filter);
 	
     HAL_FDCAN_ConfigGlobalFilter(&hfdcan1, FDCAN_REJECT, FDCAN_REJECT, FDCAN_REJECT_REMOTE, FDCAN_REJECT_REMOTE);
     HAL_FDCAN_ActivateNotification(&hfdcan1, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0);//使能邮箱0新消息中断
@@ -56,8 +47,8 @@ void can_comm_init(void)
     can_filter.IdType = FDCAN_STANDARD_ID;//标准帧
     can_filter.FilterIndex = 0;
     can_filter.FilterType = FDCAN_FILTER_DUAL;//等于过滤
-    can_filter.FilterID1 = 0x201;
-    can_filter.FilterID2 = 0x203;
+    can_filter.FilterID1 = FRIC_MOTOR_LEFT_ID;
+    can_filter.FilterID2 = FRIC_MOTOR_RIGHT_ID;
     can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;//通过过滤后给邮箱1
     HAL_FDCAN_ConfigFilter(&hfdcan2, &can_filter);
 	
@@ -69,9 +60,9 @@ void can_comm_init(void)
     //can3过滤器设置
 	//4310P pitch电机
     can_filter.IdType = FDCAN_STANDARD_ID;//标准帧
-    can_filter.FilterIndex = 1;
+    can_filter.FilterIndex = 0;
     can_filter.FilterType = FDCAN_FILTER_DUAL;//等于过滤
-    can_filter.FilterID1 = 0x015; 
+    can_filter.FilterID1 = PIT_MOTOR_REC_ID; 
     can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;//通过过滤后给邮箱0
     HAL_FDCAN_ConfigFilter(&hfdcan3, &can_filter);
 	
@@ -100,10 +91,10 @@ void can_comm_init(void)
     fdcan_tx_message.MessageMarker = 0;
     
     //各驱动初始化
-    dji_motor_init(&fric_motor[0], DJI_3508_MOTOR, CAN_CHANNEL_2, 0x203, 1.0f);
-    dji_motor_init(&fric_motor[1], DJI_3508_MOTOR, CAN_CHANNEL_2, 0x201, 1.0f);
+    dji_motor_init(&fric_motor[0], DJI_3508_MOTOR, CAN_CHANNEL_2, FRIC_MOTOR_RIGHT_ID, 1.0f);
+    dji_motor_init(&fric_motor[1], DJI_3508_MOTOR, CAN_CHANNEL_2, FRIC_MOTOR_LEFT_ID, 1.0f);
 	
-	dm_motor_init(&pit_motor, CAN_CHANNEL_3, 0x05, 0.0f, 0x15);
+	dm_motor_init(&pit_motor, CAN_CHANNEL_3, PIT_MOTOR_CMD_ID, 0.0f, PIT_MOTOR_REC_ID);
 	
 	//注意屏蔽can1电机发送
     dji_motor_init(&yaw_motor, DJI_6020_MOTOR, CAN_CHANNEL_1, YAW_MOTOR_ID, 1.0f);

@@ -235,31 +235,10 @@ void log_scope_data_pkg(void)
 			break;
 		}
 		case 18:{
-//			log_scope_get_data(wlr.v_ref);
-//			log_scope_get_data(wlr.v_fdb);
-//			log_scope_get_data(supercap.volage);
-//			log_scope_get_data(supercap.volume_percent);
-//			log_scope_get_data(supercap.current);
-//			log_scope_get_data(power_control.judge_power_buffer);
-//			log_scope_get_data(power_control.total_power_wheel);
-//			log_scope_get_data(power_control.judge_max_power);
-//			log_scope_get_data(shoot.trigger_ecd.ref);
-//			log_scope_get_data(shoot.trigger_ecd.fdb);
-//			log_scope_get_data(trigger_motor.ecd);
-//			log_scope_get_data(wlr.roll_fdb);
-//			log_scope_get_data(wlr.pit_fdb);
-//			log_scope_get_data(wlr.wz_fdb);
-//			log_scope_get_data(shoot.trigger_mode);
-			log_scope_get_data(trigger_motor.rx_current);
-			log_scope_get_data(trigger_motor.speed_rpm);
-			log_scope_get_data(global_back_flag);
-			log_scope_get_data(shoot.trigger_ecd.ref);
-			log_scope_get_data(shoot.trigger_ecd.fdb);
-			log_scope_get_data(shoot.barrel.heat_remain);
-			log_scope_get_data(power_heat_data.shooter_17mm_barrel_heat);
-			log_scope_get_data(shoot.barrel.heat);
-			log_scope_get_data(vision_data_rec.vision_enanle);
-			log_scope_get_data(rc.mouse.l);
+			log_scope_get_data(wlr.yaw_ref);
+			log_scope_get_data(wlr.yaw_err);
+			log_scope_get_data(wlr.direction);
+			break;
 		}
         default:break;
     }

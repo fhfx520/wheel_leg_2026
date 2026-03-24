@@ -1119,6 +1119,11 @@
               <FileType>1</FileType>
               <FilePath>..\User\Math\SMC.c</FilePath>
             </File>
+            <File>
+              <FileName>gimbal_decoupling.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Math\gimbal_decoupling.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

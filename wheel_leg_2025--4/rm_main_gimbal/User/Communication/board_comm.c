@@ -160,15 +160,6 @@ void fdcan_board_comm_send(void)
 		fdcan_board_comm.tx_msg.e.vision_data.vision_trace_id = vision.trace_id;
 	else
 		fdcan_board_comm.tx_msg.e.vision_data.vision_trace_id = 0;
-	//通信测试用下面
-//	static uint8_t ccc = 1;
-//	for(uint8_t i = 0;i < 64;i++)
-//	{
-//		fdcan_board_comm.tx_msg.buff[i] = ccc;
-//		ccc++;
-//		if(ccc > 128)
-//			ccc = 1;
-//	}
 	//联合体数组发送
 	can_std_transmit(CAN_CHANNEL_1,FDCAN_GIMBAL_TO_CHA_ID,fdcan_board_comm.tx_msg.buff);
 	

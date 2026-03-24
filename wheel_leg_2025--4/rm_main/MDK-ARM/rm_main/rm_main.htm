@@ -3,7 +3,7 @@
 <title>Static Call Graph - [rm_main\rm_main.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image rm_main\rm_main.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Sun Mar 22 05:10:47 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Tue Mar 24 18:33:15 2026
 <BR><P>
 <H3>Maximum Stack Usage =        848 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -5211,7 +5211,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(.rodata..L__const.MX_FREERTOS_Init.os_thread_def_GimbalTask)
 </UL>
-<P><STRONG><a name="[278]"></a>log_scope_data_pkg</STRONG> (Thumb, 1726 bytes, Stack size 104 bytes, debug_task.o(.text.log_scope_data_pkg))
+<P><STRONG><a name="[278]"></a>log_scope_data_pkg</STRONG> (Thumb, 1588 bytes, Stack size 104 bytes, debug_task.o(.text.log_scope_data_pkg))
 <BR><BR>[Stack]<UL><LI>Max Depth = 136<LI>Call Chain = log_scope_data_pkg &rArr; log_scope_get_data &rArr; float2byte
 </UL>
 <BR>[Calls]<UL><LI><a href="#[27a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;log_scope_get_data (via Veneer)
@@ -5410,7 +5410,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mode_switch_task
 </UL>
 
-<P><STRONG><a name="[31a]"></a>wlr_control</STRONG> (Thumb, 1320 bytes, Stack size 512 bytes, wlr.o(.text.wlr_control))
+<P><STRONG><a name="[31a]"></a>wlr_control</STRONG> (Thumb, 1348 bytes, Stack size 512 bytes, wlr.o(.text.wlr_control))
 <BR><BR>[Stack]<UL><LI>Max Depth = 832<LI>Call Chain = wlr_control &rArr; vmc_forward_solution_five &rArr; aMartix_Mul
 </UL>
 <BR>[Calls]<UL><LI><a href="#[269]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kalman_filter_update (via Veneer)
@@ -5658,13 +5658,13 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_task
 </UL>
 
-<P><STRONG><a name="[319]"></a>chassis_execute_fsm</STRONG> (Thumb, 1266 bytes, Stack size 12 bytes, chassis_task.o(.text.chassis_execute_fsm))
+<P><STRONG><a name="[319]"></a>chassis_execute_fsm</STRONG> (Thumb, 1262 bytes, Stack size 12 bytes, chassis_task.o(.text.chassis_execute_fsm))
 <BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = chassis_execute_fsm
 </UL>
 <BR>[Called By]<UL><LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_task
 </UL>
 
-<P><STRONG><a name="[309]"></a>chassis_data_input</STRONG> (Thumb, 3680 bytes, Stack size 80 bytes, chassis_task.o(.text.chassis_data_input))
+<P><STRONG><a name="[309]"></a>chassis_data_input</STRONG> (Thumb, 3648 bytes, Stack size 80 bytes, chassis_task.o(.text.chassis_data_input))
 <BR><BR>[Stack]<UL><LI>Max Depth = 192<LI>Call Chain = chassis_data_input &rArr; kalman_filter_update &rArr; kalman_filter_K_update &rArr; arm_mat_inverse_f32
 </UL>
 <BR>[Calls]<UL><LI><a href="#[2be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_calc (via Veneer)
@@ -5710,9 +5710,9 @@ Local Symbols
 <P><STRONG><a name="[312]"></a>chassis_self_rescue</STRONG> (Thumb, 3368 bytes, Stack size 184 bytes, chassis_task.o(.text.chassis_self_rescue))
 <BR><BR>[Stack]<UL><LI>Max Depth = 244<LI>Call Chain = chassis_self_rescue &rArr; pid_calc &rArr; f_changing_intergration_rate
 </UL>
-<BR>[Calls]<UL><LI><a href="#[256]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dm_motor_set_control_para (via Veneer)
+<BR>[Calls]<UL><LI><a href="#[28b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_calc (via Veneer)
+<LI><a href="#[256]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dm_motor_set_control_para (via Veneer)
 <LI><a href="#[311]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dji_motor_set_torque (via Veneer)
-<LI><a href="#[28b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_calc (via Veneer)
 </UL>
 <BR>[Called By]<UL><LI><a href="#[30f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_data_output
 </UL>
@@ -6033,9 +6033,9 @@ Local Symbols
 <P><STRONG><a name="[353]"></a>update_motion_reference</STRONG> (Thumb, 584 bytes, Stack size 16 bytes, wlr.o(.text.update_motion_reference))
 <BR><BR>[Stack]<UL><LI>Max Depth = 76<LI>Call Chain = update_motion_reference &rArr; pid_calc &rArr; f_changing_intergration_rate
 </UL>
-<BR>[Calls]<UL><LI><a href="#[351]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_either_leg_flying
+<BR>[Calls]<UL><LI><a href="#[28b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_calc (via Veneer)
+<LI><a href="#[351]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_either_leg_flying
 <LI><a href="#[325]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_both_legs_flying
-<LI><a href="#[28b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_calc (via Veneer)
 </UL>
 <BR>[Called By]<UL><LI><a href="#[31a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
@@ -6049,11 +6049,11 @@ Local Symbols
 <P><STRONG><a name="[324]"></a>map_virtual_force</STRONG> (Thumb, 1988 bytes, Stack size 24 bytes, wlr.o(.text.map_virtual_force))
 <BR><BR>[Stack]<UL><LI>Max Depth = 264<LI>Call Chain = map_virtual_force &rArr; vmc_inverse_solution_five &rArr; aMartix_Mul
 </UL>
-<BR>[Calls]<UL><LI><a href="#[2be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_calc (via Veneer)
+<BR>[Calls]<UL><LI><a href="#[28b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_calc (via Veneer)
+<LI><a href="#[2be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_calc (via Veneer)
 <LI><a href="#[326]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;handle_quadrant_protection
 <LI><a href="#[325]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_both_legs_flying
 <LI><a href="#[327]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_inverse_solution_five
-<LI><a href="#[28b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_calc (via Veneer)
 </UL>
 <BR>[Called By]<UL><LI><a href="#[31a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>

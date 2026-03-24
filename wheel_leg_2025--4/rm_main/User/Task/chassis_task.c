@@ -313,7 +313,7 @@ static void chassis_execute_fsm(void)
 
     if (g_robot_ctx.output.chassis == CHASSIS_HIGH) { 
         if (g_robot_ctx.output.chassis_speed) chassis_scale.keyboard = 2.3f;
-        else chassis_scale.keyboard = 1.8f;
+        else chassis_scale.keyboard = 2.0f;
     } else { 
         if (g_robot_ctx.output.chassis_speed) chassis_scale.keyboard = 2.5f;
         else chassis_scale.keyboard = 2.0f;
@@ -341,9 +341,7 @@ ChassisState_e last_chassis_mode = CHASSIS_STOP;   // [修改] 替换为 FSM 类
 // 完全基于 FSM ChassisState_e 进行解算
 // ==============================================================================
 static void chassis_data_input(void)
-{	
-	static float base_yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
-	
+{		
     spin_limit = circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, (float)yaw_motor.ecd / 8192 * 2 * PI, 2 * PI);
 
     // 1. 速度输入算算 (基于大模式)
@@ -367,7 +365,6 @@ static void chassis_data_input(void)
         case CHASSIS_STOP: {
             wlr.yaw_ref = (float)yaw_motor.ecd / 8192 * 2 * PI;
             wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;
-			base_yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
             wlr.wz_ref = 0;
             break;
         }
@@ -385,7 +382,6 @@ static void chassis_data_input(void)
 			
             wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;  
             wlr.wz_ref = 0.0f;
-
 			wlr.yaw_err = circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
             
             if (wlr.yaw_err > PI / 2 || wlr.yaw_err < - PI / 2) {
@@ -393,7 +389,6 @@ static void chassis_data_input(void)
                 wlr.direction = 1;
             }
             else if(wlr.yaw_err < PI / 2 || wlr.yaw_err > - PI / 2 ) {
-				wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI ;
                 wlr.direction = 0;
             }
             chassis_rotate_ramp.out =0;
@@ -723,7 +718,7 @@ static void chassis_self_rescue(void)
     dji_motor_set_torque(&driver_motor[0], 0);
     dji_motor_set_torque(&driver_motor[1], 0);
 	
-	//第四象限卡台阶 暂时注释
+	//第四象限卡台阶 轮子转
 	if (rescue_cnt > 50 && (vmc[0].quadrant ==4 || vmc[1].quadrant == 4) && chassis.rescue_inter_flag != 2 ) {
 		if (chassis_imu.pit < -0.25f) { 
 			dji_motor_set_torque(&driver_motor[0], -1);
