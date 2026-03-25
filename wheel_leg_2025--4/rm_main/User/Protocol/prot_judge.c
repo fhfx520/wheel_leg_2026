@@ -4,7 +4,6 @@
 #include "cmsis_os.h"
 #include "string.h"
 #include "crc.h"
-
 //机器人阵营
 typedef enum
 {
@@ -72,7 +71,7 @@ uint8_t judge_get_data(uint8_t *data)
             //统计一帧数据长度,用于CRC16校验
             data_length = frame_header.data_length + 5 + 2 + 2;
             //帧尾CRC16校验
-//            if (crc16_verify_checksum(data, data_length)) {
+            if (crc16_verify_checksum(data, data_length)) {
                 result = 0;
                 cmd_id = (data[6] << 8 | data[5]);
                 switch (cmd_id) {
@@ -104,7 +103,7 @@ uint8_t judge_get_data(uint8_t *data)
 //                        case ID_map_data                     : memcpy(&map_data                    , (data + 7), LEN_map_data                    );break;
 //                        case ID_custom_info                  : memcpy(&custom_info                 , (data + 7), LEN_custom_info                 );break;
                 }
-//            }
+            }
         }
         //首地址加帧长度,指向CRC16下一字节,用来判断是否为0xA5,用来判断一个数据包是否有多帧数据 
         if(*(data + 5 + 2 + frame_header.data_length + 2) == 0xA5) {

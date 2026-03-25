@@ -1,4 +1,5 @@
 #include "crc.h"
+#include "stdlib.h"
 
 const uint8_t crc8_init = 0xff;
 const uint8_t crc8_table[256] = {
@@ -82,10 +83,10 @@ uint8_t crc8_get_checksum(uint8_t *pdata, uint16_t length, uint8_t crc8)
  * @param[in] length: 校验数据长度
  * @retval    正确返回1，错误返回0
  */
-uint32_t crc8_verify_checksum(uint8_t *pdata, uint16_t length)
+uint8_t crc8_verify_checksum(uint8_t *pdata, uint16_t length)
 {
     uint8_t crc8 = 0;
-    if (pdata == 0 || length <= 2)
+    if (pdata == NULL || length <= 2)
         return 0;
     crc8 = crc8_get_checksum(pdata, length-1, crc8_init);
     return (crc8 == pdata[length-1]);
@@ -100,7 +101,7 @@ uint32_t crc8_verify_checksum(uint8_t *pdata, uint16_t length)
 void crc8_set_checksum(uint8_t *pdata, uint16_t length)
 {
     uint8_t crc8 = 0;
-    if (pdata == 0 || length <= 2)
+    if (pdata == NULL || length <= 2)
         return;
     crc8 = crc8_get_checksum((uint8_t *)pdata, length-1, crc8_init);
     pdata[length-1] = crc8;
@@ -116,7 +117,7 @@ void crc8_set_checksum(uint8_t *pdata, uint16_t length)
 uint16_t crc16_get_checksum(uint8_t *pdata, uint32_t length, uint16_t crc16)
 {
     uint8_t data;
-    if (pdata == 0)
+    if (pdata == NULL)
         return 0xffff;
     while (length--) {
         data = *pdata++;
@@ -131,10 +132,10 @@ uint16_t crc16_get_checksum(uint8_t *pdata, uint32_t length, uint16_t crc16)
  * @param[in] length: 校验数据长度
  * @retval    正确返回1，错误返回0
  */
-uint32_t crc16_verify_checksum(uint8_t *pdata, uint16_t length)
+uint8_t crc16_verify_checksum(uint8_t *pdata, uint16_t length)
 {
-    uint8_t crc16 = 0;
-    if (pdata == 0 || length <= 2)
+    uint16_t crc16 = 0;
+    if (pdata == NULL || length <= 2)
         return 0;
     crc16 = crc16_get_checksum(pdata, length-2, crc16_init);
     return ((crc16 & 0xff) == pdata[length-2] && ((crc16 >> 8) & 0xff) == pdata[length-1]);
@@ -149,7 +150,7 @@ uint32_t crc16_verify_checksum(uint8_t *pdata, uint16_t length)
 void crc16_set_checksum(uint8_t *pdata, uint16_t length)
 {
     uint16_t crc16 = 0;
-    if (pdata == 0 || length <= 2)
+    if (pdata == NULL || length <= 2)
         return;
     crc16 = crc16_get_checksum((uint8_t *)pdata, length-2, crc16_init);
     pdata[length-2] = (uint8_t)(crc16 & 0x00ff);
