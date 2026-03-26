@@ -575,20 +575,6 @@ static void shoot_param_update(void)
     shoot.barrel.heat_remain = 50;
 }
 
-static void shoot_test(void) {
-//    static float last_shoot_speed;
-//    shoot.barrel.bullet_spd.fdb = shoot_data.initial_speed;
-//    if (ABS(shoot.barrel.bullet_spd.fdb - last_shoot_speed) > 1e-5f) {
-//        ++shoot.barrel.shoot_cnt;//统计发射子弹数
-//        buffer_put_noprotect(shoot_speed_buffer, &shoot.barrel.bullet_spd.fdb);
-//        float vision_data_array[SHOOT_SPEED_NUM] = {0};
-//        uint32_t real_num = ubf_pop_into_array_new2old(shoot_speed_buffer, vision_data_array, 0, SHOOT_SPEED_NUM);
-//        arm_var_f32(vision_data_array, real_num, &shoot.barrel.bullet_spd.std);  //计算数据方差
-//        shoot.barrel.bullet_spd.std = sqrt(shoot.barrel.bullet_spd.std);
-//        last_shoot_speed = shoot.barrel.bullet_spd.fdb;
-//    }
-}
-
 static void shoot_mode_switch(void)
 {
     /* 更新裁判系统参数 */
@@ -612,26 +598,22 @@ static void shoot_mode_switch(void)
                 }
                 case RC_MI: {
                     shoot.fric_mode = FRIC_MODE_RUN;   //正常
-                    shoot.trigger_mode = TRIGGER_MODE_SINGLE;
-//                    shoot.fric_mode = FRIC_MODE_STOP;   //调试
-//                    shoot.trigger_mode = TRIGGER_MODE_STOP;                    
+                    shoot.trigger_mode = TRIGGER_MODE_SINGLE;                
                     
                     break;
                 }
                 case RC_DN: {
                     shoot.fric_mode = FRIC_MODE_RUN;
-                    shoot.trigger_mode = TRIGGER_MODE_SERIES;
-//                    shoot.fric_mode = FRIC_MODE_STOP;
-//                    shoot.trigger_mode = TRIGGER_MODE_STOP;                   
+                    shoot.trigger_mode = TRIGGER_MODE_SERIES;                 
                     
                     break;
                 }
                 default: break;
             }
-//           if  ( !(rc_fsm_check(RC_LEFT_LD) )){ //遥控器注释发射
-//                shoot.fric_mode = FRIC_MODE_STOP;
-//                shoot.trigger_mode = TRIGGER_MODE_PROTECT;
-//            }
+			if(rc_fsm_check(RC_RIGHT_LU)){	//右摇杆左上关闭发射 
+				shoot.fric_mode = FRIC_MODE_STOP;
+				shoot.trigger_mode = TRIGGER_MODE_PROTECT;
+			}
             break;
         }
         case KEYBOARD_MODE: {
@@ -681,7 +663,6 @@ void shoot_task(void const *argu)
         shoot_control();
         shoot_pid_calc();
         shoot_data_output();
-//        shoot_test();
         status.task.shoot = 1;
 //        taskEXIT_CRITICAL();
         osDelayUntil(&thread_wake_time, 2);

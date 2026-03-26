@@ -340,8 +340,10 @@ ChassisState_e last_chassis_mode = CHASSIS_STOP;   // [修改] 替换为 FSM 类
 // ==============================================================================
 // 完全基于 FSM ChassisState_e 进行解算
 // ==============================================================================
+uint8_t turn_back_flag = 0;
 static void chassis_data_input(void)
 {		
+	
     spin_limit = circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, (float)yaw_motor.ecd / 8192 * 2 * PI, 2 * PI);
 
     // 1. 速度输入算算 (基于大模式)
@@ -366,6 +368,7 @@ static void chassis_data_input(void)
             wlr.yaw_ref = (float)yaw_motor.ecd / 8192 * 2 * PI;
             wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;
             wlr.wz_ref = 0;
+			turn_back_flag = 0;
             break;
         }
         
@@ -375,23 +378,55 @@ static void chassis_data_input(void)
         case CHASSIS_TERRAIN_EXECUTING:
 		case CHASSIS_ASCEND:
 		case CHASSIS_EXECUTING_FOLLOW_ASCEND:			{ // 整合了原版的所有 FOLLOW 和 PRONE
-            if (gimbal.start_up)    
-                wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
-            else                    
-                wlr.yaw_ref = (float)yaw_motor.ecd / 8192 * 2  * PI;  
-			
-            wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;  
-            wlr.wz_ref = 0.0f;
-			wlr.yaw_err = circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
-            
-            if (wlr.yaw_err > PI / 2 || wlr.yaw_err < - PI / 2) {
-                wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI ;
-                wlr.direction = 1;
-            }
-            else if(wlr.yaw_err < PI / 2 || wlr.yaw_err > - PI / 2 ) {
-                wlr.direction = 0;
-            }
-            chassis_rotate_ramp.out =0;
+			if(key_scan_clear(KB_CTRL) && gimbal.start_up)
+				turn_back_flag = 1;
+			if(turn_back_flag)
+			{
+				if(wlr.direction)
+				{
+					wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
+					wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;  
+					wlr.wz_ref = 0.0f;
+					wlr.yaw_err = circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
+				if((wlr.yaw_err < PI / 3 && wlr.yaw_err > 0) || (wlr.yaw_err > - PI / 3 && wlr.yaw_err < 0))
+				{
+					wlr.direction = 0;
+					turn_back_flag = 0;
+				}
+				}
+				else
+				{
+					wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI;
+					wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;  
+					wlr.wz_ref = 0.0f;
+					wlr.yaw_err = circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
+					if((wlr.yaw_err < PI / 3 && wlr.yaw_err > 0) || (wlr.yaw_err > - PI / 3 && wlr.yaw_err < 0))
+					{
+						wlr.direction = 1;
+						turn_back_flag = 0;
+					}
+				}
+			}
+			else
+			{
+				if (gimbal.start_up)    
+					wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
+				else                    
+					wlr.yaw_ref = (float)yaw_motor.ecd / 8192 * 2  * PI;  
+				
+				wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;  
+				wlr.wz_ref = 0.0f;
+				wlr.yaw_err = circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
+				
+				if (wlr.yaw_err > PI / 2 || wlr.yaw_err < - PI / 2) {
+					wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI ;
+					wlr.direction = 1;
+				}
+				else if(wlr.yaw_err < PI / 2 || wlr.yaw_err > - PI / 2 ) {
+					wlr.direction = 0;
+				}
+			}
+			chassis_rotate_ramp.out =0;
             break;
         }
         
@@ -777,9 +812,9 @@ static void chassis_data_output(void)
 //					dm_motor_set_control_para(&joint_motor[1], 0, 0,    0, 0, 0);	
 //					dm_motor_set_control_para(&joint_motor[2], 0, -4,  0, 10, 0);
 //					dm_motor_set_control_para(&joint_motor[3], 0, 0,    0, 0, 0);
-					dm_motor_set_control_para(&joint_motor[0], 0, -2, 0, 20, 0);
+					dm_motor_set_control_para(&joint_motor[0], 0, -5, 0, 20, 0);
 					dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 20, 0);
-					dm_motor_set_control_para(&joint_motor[2], 0, 2, 0, 20, 0);
+					dm_motor_set_control_para(&joint_motor[2], 0, 5, 0, 20, 0);
 					dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 20, 0);  
 				}
 				else if(wlr.joint_all_online){

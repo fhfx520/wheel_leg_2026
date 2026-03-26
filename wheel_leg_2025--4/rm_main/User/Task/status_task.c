@@ -118,26 +118,6 @@ void status_task(void const* argument)
         if (status.dm_motor == 0) {
             chassis.init = 1;
         }
-        
-        if (rc_fsm_check(RC_LEFT_LU) || status.remote || ctrl_mode == PROTECT_MODE) { //é¥æ§å™¨åˆ‡æ?DEBUGç?æ?
-            rgb_change(1, status.remote);
-            rgb_change(2, status.vision);
-            rgb_change(3, status.judge);
-            rgb_change(4, status.power);
-            rgb_change(5, status.imu);
-            rgb_change(6, status.all);
-        } else if (rc_fsm_check(RC_RIGHT_RU)) { //é¥æ§å™¨åˆ‡æ?DEBUGç?æ?
-            rgb_change(1, status.dji_motor);
-            rgb_change(2, status.dm_motor);
-            rgb_change(3, 0);
-            rgb_change(4, 0);
-            rgb_change(5, 0);
-            rgb_change(6, 0);
-        } else {
-            normal_status();
-        }
-		rgb_output_data();
-        
         osDelay(100);
     }
 }

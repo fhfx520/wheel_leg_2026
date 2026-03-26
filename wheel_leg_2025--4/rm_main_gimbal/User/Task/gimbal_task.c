@@ -141,13 +141,11 @@ static void gimbal_pid_calc(void)
 static void gimbal_data_output(void)
 {
     if(gimbal_imu.online == 0 || yaw_motor.online == 0){
-//    dji_motor_set_torque(&pit_motor, 0);
 		dji_motor_set_torque(&yaw_motor, 0);     
 		gimbal.yaw_output = 0.0f;
 		dm_motor_set_control_para(&pit_motor,0,0,0,0,0);
     }       
     else{
-    //dji_motor_set_torque(&pit_motor, 1.0f*gimbal.pit_output);
 		dji_motor_set_torque(&yaw_motor, -1.0f*gimbal.yaw_output);
 		dm_motor_set_control_para(&pit_motor,0,0,0,0,1.0f*gimbal.pit_output);
     }
@@ -184,13 +182,6 @@ static void gimbal_get_vision_data(void)
     }
 }
 
-void gimbal_inverse_calc(decoupling_t *dp)
-{
-	dp->imu_mea_vector[0] = gimbal_imu.yaw;
-	dp->imu_mea_vector[1] = gimbal_imu.pit;
-	
-}
-
 void gimbal_task(void const *argu)
 {
     uint32_t thread_wake_time = osKernelSysTick();
@@ -212,16 +203,7 @@ void gimbal_task(void const *argu)
 					else
 						gimbal.yaw_angle.ref = gimbal_imu.yaw + (float)yaw_motor.ecd / 8192 * 2 * PI -  (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI;	
 				}
-//				if(fabs(yaw_err_up) > PI || !gimbal.start_up )
-//					gimbal.yaw_angle.ref = gimbal_imu.yaw + (float)yaw_motor.ecd / 8192 * 2 * PI -  (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;//yaw轴反馈值+电机与前方灯条差值
-//				else
-//					gimbal.yaw_angle.ref = gimbal_imu.yaw + (float)yaw_motor.ecd / 8192 * 2 * PI +  (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI + PI;	
-	
-//					gimbal.yaw_angle.ref = gimbal_imu.yaw - (float)yaw_motor.ecd / 8192 * 2 * PI +  (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI ;	
-//				gimbal.yaw_angle.ref = gimbal.yaw_angle.fdb;
-
                 gimbal.pit_angle.ref = 0.3f;
-//				gimbal.pit_angle.ref = 0.0f;
                 gimbal.pit_output = 0;
                 gimbal.yaw_output = 0;
                 break;
@@ -239,9 +221,6 @@ void gimbal_task(void const *argu)
 					gimbal.start_cnt++;
 				else
 					gimbal.start_cnt = 0;
-//								YawSMC.ref = gimbal_imu.yaw* 57.29577f + circle_error(gimbal.yaw_angle.ref* 57.29577f, gimbal_imu.yaw* 57.29577f, 360.0f);;
-//								SMC_Tick(&YawSMC,gimbal_imu.yaw* 57.29577f,gimbal_imu.wz* 57.29577f);
-//								gimbal.yaw_output = -YawSMC.u;
                 gimbal_pid_calc();
                 break;
             }
@@ -259,9 +238,6 @@ void gimbal_task(void const *argu)
                     gimbal.pit_angle.ref += rc.mouse.y * gimbal_scale.angle_keyboard ;
                     gimbal.yaw_angle.ref -= rc.mouse.x * gimbal_scale.angle_keyboard;
                 }
-//								YawSMC.ref = gimbal_imu.yaw* 57.29577f + circle_error(gimbal.yaw_angle.ref* 57.29577f, gimbal_imu.yaw* 57.29577f, 360.0f);;
-//								SMC_Tick(&YawSMC,gimbal_imu.yaw* 57.29577f,gimbal_imu.wz* 57.29577f);
-//								gimbal.yaw_output = -YawSMC.u;
 								
                 gimbal_pid_calc();
                 break;

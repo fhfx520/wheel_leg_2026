@@ -2,6 +2,7 @@
 #include "cmsis_os.h"
 #include <string.h>
 #include "board_comm.h"
+#include "status_task.h"
 	
 void board_comm_task(const void *argu)
 {
@@ -13,6 +14,8 @@ void board_comm_task(const void *argu)
 		taskENTER_CRITICAL();
 		
 		fdcan_board_comm_send();
+		
+		status.task.board = 1;
 		
 		taskEXIT_CRITICAL();
 		

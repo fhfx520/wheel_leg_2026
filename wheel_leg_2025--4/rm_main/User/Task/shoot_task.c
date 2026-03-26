@@ -159,7 +159,6 @@ static uint8_t series_shoot_enable(void)
     );
 }
 uint8_t last_enable;
-int32_t mmmmm;
 static void shoot_control(void)
 {
     switch (shoot.trigger_mode) {
@@ -197,7 +196,6 @@ static void shoot_control(void)
             trigger_ecd_error = shoot.trigger_ecd.ref - shoot.trigger_ecd.fdb;
            if (series_shoot_enable() && !back_flag) { //一个周期打一颗
                 frequency_cnt = 0;
-			    mmmmm++;
 				shoot.trigger_ecd.ref += 1 * TRIGGER_MOTOR_ECD_SERIES;
                 shoot.barrel.heat += 10;
             }
@@ -308,20 +306,6 @@ static void shoot_param_update(void)
 	if(shoot.trigger_mode != TRIGGER_MODE_SERIES || (ctrl_mode == KEYBOARD_MODE && !rc.mouse.l))
 		shoot.barrel.heat = power_heat_data.shooter_17mm_barrel_heat;
 //	shoot.barrel.heat_remain = 100;
-}
-
-static void shoot_test(void) {
-//    static float last_shoot_speed;
-//    shoot.barrel.bullet_spd.fdb = shoot_data.initial_speed;
-//    if (ABS(shoot.barrel.bullet_spd.fdb - last_shoot_speed) > 1e-5f) {
-//        ++shoot.barrel.shoot_cnt;//统计发射子弹数
-//        buffer_put_noprotect(shoot_speed_buffer, &shoot.barrel.bullet_spd.fdb);
-//        float vision_data_array[SHOOT_SPEED_NUM] = {0};
-//        uint32_t real_num = ubf_pop_into_array_new2old(shoot_speed_buffer, vision_data_array, 0, SHOOT_SPEED_NUM);
-//        arm_var_f32(vision_data_array, real_num, &shoot.barrel.bullet_spd.std);  //计算数据方差
-//        shoot.barrel.bullet_spd.std = sqrt(shoot.barrel.bullet_spd.std);
-//        last_shoot_speed = shoot.barrel.bullet_spd.fdb;
-//    }
 }
 
 static void shoot_mode_switch(void)

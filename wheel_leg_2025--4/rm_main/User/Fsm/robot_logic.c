@@ -6,11 +6,17 @@
 // [接口隔离] 弱引用底层 rc_fsm_check 接口与宏定义
 // 这样不需要 #include 任何底层文件，保证在任何平台都能无痛编译
 // ==========================================================
+#ifndef RC_LEFT_LU
+#define RC_LEFT_LU  (1 << 0)
+#endif
 #ifndef RC_LEFT_LD
 #define RC_LEFT_LD  (1<<3)
 #endif
 #ifndef RC_RIGHT_RD
 #define RC_RIGHT_RD (1<<6)
+#endif
+#ifndef RC_RIGHT_LU
+#define RC_RIGHT_LU ( 1<<4 )
 #endif
 extern uint8_t rc_fsm_check(uint8_t target_status);
 
@@ -92,7 +98,13 @@ static void rem_low_execute(void) {
     
     if (check_ch3_trigger()) { fsm_change(&fsm_remote_sub, &state_rem_spin); return; }
     if (g_robot_ctx.input.sw2 == RC_SW_MID) fsm_change(&fsm_remote_sub, &state_rem_high);
-    else if (g_robot_ctx.input.sw2 == RC_SW_DOWN) fsm_change(&fsm_remote_sub, &state_rem_ter_ready);
+    if (g_robot_ctx.input.sw2 == RC_SW_DOWN) 
+	{
+		if(rc_fsm_check(RC_LEFT_LU))
+			fsm_change(&fsm_remote_sub, &state_rem_ascend);
+		else
+			fsm_change(&fsm_remote_sub, &state_rem_ter_ready);
+	}
 }
 static const FsmState_t state_rem_low = { .name = "REM_LOW", .enter = rem_low_enter, .execute = rem_low_execute };
 
@@ -113,7 +125,13 @@ static void rem_high_execute(void) {
     g_robot_ctx.output.shoot   = SHOOT_SINGLE; 
     
     if (g_robot_ctx.input.sw2 == RC_SW_UP) fsm_change(&fsm_remote_sub, &state_rem_low);
-    else if (g_robot_ctx.input.sw2 == RC_SW_DOWN) fsm_change(&fsm_remote_sub, &state_rem_ter_ready);
+    if (g_robot_ctx.input.sw2 == RC_SW_DOWN) 
+	{
+		if(rc_fsm_check(RC_LEFT_LU))
+			fsm_change(&fsm_remote_sub, &state_rem_ascend);
+		else
+			fsm_change(&fsm_remote_sub, &state_rem_ter_ready);
+	}
 }
 static const FsmState_t state_rem_high = { .name = "REM_HIGH", .enter = rem_high_enter, .execute = rem_high_execute };
 
@@ -353,6 +371,11 @@ static void remote_execute(void) {
     if (g_robot_ctx.input.sw1 == RC_SW_DOWN) { fsm_change(&g_top_fsm, &state_keyboard); return; }
     
     fsm_run(&fsm_remote_sub);
+	
+	if (rc_fsm_check(RC_RIGHT_LU))
+         g_robot_ctx.output.shoot    = SHOOT_PROTECT;
+//	if (rc_fsm_check(RC_LEFT_LD))
+//		g_robot_ctx.output.chassis  = CHASSIS_STOP;
 }
 const FsmState_t state_remote = { .name = "REMOTE", .enter = remote_enter, .execute = remote_execute };
 
