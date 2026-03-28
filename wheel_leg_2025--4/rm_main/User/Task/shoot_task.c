@@ -18,8 +18,8 @@
 #ifndef ABS
 #define ABS(x) ((x>0)? (x): (-(x)))//32818
 #endif
-#define TRIGGER_MOTOR_ECD_SINGLE   (58975.0f)  //拨盘一颗子弹转过的编码值 8192 * 5 * 2 / 10 = 8192.0f
-#define TRIGGER_MOTOR_ECD_SERIES   (58975.0f)  //拨盘一颗子弹转过的编码值 8192 * 5 * 2 / 10 = 8192.0f
+#define TRIGGER_MOTOR_ECD_SINGLE   (58975.0f)
+#define TRIGGER_MOTOR_ECD_SERIES   (58975.0f)
 
 static float Heat_ShootPeriod_calc(uint8_t trice_id);
 

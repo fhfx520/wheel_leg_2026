@@ -125,8 +125,8 @@ static void chassis_init(void)
     memset(&chassis_y_ramp, 0, sizeof(ramp_t));
     wlr_init();
 
-    ramp_init(&chassis_x_ramp, 0.02f, -2.5f, 2.5f);
-    ramp_init(&chassis_y_ramp, 0.02f, -2.5f, 2.5f);
+    ramp_init(&chassis_x_ramp, 0.015f, -3.0f, 3.0f);
+    ramp_init(&chassis_y_ramp, 0.015f, -3.0f, 3.0f);
     ramp_init(&chassis_rotate_ramp, 0.06f, -2.0f * CHASSIS_ROTATE_SPEED, 2.0f * CHASSIS_ROTATE_SPEED);
 
     wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
@@ -312,11 +312,11 @@ static void chassis_execute_fsm(void)
     }
 
     if (g_robot_ctx.output.chassis == CHASSIS_HIGH) { 
-        if (g_robot_ctx.output.chassis_speed) chassis_scale.keyboard = 2.3f;
-        else chassis_scale.keyboard = 2.0f;
+        if (g_robot_ctx.output.chassis_speed) chassis_scale.keyboard = 2.6f;
+        else chassis_scale.keyboard = 2.6f;
     } else { 
         if (g_robot_ctx.output.chassis_speed) chassis_scale.keyboard = 2.5f;
-        else chassis_scale.keyboard = 2.0f;
+        else chassis_scale.keyboard = 2.5f;
     }
 	if(g_robot_ctx.output.chassis == CHASSIS_ASCEND){
 		chassis_scale.keyboard = 2.0f;
@@ -590,7 +590,6 @@ static void chassis_data_input(void)
 
 float left_speed=3, right_speed=3;
 float left_T, right_T;
-float up_ready;
 
 static void chassis_self_rescue(void)
 {
@@ -812,9 +811,9 @@ static void chassis_data_output(void)
 //					dm_motor_set_control_para(&joint_motor[1], 0, 0,    0, 0, 0);	
 //					dm_motor_set_control_para(&joint_motor[2], 0, -4,  0, 10, 0);
 //					dm_motor_set_control_para(&joint_motor[3], 0, 0,    0, 0, 0);
-					dm_motor_set_control_para(&joint_motor[0], 0, -5, 0, 20, 0);
+					dm_motor_set_control_para(&joint_motor[0], 0, -1, 0, 20, 0);
 					dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 20, 0);
-					dm_motor_set_control_para(&joint_motor[2], 0, 5, 0, 20, 0);
+					dm_motor_set_control_para(&joint_motor[2], 0, 1, 0, 20, 0);
 					dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 20, 0);  
 				}
 				else if(wlr.joint_all_online){

@@ -196,6 +196,11 @@ void power_get_status(uint8_t *data)
 
 }	
 
+void power_control_target_velocity(void)
+{
+	
+}
+
 uint8_t power_check_offline(void)
 {
     if (power_control.online == 0) {

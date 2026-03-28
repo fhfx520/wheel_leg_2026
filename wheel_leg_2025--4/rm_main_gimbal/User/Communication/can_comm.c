@@ -16,8 +16,6 @@ FDCAN_RxHeaderTypeDef fdcan_rx_fifo0_message, fdcan_rx_fifo1_message;
 //注意FDCAN只能设置64个字节给用，设置8个会数组越界进硬件错误中断
 uint8_t rx_fifo0_data[64], rx_fifo1_data[64];
 uint8_t fdcan_rx_fifo0_data[64], fdcan_rx_fifo1_data[64];
-
-uint8_t t_flag = 0;
 /*
  * @brief  can总线初始化
  * @retval void

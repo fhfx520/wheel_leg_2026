@@ -56,6 +56,7 @@ typedef struct
 extern chassis_t chassis;
 extern uint8_t rotate_flag;
 extern kalman_filter_t kal_fusion_vel;
+extern float up_ready;
 
 void Fusion_Vel_Acc_Test(void);
 void chassis_task(void const *argu);
