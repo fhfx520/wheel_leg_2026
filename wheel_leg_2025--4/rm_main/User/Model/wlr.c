@@ -508,7 +508,7 @@ static void update_leg_height_and_balance(float yaw_error)
             height_ramp.out = 0.35f;	
         } else if (wlr_either_leg_flying()) {
 //            x3_balance_zero = (yaw_error < 0.5f) ? 0.05f : 0.25f;
-			x3_balance_zero = 0.0f;
+			x3_balance_zero = x3_balance_zero_normal;
         } else if (wlr.jump_flag == WLR_JUMP_IDLE && wlr.sky_flag == WLR_SKY_IDLE) {
             wlr.high_set = ramp_calc(&height_ramp, LegLengthHigh);
             x3_balance_zero = x3_balance_zero_normal;
@@ -525,7 +525,7 @@ static void update_leg_height_and_balance(float yaw_error)
 				data_limit(&lqr.X_ref[1],-2.0f,2.0f);
 			}
 			else{
-				x3_balance_zero = x3_balance_zero_normal + 0.25f;	
+				x3_balance_zero = x3_balance_zero_normal + 0.13f;	
 				data_limit(&lqr.X_ref[1],-2.0f,2.0f);
 			}
 		}
@@ -734,7 +734,7 @@ static void handle_sky_state(void)
         x3_balance_zero = -0.1f;
         x5_balance_zero = 0.0f;
         wlr.sky_cnt++;
-        if (wlr.sky_cnt > 200) {
+        if (wlr.sky_cnt > 130) {
             wlr.sky_cnt = 0;
             wlr.sky_flag = WLR_SKY_LANDING;
         }

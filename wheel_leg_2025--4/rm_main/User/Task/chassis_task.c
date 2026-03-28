@@ -52,7 +52,7 @@ kalman_filter_t kal_fusion_vel;
 FGT_sin_t FGT_sin_chassis;
 chassis_t chassis;
 
-float imu_pitch_offset = 0.023f;
+float imu_pitch_offset = 0.0477525853f;
 float up_ready;
 
 chassis_scale_t chassis_scale = {
@@ -60,13 +60,20 @@ chassis_scale_t chassis_scale = {
     .keyboard = 3.0f
 };
 
-static uint8_t check_key_trigger(uint16_t key_mask) {
-    if ((g_robot_ctx.input.kb.key_code & key_mask) && 
-       !(g_robot_ctx.last_key_code & key_mask)) return 1;
-    return 0;
+static uint8_t check_ch3_trigger(void)
+{
+	static int16_t last_ch3 = 0;
+	if(rc.ch3 <= -600 && last_ch3 > -600)
+	{
+		last_ch3 = rc.ch3;
+		return 1;
+	}
+	else
+	{
+		last_ch3 = rc.ch3;
+		return 0;
+	}
 }
-
-#define KEY_CTRL  (1<<5)
 
 // 恢复你本来的代码
 static void chassis_ramp(void)
@@ -378,7 +385,7 @@ static void chassis_data_input(void)
         case CHASSIS_TERRAIN_EXECUTING:
 		case CHASSIS_ASCEND:
 		case CHASSIS_EXECUTING_FOLLOW_ASCEND:			{ // 整合了原版的所有 FOLLOW 和 PRONE
-			if(key_scan_clear(KB_CTRL) && gimbal.start_up)
+			if((key_scan_clear(KB_CTRL) || check_ch3_trigger()) && gimbal.start_up)
 				turn_back_flag = 1;
 			if(turn_back_flag)
 			{
