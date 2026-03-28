@@ -3,7 +3,7 @@
 <title>Static Call Graph - [rm_main\rm_main.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image rm_main\rm_main.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Sat Mar 28 16:26:20 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Sat Mar 28 18:35:30 2026
 <BR><P>
 <H3>Maximum Stack Usage =        848 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -5366,8 +5366,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_task
 </UL>
 
-<P><STRONG><a name="[30c]"></a>wlr_init</STRONG> (Thumb, 1184 bytes, Stack size 128 bytes, wlr.o(.text.wlr_init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 288<LI>Call Chain = wlr_init &rArr; twm_init &rArr; kalman_filter_init &rArr; malloc &rArr; internal_alloc
+<P><STRONG><a name="[30c]"></a>wlr_init</STRONG> (Thumb, 1196 bytes, Stack size 136 bytes, wlr.o(.text.wlr_init))
+<BR><BR>[Stack]<UL><LI>Max Depth = 296<LI>Call Chain = wlr_init &rArr; twm_init &rArr; kalman_filter_init &rArr; malloc &rArr; internal_alloc
 </UL>
 <BR>[Calls]<UL><LI><a href="#[265]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kalman_filter_init (via Veneer)
 <LI><a href="#[30d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_init (via Veneer)
@@ -5564,7 +5564,7 @@ Local Symbols
 <BR>[Address Reference Count : 1]<UL><LI> gimbal_task.o(.rodata.mb_callback)
 </UL>
 <P><STRONG><a name="[30b]"></a>chassis_init</STRONG> (Thumb, 436 bytes, Stack size 48 bytes, chassis_task.o(.text.chassis_init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 336<LI>Call Chain = chassis_init &rArr; wlr_init &rArr; twm_init &rArr; kalman_filter_init &rArr; malloc &rArr; internal_alloc
+<BR><BR>[Stack]<UL><LI>Max Depth = 344<LI>Call Chain = chassis_init &rArr; wlr_init &rArr; twm_init &rArr; kalman_filter_init &rArr; malloc &rArr; internal_alloc
 </UL>
 <BR>[Calls]<UL><LI><a href="#[30f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;FGT_sin_init (via Veneer)
 <LI><a href="#[265]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kalman_filter_init (via Veneer)
