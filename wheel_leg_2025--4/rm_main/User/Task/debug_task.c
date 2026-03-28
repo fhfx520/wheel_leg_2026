@@ -135,8 +135,8 @@ void log_scope_data_pkg(void)
 //			log_scope_get_data(vmc[1].L_fdb);
 			log_scope_get_data(x3_balance_zero);
 			log_scope_get_data( Last_cnt );
-			log_scope_get_data( wlr.high_set );
 			log_scope_get_data(vmc[0].L_fdb);
+			log_scope_get_data(vmc[0].L_ref);
 //			log_scope_get_data(wlr.side[0].predict_wy);
 //            log_scope_get_data(wlr.side[0].wy);
 //            log_scope_get_data(wlr.side[1].predict_wy);

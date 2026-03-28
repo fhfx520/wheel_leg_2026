@@ -94,8 +94,8 @@ float F_fdb = 0.0f;
 float yw_ddot;
 float Fwy;
 float F_wy[2];
-float ff_Fy_0 = -10.0f;
-float ff_Fy_1 = -10.0f;
+float ff_Fy_0 = -20.0f;
+float ff_Fy_1 = -20.0f;
 //位移 速度 yaw wz 左腿摆角 左腿摆角速度 右腿摆角 右腿摆角速度 机体倾角 机体倾角速度 
 //左轮转矩 右轮转矩 左腿转矩 右腿转矩
 
@@ -279,10 +279,10 @@ float K_Array_Leg_015[4][10] =
 //{2.16543, 4.83383, -4.91029, -1.24817, 30.8447, 3.91051, -8.74821, -0.66373, -26.9583, -3.42004},
 //{2.16543, 4.83383, 4.91029, 1.24817, -8.74821, -0.66373, 30.8447, 3.91051, -26.9583, -3.42004}
 
-{{-0.60099, -1.5059, -3.3319, -0.79653, -7.3268, -0.75605, -3.3985, -0.38144, -3.1797, -0.83258},
-{-0.60099, -1.5059, 3.3319, 0.79653, -3.3985, -0.38144, -7.3268, -0.75605, -3.1797, -0.83258},
-{0.828513, 1.97044, -4.40068, -1.23965, 17.8717, 1.56178, -6.95988, -0.491726, -8.50666, -1.53403},
-{0.828513, 1.97044, 4.40068, 1.23965, -6.95988, -0.491726, 17.8717, 1.56178, -8.50666, -1.53403}
+{{-1.1748, -3.31187, -4.23326, -1.23388, -11.8564, -1.17728, -5.02947, -0.618422, -6.03779, -1.26463},
+{-1.1748, -3.31187, 4.23326, 1.23388, -5.02947, -0.618422, -11.8564, -1.17728, -6.03779, -1.26463},
+{0.916372, 2.49038, -4.58822, -1.51198, 20.057, 1.67002, -8.81508, -0.599521, -18.1845, -2.40576},
+{0.916372, 2.49038, 4.58822, 1.51198, -8.81508, -0.599521, 20.057, 1.67002, -18.1845, -2.40576}
 };
 
 float K_Array_Energy[4][10] = 
@@ -856,6 +856,9 @@ static void select_control_matrix(void)
 	else if (wlr.jump_flag == WLR_JUMP_ASCEND) {
         aMartix_Cover(lqr.K, (float*)K_Array_Leg_030, 4, 10);
     } 
+	else if (wlr.sky_flag == WLR_SKY_FOLDING) {		//平地收腿运动
+        aMartix_Cover(lqr.K, (float*)K_Array_Leg_015, 4, 10);
+    } 
 	else if (wlr.high_flag == 2) {					//最长腿
         aMartix_Cover(lqr.K, (float*)K_Array_Leg_030, 4, 10);
     } 
@@ -864,9 +867,6 @@ static void select_control_matrix(void)
     } 
 	else if (wlr.high_flag == 0) {					//短腿
         aMartix_Cover(lqr.K, (float*)K_Array_Leg_018, 4, 10);
-    } 
-	else if (wlr.sky_flag == WLR_SKY_FOLDING) {		//平地收腿运动
-        aMartix_Cover(lqr.K, (float*)K_Array_Leg_015, 4, 10);
     } 
 //	else if (wlr.sky_flag == WLR_SKY_EXTENDING) {		
 //        aMartix_Cover(lqr.K, (float*)K_Jump, 4, 10);
@@ -1109,7 +1109,9 @@ void wlr_init(void)
 		pid_init(&pid_leg_sky_jump[i],  NONE,2200, 3.0, 0.0f, 150.0, 500);			//跳跃专用pid
 		pid_init(&pid_leg_recover[i], NONE, 1800, 1.5f, 20000.0f, 150, 400);		//起身专用pid
         pid_init(&pid_leg_length_fly[i], NONE, 800, 0.0, 20000, 0, 200);			//离地腿长/缓冲腿长pid
-        pid_init(&pid_L_test[i], NONE, 800, 2.0, 60000, 70, 300);					//日常腿长pid
+        pid_init(&pid_L_test[i], CHANG_I_RATE, 800, 2.0, 60000, 70, 300);			//日常腿长pid
+		pid_L_test[i].threshold_a = 0.01f;
+		pid_L_test[i].threshold_b = 0.02f;
 		pid_init(&pid_rescue[i], NONE, 2.0f, 0.5f, 0, 45, 50);						//翻倒起身腿转速pid
 		pid_init(&pid_rotate_leg[i], NONE, 1500.0f, 0.0f, 40000.0f, 0, 300);		
 		pid_init(&pid_energy_leg[i], NONE, 1000.0f, 0.0f, 40000.0f, 0, 300);
