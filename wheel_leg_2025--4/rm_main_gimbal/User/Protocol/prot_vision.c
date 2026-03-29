@@ -9,6 +9,7 @@
 #include "prot_dr16.h"
 #include "control_def.h"
 #include "board_comm.h"
+#include "crc.h"
 
 vision_t vision;
 vision_tx_msg_t vision_tx_msg;
@@ -170,6 +171,48 @@ void vision_output_data(void)
     CDC_Transmit_HS(vision_send_buf, 30);
 	send_cnt++;
 }
+
+GimbalToVision_t vision_tx;
+VisionToGimbal_t vision_rx;
+
+void superpower_vision_RxHandler(uint8_t *data)
+{
+	if(data[0] == 'S' && data[1] == 'P')
+	{
+		memcpy(&vision_rx,data,sizeof(VisionToGimbal_t));
+	}
+}
+
+void rpy_to_quaternion(float roll, float pitch, float yaw, float *w, float *x, float *y, float *z) {
+    // 计算半角的三角函数值
+    float sr = sinf(roll / 2.0f);
+    float cr = cosf(roll / 2.0f);
+    float sp = sinf(pitch / 2.0f);
+    float cp = cosf(pitch / 2.0f);
+    float sy = sinf(yaw / 2.0f);
+    float cy = cosf(yaw / 2.0f);
+
+    // 计算四元数分量
+    *w = cr * cp * cy + sr * sp * sy;
+    *x = sr * cp * cy - cr * sp * sy;
+    *y = cr * sp * cy + sr * cp * sy;
+    *z = cr * cp * sy - sr * sp * cy;
+}
+
+void superpower_vision_Tx(void)
+{
+	vision_tx.data.head[0] = 'S',vision_tx.data.head[1] = 'P';
+	rpy_to_quaternion(gimbal_imu.rol,gimbal_imu.pit,gimbal_imu.yaw,&vision_tx.data.q[0],&vision_tx.data.q[1],&vision_tx.data.q[2],&vision_tx.data.q[3]);
+	vision_tx.data.yaw = gimbal_imu.yaw / PI * 180;
+	vision_tx.data.yaw_vel = gimbal_imu.wz / PI * 180;
+	vision_tx.data.pitch = gimbal_imu.pit / PI * 180;
+	vision_tx.data.pitch_vel = gimbal_imu.wy / PI * 180;
+	vision_tx.data.bullet_speed = fdcan_board_comm.rx_msg.e.vision_data.shoot_speed;
+	vision_tx.data.bullet_count = 0;
+	crc16_set_checksum(vision_tx.buff,SUPERPOWER_VISION_TX_DATA_LEN);
+	CDC_Transmit_HS(vision_tx.buff, SUPERPOWER_VISION_TX_DATA_LEN);
+}
+
 
 uint8_t vision_check_offline(void)
 {
