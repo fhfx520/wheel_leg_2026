@@ -13,6 +13,7 @@ typedef enum {
 
 /*TFminiplus 处理后的数据*/
 extern uint16_t tfmin_distance[2];
+extern uint16_t tfmin_distance_average[2][100];
 
 void vTfGetData(uint8_t *buff,TF_Distance_e TF_Distance);
 #endif

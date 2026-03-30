@@ -65,9 +65,9 @@ osThreadId ShootTaskHandle;
 osThreadId UITaskHandle;
 osThreadId DebugTaskHandle;
 osThreadId BoardCommTaskHandle;
+osThreadId ContainerTaskHandle;
 /* USER CODE END Variables */
 osThreadId StartTaskHandle;
-osThreadId ContainerTaskHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */

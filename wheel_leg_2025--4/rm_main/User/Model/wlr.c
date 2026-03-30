@@ -13,6 +13,7 @@
 #include "KNN.h"
 #include "control_def.h"
 #include "drv_dm_motor.h"
+#include "prot_tfmini.h"
 
 extern uint32_t rescue_cnt_L;
 extern uint32_t rescue_cnt_R;
@@ -1057,7 +1058,7 @@ void wlr_init(void)
         pid_init(&pid_leg_length_fly[i], NONE, 800, 0.0, 20000, 0, 200);			//离地腿长/缓冲腿长pid
         pid_init(&pid_L_test[i], CHANG_I_RATE, 800, 2.0, 60000, 70, 300);			//日常腿长pid
 		pid_L_test[i].threshold_a = 0.01f;
-		pid_L_test[i].threshold_b = 0.02f;
+		pid_L_test[i].threshold_b = 0.03f;
 		pid_init(&pid_rescue[i], NONE, 2.0f, 0.5f, 0, 45, 50);						//翻倒起身腿转速pid
 		pid_init(&pid_rotate_leg[i], NONE, 1500.0f, 0.0f, 40000.0f, 0, 300);		
 		pid_init(&pid_energy_leg[i], NONE, 1000.0f, 0.0f, 40000.0f, 0, 300);
@@ -1143,6 +1144,15 @@ void wlr_control(void)
         kalman_filter_update(&tfmini_fn[i]);
         wlr.side[i].Front_dis_kal = tfmini_fn[i].filter_vector[0];
     }
+
+//取激光连续100次数据后平均为输出结果
+//	for (uint8_t i = 0; i < WLR_SIDE_COUNT; i++) {
+//		static float average_out;
+//		for (uint8_t j = 0; j < 100; j++){
+//			average_out += (tfmin_distance_average[i][j] * 0.01f);
+//		}
+//		wlr.side[i].Front_dis_fdb = average_out / 100.0f;
+//	}
 
     for (int i = 0; i < WLR_SIDE_COUNT; i++) {
         float L0_array[3] = {vmc[i].L_fdb, vmc[i].V_fdb.e.vy0_fdb, vmc[i].Acc_fdb.L0_ddot};

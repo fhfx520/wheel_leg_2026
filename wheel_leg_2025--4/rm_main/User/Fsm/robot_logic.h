@@ -95,6 +95,8 @@ typedef struct {
     uint16_t last_key_code; 
     uint32_t ctrl_tick;     
     
+	//允许跳跃标志位
+	uint8_t sky_start_flag;
 	//跳跃完成标志位
 	uint8_t sky_finish_flag;
 	uint8_t jump_finish_flag;

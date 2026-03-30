@@ -277,7 +277,7 @@ static void kb_ter_ready_execute(void) {
     
 	if (check_key_trigger(KEY_F)) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
 	if (check_key_trigger(KEY_C)) { fsm_change(&fsm_keyboard_sub, &state_kb_high); return; }
-	if (check_key_trigger(KEY_V)) { fsm_change(&fsm_keyboard_sub, &state_kb_ter_run); return; }
+	if (check_key_trigger(KEY_V) || g_robot_ctx.sky_start_flag) { fsm_change(&fsm_keyboard_sub, &state_kb_ter_run); return; }
 	if (check_key_trigger(KEY_Z)) { fsm_change(&fsm_keyboard_sub, &state_kb_ascend); return; }
 //	if (check_key_trigger(KEY_G)) { fsm_change(&fsm_keyboard_sub, &state_kb_double_ter_run); return; }
 }

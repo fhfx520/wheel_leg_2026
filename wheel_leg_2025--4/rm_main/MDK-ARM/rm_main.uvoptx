@@ -205,6 +205,36 @@
           <WinNumber>1</WinNumber>
           <ItemText>wlr.side[1].Fy</ItemText>
         </Ww>
+        <Ww>
+          <count>10</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>huart9</ItemText>
+        </Ww>
+        <Ww>
+          <count>11</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>wlr.side[0].Front_dis_kal</ItemText>
+        </Ww>
+        <Ww>
+          <count>12</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>wlr.side[1].Front_dis_kal</ItemText>
+        </Ww>
+        <Ww>
+          <count>13</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>wlr.side[0].Front_dis_fdb</ItemText>
+        </Ww>
+        <Ww>
+          <count>14</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>wlr.side[1].Front_dis_fdb</ItemText>
+        </Ww>
+        <Ww>
+          <count>15</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>TFminiPlusBuffArray_Front_Left</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
