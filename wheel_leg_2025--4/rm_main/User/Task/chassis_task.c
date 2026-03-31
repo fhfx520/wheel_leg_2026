@@ -52,7 +52,7 @@ kalman_filter_t kal_fusion_vel;
 FGT_sin_t FGT_sin_chassis;
 chassis_t chassis;
 
-float imu_pitch_offset = 0.0477525853f;
+float imu_pitch_offset = 0.0592483692f;
 float up_ready;
 
 chassis_scale_t chassis_scale = {
@@ -168,7 +168,7 @@ static void chassis_execute_fsm(void)
 {
     rotate_flag = 0;
 	wlr.energy_flag = 0;
-	static uint8_t ready_cnt;
+	wlr.double_flag = 0;
     switch (g_robot_ctx.output.chassis) {
         case CHASSIS_STOP:
 		{
@@ -248,17 +248,9 @@ static void chassis_execute_fsm(void)
 			g_robot_ctx.jump_finish_flag = 0;
 			if(wlr.sky_flag == WLR_SKY_IDLE)
 				wlr.sky_flag = WLR_SKY_FOLDING; 
-			if(wlr.sky_flag == WLR_SKY_FOLDING && ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f > 0.65f) && ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f < 1.2f))
-			{
-//				ready_cnt++;
-//				if(ready_cnt > 10)
-					g_robot_ctx.sky_start_flag = 1;
-			}
-			else
-			{
-				ready_cnt = 0;
-//				g_robot_ctx.sky_start_flag = 0;
-			}
+			if(wlr.sky_flag == WLR_SKY_FOLDING && ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f > 0.65f) \
+				&& ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f < 1.3f))
+				g_robot_ctx.sky_start_flag = 1;
             break;
 		}
 
@@ -268,7 +260,6 @@ static void chassis_execute_fsm(void)
             wlr.high_flag = 0;
 			wlr.jump_flag = WLR_JUMP_IDLE;
 			g_robot_ctx.sky_start_flag = 0;
-			ready_cnt = 0;
             if(wlr.sky_flag == WLR_SKY_FOLDING) 
 				wlr.sky_flag = WLR_SKY_EXTENDING; 
 			//set跳跃完成标志位 用于fsm自动变回低腿长模式
@@ -294,7 +285,11 @@ static void chassis_execute_fsm(void)
 		{
 			wlr.ctrl_mode = 2;
 			wlr.high_flag = 0;
-			if(wlr.sky_flag == WLR_SKY_FOLDING) 
+			wlr.double_flag = 1;
+			if(wlr.sky_flag == WLR_SKY_IDLE && wlr.jump_flag == WLR_JUMP_IDLE)
+				wlr.sky_flag = WLR_SKY_FOLDING; 
+			else if(wlr.sky_flag == WLR_SKY_FOLDING && ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f > 0.45f) \
+				&& ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f < 0.8f) && fabsf(wlr.v_fdb) > 1.5f)
 				wlr.sky_flag = WLR_SKY_EXTENDING; 
 			else if(wlr.sky_flag == WLR_SKY_STAND && !g_robot_ctx.sky_finish_flag)
 				g_robot_ctx.sky_finish_flag = 1;
@@ -305,7 +300,6 @@ static void chassis_execute_fsm(void)
 			}
 			else if(wlr.jump_flag == WLR_JUMP_RECOVER_SHORT && !g_robot_ctx.jump_finish_flag)
 				g_robot_ctx.jump_finish_flag = 1;
-			
 			break;
 		}
 		
@@ -323,7 +317,7 @@ static void chassis_execute_fsm(void)
 		{
             wlr.ctrl_mode = 0; 
             wlr.high_flag = 0;
-            wlr.jump_flag = 0;
+            wlr.jump_flag = WLR_JUMP_IDLE;
             wlr.sky_flag = WLR_SKY_IDLE;
             chassis.rescue_cnt_L = 0;
             chassis.rescue_cnt_R = 0;
@@ -836,9 +830,9 @@ static void chassis_data_output(void)
 //					dm_motor_set_control_para(&joint_motor[1], 0, 0,    0, 0, 0);	
 //					dm_motor_set_control_para(&joint_motor[2], 0, -4,  0, 10, 0);
 //					dm_motor_set_control_para(&joint_motor[3], 0, 0,    0, 0, 0);
-					dm_motor_set_control_para(&joint_motor[0], 0, -1, 0, 20, 0);
+					dm_motor_set_control_para(&joint_motor[0], 0, -10, 0, 20, 0);
 					dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 20, 0);
-					dm_motor_set_control_para(&joint_motor[2], 0, 1, 0, 20, 0);
+					dm_motor_set_control_para(&joint_motor[2], 0, 10, 0, 20, 0);
 					dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 20, 0);  
 				}
 				else if(wlr.joint_all_online){

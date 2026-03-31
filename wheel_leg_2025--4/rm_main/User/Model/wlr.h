@@ -80,6 +80,7 @@ typedef struct
 		sky_cnt		跳跃计数变量
 		sky_over 	=1完成跳跃
 		jump2_over  =1机体已磕上第二级台阶 */
+    uint8_t double_flag;//是否上二级台阶标志位
 	
 	uint16_t s_wait;//定点wait
 	uint8_t direction;//当前前进方向 0为膝关节反向 1为膝关节正向
