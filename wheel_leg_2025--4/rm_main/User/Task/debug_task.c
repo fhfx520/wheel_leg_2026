@@ -235,9 +235,9 @@ void log_scope_data_pkg(void)
 			break;
 		}
 		case 18:{
-			log_scope_get_data(wlr.yaw_ref);
-			log_scope_get_data(wlr.yaw_err);
-			log_scope_get_data(wlr.direction);
+			log_scope_get_data(wlr.pit_fdb);
+			log_scope_get_data(wlr.v_fdb);
+			log_scope_get_data(wlr.side[0].Front_dis_kal);
 			break;
 		}
         default:break;

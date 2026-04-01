@@ -647,7 +647,6 @@ static void handle_sky_state(void)
 	    pid_leg_sky_cover[0].i_out = pid_leg_sky_cover[1].i_out = \
 	    Fy_ramp[0].out = Fy_ramp[1].out= 0;
 		sky_ramp[0].out = sky_ramp[1].out= 0;
-		
         if (abs(rc.ch2) > 500) { 
             wlr.sky_cnt++;
         }
@@ -662,7 +661,7 @@ static void handle_sky_state(void)
 		if(wlr.double_flag)
 		{
 			x3_balance_zero = 0.08f;
-			x5_balance_zero = 0.1f;
+			x5_balance_zero = 0.05f;
 		}
 		else
 		{

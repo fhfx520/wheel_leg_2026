@@ -52,7 +52,7 @@ kalman_filter_t kal_fusion_vel;
 FGT_sin_t FGT_sin_chassis;
 chassis_t chassis;
 
-float imu_pitch_offset = 0.0592483692f;
+float imu_pitch_offset = 0.0517700613f;
 float up_ready;
 
 chassis_scale_t chassis_scale = {
@@ -249,7 +249,7 @@ static void chassis_execute_fsm(void)
 			if(wlr.sky_flag == WLR_SKY_IDLE)
 				wlr.sky_flag = WLR_SKY_FOLDING; 
 			if(wlr.sky_flag == WLR_SKY_FOLDING && ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f > 0.65f) \
-				&& ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f < 1.3f))
+				&& ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f < 1.2f))
 				g_robot_ctx.sky_start_flag = 1;
             break;
 		}
