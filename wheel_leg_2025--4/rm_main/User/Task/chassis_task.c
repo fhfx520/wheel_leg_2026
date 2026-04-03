@@ -52,7 +52,7 @@ kalman_filter_t kal_fusion_vel;
 FGT_sin_t FGT_sin_chassis;
 chassis_t chassis;
 
-float imu_pitch_offset = 0.089155063f;
+float imu_pitch_offset = 0.124833025f;
 float up_ready;
 
 chassis_scale_t chassis_scale = {
@@ -331,8 +331,8 @@ static void chassis_execute_fsm(void)
     }
 
     if (g_robot_ctx.output.chassis == CHASSIS_HIGH) { 
-        if (g_robot_ctx.output.chassis_speed) chassis_scale.keyboard = 2.2f;
-        else chassis_scale.keyboard = 2.2f;
+        if (g_robot_ctx.output.chassis_speed) chassis_scale.keyboard = 2.0f;
+        else chassis_scale.keyboard = 2.0f;
     } else { 
         if (g_robot_ctx.output.chassis_speed) chassis_scale.keyboard = 2.5f;
         else chassis_scale.keyboard = 2.5f;
@@ -830,10 +830,14 @@ static void chassis_data_output(void)
 //					dm_motor_set_control_para(&joint_motor[1], 0, 0,    0, 0, 0);	
 //					dm_motor_set_control_para(&joint_motor[2], 0, -4,  0, 10, 0);
 //					dm_motor_set_control_para(&joint_motor[3], 0, 0,    0, 0, 0);
-					dm_motor_set_control_para(&joint_motor[0], 0, -10, 0, 20, 0);
-					dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 20, 0);
-					dm_motor_set_control_para(&joint_motor[2], 0, 10, 0, 20, 0);
-					dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 20, 0);  
+//					dm_motor_set_control_para(&joint_motor[0], 0, -10, 0, 20, 0);
+//					dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 20, 0);
+//					dm_motor_set_control_para(&joint_motor[2], 0, 10, 0, 20, 0);
+//					dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 20, 0);  
+					dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, wlr.side[0].T1);
+					dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, wlr.side[0].T2);
+					dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0,-wlr.side[1].T1);
+					dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0,-wlr.side[1].T2);  
 				}
 				else if(wlr.joint_all_online){
 					dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, wlr.side[0].T1);

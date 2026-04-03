@@ -198,10 +198,15 @@ float K_Array_Leg_030[4][10] =
 //{0.645957, 1.4676, -6.50345, -1.94561, 22.2361, 2.09071, -13.6701, -0.998504, -23.8019, -3.25382},
 //{0.645957, 1.4676, 6.50345, 1.94561, -13.6701, -0.998504, 22.2361, 2.09071, -23.8019, -3.25382}
 
-{{-1.05431, -2.71882, -3.8832, -1.00545, -12.7904, -1.56967, -4.687, -0.650318, -4.81147, -0.944401},
-{-1.05431, -2.71882, 3.8832, 1.00545, -4.687, -0.650318, -12.7904, -1.56967, -4.81147, -0.944401},
-{0.728258, 1.82676, -6.28277, -1.89712, 23.0937, 2.20685, -13.2871, -0.932017, -23.4521, -3.18488},
-{0.728258, 1.82676, 6.28277, 1.89712, -13.2871, -0.932017, 23.0937, 2.20685, -23.4521, -3.18488}
+//{{-1.05431, -2.71882, -3.8832, -1.00545, -12.7904, -1.56967, -4.687, -0.650318, -4.81147, -0.944401},
+//{-1.05431, -2.71882, 3.8832, 1.00545, -4.687, -0.650318, -12.7904, -1.56967, -4.81147, -0.944401},
+//{0.728258, 1.82676, -6.28277, -1.89712, 23.0937, 2.20685, -13.2871, -0.932017, -23.4521, -3.18488},
+//{0.728258, 1.82676, 6.28277, 1.89712, -13.2871, -0.932017, 23.0937, 2.20685, -23.4521, -3.18488}
+
+{{-0.947686, -3.24553, -4.86807, -1.23895, -17.1345, -2.25814, -5.86629, -0.830853, -7.25895, -1.13856},
+{-0.947686, -3.24553, 4.86807, 1.23895, -5.86629, -0.830853, -17.1345, -2.25814, -7.25895, -1.13856},
+{0.582497, 1.96624, -7.60653, -2.17273, 27.4088, 2.91566, -14.71, -1.15579, -36.082, -3.93633},
+{0.582497, 1.96624, 7.60653, 2.17273, -14.71, -1.15579, 27.4088, 2.91566, -36.082, -3.93633}
 };
 
 float K_Array_Leg_018[4][10] = 
@@ -466,14 +471,14 @@ static void update_leg_height_and_balance(float yaw_error)
         }
 		
 		wlr.direction == 0 ? 
-		(  (lqr.X_fdb[1] <= 0) ? (Last_cnt = 100) :  (Last_cnt = 200)   )
+		(  (lqr.X_fdb[1] <= 0) ? (Last_cnt = 200) :  (Last_cnt = 200)   )
 		: 
-		(  (lqr.X_fdb[1] <= 0) ? (Last_cnt = 100) :  (Last_cnt = 200)   ) ; 
+		(  (lqr.X_fdb[1] <= 0) ? (Last_cnt = 200) :  (Last_cnt = 200)   ) ; 
 		
 		DO_LAST(wlr_both_legs_flying(),Last_cnt){     
 			if(wlr.direction == 0){
-				x3_balance_zero = x3_balance_zero_normal - 0.10f;
-				data_limit(&lqr.X_ref[1],-2.0f,2.0f);
+				x3_balance_zero = x3_balance_zero_normal - 0.13f;
+				data_limit(&lqr.X_ref[1],-1.5f,1.5f);
 			}
 			else{
 				x3_balance_zero = x3_balance_zero_normal + 0.05f;	
@@ -602,16 +607,18 @@ static void handle_jump_state(void)
 			wlr.high_set = jump_leg_length;
 			wlr.v_ref = 0;
 			wlr.crash_flag = 1;
+			wlr.high_set = 0.16f;
+			 wlr.jump_flag = WLR_JUMP_RECOVER_SHORT;
 		 }
-		 if((fabs(lqr.X_fdb[4]) > 1.2f && fabs(lqr.X_fdb[6]) > 1.2f && wlr.crash_flag))
-		 {
-			wlr.jump_flag = WLR_JUMP_RECOVER_SHORT;
-			wlr.crash_flag = 0;
-			wlr.high_flag = 0;
-			chassis.recover_flag = 1;
-			chassis.rescue_cnt_R = chassis.rescue_cnt_L = 150;
-//			chassis.rescue_inter_flag = 2;
-		 }
+//		 if((fabs(lqr.X_fdb[4]) > 0.8f && fabs(lqr.X_fdb[6]) > 0.8f && wlr.crash_flag))
+//		 {
+//			wlr.jump_flag = WLR_JUMP_RECOVER_SHORT;
+//			wlr.crash_flag = 0;
+//			wlr.high_flag = 0;
+//			chassis.recover_flag = 1;
+//			chassis.rescue_cnt_R = chassis.rescue_cnt_L = 150;
+////			chassis.rescue_inter_flag = 2;
+//		 }
 	}
 	else if(wlr.jump_flag == WLR_JUMP_RECOVER_SHORT)
 	{
@@ -874,7 +881,7 @@ static void update_fly_state(uint8_t index, float yaw_err)
 {
     if ( fabs(chassis_imu.pit) < 0.50f &&  wlr.side[index].Fn_kal < 155.0f && rotate_flag == 0 && wlr.high_flag == 1 && chassis.recover_flag == 0
 		&& (wlr.sky_flag == WLR_SKY_IDLE) && (wlr.sky_flag == WLR_JUMP_IDLE))  {
-        wlr.side[index].fly_cnt += 30;
+        wlr.side[index].fly_cnt += 10;
     } else if (wlr.side[index].fly_cnt > 0) {
         wlr.side[index].fly_cnt -= 5;
         if (wlr.side[index].Fn_kal > 165.0f) {
@@ -904,7 +911,7 @@ static void handle_quadrant_protection(uint8_t index)
         && (wlr.sky_flag == WLR_SKY_IDLE)
         && chassis.recover_flag == 0) {
         quadrant_cnt++;
-        if (quadrant_cnt > 200) {
+        if (quadrant_cnt > 200 && 0) {
             chassis.recover_flag = 1;
             wlr.high_flag = 0;
         }
@@ -1156,7 +1163,7 @@ void wlr_control(void)
     if (g_robot_ctx.output.chassis  == CHASSIS_LOW_SPIN) {
         data_limit(&lqr.X_diff[1], -3.0f, 3.0f);
     } else {
-        data_limit(&lqr.X_diff[1], -2.0f, 2.0f);
+        data_limit(&lqr.X_diff[1], -1.8f, 1.8f);
     }
 	//功率限制
 //    power_limit_current();
