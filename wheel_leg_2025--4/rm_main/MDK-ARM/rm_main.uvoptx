@@ -158,12 +158,7 @@
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>chassis_imu</ItemText>
-        </Ww>
-        <Ww>
-          <count>1</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>wlr.pit_fdb</ItemText>
+          <ItemText>driver_motor,0x0A</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>
