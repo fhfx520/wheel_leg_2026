@@ -96,7 +96,7 @@ float yw_ddot;
 float Fwy;
 float F_wy[2];
 float ff_Fy_0 = 20.0f;
-float ff_Fy_1 = 10.0f;
+float ff_Fy_1 = 20.0f;
 //位移 速度 yaw wz 左腿摆角 左腿摆角速度 右腿摆角 右腿摆角速度 机体倾角 机体倾角速度 
 //左轮转矩 右轮转矩 左腿转矩 右腿转矩
 
@@ -461,8 +461,8 @@ static void update_leg_height_and_balance(float yaw_error)
         x3_balance_zero = x3_balance_zero_normal;
     } else if (wlr.high_flag == 1) {
         if (wlr_both_legs_flying()) {
-            wlr.high_set = 0.35f;
-            height_ramp.out = 0.35f;	
+            wlr.high_set = 0.33f;
+            height_ramp.out = 0.33f;	
         } else if (wlr_either_leg_flying()) {
 			x3_balance_zero = x3_balance_zero_normal;
         } else if (wlr.jump_flag == WLR_JUMP_IDLE && wlr.sky_flag == WLR_SKY_IDLE) {
@@ -477,12 +477,12 @@ static void update_leg_height_and_balance(float yaw_error)
 		
 		DO_LAST(wlr_both_legs_flying(),Last_cnt){     
 			if(wlr.direction == 0){
-				x3_balance_zero = x3_balance_zero_normal - 0.13f;
-				data_limit(&lqr.X_ref[1],-1.5f,1.5f);
+				x3_balance_zero = x3_balance_zero_normal - 0.05f;
+				data_limit(&wlr.v_ref,-1.5f,1.5f);
 			}
 			else{
 				x3_balance_zero = x3_balance_zero_normal + 0.05f;	
-				data_limit(&lqr.X_ref[1],-2.0f,2.0f);
+				data_limit(&wlr.v_ref,-2.0f,2.0f);
 			}
 		}
 		x5_balance_zero = 0.0f;
@@ -622,14 +622,14 @@ static void handle_jump_state(void)
 	}
 	else if(wlr.jump_flag == WLR_JUMP_RECOVER_SHORT)
 	{
-		 wlr.high_set = wlr.recover_length;
+		 wlr.high_set = 0.16f;
 		 if (fabs(wlr.high_set - vmc[0].L_fdb) < 0.05f && fabs(wlr.high_set - vmc[1].L_fdb) < 0.05f) {
 			 wlr.jump_cnt++;
 			 if(wlr.jump_cnt > 50)
 			 {
 				 wlr.jump_flag = WLR_JUMP_RECOVER_LONG;
 				 wlr.crash_flag = 0;
-				 height_ramp.out = wlr.recover_length;
+				 height_ramp.out = 0.16f;
 				 pid_leg_recover[0].i_out = 0;
 				 pid_leg_recover[1].i_out = 0;
 			 }
@@ -879,12 +879,12 @@ static void update_motion_reference(void)
 
 static void update_fly_state(uint8_t index, float yaw_err)
 {
-    if ( fabs(chassis_imu.pit) < 0.50f &&  wlr.side[index].Fn_kal < 155.0f && rotate_flag == 0 && wlr.high_flag == 1 && chassis.recover_flag == 0
+    if ( fabs(chassis_imu.pit) < 0.50f &&  wlr.side[index].Fn_kal < 140.0f && rotate_flag == 0 && wlr.high_flag == 1 && chassis.recover_flag == 0
 		&& (wlr.sky_flag == WLR_SKY_IDLE) && (wlr.sky_flag == WLR_JUMP_IDLE))  {
         wlr.side[index].fly_cnt += 10;
     } else if (wlr.side[index].fly_cnt > 0) {
         wlr.side[index].fly_cnt -= 5;
-        if (wlr.side[index].Fn_kal > 165.0f) {
+        if (wlr.side[index].Fn_kal > 160.0f) {
             wlr.side[index].fly_cnt -= 40;
         }
         if (wlr.side[index].fly_cnt < 0) {
@@ -944,7 +944,7 @@ static void map_virtual_force(uint8_t index)
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
     }
 	else if(wlr.jump_flag == WLR_JUMP_ASCEND){
-		wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 40.0f
+		wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 30.0f
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
 	}
 	else if (wlr.sky_flag == WLR_SKY_FOLDING) {
