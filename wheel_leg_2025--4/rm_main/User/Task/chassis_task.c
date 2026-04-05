@@ -513,8 +513,7 @@ static void chassis_data_input(void)
     chassis.output.vy = chassis.input.vx * arm_sin_f32(wlr.yaw_err) + chassis.input.vy * arm_cos_f32(wlr.yaw_err);
         
     if (g_robot_ctx.output.chassis == CHASSIS_LOW_SPIN){
-        if (fabs(wlr.v_fdb) > 2.0f) chassis.output.vx = -2.0f * wlr.v_fdb;
-        else rotate_flag = 1;            
+		rotate_flag = 1;            
     }
     else if(rotate_ramp_flag == 0) rotate_flag = 0;   
     

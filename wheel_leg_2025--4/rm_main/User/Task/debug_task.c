@@ -243,6 +243,7 @@ void log_scope_data_pkg(void)
 			log_scope_get_data(chassis.output.vx);
 			log_scope_get_data(chassis.output.vy);
 			log_scope_get_data(wlr.yaw_err);
+			log_scope_get_data(lqr.X_diff[1]);
 			break;
 		}
         default:break;

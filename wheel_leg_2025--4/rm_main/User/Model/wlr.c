@@ -294,15 +294,25 @@ float K_Array_Leg_rotate[4][10] =
 //{0 , 0, 0, -2.17516, 32.8562, 3.01931, -16.0313, -0.988754, -26.1158, -2.62371},
 //{0 , 0, 0, 2.17516, -16.0313, -0.988754, 32.8562, 3.01931, -26.1158, -2.62371}
 
-{{0, -4.93003, 0, -1.13, -20.0828, -2.14187, -5.32546, -0.804943, -4.30173, -0.952754},
-{0, -4.93003, 0, 1.13, -5.32546, -0.804943, -20.0828, -2.14187, -4.30173, -0.952754},
-{0, 3.89962, 0, -2.06254, 26.0566, 2.18361, -15.7878, -1.07608, -19.6875, -3.10012},
-{0, 3.89962, 0, 2.06254, -15.7878, -1.07608, 26.0566, 2.18361, -19.6875, -3.10012}
+//{{0, -3.24553, 0, -1.13, -20.0828, -2.14187, -5.32546, -0.804943, -4.30173, -0.952754},
+//{0, -3.24553, 0, 1.13, -5.32546, -0.804943, -20.0828, -2.14187, -4.30173, -0.952754},
+//{0, 1.96624, 0, -2.06254, 26.0566, 2.18361, -15.7878, -1.07608, -19.6875, -3.10012},
+//{0, 1.96624, 0, 2.06254, -15.7878, -1.07608, 26.0566, 2.18361, -19.6875, -3.10012}
 
 //{{0, 0, 0, -1.13, -18.7954, -2.14285, -7.56083, -1.01705, -7.15156, -1.31743},
 //{0, 0, 0, 1.13, -7.56083, -1.01705, -18.7954, -2.14285, -7.15156, -1.31743},
 //{0, 0, 0, -2.79515, 34.2222, 3.22149, -14.0909, -0.889731, -27.4444, -3.15102},
 //{0, 0, 0, 2.06254, -14.0909, -0.889731, 34.2222, 3.22149, -27.4444, -3.15102}
+
+//{{0, -4.93003, 0, -2.00597, -18.7954, -2.14285, -7.56083, -1.01705, -7.15156, -1.31743},
+//{0, -4.93003, 0, 2.00597, -7.56083, -1.01705, -18.7954, -2.14285, -7.15156, -1.31743},
+//{0, 3.89962, 0, -2.79515, 34.2222, 3.22149, -14.0909, -0.889731, -27.4444, -3.15102},
+//{0, 3.89962, 0, 2.79515, -14.0909, -0.889731, 34.2222, 3.22149, -27.4444, -3.15102}
+
+{{0, -3.24553, 0, -1.23895, -17.1345, -2.25814, -5.86629, -0.830853, -7.25895, -1.13856},
+{0, -3.24553, 0, 1.23895, -5.86629, -0.830853, -17.1345, -2.25814, -7.25895, -1.13856},
+{0, 1.96624, 0, -2.17273, 27.4088, 2.91566, -14.71, -1.15579, -36.082, -3.93633},
+{0, 1.96624, 0, 2.17273, -14.71, -1.15579, 27.4088, 2.91566, -36.082, -3.93633}
 };
 
 float K_Jump[4][10] = 
@@ -874,9 +884,24 @@ static void update_motion_reference(void)
 //		lqr.X_diff[1] = 0;
     }
 
-//    if (rotate_flag == 1) {
-//        wlr.v_ref = wlr.v_fdb;
-//    }
+    if (rotate_flag == 1) {
+        data_limit(&wlr.v_ref,-1.5f,1.5f);
+		if(fabsf(wlr.v_ref) > 0.5f)
+		{
+			K_Array_Leg_rotate[0][1] = -3.24553f;
+			K_Array_Leg_rotate[1][1] = -3.24553f;
+			K_Array_Leg_rotate[2][1] = 1.96624f;
+			K_Array_Leg_rotate[3][1] = 1.96624f;
+		}
+		else 
+		{
+			K_Array_Leg_rotate[0][1] = 0.0f;
+			K_Array_Leg_rotate[1][1] = 0.0f;
+			K_Array_Leg_rotate[2][1] = 0.0f;
+			K_Array_Leg_rotate[3][1] = 0.0f;
+		}
+			
+    }
 
     lqr.X_ref[1] = wlr.v_ref;
     lqr.X_ref[2] = wlr.yaw_ref;
@@ -948,8 +973,8 @@ static void map_virtual_force(uint8_t index)
         wlr.side[index].Fy = pid_calc(&pid_leg_recover[index], 0.05f, vmc[index].L_fdb);
     } 
 	else if (rotate_flag || rotate_ramp_flag == 1) {
-        wlr.side[index].Fy = pid_calc(&pid_rotate_leg[index], tlm.l_ref[index], vmc[index].L_fdb)
-                              + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
+        wlr.side[index].Fy = pid_calc(&pid_rotate_leg[index], tlm.l_ref[index], vmc[index].L_fdb) - 20.0f;
+//                              + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs) - 20.0f;
     }
 	else if(wlr.jump_flag == WLR_JUMP_ASCEND){
 		wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 30.0f
@@ -1165,15 +1190,13 @@ void wlr_control(void)
     update_rotate_state();						//更新在小陀螺下的K矩阵（K_Array_Leg_rotate[0][3]和K_Array_Leg_rotate[1][3]）
     update_leg_references();					//更新不同倾角下两腿腿长
     select_control_matrix();					//选择对应K矩阵
-    update_motion_reference();					//更新不同运动状态下，状态变量的值   
-
-	lqr.X_diff[2] = circle_error(lqr.X_ref[2],lqr.X_fdb[2],2 * PI);    
+    update_motion_reference();					//更新不同运动状态下，状态变量的值     
 
     aMartix_Add(1, lqr.X_ref, -1, lqr.X_fdb, lqr.X_diff, 10, 1);
 	lqr.X_diff[2] = circle_error(lqr.X_ref[2],lqr.X_fdb[2],2 * PI);
 	
     if (g_robot_ctx.output.chassis  == CHASSIS_LOW_SPIN) {
-        data_limit(&lqr.X_diff[1], -0.5f, 0.5f);
+        data_limit(&lqr.X_diff[1], -1.5f, 1.5f);
     } else {
         data_limit(&lqr.X_diff[1], -1.8f, 1.8f);
     }
