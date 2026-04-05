@@ -467,24 +467,24 @@ static void chassis_data_input(void)
 //            wlr.wz_ref = variable_rotate_vw;
 			wlr.wz_ref = ramp_calc(&chassis_rotate_ramp , -(CHASSIS_ROTATE_SPEED + (power_control.judge_max_power - 40.0f)/25.0f));
 			
-			if (supercap.volume_percent < 30.0f)
-				wlr.wz_ref += 6.0f;
-			else if (supercap.volume_percent < 35.0f)
-				wlr.wz_ref += 5.5f;
-			else if (supercap.volume_percent < 40.0f)
-				wlr.wz_ref += 5.0f;
-			else if (supercap.volume_percent < 45.0f)
-				wlr.wz_ref += 4.5f;
-			else if (supercap.volume_percent < 50.0f)
-				wlr.wz_ref += 4.0f;
-			else if (supercap.volume_percent < 55.0f)
-				wlr.wz_ref += 3.5f;
-			else if (supercap.volume_percent < 60.0f)
-				wlr.wz_ref += 3.0f;		
-			else if (supercap.volume_percent < 65.0f)
-				wlr.wz_ref += 2.5f;	
-			else if (supercap.volume_percent < 70.0f)
-				wlr.wz_ref += 2.0f;
+//			if (supercap.volume_percent < 30.0f)
+//				wlr.wz_ref += 6.0f;
+//			else if (supercap.volume_percent < 35.0f)
+//				wlr.wz_ref += 5.5f;
+//			else if (supercap.volume_percent < 40.0f)
+//				wlr.wz_ref += 5.0f;
+//			else if (supercap.volume_percent < 45.0f)
+//				wlr.wz_ref += 4.5f;
+//			else if (supercap.volume_percent < 50.0f)
+//				wlr.wz_ref += 4.0f;
+//			else if (supercap.volume_percent < 55.0f)
+//				wlr.wz_ref += 3.5f;
+//			else if (supercap.volume_percent < 60.0f)
+//				wlr.wz_ref += 3.0f;		
+//			else if (supercap.volume_percent < 65.0f)
+//				wlr.wz_ref += 2.5f;	
+//			else if (supercap.volume_percent < 70.0f)
+//				wlr.wz_ref += 2.0f;
 			
 			if(g_robot_ctx.input.kb.bit.SHIFT)//按住shift开启变速小陀螺
 				wlr.wz_ref = variable_vw_generate(wlr.wz_ref);

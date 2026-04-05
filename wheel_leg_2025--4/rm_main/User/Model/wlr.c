@@ -82,6 +82,7 @@ float x3_balance_zero = 0.08f, x5_balance_zero = 0.040f;//腿摆角角度偏置 
 const float x3_balance_zero_normal = 0.02f; //车头朝前正常情况偏置
 
 float Rotate_balance_zero 		 = 0.17f ;
+float move_rotate_balance_zero	 = 0.0f;
 float IMU_Roll_balance_zero		 = -0.0f;		//陀螺仪roll偏置
 
 uint16_t quadrant_cnt = 0;
@@ -293,10 +294,10 @@ float K_Array_Leg_rotate[4][10] =
 //{0 , 0, 0, -2.17516, 32.8562, 3.01931, -16.0313, -0.988754, -26.1158, -2.62371},
 //{0 , 0, 0, 2.17516, -16.0313, -0.988754, 32.8562, 3.01931, -26.1158, -2.62371}
 
-{{0, 0, 0, -1.13, -20.0828, -2.14187, -5.32546, -0.804943, -4.30173, -0.952754},
-{0, 0, 0, 1.13, -5.32546, -0.804943, -20.0828, -2.14187, -4.30173, -0.952754},
-{0, 0, 0, -2.06254, 26.0566, 2.18361, -15.7878, -1.07608, -19.6875, -3.10012},
-{0, 0, 0, 2.06254, -15.7878, -1.07608, 26.0566, 2.18361, -19.6875, -3.10012}
+{{0, -4.93003, 0, -1.13, -20.0828, -2.14187, -5.32546, -0.804943, -4.30173, -0.952754},
+{0, -4.93003, 0, 1.13, -5.32546, -0.804943, -20.0828, -2.14187, -4.30173, -0.952754},
+{0, 3.89962, 0, -2.06254, 26.0566, 2.18361, -15.7878, -1.07608, -19.6875, -3.10012},
+{0, 3.89962, 0, 2.06254, -15.7878, -1.07608, 26.0566, 2.18361, -19.6875, -3.10012}
 
 //{{0, 0, 0, -1.13, -18.7954, -2.14285, -7.56083, -1.01705, -7.15156, -1.31743},
 //{0, 0, 0, 1.13, -7.56083, -1.01705, -18.7954, -2.14285, -7.15156, -1.31743},
@@ -744,6 +745,12 @@ static void update_rotate_state(void)
 		pid_L_test[0].i_out = pid_L_test[1].i_out = 0;
        	 if (g_robot_ctx.output.chassis  == CHASSIS_LOW_SPIN) {
             Rotate_balance_zero = 0.03f;
+			if(rc.ch4 > 600)
+				move_rotate_balance_zero = 0.1f;
+			else if(rc.ch4 < -600)
+				move_rotate_balance_zero = -0.1f;
+			else 
+				move_rotate_balance_zero = 0.0f;
 			x5_balance_zero = 0.06f;
         } else {
             Rotate_balance_zero = 0.063f;
@@ -754,7 +761,8 @@ static void update_rotate_state(void)
 		K_Array_Leg_rotate[0][3] = -ramp_calc(&wz_ramp, 1.13574f);		//K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
         K_Array_Leg_rotate[1][3] = ramp_calc(&wz_ramp, 1.13574f);
     } else {
-        Rotate_balance_zero = 0;
+        Rotate_balance_zero = 0.0f;
+		move_rotate_balance_zero = 0.0f;
 //        wz_ramp.out = 2.0f;
     }
 }
@@ -866,9 +874,9 @@ static void update_motion_reference(void)
 //		lqr.X_diff[1] = 0;
     }
 
-    if (rotate_flag == 1) {
-        wlr.v_ref = wlr.v_fdb;
-    }
+//    if (rotate_flag == 1) {
+//        wlr.v_ref = wlr.v_fdb;
+//    }
 
     lqr.X_ref[1] = wlr.v_ref;
     lqr.X_ref[2] = wlr.yaw_ref;
@@ -1104,20 +1112,22 @@ void wlr_control(void)
                                   wlr.side[i].w1, wlr.side[i].t2, wlr.side[i].t1);
     }
     lqr.X_fdb[0] = wlr.s_fdb;
-//    lqr.X_fdb[1] = wlr.v_fdb;
-	lqr.X_fdb[1] = kal_fusion_vel.filter_vector[1];
+	if(rotate_flag || rotate_ramp_flag)
+		lqr.X_fdb[1] = wlr.v_fdb * arm_cos_f32(wlr.yaw_err);
+	else
+		lqr.X_fdb[1] = kal_fusion_vel.filter_vector[1];
     lqr.X_fdb[2] = wlr.yaw_fdb;
     lqr.X_fdb[3] = -wlr.wz_fdb;
 	
     lqr.X_fdb[8] = x5_balance_zero + wlr.pit_fdb;		//wlr.pit_fdb = -chassis_imu.pit;
     lqr.X_fdb[9] = wlr.wy_fdb;
 	
-    lqr.X_fdb[4] = x3_balance_zero + (-PI / 2 + lqr.X_fdb[8] + vmc[0].q_fdb[0]) ;
+    lqr.X_fdb[4] = x3_balance_zero + (-PI / 2 + lqr.X_fdb[8] + vmc[0].q_fdb[0]) - move_rotate_balance_zero;
     lqr.X_fdb[5] = lqr.X_fdb[9] + vmc[0].V_fdb.e.vw0_fdb;
     lqr.dot_leg_w[0] = (lqr.X_fdb[5] - lqr.last_leg_w[0]) / 0.002f;
     lqr.last_leg_w[0] = lqr.X_fdb[5];
     
-	lqr.X_fdb[6] = x3_balance_zero + (-PI / 2 + lqr.X_fdb[8] + vmc[1].q_fdb[0]) + Rotate_balance_zero;
+	lqr.X_fdb[6] = x3_balance_zero + (-PI / 2 + lqr.X_fdb[8] + vmc[1].q_fdb[0]) + Rotate_balance_zero + move_rotate_balance_zero;
     lqr.X_fdb[7] = lqr.X_fdb[9] + vmc[1].V_fdb.e.vw0_fdb;
     lqr.dot_leg_w[1] = (lqr.X_fdb[7] - lqr.last_leg_w[1]) / 0.002f;
     lqr.last_leg_w[1] = lqr.X_fdb[7];
@@ -1155,13 +1165,15 @@ void wlr_control(void)
     update_rotate_state();						//更新在小陀螺下的K矩阵（K_Array_Leg_rotate[0][3]和K_Array_Leg_rotate[1][3]）
     update_leg_references();					//更新不同倾角下两腿腿长
     select_control_matrix();					//选择对应K矩阵
-    update_motion_reference();					//更新不同运动状态下，状态变量的值       
+    update_motion_reference();					//更新不同运动状态下，状态变量的值   
+
+	lqr.X_diff[2] = circle_error(lqr.X_ref[2],lqr.X_fdb[2],2 * PI);    
 
     aMartix_Add(1, lqr.X_ref, -1, lqr.X_fdb, lqr.X_diff, 10, 1);
 	lqr.X_diff[2] = circle_error(lqr.X_ref[2],lqr.X_fdb[2],2 * PI);
 	
     if (g_robot_ctx.output.chassis  == CHASSIS_LOW_SPIN) {
-        data_limit(&lqr.X_diff[1], -3.0f, 3.0f);
+        data_limit(&lqr.X_diff[1], -0.5f, 0.5f);
     } else {
         data_limit(&lqr.X_diff[1], -1.8f, 1.8f);
     }
