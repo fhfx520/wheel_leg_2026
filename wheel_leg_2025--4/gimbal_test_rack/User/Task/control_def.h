@@ -1,0 +1,35 @@
+#ifndef __CONTROL_DEF_H
+#define __CONTROL_DEF_H
+
+#include "stdint.h"
+
+/*----------------------------- player preference ----------------------------- */
+
+#define KEY_GIMBAL_TURN_R       KB_E
+#define KEY_GIMBAL_TURN_L       KB_Q
+
+#define KEY_PRESS_VISION1       rc.kb.bit.B //大符
+#define KEY_PRESS_VISION2       rc.kb.bit.V //小符
+
+
+/*-----------------------------shoot-----------------------------*/
+//拨盘频率
+#define TRIGGER_PERIOD      200//ms 90->11Hz 40->25Hz 33->30Hz
+#define TRIGGER_PERIOD2     200//40 55->18Hz                   
+
+/*-----------------------------chassis---------------------------*/
+
+#define SUPERCAP_CHAGER_VOLAGE    23.6f
+#define SUPERCAP_DISCHAGER_VOLAGE	13.5f //超级电容放电电压下限
+
+#define CHASSIS_YAW_OFFSET  0.0f
+#define CHASSIS_YAW_FIGHT   ((CHASSIS_YAW_OFFSET + PI / 2.0f) % (2 * PI))
+#define CHASSIS_ROTATE_SPEED 8.5f //rad/s
+
+/*-----------------------------gimbal----------------------------*/
+
+#define GIMBAL_PIT_CENTER_OFFSET    5400
+#define GIMBAL_PIT_MAX              6400
+#define GIMBAL_PIT_MIN              5000
+
+#endif

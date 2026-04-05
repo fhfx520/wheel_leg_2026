@@ -1,0 +1,221 @@
+#ifndef __PROT_VISION_H
+#define __PROT_VISION_H
+
+#include "stdint.h"
+#include "math.h"
+
+
+#define VISION_DATA_LEN 44
+
+#define NAN_PROCESS(now, last)      \
+    do {                            \
+        if (isnan(now)) {           \
+            (now) = (last);         \
+        } else {                    \
+            (last) = (now);         \
+        }                           \
+    } while (0)
+
+typedef enum
+{
+    NORMAL = 0,
+    TAIL_ERROR = 1,
+    REPEAT_ERROR = 2
+} vision_rx_status_e;
+
+typedef enum
+{
+    UNAIMING = 0,
+    AIMING = 1,
+    FIRST_LOST = 2
+} vision_aim_status_e;
+
+#pragma pack(1)
+typedef struct
+{
+    uint32_t rx_repeat_cnt;
+    vision_rx_status_e rx_status;
+    vision_aim_status_e aim_status;
+    uint32_t new_frame_flag;
+    float target_yaw_angle, target_pit_angle;
+    float yaw_min_err;
+	float pit_min_err;
+    uint32_t shoot_enable;
+	uint8_t trace_id;
+    uint8_t online;
+    union
+    {
+        uint8_t buff[VISION_DATA_LEN];
+         struct
+        {
+            float yaw;
+            float pit;
+            float yaw_vel;
+            float yaw_acc;
+            float pit_vel;
+            float pit_acc;
+            float shoot_yaw_tole;
+			float shoot_pit_tole;
+            float fire;
+            float fire_rf;
+            uint8_t empty;
+            uint8_t cnt : 6;
+            uint8_t ist_flag :1;
+            uint8_t aim_flag :1;
+			uint8_t trace_id;
+            uint8_t eof;
+        } data;
+    } rx[2];
+    union
+    {
+        uint8_t buff[23];
+         struct
+        {
+            uint8_t sof;
+            uint8_t imu_pit[4];
+            uint8_t imu_yaw[4];
+            uint8_t imu_pit_spd[4];
+            uint8_t imu_yaw_spd[4];
+					
+            uint8_t vacancy :1;
+            uint8_t camp :1;
+            uint8_t aiming_mode :3;
+            uint8_t shooter_speed :3;
+						uint8_t trace_id;
+						uint8_t shoot_speed[4];
+            uint8_t empty;
+            uint8_t eof1;
+            uint8_t eof2;
+					
+            uint16_t empty1;
+        } data;
+    } tx;
+    
+    union
+    {
+        uint8_t buff[8];
+         struct
+        {
+            uint8_t vision_shoot_enable;
+            uint8_t start_up_flag;
+            uint8_t empty2;
+            uint8_t empty3;
+            uint8_t empty4;
+            uint8_t empty5;
+            uint8_t empty6;
+            uint8_t empty7;            
+        } data;
+    } rxt;
+    
+} vision_t;
+
+typedef struct
+{
+    uint8_t sof; 
+    uint8_t imu_pit[4];
+    uint8_t imu_yaw[4];
+    uint8_t imu_pit_spd[4];
+    uint8_t imu_yaw_spd[4];
+    struct
+    {
+        uint8_t vacancy : 1;       
+        uint8_t camp : 1;          
+        uint8_t aiming_status : 3; 
+        uint8_t shooter_speed : 3; 
+    } mode_msg;
+    
+    uint8_t ID;
+	uint8_t shoot_speed[4];
+	
+	uint8_t bias_time[4];
+	
+    uint8_t eof1; 
+    uint8_t eof2; 
+    
+} vision_tx_msg_t;
+
+#pragma pack()
+
+
+//*******************同济视觉通信，待测试***********************//
+#define SUPERPOWER_VISION_TX_DATA_LEN	43
+
+#pragma pack(1)
+typedef struct 
+{
+	union
+	{
+		uint8_t buff[SUPERPOWER_VISION_TX_DATA_LEN];
+		struct{
+		uint8_t head[2];
+		uint8_t mode;  // 0: ????, 1: ????, 2: С??, 3: ???
+		float q[4];    // wxyz???
+		float yaw;
+		float yaw_vel;
+		float pitch;
+		float pitch_vel;
+		float bullet_speed;
+		uint16_t bullet_count;  // ????????????
+		uint16_t crc16;
+		} e;
+	} data;
+} GimbalToVision_t;
+
+//typedef struct 
+//{
+//  uint8_t head[2];
+//  uint8_t mode;  // 0: ??????, 1: ???????????????2: ????????????
+//  float yaw;
+//  float yaw_vel;
+//  float yaw_acc;
+//  float pitch;
+//  float pitch_vel;
+//  float pitch_acc;
+//  uint16_t crc16;
+//} VisionToGimbal_t;
+typedef struct 
+{
+
+	float target_yaw_angle, target_pit_angle;
+	float target_yaw_vel,target_pit_vel;
+
+	union
+	{
+		uint8_t buff[29];//长度是29
+		struct{
+		uint8_t head[2];//SP
+		uint8_t mode;  // 0: ??????, 1: ???????????????2: ????????????
+		float yaw;
+		float yaw_vel;
+		float yaw_acc;
+		float pitch;
+		float pitch_vel;
+		float pitch_acc;
+		uint16_t crc16;
+		} e;
+	} data;
+} VisionToGimbal_t;
+
+
+#pragma pack()
+
+
+
+
+void superpower_vision_Tx(void);
+void superpower_vision_Rx(uint8_t *data);
+//extern vision_super_power_t vision_super_power;
+extern VisionToGimbal_t vision_rx;
+//*******************同济视觉通信，待测试结束***********************//
+
+
+
+extern vision_t vision;
+extern vision_tx_msg_t vision_tx_msg;
+void vision_get_data(uint8_t *data);
+void vision_output_data(void);
+uint8_t vision_check_offline(void);
+void vision_gimbal_get_data(vision_t * vision, uint32_t id, uint8_t *data);
+
+
+#endif
