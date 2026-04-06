@@ -220,6 +220,21 @@
           <WinNumber>1</WinNumber>
           <ItemText>lqr.X_ref[1]</ItemText>
         </Ww>
+        <Ww>
+          <count>13</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>chassis,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>14</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>\\rm_main\../User/Task/chassis_task.c\chassis.rescue_inter_flag</ItemText>
+        </Ww>
+        <Ww>
+          <count>15</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>rescue_cnt</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
@@ -246,6 +261,21 @@
           <count>4</count>
           <WinNumber>2</WinNumber>
           <ItemText>r_cnt2,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>5</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>vmc[0].quadrant,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>6</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>vmc[1].quadrant,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>7</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>pid_wheel_velocity</ItemText>
         </Ww>
       </WatchWindow2>
       <MemoryWindow1>

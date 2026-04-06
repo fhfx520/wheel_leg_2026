@@ -82,7 +82,6 @@ float x3_balance_zero = 0.08f, x5_balance_zero = 0.040f;//腿摆角角度偏置 
 const float x3_balance_zero_normal = 0.02f; //车头朝前正常情况偏置
 
 float Rotate_balance_zero 		 = 0.17f ;
-float move_rotate_balance_zero	 = 0.0f;
 float IMU_Roll_balance_zero		 = -0.0f;		//陀螺仪roll偏置
 
 uint16_t quadrant_cnt = 0;
@@ -154,18 +153,7 @@ const float K_Array_Prone[4][10] =
 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
 
-// 0805 : 4000, 2000, 5000, 200, 20000, 500, 20000, 500, 20000, 800
 float K_Array_Leg_030[4][10] = 
-//{{-1.08155, -2.6565, -2.22742, -0.667423, -17.6567, -1.49004, -4.91961, -0.724637, -4.75264, -0.56702},
-//{-1.08155, -2.6565, 2.22742, 0.667423, -4.91961, -0.724637, -17.6567, -1.49004, -4.75264, -0.56702},
-//{1.73901, 4.20512, -9.39727, -3.20106, 52.5307, 3.68537, -23.2778, -0.715762, -36.8817, -3.03256},
-//{1.73901, 4.20512, 9.39727, 3.20106, -23.2778, -0.715762, 52.5307, 3.68537, -36.8817, -3.03256}
-
-//{{-1.51277, -3.09417, -1.86888, -1.34708, -17.002, -2.25729, -4.68966, -0.890387, -2.91762, -0.586027},
-//{-1.51277, -3.09417, 1.86888, 1.34708, -4.68966, -0.890387, -17.002, -2.25729, -2.91762, -0.586027},
-//{0.89471, 1.76186, -3.55387, -2.77928, 31.8954, 3.02506, -21.4194, -1.44492, -16.1417, -2.14062},
-//{0.89471, 1.76186, 3.55387, 2.77928, -21.4194, -1.44492, 31.8954, 3.02506, -16.1417, -2.14062}
-
 //{{-0.934583, -2.97804, -2.24285, -1.62974, -15.7627, -1.56594, -5.33195, -0.705001, -4.03356, -0.828956},
 //{-0.934583, -2.97804, 2.24285, 1.62974, -5.33195, -0.705001, -15.7627, -1.56594, -4.03356, -0.828956},
 //{0.638386, 1.97727, -3.13352, -2.41166, 27.6856, 2.19171, -15.1371, -0.938377, -15.5574, -2.15953},
@@ -381,6 +369,7 @@ pid_t pid_roll;
 pid_t pid_L_test[2];
 pid_t pid_rotate_leg[2];
 pid_t pid_energy_leg[2];
+
 static float wlr_fn_calc(float az, float Fy_fdb, float T0_fdb, float L0[3], float theta[3])
 {
     Fwy = Fy_fdb * cosf(theta[0]) + T0_fdb * sinf(theta[0]) / L0[0];//轮子受到腿部机构竖直方向的作用力
@@ -390,16 +379,6 @@ static float wlr_fn_calc(float az, float Fy_fdb, float T0_fdb, float L0[3], floa
 				+ L0[0] * theta[2] * sinf(theta[0])
 				+ L0[0] * powf(theta[1], 2) * cosf(theta[0]);//轮子竖直方向的加速度
     return Fwy + mw * GRAVITY + mw * yw_ddot;
-	//	去除AZ
-//	az = 0;
-//    float Fwy = Fy_fdb * cosf(theta[0]) + T0_fdb * sinf(theta[0]) / L0[0];//轮子受到腿部机构竖直方向的作用力
-//    float yw_ddot = az
-//                    - L0[2] * cosf(theta[0])
-//                    + 2 * L0[1] * theta[1] * sinf(theta[0])
-//                    + L0[0] * theta[2] * sinf(theta[0])
-//                    + L0[0] * powf(theta[1], 2) * cosf(theta[0]);//轮子竖直方向的加速度
-//	
-//    return Fwy + mw * GRAVITY + mw * yw_ddot;
 }
 
 static float gas_spring_F_Calc(vmc_t v)
@@ -754,13 +733,6 @@ static void update_rotate_state(void)
         wlr.high_set = LegLengthRotate;
 		pid_L_test[0].i_out = pid_L_test[1].i_out = 0;
        	 if (g_robot_ctx.output.chassis  == CHASSIS_LOW_SPIN) {
-            Rotate_balance_zero = 0.03f;
-			if(rc.ch4 > 600)
-				move_rotate_balance_zero = 0.1f;
-			else if(rc.ch4 < -600)
-				move_rotate_balance_zero = -0.1f;
-			else 
-				move_rotate_balance_zero = 0.0f;
 			x5_balance_zero = 0.06f;
         } else {
             Rotate_balance_zero = 0.063f;
@@ -772,7 +744,6 @@ static void update_rotate_state(void)
         K_Array_Leg_rotate[1][3] = ramp_calc(&wz_ramp, 1.13574f);
     } else {
         Rotate_balance_zero = 0.0f;
-		move_rotate_balance_zero = 0.0f;
 //        wz_ramp.out = 2.0f;
     }
 }
@@ -1137,6 +1108,7 @@ void wlr_control(void)
                                   wlr.side[i].w1, wlr.side[i].t2, wlr.side[i].t1);
     }
     lqr.X_fdb[0] = wlr.s_fdb;
+    //目前这里小陀螺平移方向与头的方向存在90°的偏差 原因还不知道是为什么
 	if(rotate_flag || rotate_ramp_flag)
 		lqr.X_fdb[1] = wlr.v_fdb * arm_cos_f32(wlr.yaw_err);
 	else
@@ -1147,12 +1119,12 @@ void wlr_control(void)
     lqr.X_fdb[8] = x5_balance_zero + wlr.pit_fdb;		//wlr.pit_fdb = -chassis_imu.pit;
     lqr.X_fdb[9] = wlr.wy_fdb;
 	
-    lqr.X_fdb[4] = x3_balance_zero + (-PI / 2 + lqr.X_fdb[8] + vmc[0].q_fdb[0]) - move_rotate_balance_zero;
+    lqr.X_fdb[4] = x3_balance_zero + (-PI / 2 + lqr.X_fdb[8] + vmc[0].q_fdb[0]);
     lqr.X_fdb[5] = lqr.X_fdb[9] + vmc[0].V_fdb.e.vw0_fdb;
     lqr.dot_leg_w[0] = (lqr.X_fdb[5] - lqr.last_leg_w[0]) / 0.002f;
     lqr.last_leg_w[0] = lqr.X_fdb[5];
     
-	lqr.X_fdb[6] = x3_balance_zero + (-PI / 2 + lqr.X_fdb[8] + vmc[1].q_fdb[0]) + Rotate_balance_zero + move_rotate_balance_zero;
+	lqr.X_fdb[6] = x3_balance_zero + (-PI / 2 + lqr.X_fdb[8] + vmc[1].q_fdb[0]) + Rotate_balance_zero;
     lqr.X_fdb[7] = lqr.X_fdb[9] + vmc[1].V_fdb.e.vw0_fdb;
     lqr.dot_leg_w[1] = (lqr.X_fdb[7] - lqr.last_leg_w[1]) / 0.002f;
     lqr.last_leg_w[1] = lqr.X_fdb[7];
@@ -1201,7 +1173,7 @@ void wlr_control(void)
         data_limit(&lqr.X_diff[1], -1.8f, 1.8f);
     }
 	//功率限制
-//    power_limit_current();
+//  power_limit_current();
 	//LQR的K增益带入计算
     aMartix_Mul(lqr.K, lqr.X_diff, lqr.U_ref, 4, 10, 1);
 

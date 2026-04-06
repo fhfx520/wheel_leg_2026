@@ -646,26 +646,26 @@ static void chassis_self_rescue(void)
 	if (chassis.rescue_inter_flag == 4) {	//第二象限启动卡墙
 		//左腿归正
 		if (vmc[0].quadrant == 2 && chassis.rescue_cnt_L <= 100) {
-			dm_motor_set_control_para(&joint_motor[0], 0, -rescue_T, 0, 5, 0);//0.03 0.5
+			dm_motor_set_control_para(&joint_motor[0], 0, rescue_T, 0, 5, 0);//0.03 0.5
             dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);	
-		} else if (vmc[0].quadrant == 1) 
+		} else if (vmc[0].quadrant == 3) 
 			chassis.rescue_cnt_L++;
-		if (chassis.rescue_cnt_L > 100) {
+		if (chassis.rescue_cnt_L > 200) {
 			dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, 0);
 			dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0); 		
 		}
 		//右腿归正
 		if (vmc[1].quadrant == 2 && chassis.rescue_cnt_R <= 100 ) {
-			dm_motor_set_control_para(&joint_motor[2], 0, rescue_T, 0, 5, 0);//0.03 0.5
+			dm_motor_set_control_para(&joint_motor[2], 0, -rescue_T, 0, 5, 0);//0.03 0.5
             dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);	
-		} else if (vmc[1].quadrant == 1)
+		} else if (vmc[1].quadrant == 3)
 			chassis.rescue_cnt_R++;
-		if (chassis.rescue_cnt_R > 100) {
+		if (chassis.rescue_cnt_R > 200) {
             dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, 0);
             dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
 		}
 		//进入收腿阶段
-        if(chassis.rescue_cnt_L > 200 || chassis.rescue_cnt_R > 200) {
+        if(chassis.rescue_cnt_L > 200 && chassis.rescue_cnt_R > 200) {
             chassis.rescue_cnt_L = 0;
             chassis.rescue_cnt_R = 0;
 			chassis.rescue_inter_flag = 1;
@@ -674,23 +674,25 @@ static void chassis_self_rescue(void)
     
     if (chassis.rescue_inter_flag == 1) {
         //左腿归正
-		if ( (vmc[0].quadrant == 1 || vmc[0].quadrant == 2 || vmc[0].quadrant == 3) && (fabs(chassis_imu.pit) > 0.3f ||fabs(chassis_imu.rol )> 0.3f) || chassis.rescue_cnt_L > 1250 ) {
-			dm_motor_set_control_para(&joint_motor[0], 0, 8, 0, 5, 10);//快哥z
+		if ( (vmc[0].quadrant == 1 || vmc[0].quadrant == 2 || vmc[0].quadrant == 3) && (fabs(chassis_imu.pit) > 0.3f || fabs(chassis_imu.rol )> 0.3f) || chassis.rescue_cnt_L > 1250 ) {
+//			dm_motor_set_control_para(&joint_motor[0], 0, 8, 0, 5, 10);//快哥z
+			dm_motor_set_control_para(&joint_motor[0], 0, rescue_T, 0, 5, 0);
             dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);
 			if( chassis.rescue_cnt_L < 1000)
 				chassis.rescue_cnt_L = 0;
-        } else if (vmc[0].quadrant == 4 || fabs(chassis_imu.pit) < 0.2f ||fabs(chassis_imu.rol ) <  0.2f) {
+        } else if (vmc[0].quadrant == 4 || fabs(chassis_imu.pit) < 0.2f || fabs(chassis_imu.rol ) <  0.2f) {
             dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, 0);
             dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);        
             chassis.rescue_cnt_L++;       
         }
         //右腿归正        
-		if ((vmc[1].quadrant == 1 || vmc[1].quadrant == 2 || vmc[1].quadrant == 3) &&  (fabs(chassis_imu.pit) > 0.3f ||fabs(chassis_imu.rol )> 0.3f) || chassis.rescue_cnt_R > 1250 ) {
-			dm_motor_set_control_para(&joint_motor[2], 0, -8, 0, 5, 10);//快哥
+		if ((vmc[1].quadrant == 1 || vmc[1].quadrant == 2 || vmc[1].quadrant == 3) &&  (fabs(chassis_imu.pit) > 0.3f || fabs(chassis_imu.rol )> 0.3f) || chassis.rescue_cnt_R > 1250 ) {
+//			dm_motor_set_control_para(&joint_motor[2], 0, -8, 0, 5, 10);//快哥
+			dm_motor_set_control_para(&joint_motor[2], 0, -rescue_T, 0, 5, 0);
             dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
 			if( chassis.rescue_cnt_R < 1000)
 				chassis.rescue_cnt_R = 0; 
-        } else if (vmc[1].quadrant == 4 || fabs(chassis_imu.pit) < 0.2f ||fabs(chassis_imu.rol ) <  0.2f) {
+        } else if (vmc[1].quadrant == 4 || fabs(chassis_imu.pit) < 0.2f || fabs(chassis_imu.rol ) < 0.2f) {
             dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, 0);//0.03 0.5
             dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
             chassis.rescue_cnt_R++;
@@ -701,7 +703,7 @@ static void chassis_self_rescue(void)
 				up_ready = 1;
 			/*shangjiao*/
 			if(vmc[0].quadrant != 1 ){
-				dm_motor_set_control_para(&joint_motor[0], 0, 6, 0, 5, 0);//快哥z
+				dm_motor_set_control_para(&joint_motor[0], 0, rescue_T, 0, 5, 0);//快哥z
 				dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);
 			}else{
 				dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, 0);//0.03 0.5
@@ -709,7 +711,7 @@ static void chassis_self_rescue(void)
 			}
 						
 			if(vmc[1].quadrant != 1 ){
-				dm_motor_set_control_para(&joint_motor[2], 0, -6, 0, 5, 0);//快哥
+				dm_motor_set_control_para(&joint_motor[2], 0, -rescue_T, 0, 5, 0);//快哥
 				dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
 			}else{
 				dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, 0);//0.03 0.5
