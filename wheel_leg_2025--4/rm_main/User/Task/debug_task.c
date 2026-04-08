@@ -23,7 +23,7 @@
 #include "board_comm.h"
 
 #define row_debug 2 * 10
-uint8_t debug_wave = 18;
+uint8_t debug_wave = 7;
 float test_hex = 1;
 extern FGT_sin_t FGT_sin_chassis;
 extern  uint16_t quadrant_cnt;
@@ -244,6 +244,9 @@ void log_scope_data_pkg(void)
 			log_scope_get_data(chassis.output.vy);
 			log_scope_get_data(wlr.yaw_err);
 			log_scope_get_data(lqr.X_diff[1]);
+			log_scope_get_data(lqr.X_fdb[3]);
+			log_scope_get_data(lqr.X_ref[3]);
+			log_scope_get_data(chassis.input.vx);
 			break;
 		}
         default:break;

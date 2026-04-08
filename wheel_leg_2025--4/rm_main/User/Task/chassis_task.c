@@ -52,7 +52,7 @@ kalman_filter_t kal_fusion_vel;
 FGT_sin_t FGT_sin_chassis;
 chassis_t chassis;
 
-float imu_pitch_offset = 0.124833025f;
+float imu_pitch_offset = 0.0904504813f;
 float up_ready;
 
 chassis_scale_t chassis_scale = {
@@ -331,8 +331,8 @@ static void chassis_execute_fsm(void)
     }
 
     if (g_robot_ctx.output.chassis == CHASSIS_HIGH) { 
-        if (g_robot_ctx.output.chassis_speed) chassis_scale.keyboard = 2.0f;
-        else chassis_scale.keyboard = 2.0f;
+        if (g_robot_ctx.output.chassis_speed) chassis_scale.keyboard = 2.2f;
+        else chassis_scale.keyboard = 2.2f;
     } else { 
         if (g_robot_ctx.output.chassis_speed) chassis_scale.keyboard = 2.5f;
         else chassis_scale.keyboard = 2.5f;
@@ -359,10 +359,8 @@ ChassisState_e last_chassis_mode = CHASSIS_STOP;   // [修改] 替换为 FSM 类
 // ==============================================================================
 // 完全基于 FSM ChassisState_e 进行解算
 // ==============================================================================
-uint8_t turn_back_flag = 0;
 static void chassis_data_input(void)
 {		
-	
     spin_limit = circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, (float)yaw_motor.ecd / 8192 * 2 * PI, 2 * PI);
 
     // 1. 速度输入算算 (基于大模式)
@@ -387,7 +385,7 @@ static void chassis_data_input(void)
             wlr.yaw_ref = (float)yaw_motor.ecd / 8192 * 2 * PI;
             wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;
             wlr.wz_ref = 0;
-			turn_back_flag = 0;
+			chassis.turn_back_flag = 0;
             break;
         }
         
@@ -398,8 +396,8 @@ static void chassis_data_input(void)
 		case CHASSIS_ASCEND:
 		case CHASSIS_EXECUTING_FOLLOW_ASCEND:			{ // 整合了原版的所有 FOLLOW 和 PRONE
 			if((key_scan_clear(KB_CTRL) || check_ch3_trigger()) && gimbal.start_up)
-				turn_back_flag = 1;
-			if(turn_back_flag)
+				chassis.turn_back_flag = 1;
+			if(chassis.turn_back_flag)
 			{
 				if(wlr.direction)
 				{
@@ -410,7 +408,7 @@ static void chassis_data_input(void)
 				if((wlr.yaw_err < PI / 3 && wlr.yaw_err > 0) || (wlr.yaw_err > - PI / 3 && wlr.yaw_err < 0))
 				{
 					wlr.direction = 0;
-					turn_back_flag = 0;
+					chassis.turn_back_flag = 0;
 				}
 				}
 				else
@@ -422,7 +420,7 @@ static void chassis_data_input(void)
 					if((wlr.yaw_err < PI / 3 && wlr.yaw_err > 0) || (wlr.yaw_err > - PI / 3 && wlr.yaw_err < 0))
 					{
 						wlr.direction = 1;
-						turn_back_flag = 0;
+						chassis.turn_back_flag = 0;
 					}
 				}
 			}
@@ -567,6 +565,8 @@ static void chassis_data_input(void)
         wlr.v_ref = chassis.output.vy;
         wlr.s_ref += (wlr.v_ref * 0.001f * 2);
     }
+    //小陀螺下速度是Vy方向的原因还不知道为何
+    if(g_robot_ctx.output.chassis == CHASSIS_LOW_SPIN)  wlr.v_ref = chassis.output.vy;
     if(rotate_stop_flag) wlr.v_ref = 0.0f;
         
     wlr.roll_fdb    = -chassis_imu.rol;
@@ -648,9 +648,9 @@ static void chassis_self_rescue(void)
 		if (vmc[0].quadrant == 2 && chassis.rescue_cnt_L <= 100) {
 			dm_motor_set_control_para(&joint_motor[0], 0, rescue_T, 0, 5, 0);//0.03 0.5
             dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);	
-		} else if (vmc[0].quadrant == 3) 
+		} else if (vmc[0].quadrant == 1) 
 			chassis.rescue_cnt_L++;
-		if (chassis.rescue_cnt_L > 200) {
+		if (chassis.rescue_cnt_L > 100) {
 			dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, 0);
 			dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0); 		
 		}
@@ -658,14 +658,14 @@ static void chassis_self_rescue(void)
 		if (vmc[1].quadrant == 2 && chassis.rescue_cnt_R <= 100 ) {
 			dm_motor_set_control_para(&joint_motor[2], 0, -rescue_T, 0, 5, 0);//0.03 0.5
             dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);	
-		} else if (vmc[1].quadrant == 3)
+		} else if (vmc[1].quadrant == 1)
 			chassis.rescue_cnt_R++;
-		if (chassis.rescue_cnt_R > 200) {
+		if (chassis.rescue_cnt_R > 100) {
             dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, 0);
             dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
 		}
 		//进入收腿阶段
-        if(chassis.rescue_cnt_L > 200 && chassis.rescue_cnt_R > 200) {
+        if(chassis.rescue_cnt_L > 200 || chassis.rescue_cnt_R > 200) {
             chassis.rescue_cnt_L = 0;
             chassis.rescue_cnt_R = 0;
 			chassis.rescue_inter_flag = 1;

@@ -465,14 +465,14 @@ static void update_leg_height_and_balance(float yaw_error)
 		: 
 		(  (lqr.X_fdb[1] <= 0) ? (Last_cnt = 200) :  (Last_cnt = 200)   ) ; 
 		
-		DO_LAST(wlr_both_legs_flying(),Last_cnt){     
+		DO_LAST(wlr_both_legs_flying(),200){     
 			if(wlr.direction == 0){
-				x3_balance_zero = x3_balance_zero_normal - 0.05f;
-				data_limit(&wlr.v_ref,-1.5f,1.5f);
+				x3_balance_zero = x3_balance_zero_normal;
+				data_limit(&wlr.v_ref,-1.0f,1.0f);
 			}
 			else{
-				x3_balance_zero = x3_balance_zero_normal + 0.05f;	
-				data_limit(&wlr.v_ref,-2.0f,2.0f);
+				x3_balance_zero = x3_balance_zero_normal + 0.13f;	
+				data_limit(&wlr.v_ref,-1.0f,1.0f);
 			}
 		}
 		x5_balance_zero = 0.0f;
@@ -740,8 +740,21 @@ static void update_rotate_state(void)
         }
 //        K_Array_Leg_rotate[0][3] = -ramp_calc(&wz_ramp, 0.254976f);		//K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
 //        K_Array_Leg_rotate[1][3] = ramp_calc(&wz_ramp, 0.254976f);		//K_Array_Leg_rotate[1][3] 越大 小陀螺越不稳定
-		K_Array_Leg_rotate[0][3] = -ramp_calc(&wz_ramp, 1.13574f);		//K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
-        K_Array_Leg_rotate[1][3] = ramp_calc(&wz_ramp, 1.13574f);
+		if(fabsf(wlr.v_ref) > 0.5f)
+		{
+			K_Array_Leg_rotate[0][3] = -ramp_calc(&wz_ramp, 0.23574f);		//K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
+			K_Array_Leg_rotate[1][3] = ramp_calc(&wz_ramp, 0.23574f);
+			K_Array_Leg_rotate[2][3] = -1.17273f;		//K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
+			K_Array_Leg_rotate[3][3] = 1.17273f;
+		}
+		else
+		{
+			K_Array_Leg_rotate[0][3] = -ramp_calc(&wz_ramp, 1.23895f);		//K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
+			K_Array_Leg_rotate[1][3] = ramp_calc(&wz_ramp, 1.23895f);
+			K_Array_Leg_rotate[2][3] = -2.17273f;		//K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
+			K_Array_Leg_rotate[3][3] = 2.17273f;
+		}
+		
     } else {
         Rotate_balance_zero = 0.0f;
 //        wz_ramp.out = 2.0f;
@@ -859,17 +872,13 @@ static void update_motion_reference(void)
         data_limit(&wlr.v_ref,-1.5f,1.5f);
 		if(fabsf(wlr.v_ref) > 0.5f)
 		{
-			K_Array_Leg_rotate[0][1] = -3.24553f;
-			K_Array_Leg_rotate[1][1] = -3.24553f;
-			K_Array_Leg_rotate[2][1] = 1.96624f;
-			K_Array_Leg_rotate[3][1] = 1.96624f;
+			K_Array_Leg_rotate[0][1] = -3.24553f; K_Array_Leg_rotate[1][1] = -3.24553f;
+			K_Array_Leg_rotate[2][1] = 1.96624f;  K_Array_Leg_rotate[3][1] = 1.96624f;
 		}
 		else 
 		{
-			K_Array_Leg_rotate[0][1] = 0.0f;
-			K_Array_Leg_rotate[1][1] = 0.0f;
-			K_Array_Leg_rotate[2][1] = 0.0f;
-			K_Array_Leg_rotate[3][1] = 0.0f;
+			K_Array_Leg_rotate[0][1] = 0.0f; K_Array_Leg_rotate[1][1] = 0.0f;
+			K_Array_Leg_rotate[2][1] = 0.0f; K_Array_Leg_rotate[3][1] = 0.0f;
 		}
 			
     }
@@ -883,7 +892,7 @@ static void update_motion_reference(void)
 
 static void update_fly_state(uint8_t index, float yaw_err)
 {
-    if ( fabs(chassis_imu.pit) < 0.50f &&  wlr.side[index].Fn_kal < 140.0f && rotate_flag == 0 && wlr.high_flag == 1 && chassis.recover_flag == 0
+    if ( fabs(chassis_imu.pit) < 0.50f &&  wlr.side[index].Fn_kal < 145.0f && rotate_flag == 0 && wlr.high_flag == 1 && chassis.recover_flag == 0
 		&& (wlr.sky_flag == WLR_SKY_IDLE) && (wlr.sky_flag == WLR_JUMP_IDLE))  {
         wlr.side[index].fly_cnt += 10;
     } else if (wlr.side[index].fly_cnt > 0) {
@@ -1108,9 +1117,9 @@ void wlr_control(void)
                                   wlr.side[i].w1, wlr.side[i].t2, wlr.side[i].t1);
     }
     lqr.X_fdb[0] = wlr.s_fdb;
-    //目前这里小陀螺平移方向与头的方向存在90°的偏差 原因还不知道是为什么
+    //小陀螺下不用加速度融合速度
 	if(rotate_flag || rotate_ramp_flag)
-		lqr.X_fdb[1] = wlr.v_fdb * arm_cos_f32(wlr.yaw_err);
+		lqr.X_fdb[1] = wlr.v_fdb;
 	else
 		lqr.X_fdb[1] = kal_fusion_vel.filter_vector[1];
     lqr.X_fdb[2] = wlr.yaw_fdb;
@@ -1168,10 +1177,17 @@ void wlr_control(void)
 	lqr.X_diff[2] = circle_error(lqr.X_ref[2],lqr.X_fdb[2],2 * PI);
 	
     if (g_robot_ctx.output.chassis  == CHASSIS_LOW_SPIN) {
-        data_limit(&lqr.X_diff[1], -1.5f, 1.5f);
+        data_limit(&lqr.X_diff[1], -1.25f, 1.25f);
     } else {
         data_limit(&lqr.X_diff[1], -1.8f, 1.8f);
     }
+	if(chassis.turn_back_flag)//切换跟随时屏蔽运动有关项且限制yaw_err的差值
+	{
+		data_limit(&lqr.X_diff[0], 0.0f, 0.0f);
+		data_limit(&lqr.X_diff[1], 0.0f, 0.0f);
+		data_limit(&lqr.X_diff[2], -0.5f, 0.5f);
+		data_limit(&lqr.X_diff[3], 0.0f, 0.0f);
+	}
 	//功率限制
 //  power_limit_current();
 	//LQR的K增益带入计算

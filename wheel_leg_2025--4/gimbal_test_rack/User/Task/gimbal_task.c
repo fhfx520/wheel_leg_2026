@@ -69,14 +69,14 @@ static void gimbal_init(void)
 	gimbal.pit_angle.pid.threshold_a = 0.0f;
 	gimbal.pit_angle.pid.threshold_b = 0.0f;
 	
-	pid_init(&gimbal.yaw_angle.pid, CHANG_I_RATE,25.0f, 0.2f, 0.0f, 0, 3);//尝试云台补偿算法
+	pid_init(&gimbal.yaw_angle.pid, CHANG_I_RATE,40.0f, 0.2f, 0.0f, 0, 4);//尝试云台补偿算法
 //	pid_init(&gimbal.yaw_spd.pid, CHANG_I_RATE, 0.5f, 0.0003f, 0, 0.3f, 1.0f);
 	
 	
 	pid_init(&gimbal.yaw_vision_vel.pid,NONE,0.45f,0.0f,0.0f,0.0f,50.0f);//同济视觉双外环测试
 
 	
-    pid_init(&gimbal.yaw_spd.pid, NONE, 17000.0f, 100.0f, 0, 5000.0f, 25000.0f);
+    pid_init(&gimbal.yaw_spd.pid, NONE, 15000.0f, 50.0f, 0, 1000.0f, 25000.0f);
 	gimbal.yaw_angle.pid.threshold_a = 0.015f;
 	gimbal.yaw_angle.pid.threshold_b = 0.1f; 
 	

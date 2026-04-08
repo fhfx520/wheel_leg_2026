@@ -175,7 +175,7 @@ static void pre_fabricated_trigger_position(void)
 		if(recover_flag == 0)
 		{ 
 #ifdef MG4005
-			shoot.trigger_ecd.ref = 54500.0f/65535.0f;			//38400	50%的连发几率			//改这里改变预制的位置，通过读编码值
+			shoot.trigger_ecd.ref = 13616.0f/65535.0f;			//38400	50%的连发几率			//改这里改变预制的位置，通过读编码值
 
 #endif
 //
