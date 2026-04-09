@@ -98,14 +98,55 @@ static uint8_t check_joint_stall(dm_motor_t motor1, dm_motor_t motor2)
 		stall_cnt_1 = 300;
 	if(stall_cnt_2 > 300)
 		stall_cnt_2 = 300;
+
 	//决定返回值
-    if(stall_cnt_1 == 300 && stall_cnt_2 == 300)
+    if(stall_cnt_1 >= 150 && stall_cnt_2 >= 150)
 		return 3;//双腿卡死
-	else if(stall_cnt_1 == 300)
+	if(stall_cnt_1 == 300)
 		return 1;//左腿卡死
-    else if(stall_cnt_2 == 300)
+    if(stall_cnt_2 == 300)
 		return 2;//右腿卡死
     return 0;
+}
+
+// 工具函数 检测腿是否脱离卡死
+static uint8_t check_joint_offstall(uint8_t stall_leg_num)
+{
+	static uint16_t offstall_cnt;
+	if(!stall_leg_num)
+		return 1;
+    switch(stall_leg_num)
+	{
+		case 1:
+		{
+			if(fabsf(joint_motor[0].velocity) > 0.3f)
+				offstall_cnt++;
+			else 
+				offstall_cnt = 0;
+		}break;
+		case 2:
+		{
+			if(fabsf(joint_motor[2].velocity) > 0.3f)
+				offstall_cnt++;
+			else 
+				offstall_cnt = 0;
+		}break;
+		case 3:
+		{
+			if(fabsf(joint_motor[0].velocity) > 0.3f && fabsf(joint_motor[2].velocity) > 0.3f)
+				offstall_cnt++;
+			else 
+				offstall_cnt = 0;
+		}break;
+		default : break;
+	}
+	if(offstall_cnt > 100)
+	{
+		offstall_cnt = 0;
+		return 1;
+	}
+	else
+		return 0;
 }
 
 // 恢复你本来的代码
@@ -874,6 +915,9 @@ static void chassis_rescue_test(void)
 			if(up_ready > 100)
 				chassis.rescue_inter_flag = CHASSIS_RESCUE_RECOVER;//收腿阶段
 		}
+		//归位计数超过设定值，直接进收腿
+		if(chassis.rescue_cnt_L > 3000 || chassis.rescue_cnt_R > 3000)
+			chassis.rescue_inter_flag = CHASSIS_RESCUE_RECOVER;//收腿阶段
     } else if (chassis.rescue_inter_flag == CHASSIS_RESCUE_RECOVER) { //开始收腿
 		//关节电机恢复lqr + 腿长pid控制
         dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, 1.0f*wlr.side[0].T1);
@@ -985,36 +1029,87 @@ static void chassis_rescue_test(void)
 			chassis.rescue_inter_flag = CHASSIS_RESCUE_NORMAL;
 		}
 	} else if(chassis.rescue_inter_flag == CHASSIS_RESCUE_STUCK) {
-		dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);
-		dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
-		//关节电机出小力
-		if(stall_leg == 1) {
-			dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, 5);
-			dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, 0);
+		//先判断哪条腿卡死了
+		switch(stall_leg)
+		{
+			case 1://左腿卡死
+			{
+				if(vmc[0].quadrant == 4)//左腿第四象限卡死
+				{
+					//腿给一点点力，增大摩擦力，让轮子转，往前开一段距离
+					dm_motor_set_control_para(&joint_motor[0], 0, 1, 0, 10, 0);
+					dji_motor_set_torque(&driver_motor[0], 2);
+					dji_motor_set_torque(&driver_motor[1], -2);
+				}
+				else if(vmc[0].quadrant == 3)//左腿第三象限卡死
+				{
+					//腿给一点点力，增大摩擦力，让轮子转，往后开一段距离
+					dm_motor_set_control_para(&joint_motor[0], 0, 1, 0, 5, 0);
+					dji_motor_set_torque(&driver_motor[0], 2);
+					dji_motor_set_torque(&driver_motor[1], 2);
+				}
+				if(vmc[1].quadrant == 1)
+				{
+					//右腿到第一象限之后，腿给一点点力，增大摩擦力
+					dm_motor_set_control_para(&joint_motor[2], 0, -1, 0, 10, 0);
+				}
+				else//右腿如果不在第一象限，则轮子不给力，腿给一点点速度转
+				{
+					dm_motor_set_control_para(&joint_motor[2], 0, -3, 0, 10, 0);
+					dji_motor_set_torque(&driver_motor[1], 0);
+				}
+			}break;
+			case 2://右腿卡死
+			{
+				if(vmc[1].quadrant == 4)//右腿第四象限卡死
+				{
+					//腿给一点点力，增大摩擦力，让轮子转，往前开一段距离
+					dm_motor_set_control_para(&joint_motor[2], 0, -1, 0, 10, 0);
+					dji_motor_set_torque(&driver_motor[0], 2);
+					dji_motor_set_torque(&driver_motor[1], -2);
+				}
+				else if(vmc[1].quadrant == 3)//右腿第三象限卡死
+				{
+					//腿给一点点力，增大摩擦力，让轮子转，往后开一段距离
+					dm_motor_set_control_para(&joint_motor[2], 0, -1, 0, 5, 0);
+					dji_motor_set_torque(&driver_motor[0], -2);
+					dji_motor_set_torque(&driver_motor[1], -2);
+				}
+				if(vmc[0].quadrant == 1)
+				{
+					//右腿到第一象限之后，腿给一点点力，增大摩擦力
+					dm_motor_set_control_para(&joint_motor[0], 0, 1, 0, 10, 0);
+				}
+				else
+				{
+					//右腿如果不在第一象限，则轮子不给力，腿给一点点速度转
+					dm_motor_set_control_para(&joint_motor[0], 0, 3, 0, 10, 0);
+					dji_motor_set_torque(&driver_motor[0], 0);
+				}
+			}break;
+			case 3://双腿卡死
+			{
+				if(vmc[0].quadrant == 4 && vmc[1].quadrant == 4) {//双腿第四象限卡死
+					//腿给一点点力，增大摩擦力，让轮子转，往前开一段距离
+					dm_motor_set_control_para(&joint_motor[0], 0, 1, 0, 10, 0);
+					dm_motor_set_control_para(&joint_motor[2], 0, -1, 0, 10, 0);
+					dji_motor_set_torque(&driver_motor[0], 2);
+					dji_motor_set_torque(&driver_motor[1], -2);
+				}
+				else if(vmc[0].quadrant == 3 && vmc[1].quadrant == 3) {//双腿第三象限卡死
+					//腿给一点点力，增大摩擦力，让轮子转，往后开一段距离
+					dm_motor_set_control_para(&joint_motor[0], 0, 3, 0, 10, 0);
+					dm_motor_set_control_para(&joint_motor[2], 0, -3, 0, 10, 0);
+					dji_motor_set_torque(&driver_motor[0], 2);
+					dji_motor_set_torque(&driver_motor[1], -2);
+				}
+			}break;
+			default : break;
 		}
-		else if(stall_leg == 2) {
-			dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, 0);
-			dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, -5);
-		}
-		else {
-			dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, 5);
-			dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, -5);
-		}
-		//判断是第几象限卡死的
-		if(((vmc[0].quadrant == 4 || vmc[0].quadrant == 2) && (stall_leg == 1 || stall_leg == 3)) || \
-		 ((vmc[1].quadrant == 4 || vmc[1].quadrant == 2) && (stall_leg == 2 || stall_leg == 3))) {
-			//第二/四象限卡死
-			dji_motor_set_torque(&driver_motor[0], 1);
-			dji_motor_set_torque(&driver_motor[1], -1);
-		}
-		else if((vmc[0].quadrant == 3 && (stall_leg == 1 || stall_leg == 3)) || (vmc[1].quadrant == 3 && (stall_leg == 2 || stall_leg == 3))) {
-			dji_motor_set_torque(&driver_motor[0], 1);
-			dji_motor_set_torque(&driver_motor[1], 1);
-		}
-		else if(vmc[0].quadrant == 1 && vmc[1].quadrant == 1) {
+		if((vmc[0].quadrant == 1 && vmc[1].quadrant == 1) || check_joint_offstall(stall_leg)) {
 			//清除关节力
 			dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, 0);
-			dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, -0);
+			dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, 0);
 			//清除轮子力
 			dji_motor_set_torque(&driver_motor[0], 0);
 			dji_motor_set_torque(&driver_motor[1], 0);
