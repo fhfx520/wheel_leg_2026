@@ -75,6 +75,39 @@ static uint8_t check_ch3_trigger(void)
 	}
 }
 
+// 工具函数 检测关节电机在起身过程中是否有堵转现象来判断是否卡台阶
+static uint8_t check_joint_stall(dm_motor_t motor1, dm_motor_t motor2)
+{
+    // 为每个电机维护独立的堵转计数器
+    static uint16_t stall_cnt_1 = 0;
+    static uint16_t stall_cnt_2 = 0;
+
+    // 对于motor1
+    if(fabsf(motor1.velocity) < 0.3f && fabsf(motor1.torque) > 10.0f)
+        stall_cnt_1++;
+    else 
+        stall_cnt_1 = 0;
+    
+    // 对于motor2
+    if(fabsf(motor2.velocity) < 0.3f && fabsf(motor2.torque) > 10.0f)
+        stall_cnt_2++;
+    else 
+        stall_cnt_2 = 0;
+
+	if(stall_cnt_1 > 300)
+		stall_cnt_1 = 300;
+	if(stall_cnt_2 > 300)
+		stall_cnt_2 = 300;
+	//决定返回值
+    if(stall_cnt_1 == 300 && stall_cnt_2 == 300)
+		return 3;//双腿卡死
+	else if(stall_cnt_1 == 300)
+		return 1;//左腿卡死
+    else if(stall_cnt_2 == 300)
+		return 2;//右腿卡死
+    return 0;
+}
+
 // 恢复你本来的代码
 static void chassis_ramp(void)
 {
@@ -178,9 +211,8 @@ static void chassis_execute_fsm(void)
             wlr.sky_flag = WLR_SKY_IDLE;
             chassis.rescue_cnt_L = 0;
             chassis.rescue_cnt_R = 0;
-            chassis.recover_flag = 0;
 			chassis.recover_flag = 0;
-			chassis.rescue_inter_flag = 0;
+			chassis.rescue_inter_flag = CHASSIS_RESCUE_IDLE;
 			up_ready=0;
 			g_robot_ctx.sky_start_flag = 0;
 			g_robot_ctx.sky_finish_flag = 0;
@@ -324,8 +356,7 @@ static void chassis_execute_fsm(void)
             chassis.recover_flag = 0;
 			g_robot_ctx.sky_finish_flag = 0;
 			g_robot_ctx.sky_start_flag = 0;
-			chassis.recover_flag = 0;
-			chassis.rescue_inter_flag = 0;
+			chassis.rescue_inter_flag = CHASSIS_RESCUE_IDLE;
             break;
 		}
     }
@@ -344,7 +375,7 @@ static void chassis_execute_fsm(void)
     if (supercap.volume_percent < 10 )  chassis_scale.keyboard = 1.4f;
     else if (supercap.volume_percent < 20 ) chassis_scale.keyboard = 1.7f;
 
-    if (g_robot_ctx.output.chassis == CHASSIS_HIGH) chassis_scale.remote = 1.0f / 660 * 2.4f;
+    if (g_robot_ctx.output.chassis == CHASSIS_HIGH) chassis_scale.remote = 1.0f / 660 * 2.2f;
     else chassis_scale.remote = 1.0f /660 * 2.6f; 
 	
 	last_chassis_output = g_robot_ctx.output.chassis;
@@ -388,7 +419,6 @@ static void chassis_data_input(void)
 			chassis.turn_back_flag = 0;
             break;
         }
-        
         case CHASSIS_LOW:
         case CHASSIS_HIGH:
         case CHASSIS_TERRAIN_READY:
@@ -405,11 +435,11 @@ static void chassis_data_input(void)
 					wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;  
 					wlr.wz_ref = 0.0f;
 					wlr.yaw_err = circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
-				if((wlr.yaw_err < PI / 3 && wlr.yaw_err > 0) || (wlr.yaw_err > - PI / 3 && wlr.yaw_err < 0))
-				{
-					wlr.direction = 0;
-					chassis.turn_back_flag = 0;
-				}
+					if((wlr.yaw_err < PI / 3 && wlr.yaw_err > 0) || (wlr.yaw_err > - PI / 3 && wlr.yaw_err < 0))
+					{
+						wlr.direction = 0;
+						chassis.turn_back_flag = 0;
+					}
 				}
 				else
 				{
@@ -799,7 +829,226 @@ static void chassis_self_rescue(void)
 
 static void chassis_rescue_test(void)
 {
-    // ... [原代码保持不变] ...
+    static uint16_t leg_length_cnt;		//腿长到达目标长度之后，变量++
+	static uint16_t rescue_cnt = 0;		
+	static float rescue_T = 4.5f;			//翻转力矩
+	static uint8_t stall_leg;
+	
+	if (fabsf(chassis_imu.pit) > PI / 2.0f)
+		rescue_T = 6.5;
+	else
+		rescue_T = 4.5;
+		
+	if (chassis.rescue_inter_flag == CHASSIS_RESCUE_IDLE && (fabsf(chassis_imu.pit) < PI / 2.0f))//机身比较平，头不朝下
+        chassis.rescue_inter_flag = CHASSIS_RESCUE_NORMAL;//头先回正，腿通过简单的旋转即可回正。
+	else if(chassis.rescue_inter_flag == CHASSIS_RESCUE_IDLE && (fabsf(chassis_imu.pit) > PI / 2.0f))
+		chassis.rescue_inter_flag = CHASSIS_RESCUE_OVERTURN;//翻车了，头先别传，通过撑腿回到normal状态
+	else if(chassis.rescue_inter_flag == CHASSIS_RESCUE_NORMAL && stall_leg)
+		chassis.rescue_inter_flag = CHASSIS_RESCUE_STUCK;//正常起身下，有腿堵转
+	
+	if (chassis.rescue_inter_flag == CHASSIS_RESCUE_NORMAL) {
+		stall_leg = check_joint_stall(joint_motor[0],joint_motor[2]);//normal全局卡死检测
+        //左腿归正
+		if (vmc[0].quadrant != 1){
+			dm_motor_set_control_para(&joint_motor[0], 0, rescue_T, 0, 5, 0);
+            dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);
+			chassis.rescue_cnt_L++;//计数，超过一定值则判断为受到阻碍
+		}
+		else{
+			dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, 0);
+            dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);
+		}
+        //右腿归正        
+		if (vmc[1].quadrant != 1){
+			dm_motor_set_control_para(&joint_motor[2], 0, -rescue_T, 0, 5, 0);
+            dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
+			chassis.rescue_cnt_R++;//计数，超过一定值则判断为受到阻碍
+		}
+		else{
+			dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, 0);
+            dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
+		}
+        //双腿都到达第一象限之后 等待200ms缓冲后开始收腿
+		if(vmc[0].quadrant == 1 && vmc[1].quadrant == 1){
+			up_ready++;
+			if(up_ready > 100)
+				chassis.rescue_inter_flag = CHASSIS_RESCUE_RECOVER;//收腿阶段
+		}
+    } else if (chassis.rescue_inter_flag == CHASSIS_RESCUE_RECOVER) { //开始收腿
+		//关节电机恢复lqr + 腿长pid控制
+        dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, 1.0f*wlr.side[0].T1);
+        dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 1.0f*wlr.side[0].T2); 
+        dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0,-1.0f*wlr.side[1].T1);
+        dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0,-1.0f*wlr.side[1].T2);
+		//收腿时轮子不能出力 不然会俯冲
+		dji_motor_set_torque(&driver_motor[0], 0);
+		dji_motor_set_torque(&driver_motor[1], 0);
+				
+		//认为腿长已收到可以起身的长度
+        if (fabsf(vmc[0].L_fdb - wlr.recover_length) < 0.05f && fabsf(vmc[1].L_fdb - wlr.recover_length) < 0.05f)  {
+			leg_length_cnt++;
+			if(leg_length_cnt > 70){
+				leg_length_cnt = 0;
+				rescue_cnt = 0;
+				quadrant_cnt = 0;
+				chassis.rescue_cnt_L = 0;
+				chassis.rescue_cnt_R = 0;
+				chassis.recover_flag = 2;//收腿完成，准备起身
+				wlr.high_flag = 0;
+				up_ready=0;
+			}
+        }
+    } else if(chassis.rescue_inter_flag == CHASSIS_RESCUE_OVERTURN) {
+		//先判断一下是往哪边翻车
+		if(chassis_imu.pit < -PI / 3.0f) { //小于-60°一直发力 让车身回正
+			//同时还需考虑到roll的影响 需要让roll先回正再回正pit
+			if(fabsf(chassis_imu.rol) < 0.15f) {
+				dm_motor_set_control_para(&joint_motor[0], 0, rescue_T, 0, 5, 0);
+				dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);
+				dm_motor_set_control_para(&joint_motor[2], 0, -rescue_T, 0, 5, 0);
+				dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
+			}
+			else if(chassis_imu.rol > 0.15f) {
+				if(vmc[0].quadrant == 1 || vmc[0].quadrant == 2) {
+					dm_motor_set_control_para(&joint_motor[0], 0, rescue_T, 0, 5, 0);
+					dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);
+					dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 5, 0);
+					dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
+				}
+				else {
+					dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 5, 0);
+					dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);
+					dm_motor_set_control_para(&joint_motor[2], 0, -rescue_T, 0, 5, 0);
+					dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
+				}
+			}
+			else if(chassis_imu.rol < -0.15f) {
+				if(vmc[1].quadrant == 1 || vmc[1].quadrant == 2) {
+					dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 5, 0);
+					dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);
+					dm_motor_set_control_para(&joint_motor[2], 0, -rescue_T, 0, 5, 0);
+					dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
+				}
+				else {
+					dm_motor_set_control_para(&joint_motor[0], 0, rescue_T, 0, 5, 0);
+					dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);
+					dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 5, 0);
+					dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
+				}
+			}
+		}
+		else if(chassis_imu.pit > PI / 3.0f) { //大于60°一直发力 让车身回正
+			//同时还需考虑到roll的影响 需要让roll先回正再回正pit
+			if(fabsf(chassis_imu.rol) < 0.15f) {
+				dm_motor_set_control_para(&joint_motor[0], 0, -rescue_T, 0, 5, 0);
+				dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);
+				dm_motor_set_control_para(&joint_motor[2], 0, rescue_T, 0, 5, 0);
+				dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
+			}
+			else if(chassis_imu.rol > 0.15f) {
+				if(vmc[0].quadrant == 1 || vmc[0].quadrant == 2) {
+					dm_motor_set_control_para(&joint_motor[0], 0, -rescue_T, 0, 5, 0);
+					dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);
+					dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 5, 0);
+					dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
+				}
+				else {
+					dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 5, 0);
+					dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);
+					dm_motor_set_control_para(&joint_motor[2], 0, rescue_T, 0, 5, 0);
+					dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
+				}
+			}
+			else if(chassis_imu.rol < -0.15f) {
+				if(vmc[1].quadrant == 1 || vmc[1].quadrant == 2) {
+					dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 5, 0);
+					dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);
+					dm_motor_set_control_para(&joint_motor[2], 0, rescue_T, 0, 5, 0);
+					dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
+				}
+				else {
+					dm_motor_set_control_para(&joint_motor[0], 0, -rescue_T, 0, 5, 0);
+					dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);
+					dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 5, 0);
+					dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
+				}
+			}
+		}
+		else if(fabsf(chassis_imu.pit) < PI / 6.0f) { //绝对值小于30° 
+			dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 5, 0);
+            dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);
+			dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 5, 0);
+            dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
+			rescue_cnt++;
+		}
+		if(rescue_cnt > 100) { //缓冲200ms后进入normal
+			chassis.rescue_inter_flag = CHASSIS_RESCUE_NORMAL;
+		}
+	} else if(chassis.rescue_inter_flag == CHASSIS_RESCUE_STUCK) {
+		dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);
+		dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
+		//关节电机出小力
+		if(stall_leg == 1) {
+			dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, 5);
+			dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, 0);
+		}
+		else if(stall_leg == 2) {
+			dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, 0);
+			dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, -5);
+		}
+		else {
+			dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, 5);
+			dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, -5);
+		}
+		//判断是第几象限卡死的
+		if(((vmc[0].quadrant == 4 || vmc[0].quadrant == 2) && (stall_leg == 1 || stall_leg == 3)) || \
+		 ((vmc[1].quadrant == 4 || vmc[1].quadrant == 2) && (stall_leg == 2 || stall_leg == 3))) {
+			//第二/四象限卡死
+			dji_motor_set_torque(&driver_motor[0], 1);
+			dji_motor_set_torque(&driver_motor[1], -1);
+		}
+		else if((vmc[0].quadrant == 3 && (stall_leg == 1 || stall_leg == 3)) || (vmc[1].quadrant == 3 && (stall_leg == 2 || stall_leg == 3))) {
+			dji_motor_set_torque(&driver_motor[0], 1);
+			dji_motor_set_torque(&driver_motor[1], 1);
+		}
+		else if(vmc[0].quadrant == 1 && vmc[1].quadrant == 1) {
+			//清除关节力
+			dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, 0);
+			dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, -0);
+			//清除轮子力
+			dji_motor_set_torque(&driver_motor[0], 0);
+			dji_motor_set_torque(&driver_motor[1], 0);
+			//双腿都在第一象限则回normal
+			chassis.rescue_inter_flag = CHASSIS_RESCUE_NORMAL;
+			stall_leg = 0;
+		}
+	}
+
+	if(ctrl_mode == PROTECT_MODE){
+		leg_length_cnt = 0;
+		rescue_cnt = 0;
+		quadrant_cnt = 0;
+		chassis.rescue_cnt_L = 0;
+		chassis.rescue_cnt_R = 0;
+		chassis.recover_flag = 0; 
+		chassis.rescue_inter_flag = CHASSIS_RESCUE_IDLE;
+		wlr.high_flag = 0;
+		up_ready=0;
+	}
+
+	if(chassis.recover_flag == 2) {
+		//检测摆角
+		if(fabsf(vmc[0].q_fdb[0] - PI / 2.0f) < 0.5f && fabsf(vmc[1].q_fdb[0] - PI / 2.0f) < 0.5f)
+			chassis.recover_cnt++;
+		if(fabsf(vmc[0].q_fdb[0] - PI / 2.0f) < 0.85f && fabsf(vmc[1].q_fdb[0] - PI / 2.0f) < 0.85f)
+			chassis.recover_cnt++;
+		if(chassis.recover_cnt > 50) {
+			chassis.recover_cnt = 0;
+			chassis.recover_flag = 0;
+			chassis.rescue_inter_flag = CHASSIS_RESCUE_IDLE;
+		}
+	}
+	wlr.s_ref = wlr.s_adapt = wlr.s_fdb;
 }
 
 float temp_T;
@@ -823,24 +1072,10 @@ static void chassis_data_output(void)
         if (wlr.prone_flag) {
             // ... [原力控和卧倒逻辑保持不变] ...
         } else {
-            if(chassis.recover_flag == 1) 
-				chassis_self_rescue();
+            if(chassis.recover_flag == 1 || chassis.recover_flag == 2) 
+				chassis_rescue_test();
             if(chassis.recover_flag != 1) {
-				if(wlr.crash_flag){	  
-//					dm_motor_set_control_para(&joint_motor[0], 0, 4, 0, 10, 0);
-//					dm_motor_set_control_para(&joint_motor[1], 0, 0,    0, 0, 0);	
-//					dm_motor_set_control_para(&joint_motor[2], 0, -4,  0, 10, 0);
-//					dm_motor_set_control_para(&joint_motor[3], 0, 0,    0, 0, 0);
-//					dm_motor_set_control_para(&joint_motor[0], 0, -10, 0, 20, 0);
-//					dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 20, 0);
-//					dm_motor_set_control_para(&joint_motor[2], 0, 10, 0, 20, 0);
-//					dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 20, 0);  
-					dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, wlr.side[0].T1);
-					dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, wlr.side[0].T2);
-					dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0,-wlr.side[1].T1);
-					dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0,-wlr.side[1].T2);  
-				}
-				else if(wlr.joint_all_online){
+				if(wlr.joint_all_online){
 					dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, wlr.side[0].T1);
 					dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, wlr.side[0].T2);
 					dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0,-wlr.side[1].T1);
@@ -932,7 +1167,6 @@ void chassis_task(void const *argu)
         // 5. 将算好的力矩下发到电机
         chassis_data_output();
 		
-        
 		//底盘待发送数据打包
 		chassis_set_container();
 		

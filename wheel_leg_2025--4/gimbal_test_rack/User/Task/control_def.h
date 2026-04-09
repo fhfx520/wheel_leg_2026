@@ -14,8 +14,8 @@
 
 /*-----------------------------shoot-----------------------------*/
 //拨盘频率
-#define TRIGGER_PERIOD      200//ms 90->11Hz 40->25Hz 33->30Hz
-#define TRIGGER_PERIOD2     200//40 55->18Hz                   
+#define TRIGGER_PERIOD      83//ms 90->11Hz 40->25Hz 33->30Hz
+#define TRIGGER_PERIOD2     83//40 55->18Hz                   
 
 /*-----------------------------chassis---------------------------*/
 

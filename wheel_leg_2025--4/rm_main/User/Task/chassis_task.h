@@ -22,6 +22,15 @@ typedef enum
     CHASSIS_MODE_KEYBOARD_PRONE,  //趴倒模式
 } chassis_mode_e;
 
+typedef enum
+{
+    CHASSIS_RESCUE_IDLE = 0,//空闲
+    CHASSIS_RESCUE_NORMAL = 1,//正常旋转腿即可回正
+    CHASSIS_RESCUE_RECOVER = 2,//收腿阶段
+    CHASSIS_RESCUE_OVERTURN = 3,//翻车了
+    CHASSIS_RESCUE_STUCK = 4,//腿卡死
+} chassis_rescue_e;
+
 typedef struct
 {
     uint8_t stop_cnt;
@@ -41,8 +50,9 @@ typedef struct
 
 typedef struct
 {
-    uint8_t recover_flag;           
-    uint8_t rescue_inter_flag;      
+    uint8_t recover_flag;       
+    uint8_t recover_cnt;     
+    chassis_rescue_e rescue_inter_flag;   
     uint32_t rescue_cnt_L;
     uint32_t rescue_cnt_R;
     uint8_t init;                

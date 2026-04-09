@@ -224,10 +224,15 @@ float K_Array_Leg_018[4][10] =
 //{1.89578, 3.89962, -8.64575, -2.79515, 34.2222, 3.22149, -14.0909, -0.889731, -27.4444, -3.15102},
 //{1.89578, 3.89962, 8.64575, 2.79515, -14.0909, -0.889731, 34.2222, 3.22149, -27.4444, -3.15102}
 
-{{-1.18614, -2.80434, -4.90287, -1.53292, -11.5775, -1.19371, -5.37818, -0.631104, -5.85597, -1.12369},
-{-1.18614, -2.80434, 4.90287, 1.53292, -5.37818, -0.631104, -11.5775, -1.19371, -5.85597, -1.12369},
-{1.9169, 4.3608, -7.54293, -2.46299, 33.6684, 2.82827, -10.9339, -0.5465, -23.1891, -2.74221},
-{1.9169, 4.3608, 7.54293, 2.46299, -10.9339, -0.5465, 33.6684, 2.82827, -23.1891, -2.74221}
+//{{-1.18614, -2.80434, -4.90287, -1.53292, -11.5775, -1.19371, -5.37818, -0.631104, -5.85597, -1.12369},
+//{-1.18614, -2.80434, 4.90287, 1.53292, -5.37818, -0.631104, -11.5775, -1.19371, -5.85597, -1.12369},
+//{1.9169, 4.3608, -7.54293, -2.46299, 33.6684, 2.82827, -10.9339, -0.5465, -23.1891, -2.74221},
+//{1.9169, 4.3608, 7.54293, 2.46299, -10.9339, -0.5465, 33.6684, 2.82827, -23.1891, -2.74221}
+
+{{-1.03593, -2.46259, -4.41347, -1.39537, -10.434, -1.08577, -5.00754, -0.579395, -5.55249, -1.06963},
+{-1.03593, -2.46259, 4.41347, 1.39537, -5.00754, -0.579395, -10.434, -1.08577, -5.55249, -1.06963},
+{2.04961, 4.68586, -7.3806, -2.41616, 34.5908, 2.92944, -10.2141, -0.463098, -22.5253, -2.6247},
+{2.04961, 4.68586, 7.3806, 2.41616, -10.2141, -0.463098, 34.5908, 2.92944, -22.5253, -2.6247}
 };
 float K_Array_Leg_015[4][10] = 
 //{{-1.64547, -3.78988, -3.15575, -0.728416, -13.8598, -1.9045, -6.06882, -0.816828, -7.81789, -1.49325},
@@ -235,10 +240,15 @@ float K_Array_Leg_015[4][10] =
 //{2.16543, 4.83383, -4.91029, -1.24817, 30.8447, 3.91051, -8.74821, -0.66373, -26.9583, -3.42004},
 //{2.16543, 4.83383, 4.91029, 1.24817, -8.74821, -0.66373, 30.8447, 3.91051, -26.9583, -3.42004}
 
-{{-1.1748, -3.31187, -4.23326, -1.23388, -11.8564, -1.17728, -5.02947, -0.618422, -6.03779, -1.26463},
-{-1.1748, -3.31187, 4.23326, 1.23388, -5.02947, -0.618422, -11.8564, -1.17728, -6.03779, -1.26463},
-{0.916372, 2.49038, -4.58822, -1.51198, 20.057, 1.67002, -8.81508, -0.599521, -18.1845, -2.40576},
-{0.916372, 2.49038, 4.58822, 1.51198, -8.81508, -0.599521, 20.057, 1.67002, -18.1845, -2.40576}
+//{{-1.1748, -3.31187, -4.23326, -1.23388, -11.8564, -1.17728, -5.02947, -0.618422, -6.03779, -1.26463},
+//{-1.1748, -3.31187, 4.23326, 1.23388, -5.02947, -0.618422, -11.8564, -1.17728, -6.03779, -1.26463},
+//{0.916372, 2.49038, -4.58822, -1.51198, 20.057, 1.67002, -8.81508, -0.599521, -18.1845, -2.40576},
+//{0.916372, 2.49038, 4.58822, 1.51198, -8.81508, -0.599521, 20.057, 1.67002, -18.1845, -2.40576}
+
+{{-0.82901, -2.9273, -3.9715, -1.0643, -9.2547, -0.99003, -4.8267, -0.6026, -6.0625, -1.2483},
+{-0.82901, -2.9273, 3.9715, 1.0643, -4.8267, -0.6026, -9.2547, -0.99003, -6.0625, -1.2483},
+{1.48502, 5.08335, -5.46561, -1.58449, 25.7709, 2.2352, -7.17445, -0.280636, -19.2445, -2.1996},
+{1.48502, 5.08335, 5.46561, 1.58449, -7.17445, -0.280636, 25.7709, 2.2352, -19.2445, -2.1996}
 };
 
 float K_Array_Energy[4][10] = 
@@ -475,19 +485,16 @@ static void update_leg_height_and_balance(float yaw_error)
             x3_balance_zero = x3_balance_zero_normal;
         }
 		
-		wlr.direction == 0 ? 
-		(  (lqr.X_fdb[1] <= 0) ? (Last_cnt = 200) :  (Last_cnt = 200)   )
-		: 
-		(  (lqr.X_fdb[1] <= 0) ? (Last_cnt = 200) :  (Last_cnt = 200)   ) ; 
+		(wlr.direction == 0) ? (Last_cnt = 200) : (Last_cnt = 400);
 		
-		DO_LAST(wlr_both_legs_flying(),200){     
+		DO_LAST(wlr_both_legs_flying(),Last_cnt){     
 			if(wlr.direction == 0){
 				x3_balance_zero = x3_balance_zero_normal;
 				data_limit(&wlr.v_ref,-1.0f,1.0f);
 			}
 			else{
-				x3_balance_zero = x3_balance_zero_normal + 0.13f;	
-				data_limit(&wlr.v_ref,-1.0f,1.0f);
+				x3_balance_zero = x3_balance_zero_normal;	
+				data_limit(&wlr.v_ref,-0.0f,0.0f);
 			}
 		}
 		x5_balance_zero = 0.0f;
@@ -809,14 +816,8 @@ static void select_control_matrix(void)
 	else if ((wlr_both_legs_flying() && wlr.jump_flag == WLR_JUMP_IDLE && !chassis.recover_flag)) {		//双腿离地 && ,,, && chassis.recover_flag == 0
         aMartix_Cover(lqr.K, (float*)K_Array_Fly, 4, 10);
     } 
-	else if (chassis.recover_flag > 1) {		//收腿起立时，先把车身以前导轮撑起，再收腿
+	else if (chassis.recover_flag == 2) {		//收腿起立时，先把车身以前导轮撑起，再收腿
         aMartix_Cover(lqr.K, (float*)K_Array_Leg_recover, 4, 10);
-        if (fabs(lqr.X_fdb[4]) < 0.85f && fabs(lqr.X_fdb[6]) < 0.85f) {
-            chassis.recover_flag++;
-        }
-        if (chassis.recover_flag > 30) {
-            chassis.recover_flag = 0;
-        }
     } 
 	else if (rotate_flag == 1 || rotate_ramp_flag == 1) {					//小陀螺
         aMartix_Cover(lqr.K, (float*)K_Array_Leg_rotate, 4, 10);
@@ -960,12 +961,9 @@ static void map_virtual_force(uint8_t index)
         && wlr.sky_flag == WLR_SKY_IDLE && !chassis.recover_flag) {	// && 未进入翻倒自起立 && 跳跃未完成
         wlr.side[index].Fy = pid_calc(&pid_leg_length_fly[index], tlm.l_ref[index], vmc[index].L_fdb) - 30.0f;
     } 
-	else if ((chassis.recover_flag == 1 && chassis.rescue_inter_flag == 2) || wlr.jump_flag == WLR_JUMP_RECOVER_SHORT) {		//进入翻倒自起立 && 进入收腿阶段
+	else if ((chassis.recover_flag >= 1 && chassis.rescue_inter_flag == CHASSIS_RESCUE_RECOVER) || wlr.jump_flag == WLR_JUMP_RECOVER_SHORT) {		//进入翻倒自起立 && 进入收腿阶段
         Fy_temp = pid_calc(&pid_leg_recover[index], wlr.recover_length, vmc[index].L_fdb) - 100.0f;
         wlr.side[index].Fy = ramp_calc(&Fy_ramp[index], Fy_temp);
-    } 
-	else if (chassis.recover_flag > 1 && wlr.jump_flag != 0 && 0) {
-        wlr.side[index].Fy = pid_calc(&pid_leg_recover[index], 0.05f, vmc[index].L_fdb);
     } 
 	else if (rotate_flag || rotate_ramp_flag == 1) {
         wlr.side[index].Fy = pid_calc(&pid_rotate_leg[index], tlm.l_ref[index], vmc[index].L_fdb) - 20.0f;
@@ -1009,7 +1007,7 @@ static void map_virtual_force(uint8_t index)
         wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - ff_Fy_0
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
     }
-    if ((chassis.recover_flag == 1 || chassis.rescue_inter_flag == 2)) {
+    if (chassis.recover_flag == 1) {
         wlr.side[index].T0 = 0;												
     } else {																
         wlr.side[index].T0 = lqr.U_ref[2 + index];
