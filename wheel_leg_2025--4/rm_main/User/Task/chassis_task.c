@@ -927,6 +927,7 @@ static void chassis_rescue_test(void)
 		//收腿时轮子不能出力 不然会俯冲
 		dji_motor_set_torque(&driver_motor[0], 0);
 		dji_motor_set_torque(&driver_motor[1], 0);
+		rescue_cnt++;//超时检测
 				
 		//认为腿长已收到可以起身的长度
         if (fabsf(vmc[0].L_fdb - wlr.recover_length) < 0.05f && fabsf(vmc[1].L_fdb - wlr.recover_length) < 0.05f)  {
@@ -942,6 +943,10 @@ static void chassis_rescue_test(void)
 				up_ready=0;
 			}
         }
+		if(rescue_cnt >= 300) {
+			chassis.rescue_inter_flag = CHASSIS_RESCUE_RECOVER_STUCK;
+			rescue_cnt = 0;
+		}
     } else if(chassis.rescue_inter_flag == CHASSIS_RESCUE_OVERTURN) {
 		//先判断一下是往哪边翻车
 		if(chassis_imu.pit < -PI / 3.0f) { //小于-60°一直发力 让车身回正
@@ -1027,6 +1032,7 @@ static void chassis_rescue_test(void)
 		}
 		if(rescue_cnt > 100) { //缓冲200ms后进入normal
 			chassis.rescue_inter_flag = CHASSIS_RESCUE_NORMAL;
+			rescue_cnt = 0;
 		}
 	} else if(chassis.rescue_inter_flag == CHASSIS_RESCUE_STUCK) {
 		//先判断哪条腿卡死了
@@ -1117,6 +1123,29 @@ static void chassis_rescue_test(void)
 			chassis.rescue_inter_flag = CHASSIS_RESCUE_NORMAL;
 			stall_leg = 0;
 		}
+	} else if(chassis.rescue_inter_flag == CHASSIS_RESCUE_RECOVER_STUCK) {
+		if(fabsf(vmc[0].L_fdb - wlr.recover_length) > 0.1f && fabsf(vmc[1].L_fdb - wlr.recover_length) > 0.1f) { //如果发腿收腿卡死，就先转到第四象限再收腿
+			dm_motor_set_control_para(&joint_motor[0], 0, -3, 0, 10, 0);
+			dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);
+			dm_motor_set_control_para(&joint_motor[2], 0, 3, 0, 10, 0);
+			dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
+			if(vmc[0].quadrant == 4 && vmc[1].quadrant == 4)
+				rescue_cnt++;
+		}
+		else if(fabsf(vmc[0].L_fdb - wlr.recover_length) > 0.1f) { //如果发腿收腿卡死，就先转到第四象限再收腿
+			dm_motor_set_control_para(&joint_motor[0], 0, -3, 0, 10, 0);
+			dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);
+			if(vmc[0].quadrant == 4)
+				rescue_cnt++;
+		}
+		else if(fabsf(vmc[1].L_fdb - wlr.recover_length) > 0.1f) { //如果发腿收腿卡死，就先转到第四象限再收腿
+			dm_motor_set_control_para(&joint_motor[2], 0, 3, 0, 10, 0);
+			dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
+			if(vmc[1].quadrant == 4)
+				rescue_cnt++;
+		}
+		if(rescue_cnt > 50)
+			chassis.rescue_inter_flag = CHASSIS_RESCUE_RECOVER;
 	}
 
 	if(ctrl_mode == PROTECT_MODE){
@@ -1146,6 +1175,15 @@ static void chassis_rescue_test(void)
 	wlr.s_ref = wlr.s_adapt = wlr.s_fdb;
 }
 
+//卡盲道，极限逃离
+static void chassis_hardest_rescue(void)
+{
+	//目前想法是在第四象限收腿转到第二/三象限后蹬腿 可以让车前进/后腿 
+	//轮子直接转可能也是一种方案
+	//只转大腿电机可能也是一种方案
+	//总之如果在盲道上开始lqr控制的话是不可能出来的
+}
+
 float temp_T;
 
 static void chassis_data_output(void)
@@ -1169,6 +1207,8 @@ static void chassis_data_output(void)
         } else {
             if(chassis.recover_flag == 1 || chassis.recover_flag == 2) 
 				chassis_rescue_test();
+			if(rc_fsm_check(RC_LEFT_RU))
+				chassis_hardest_rescue();
             if(chassis.recover_flag != 1) {
 				if(wlr.joint_all_online){
 					dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, wlr.side[0].T1);

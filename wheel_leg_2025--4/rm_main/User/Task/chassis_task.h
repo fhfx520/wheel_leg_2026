@@ -29,6 +29,7 @@ typedef enum
     CHASSIS_RESCUE_RECOVER = 2,//收腿阶段
     CHASSIS_RESCUE_OVERTURN = 3,//翻车了
     CHASSIS_RESCUE_STUCK = 4,//腿卡死
+    CHASSIS_RESCUE_RECOVER_STUCK = 5,//第一象限收腿卡
 } chassis_rescue_e;
 
 typedef struct
