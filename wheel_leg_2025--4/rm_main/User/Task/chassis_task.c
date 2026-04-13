@@ -349,7 +349,7 @@ static void chassis_execute_fsm(void)
 			g_robot_ctx.sky_start_flag = 0;
 			if(wlr.jump_flag == WLR_JUMP_IDLE) 
 				wlr.jump_flag = WLR_JUMP_ASCEND; 
-			if(wlr.jump_flag == WLR_JUMP_RECOVER_SHORT && !g_robot_ctx.jump_finish_flag)
+			if(wlr.jump_flag == WLR_JUMP_RECOVER_LONG && !g_robot_ctx.jump_finish_flag)
 				g_robot_ctx.jump_finish_flag = 1;
 			break;
 		}
@@ -403,8 +403,8 @@ static void chassis_execute_fsm(void)
     }
 
     if (g_robot_ctx.output.chassis == CHASSIS_HIGH) { 
-        if (g_robot_ctx.output.chassis_speed) chassis_scale.keyboard = 2.2f;
-        else chassis_scale.keyboard = 2.2f;
+        if (g_robot_ctx.output.chassis_speed) chassis_scale.keyboard = 2.0f;
+        else chassis_scale.keyboard = 2.0f;
     } else { 
         if (g_robot_ctx.output.chassis_speed) chassis_scale.keyboard = 2.6f;
         else chassis_scale.keyboard = 2.6f;
@@ -413,10 +413,10 @@ static void chassis_execute_fsm(void)
 		chassis_scale.keyboard = 2.0f;
 	}
 
-    if (supercap.volume_percent < 10 )  chassis_scale.keyboard = 1.4f;
-    else if (supercap.volume_percent < 20 ) chassis_scale.keyboard = 1.7f;
+//    if (supercap.volume_percent < 10 )  chassis_scale.keyboard = 1.4f;
+//    else if (supercap.volume_percent < 20 ) chassis_scale.keyboard = 1.7f;
 
-    if (g_robot_ctx.output.chassis == CHASSIS_HIGH) chassis_scale.remote = 1.0f / 660 * 2.2f;
+    if (g_robot_ctx.output.chassis == CHASSIS_HIGH) chassis_scale.remote = 1.0f / 660 * 2.0f;
     else chassis_scale.remote = 1.0f /660 * 2.6f; 
 	
 	last_chassis_output = g_robot_ctx.output.chassis;
@@ -1144,8 +1144,10 @@ static void chassis_rescue_test(void)
 			if(vmc[1].quadrant == 4)
 				rescue_cnt++;
 		}
-		if(rescue_cnt > 50)
+		if(rescue_cnt > 50) {
 			chassis.rescue_inter_flag = CHASSIS_RESCUE_RECOVER;
+			rescue_cnt = 0;
+		}
 	}
 
 	if(ctrl_mode == PROTECT_MODE){
