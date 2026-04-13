@@ -701,14 +701,14 @@ static void handle_sky_state(void)
 		if(wlr.double_flag)
 		{
 			x3_balance_zero = 0.08f;
-			x5_balance_zero = 0.05f;
+			x5_balance_zero = 0.0f;
 		}
 		else
 		{
 			x3_balance_zero = 0.15f;
 			x5_balance_zero = 0.1f;
 		}
-        if (fabs(0.30f - vmc[0].L_fdb) < 0.03f && fabs(0.30f - vmc[1].L_fdb) < 0.03f) {
+        if (fabsf(0.30f - vmc[0].L_fdb) < 0.03f && fabsf(0.30f - vmc[1].L_fdb) < 0.03f) {
             wlr.sky_cnt++;
         }
         if (wlr.sky_cnt > 5) {
@@ -961,7 +961,7 @@ static void handle_quadrant_protection(uint8_t index)
         && (wlr.sky_flag == WLR_SKY_IDLE)
         && chassis.recover_flag == 0) {
         quadrant_cnt++;
-        if (quadrant_cnt > 200 && 0) {
+        if (quadrant_cnt > 200) {
             chassis.recover_flag = 1;
             wlr.high_flag = 0;
         }
@@ -986,15 +986,15 @@ static void map_virtual_force(uint8_t index)
         Fy_temp = pid_calc(&pid_leg_recover[index], wlr.recover_length, vmc[index].L_fdb) - 100.0f;
         wlr.side[index].Fy = ramp_calc(&Fy_ramp[index], Fy_temp);
     } 
-	else if (rotate_flag || rotate_ramp_flag == 1) {
+	else if (rotate_flag || rotate_ramp_flag == 1) {//小陀螺和小陀螺斜坡停
         wlr.side[index].Fy = pid_calc(&pid_rotate_leg[index], tlm.l_ref[index], vmc[index].L_fdb) - 20.0f;
 //                              + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs) - 20.0f;
     }
-	else if(wlr.jump_flag == WLR_JUMP_ASCEND){
+	else if(wlr.jump_flag == WLR_JUMP_ASCEND){//磕台阶站高
 		wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 50.0f
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
 	}
-	else if (wlr.sky_flag == WLR_SKY_FOLDING) {
+	else if (wlr.sky_flag == WLR_SKY_FOLDING) {//准备跳
         if(wlr.double_flag)
             wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - ff_Fy_0
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
@@ -1002,29 +1002,29 @@ static void map_virtual_force(uint8_t index)
             wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 30.0f
 								+ WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
     } 
-	else if (wlr.sky_flag == WLR_SKY_EXTENDING) {
+	else if (wlr.sky_flag == WLR_SKY_EXTENDING) {//蹬腿跳
 		Fy_temp = pid_calc(&pid_leg_sky_jump[index], tlm.l_ref[index], vmc[index].L_fdb);
 		wlr.side[index].Fy = ramp_calc(&sky_ramp[index], Fy_temp);
     } 
-	else if (wlr.sky_flag == WLR_SKY_AIR_FOLDING) {
+	else if (wlr.sky_flag == WLR_SKY_AIR_FOLDING) {//空中收腿
         Fy_temp = pid_calc(&pid_leg_sky_cover[index], tlm.l_ref[index], vmc[index].L_fdb) - 100.0f ;
         wlr.side[index].Fy = ramp_calc(&Fy_ramp[index], Fy_temp);
     } 
-	else if (wlr.sky_flag == WLR_SKY_LANDING) {
+	else if (wlr.sky_flag == WLR_SKY_LANDING) {//跳跃落地缓冲
          wlr.side[index].Fy = pid_calc(&pid_leg_length_fly[index], tlm.l_ref[index], vmc[index].L_fdb);
     } 
-	else if (wlr.sky_flag == WLR_SKY_STAND) {
+	else if (wlr.sky_flag == WLR_SKY_STAND) {//跳跃结束
          wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 30.0f
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
     } 
-	else if (wlr.energy_flag){
+	else if (wlr.energy_flag){//击打能量机关
 		wlr.side[index].Fy = pid_calc(&pid_energy_leg[index], tlm.l_ref[index], vmc[index].L_fdb);
 	}
-	else if (wlr.high_flag == 1){
+	else if (wlr.high_flag == 1){//中腿长
         wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - ff_Fy_1
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
     }
-	else {
+	else {//低腿长
         wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - ff_Fy_0
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
     }

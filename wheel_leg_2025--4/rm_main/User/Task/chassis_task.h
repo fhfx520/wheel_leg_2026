@@ -58,6 +58,7 @@ typedef struct
     uint32_t rescue_cnt_R;
     uint8_t init;                
 	uint8_t turn_back_flag;
+    uint16_t turn_back_cnt;
     uint8_t joint_motor_reset;      
     // [修改] 删除了 chassis_mode_e mode 暂时保留 有耦合模块
     //chassis_mode_e mode;
