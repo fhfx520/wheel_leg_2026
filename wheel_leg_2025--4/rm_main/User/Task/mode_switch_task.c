@@ -120,7 +120,8 @@ void modesw_set_container(void)
 	modesw_set_rc_data_container.sw2 = rc.sw2;
 	modesw_set_rc_data_container.rc_init_status = rc.init_status;
 	modesw_set_rc_data_container.ctrl_mode = ctrl_mode;
-	if (chassis.recover_flag == 1 && fabs(chassis_imu.pit) > 0.3f)
+	//整车翻倒保护头
+	if (chassis.recover_flag == 1 && fabsf(chassis_imu.pit) > 0.3f)
 		modesw_set_rc_data_container.ctrl_mode = PROTECT_MODE;
 	container_set(TAG_DR16_RC_DATA,&modesw_set_rc_data_container,sizeof(modesw_set_rc_data_container),CONTAINER_TYPE_STRUCT);
 	

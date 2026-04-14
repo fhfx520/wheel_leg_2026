@@ -8,8 +8,7 @@
 #include "prot_dr16.h"
 #include "status_task.h"
 #include "board_comm.h"
-uint32_t board_send_cnt;
-int8_t cnt_init = 20;
+
 void comm_task(void const* argument)
 {
     uint32_t thread_wake_time = osKernelSysTick();
@@ -41,9 +40,8 @@ void comm_task(void const* argument)
 				dm_motor_output_single_data(&joint_motor[i]);   
             } 
         }
-        taskEXIT_CRITICAL();
-			
-        osDelayUntil(&thread_wake_time, 1);
         
+        taskEXIT_CRITICAL();
+        osDelayUntil(&thread_wake_time, 1);
     }
 }

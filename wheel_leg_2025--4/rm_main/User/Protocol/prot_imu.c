@@ -2,7 +2,7 @@
 #include "string.h"
 
 #ifndef PI
-#define PI 3.14159265358979323846f
+    #define PI 3.14159265358979323846f
 #endif
 
 imu_t chassis_imu, gimbal_imu;

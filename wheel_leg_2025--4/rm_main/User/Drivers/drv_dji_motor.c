@@ -3,7 +3,7 @@
 #include "status_task.h"
 
 #ifndef PI
-#define PI 3.14159265358979323846f
+    #define PI 3.14159265358979323846f
 #endif
 #define LIMIT(x,limit) (x)=(((x)<=(-limit))?(-limit):(((x)>=(limit))?(limit):(x)))
 #define DATA_RANGE 0
@@ -19,8 +19,6 @@ dji_motor_t fric_motor[2];
 dji_motor_t driver_motor[2];
 dji_motor_t pit_motor, yaw_motor;
 dji_motor_t trigger_motor;
-
-
 
 static const float motor_para_table[3][4] =
 {

@@ -116,7 +116,6 @@ void gimbal_stable_output_data(void)
     can_std_transmit(CAN_CHANNEL_3, 0x008, rc.tx6.buff);
 }
 
-
 static uint16_t key_map(key_index_e key_index)
 {
     uint16_t key;

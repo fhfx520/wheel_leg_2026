@@ -4,7 +4,7 @@
 #define LIMIT_MIN_MAX(x,min,max) (x)=(((x)<=(min))?(min):(((x)>=(max))?(max):(x)))
 
 #ifndef PI
-#define PI 3.14159265358979323846f
+    #define PI 3.14159265358979323846f
 #endif
 
 static list_t object_list = {&object_list, &object_list};
@@ -45,10 +45,8 @@ void dm_motor_init(dm_motor_t *motor, can_channel_e can_channel, uint32_t id, fl
     motor->zero_point = zero_point;
     motor->mst_id = mst_id;
 	
-	 for (int i = 0; i < 10; i++)
-	dm_motor_set_control_cmd(motor, CMD_RESET_MODE);
-		 
-//	dm_motor_set_control_cmd(motor, CMD_ENABLE_MODE);
+	for (int i = 0; i < 10; i++)
+	    dm_motor_set_control_cmd(motor, CMD_RESET_MODE);
 	HAL_Delay(100);
     dm_motor_set_control_para(motor, 0, 0, 0, 0, 0);
     dm_motor_output_single_data(motor);

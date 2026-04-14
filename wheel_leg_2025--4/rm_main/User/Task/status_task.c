@@ -1,11 +1,9 @@
 #include "status_task.h"
 #include "control_def.h"
 #include "cmsis_os.h"
-
 #include "mode_switch_task.h"
 #include "chassis_task.h"
 #include "wlr.h"
-
 #include "drv_dji_motor.h"
 #include "drv_dm_motor.h"
 #include "prot_dr16.h"

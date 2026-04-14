@@ -1,9 +1,7 @@
-
 #include "prot_tfmini.h"
 #include "wlr.h"
 
 uint16_t tfmin_distance[2];
-uint16_t tfmin_distance_average[2][100];
 uint16_t tfmin_distance_sum[2];
 
 /**
@@ -30,12 +28,6 @@ void vTfGetData(uint8_t *buff,TF_Distance_e TF_Distance)
 			wlr.side[TF_Distance].Front_dis_fdb  = tfmin_distance[TF_Distance]  * 0.01f ;//m
 		
 		}
-//		//目前尝试不在强度范围内就延续上一帧数据
-//		tfmin_distance_average[TF_Distance][i++] = tfmin_distance[TF_Distance];
-//		 
-//		if(i == 99)
-//			i = 0;		
-		
 	}
 }
 
