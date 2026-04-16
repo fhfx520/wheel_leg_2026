@@ -732,14 +732,15 @@ static void handle_sky_state(void)
         x3_balance_zero = -0.1f;
         x5_balance_zero = 0.0f;
         wlr.sky_cnt++;
-        if (wlr.sky_cnt > 150) {
+        target_cnt = (wlr.double_flag ? 150 : 175);
+        if (wlr.sky_cnt > target_cnt) {
             wlr.sky_cnt = 0;
             wlr.sky_flag = WLR_SKY_LANDING;
         }
     } else if (wlr.sky_flag == WLR_SKY_LANDING) {
         wlr.high_set = 0.33f;
 		sky_height_ramp.out = wlr.high_set;
-        x3_balance_zero = x3_balance_zero_normal;
+		x3_balance_zero = x3_balance_zero_normal;
 		if(wlr.double_flag)
 			data_limit(&wlr.v_ref,-2.0f,2.0f);
 		else
@@ -969,7 +970,7 @@ static void handle_quadrant_protection(uint8_t index)
     if ((vmc[index].quadrant == 4 || vmc[index].quadrant == 3 || fabs(chassis_imu.pit) > 1.2f
          || fabs(lqr.X_fdb[4] - lqr.X_fdb[6]) > 0.8f || fabs(lqr.X_diff[4]) > 1.2f
          || fabs(lqr.X_diff[6]) > 1.2f)
-        && (wlr.sky_flag == WLR_SKY_IDLE)
+        && (wlr.sky_flag == WLR_SKY_IDLE) && (wlr.jump_flag == WLR_JUMP_IDLE)
         && chassis.recover_flag == 0) {
         quadrant_cnt++;
         if (quadrant_cnt > 200) {
