@@ -36,6 +36,7 @@ static imu_data_t chassis_set_imu_data_container;
 
 extern pid_t pid_leg_recover[2];
 extern float real_vel;
+extern ramp_t jump_ramp;
 
 uint8_t rotate_flag;
 uint8_t rotate_stop_flag;
@@ -356,11 +357,11 @@ static void chassis_execute_fsm(void)
 			if(wlr.sky_flag == WLR_SKY_IDLE && wlr.jump_flag == WLR_JUMP_IDLE)
 				wlr.sky_flag = WLR_SKY_FOLDING; 
 			else if(wlr.sky_flag == WLR_SKY_FOLDING && ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f > 0.45f) \
-				&& ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f < 0.8f) && fabsf(wlr.v_fdb) > 1.5f)
+				&& ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f < 0.8f) && fabsf(jump_ramp.out) == 2.0f)
 				wlr.sky_flag = WLR_SKY_EXTENDING; 
 			else if(wlr.sky_flag == WLR_SKY_STAND && !g_robot_ctx.sky_finish_flag)
 				g_robot_ctx.sky_finish_flag = 1;
-			if(g_robot_ctx.sky_finish_flag && wlr.jump_flag == WLR_JUMP_IDLE)
+			if(g_robot_ctx.sky_finish_flag && wlr.jump_flag == WLR_JUMP_IDLE && wlr.sky_over == 1)
 			{
 				wlr.sky_flag = WLR_SKY_IDLE;
 				wlr.jump_flag = WLR_JUMP_ASCEND; 
