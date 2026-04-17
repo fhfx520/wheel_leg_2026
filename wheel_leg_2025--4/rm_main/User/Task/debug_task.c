@@ -23,7 +23,7 @@
 #include "board_comm.h"
 
 #define row_debug 2 * 10
-uint8_t debug_wave = 9;
+uint8_t debug_wave = 4;
 float test_hex = 1;
 extern FGT_sin_t FGT_sin_chassis;
 extern  uint16_t quadrant_cnt;
@@ -94,8 +94,11 @@ void log_scope_data_pkg(void)
 //          log_scope_get_data(power_heat_data.chassis_power);
 //          log_scope_get_data(power_heat_data.buffer_energy);
 //          log_scope_get_data(supercap.volage);
-            log_scope_get_data(robot_status.chassis_power_limit);
+            // log_scope_get_data(robot_status.chassis_power_limit);
 //            log_scope_get_data( power_heat_data.chassis_power);
+			log_scope_get_data(global_v);
+			log_scope_get_data(lqr.X_ref[1]);
+			log_scope_get_data(chassis_imu.wz);
             break;
         } case 5: {//支持力调试
 //          log_scope_get_data(wlr.side[0].Fn_fdb);
@@ -160,6 +163,7 @@ void log_scope_data_pkg(void)
 			log_scope_get_data(gimbal_stable.feedback_alpha_speed);
 			log_scope_get_data(gimbal.yaw_output);
 			log_scope_get_data(gimbal_imu.yaw);
+
             break;
         } case 10: {//状态预测
             log_scope_get_data(wlr.side[0].predict_wy);

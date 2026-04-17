@@ -3,7 +3,7 @@
 <title>Static Call Graph - [rm_main\rm_main.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image rm_main\rm_main.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Fri Apr 17 22:58:22 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Sat Apr 18 02:04:26 2026
 <BR><P>
 <H3>Maximum Stack Usage =        856 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -265,7 +265,7 @@ Global Symbols
 <P><STRONG><a name="[ab]"></a>__main</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry.o(.ARM.Collect$$$$00000000))
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32h723xx.o(.text)
 </UL>
-<P><STRONG><a name="[35b]"></a>_main_stk</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry2.o(.ARM.Collect$$$$00000001))
+<P><STRONG><a name="[35c]"></a>_main_stk</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry2.o(.ARM.Collect$$$$00000001))
 
 <P><STRONG><a name="[f1]"></a>_main_scatterload</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry5.o(.ARM.Collect$$$$00000004))
 <BR><BR>[Calls]<UL><LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__scatterload
@@ -275,15 +275,15 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__scatterload
 </UL>
 
-<P><STRONG><a name="[35c]"></a>_main_clock</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry7b.o(.ARM.Collect$$$$00000008))
+<P><STRONG><a name="[35d]"></a>_main_clock</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry7b.o(.ARM.Collect$$$$00000008))
 
-<P><STRONG><a name="[35d]"></a>_main_cpp_init</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry8b.o(.ARM.Collect$$$$0000000A))
+<P><STRONG><a name="[35e]"></a>_main_cpp_init</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry8b.o(.ARM.Collect$$$$0000000A))
 
-<P><STRONG><a name="[35e]"></a>_main_init</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry9a.o(.ARM.Collect$$$$0000000B))
+<P><STRONG><a name="[35f]"></a>_main_init</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry9a.o(.ARM.Collect$$$$0000000B))
 
-<P><STRONG><a name="[35f]"></a>__rt_final_cpp</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry10a.o(.ARM.Collect$$$$0000000D))
+<P><STRONG><a name="[360]"></a>__rt_final_cpp</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry10a.o(.ARM.Collect$$$$0000000D))
 
-<P><STRONG><a name="[360]"></a>__rt_final_exit</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry11a.o(.ARM.Collect$$$$0000000F))
+<P><STRONG><a name="[361]"></a>__rt_final_exit</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry11a.o(.ARM.Collect$$$$0000000F))
 
 <P><STRONG><a name="[16]"></a>Reset_Handler</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, startup_stm32h723xx.o(.text))
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32h723xx.o(RESET)
@@ -613,8 +613,8 @@ Global Symbols
 <P><STRONG><a name="[f3]"></a>__aeabi_uldivmod</STRONG> (Thumb, 98 bytes, Stack size 40 bytes, uldiv.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = __aeabi_uldivmod
 </UL>
-<BR>[Calls]<UL><LI><a href="#[f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_llsl
-<LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_llsr
+<BR>[Calls]<UL><LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_llsr
+<LI><a href="#[f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_llsl
 </UL>
 <BR>[Called By]<UL><LI><a href="#[1c6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_SetConfig
 </UL>
@@ -660,16 +660,16 @@ Global Symbols
 <LI><a href="#[267]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kalman_filter_measure_update
 </UL>
 
-<P><STRONG><a name="[361]"></a>__aeabi_memcpy8</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, memcpya.o(.text), UNUSED)
+<P><STRONG><a name="[362]"></a>__aeabi_memcpy8</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, memcpya.o(.text), UNUSED)
 
 <P><STRONG><a name="[f8]"></a>__aeabi_memset</STRONG> (Thumb, 14 bytes, Stack size 0 bytes, memseta.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_memset$wrapper
 <LI><a href="#[f7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr
 </UL>
 
-<P><STRONG><a name="[362]"></a>__aeabi_memset4</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, memseta.o(.text), UNUSED)
+<P><STRONG><a name="[363]"></a>__aeabi_memset4</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, memseta.o(.text), UNUSED)
 
-<P><STRONG><a name="[363]"></a>__aeabi_memset8</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, memseta.o(.text), UNUSED)
+<P><STRONG><a name="[364]"></a>__aeabi_memset8</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, memseta.o(.text), UNUSED)
 
 <P><STRONG><a name="[f7]"></a>__aeabi_memclr</STRONG> (Thumb, 4 bytes, Stack size 0 bytes, memseta.o(.text))
 <BR><BR>[Calls]<UL><LI><a href="#[f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memset
@@ -712,24 +712,24 @@ Global Symbols
 <LI><a href="#[22d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_init_g_5_0
 <LI><a href="#[22c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_init_g_4_0
 <LI><a href="#[229]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_init_g_3_0
-<LI><a href="#[34c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_update (via Veneer)
+<LI><a href="#[34d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_update (via Veneer)
 </UL>
 
 <P><STRONG><a name="[f5]"></a>__aeabi_llsl</STRONG> (Thumb, 30 bytes, Stack size 0 bytes, llshl.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_uldivmod
 </UL>
 
-<P><STRONG><a name="[364]"></a>_ll_shift_l</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, llshl.o(.text), UNUSED)
+<P><STRONG><a name="[365]"></a>_ll_shift_l</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, llshl.o(.text), UNUSED)
 
 <P><STRONG><a name="[f4]"></a>__aeabi_llsr</STRONG> (Thumb, 32 bytes, Stack size 0 bytes, llushr.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_uldivmod
 </UL>
 
-<P><STRONG><a name="[365]"></a>_ll_ushift_r</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, llushr.o(.text), UNUSED)
+<P><STRONG><a name="[366]"></a>_ll_ushift_r</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, llushr.o(.text), UNUSED)
 
-<P><STRONG><a name="[366]"></a>__I$use$fp</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, iusefp.o(.text), UNUSED)
+<P><STRONG><a name="[367]"></a>__I$use$fp</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, iusefp.o(.text), UNUSED)
 
-<P><STRONG><a name="[367]"></a>__fp_status</STRONG> (Thumb, 4 bytes, Stack size 0 bytes, fpstat.o(.text), UNUSED)
+<P><STRONG><a name="[368]"></a>__fp_status</STRONG> (Thumb, 4 bytes, Stack size 0 bytes, fpstat.o(.text), UNUSED)
 
 <P><STRONG><a name="[2f9]"></a>__ieee_status</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, fpstat.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[2f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_powf
@@ -741,11 +741,11 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[f1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_main_scatterload
 </UL>
 
-<P><STRONG><a name="[368]"></a>__scatterload_rt2</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, init.o(.text), UNUSED)
+<P><STRONG><a name="[369]"></a>__scatterload_rt2</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, init.o(.text), UNUSED)
 
-<P><STRONG><a name="[369]"></a>__decompress</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __dczerorl2.o(.text), UNUSED)
+<P><STRONG><a name="[36a]"></a>__decompress</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __dczerorl2.o(.text), UNUSED)
 
-<P><STRONG><a name="[36a]"></a>__decompress1</STRONG> (Thumb, 86 bytes, Stack size unknown bytes, __dczerorl2.o(.text), UNUSED)
+<P><STRONG><a name="[36b]"></a>__decompress1</STRONG> (Thumb, 86 bytes, Stack size unknown bytes, __dczerorl2.o(.text), UNUSED)
 
 <P><STRONG><a name="[254]"></a>BranchlessNormalizeAngle</STRONG> (Thumb, 44 bytes, Stack size 4 bytes, math_lib.o(.text.BranchlessNormalizeAngle))
 <BR><BR>[Stack]<UL><LI>Max Depth = 4<LI>Call Chain = BranchlessNormalizeAngle
@@ -1247,7 +1247,7 @@ Global Symbols
 <LI><a href="#[1c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_CheckIdleState
 </UL>
 
-<P><STRONG><a name="[33d]"></a>HAL_IWDG_Refresh</STRONG> (Thumb, 20 bytes, Stack size 4 bytes, stm32h7xx_hal_iwdg.o(.text.HAL_IWDG_Refresh))
+<P><STRONG><a name="[33e]"></a>HAL_IWDG_Refresh</STRONG> (Thumb, 20 bytes, Stack size 4 bytes, stm32h7xx_hal_iwdg.o(.text.HAL_IWDG_Refresh))
 <BR><BR>[Stack]<UL><LI>Max Depth = 4<LI>Call Chain = HAL_IWDG_Refresh
 </UL>
 <BR>[Called By]<UL><LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;status_task (via Veneer)
@@ -2024,13 +2024,13 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[197]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DMA_Abort_IT
 <LI><a href="#[105]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DMA_Abort
-<LI><a href="#[1bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_EndRxTransfer
 <LI><a href="#[1c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UARTEx_RxFifoFullCallback
 <LI><a href="#[1c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UARTEx_TxFifoEmptyCallback
 <LI><a href="#[1bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UARTEx_WakeupCallback
 <LI><a href="#[1be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UARTEx_RxEventCallback
 <LI><a href="#[1bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_ErrorCallback
 <LI><a href="#[1c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_EndTransmit_IT
+<LI><a href="#[1bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_EndRxTransfer
 </UL>
 <BR>[Called By]<UL><LI><a href="#[a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART10_IRQHandler
 <LI><a href="#[a1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART9_IRQHandler
@@ -3319,7 +3319,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[2cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_update_g_4
 </UL>
 
-<P><STRONG><a name="[358]"></a>aMartix_Add</STRONG> (Thumb, 104 bytes, Stack size 28 bytes, math_matrix.o(.text.aMartix_Add))
+<P><STRONG><a name="[359]"></a>aMartix_Add</STRONG> (Thumb, 104 bytes, Stack size 28 bytes, math_matrix.o(.text.aMartix_Add))
 <BR><BR>[Stack]<UL><LI>Max Depth = 28<LI>Call Chain = aMartix_Add
 </UL>
 <BR>[Called By]<UL><LI><a href="#[319]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control (via Veneer)
@@ -3331,12 +3331,12 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[32e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;select_control_matrix (via Veneer)
 </UL>
 
-<P><STRONG><a name="[354]"></a>aMartix_Mul</STRONG> (Thumb, 172 bytes, Stack size 32 bytes, math_matrix.o(.text.aMartix_Mul))
+<P><STRONG><a name="[355]"></a>aMartix_Mul</STRONG> (Thumb, 172 bytes, Stack size 32 bytes, math_matrix.o(.text.aMartix_Mul))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = aMartix_Mul
 </UL>
 <BR>[Called By]<UL><LI><a href="#[319]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control (via Veneer)
 <LI><a href="#[326]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_inverse_solution_five (via Veneer)
-<LI><a href="#[353]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_forward_solution_five (via Veneer)
+<LI><a href="#[354]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_forward_solution_five (via Veneer)
 </UL>
 
 <P><STRONG><a name="[309]"></a>arm_cos_f32</STRONG> (Thumb, 144 bytes, Stack size 0 bytes, arm_cos_f32.o(.text.arm_cos_f32))
@@ -3344,7 +3344,7 @@ Global Symbols
 <LI><a href="#[31f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gimbal_stable_calc (via Veneer)
 <LI><a href="#[31a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gas_spring_F_Calc (via Veneer)
 <LI><a href="#[326]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_inverse_solution_five (via Veneer)
-<LI><a href="#[353]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_forward_solution_five (via Veneer)
+<LI><a href="#[354]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_forward_solution_five (via Veneer)
 <LI><a href="#[31b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;get_real_vel (via Veneer)
 </UL>
 
@@ -3398,11 +3398,11 @@ Global Symbols
 <LI><a href="#[31f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gimbal_stable_calc (via Veneer)
 <LI><a href="#[31a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gas_spring_F_Calc (via Veneer)
 <LI><a href="#[326]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_inverse_solution_five (via Veneer)
-<LI><a href="#[353]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_forward_solution_five (via Veneer)
+<LI><a href="#[354]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_forward_solution_five (via Veneer)
 <LI><a href="#[31b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;get_real_vel (via Veneer)
 </UL>
 
-<P><STRONG><a name="[344]"></a>board_comm_check_offline</STRONG> (Thumb, 50 bytes, Stack size 4 bytes, board_comm.o(.text.board_comm_check_offline))
+<P><STRONG><a name="[345]"></a>board_comm_check_offline</STRONG> (Thumb, 50 bytes, Stack size 4 bytes, board_comm.o(.text.board_comm_check_offline))
 <BR><BR>[Stack]<UL><LI>Max Depth = 4<LI>Call Chain = board_comm_check_offline
 </UL>
 <BR>[Called By]<UL><LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;status_task (via Veneer)
@@ -3460,7 +3460,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[319]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control (via Veneer)
 <LI><a href="#[304]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_data_input (via Veneer)
 <LI><a href="#[31f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gimbal_stable_calc (via Veneer)
-<LI><a href="#[34c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_update (via Veneer)
+<LI><a href="#[34d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_update (via Veneer)
 </UL>
 
 <P><STRONG><a name="[23f]"></a>container_bus_init</STRONG> (Thumb, 192 bytes, Stack size 40 bytes, container_bus.o(.text.container_bus_init))
@@ -3569,13 +3569,13 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[319]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control (via Veneer)
 <LI><a href="#[303]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;apply_output_limits (via Veneer)
 <LI><a href="#[33c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;stable_velocity_control (via Veneer)
-<LI><a href="#[351]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_motion_reference (via Veneer)
+<LI><a href="#[352]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_motion_reference (via Veneer)
 <LI><a href="#[322]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;handle_sky_state (via Veneer)
-<LI><a href="#[34e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_leg_height_and_balance (via Veneer)
+<LI><a href="#[34f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_leg_height_and_balance (via Veneer)
 <LI><a href="#[2bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_calc
 </UL>
 
-<P><STRONG><a name="[345]"></a>dji_motor_check_offline</STRONG> (Thumb, 122 bytes, Stack size 12 bytes, drv_dji_motor.o(.text.dji_motor_check_offline))
+<P><STRONG><a name="[346]"></a>dji_motor_check_offline</STRONG> (Thumb, 122 bytes, Stack size 12 bytes, drv_dji_motor.o(.text.dji_motor_check_offline))
 <BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = dji_motor_check_offline
 </UL>
 <BR>[Called By]<UL><LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;status_task (via Veneer)
@@ -3616,7 +3616,7 @@ Global Symbols
 <LI><a href="#[334]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;shoot_data_output (via Veneer)
 </UL>
 
-<P><STRONG><a name="[346]"></a>dm_motor_check_offline</STRONG> (Thumb, 112 bytes, Stack size 12 bytes, drv_dm_motor.o(.text.dm_motor_check_offline))
+<P><STRONG><a name="[347]"></a>dm_motor_check_offline</STRONG> (Thumb, 112 bytes, Stack size 12 bytes, drv_dm_motor.o(.text.dm_motor_check_offline))
 <BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = dm_motor_check_offline
 </UL>
 <BR>[Called By]<UL><LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;status_task (via Veneer)
@@ -3690,8 +3690,6 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = fsm_change
 </UL>
 <BR>[Called By]<UL><LI><a href="#[2c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robot_logic_update
-<LI><a href="#[c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_energy_execute
-<LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ascend_execute
 <LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_double_ter_execute
 <LI><a href="#[d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ter_run_execute
 <LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ter_ready_execute
@@ -3707,6 +3705,8 @@ Global Symbols
 <LI><a href="#[d5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;keyboard_execute
 <LI><a href="#[e3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;remote_execute
 <LI><a href="#[d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;protect_execute
+<LI><a href="#[c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_energy_execute
+<LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ascend_execute
 </UL>
 
 <P><STRONG><a name="[272]"></a>fsm_init</STRONG> (Thumb, 62 bytes, Stack size 16 bytes, fsm_core.o(.text.fsm_init))
@@ -3725,7 +3725,7 @@ Global Symbols
 <LI><a href="#[e3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;remote_execute
 </UL>
 
-<P><STRONG><a name="[343]"></a>imu_check_offline</STRONG> (Thumb, 118 bytes, Stack size 4 bytes, prot_imu.o(.text.imu_check_offline))
+<P><STRONG><a name="[344]"></a>imu_check_offline</STRONG> (Thumb, 118 bytes, Stack size 4 bytes, prot_imu.o(.text.imu_check_offline))
 <BR><BR>[Stack]<UL><LI>Max Depth = 4<LI>Call Chain = imu_check_offline
 </UL>
 <BR>[Called By]<UL><LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;status_task (via Veneer)
@@ -3740,7 +3740,7 @@ Global Symbols
 <LI><a href="#[115]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_RxFifo0Callback
 </UL>
 
-<P><STRONG><a name="[341]"></a>judge_check_offline</STRONG> (Thumb, 50 bytes, Stack size 4 bytes, prot_judge.o(.text.judge_check_offline))
+<P><STRONG><a name="[342]"></a>judge_check_offline</STRONG> (Thumb, 50 bytes, Stack size 4 bytes, prot_judge.o(.text.judge_check_offline))
 <BR><BR>[Stack]<UL><LI>Max Depth = 4<LI>Call Chain = judge_check_offline
 </UL>
 <BR>[Called By]<UL><LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;status_task (via Veneer)
@@ -3823,8 +3823,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[311]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_init (via Veneer)
 <LI><a href="#[301]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Fusion_Vel_Acc_Init (via Veneer)
 <LI><a href="#[310]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_init (via Veneer)
-<LI><a href="#[34a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;twm_init (via Veneer)
-<LI><a href="#[348]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tlm_init (via Veneer)
+<LI><a href="#[34b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;twm_init (via Veneer)
+<LI><a href="#[349]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tlm_init (via Veneer)
 </UL>
 
 <P><STRONG><a name="[267]"></a>kalman_filter_measure_update</STRONG> (Thumb, 116 bytes, Stack size 24 bytes, kalman_filter.o(.text.kalman_filter_measure_update))
@@ -3850,7 +3850,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[319]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control (via Veneer)
 <LI><a href="#[302]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Fusion_Vel_Acc_Test (via Veneer)
 <LI><a href="#[304]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_data_input (via Veneer)
-<LI><a href="#[347]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tlm_gnd_roll_calc (via Veneer)
+<LI><a href="#[348]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tlm_gnd_roll_calc (via Veneer)
 </UL>
 
 <P><STRONG><a name="[26a]"></a>kalman_filter_xhat_update</STRONG> (Thumb, 182 bytes, Stack size 16 bytes, kalman_filter.o(.text.kalman_filter_xhat_update))
@@ -3888,6 +3888,12 @@ Global Symbols
 </UL>
 <BR>[Called By]<UL><LI><a href="#[304]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_data_input (via Veneer)
 <LI><a href="#[2dd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vision_num
+</UL>
+
+<P><STRONG><a name="[33d]"></a>limit_velocity</STRONG> (Thumb, 216 bytes, Stack size 12 bytes, velocity_control.o(.text.limit_velocity))
+<BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = limit_velocity
+</UL>
+<BR>[Called By]<UL><LI><a href="#[33c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;stable_velocity_control (via Veneer)
 </UL>
 
 <P><STRONG><a name="[2d3]"></a>log_init</STRONG> (Thumb, 20 bytes, Stack size 4 bytes, data_log.o(.text.log_init))
@@ -4021,7 +4027,7 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[28b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;f_changing_intergration_rate
 </UL>
 <BR>[Called By]<UL><LI><a href="#[323]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;map_virtual_force (via Veneer)
-<LI><a href="#[351]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_motion_reference (via Veneer)
+<LI><a href="#[352]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_motion_reference (via Veneer)
 <LI><a href="#[339]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;shoot_pid_calc (via Veneer)
 </UL>
 
@@ -4033,7 +4039,7 @@ Global Symbols
 <LI><a href="#[335]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;shoot_init (via Veneer)
 </UL>
 
-<P><STRONG><a name="[342]"></a>power_check_offline</STRONG> (Thumb, 54 bytes, Stack size 4 bytes, prot_power.o(.text.power_check_offline))
+<P><STRONG><a name="[343]"></a>power_check_offline</STRONG> (Thumb, 54 bytes, Stack size 4 bytes, prot_power.o(.text.power_check_offline))
 <BR><BR>[Stack]<UL><LI>Max Depth = 4<LI>Call Chain = power_check_offline
 </UL>
 <BR>[Called By]<UL><LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;status_task (via Veneer)
@@ -4096,10 +4102,10 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[306]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_ramp (via Veneer)
 <LI><a href="#[304]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_data_input (via Veneer)
 <LI><a href="#[323]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;map_virtual_force (via Veneer)
-<LI><a href="#[352]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_rotate_state (via Veneer)
+<LI><a href="#[353]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_rotate_state (via Veneer)
 <LI><a href="#[322]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;handle_sky_state (via Veneer)
 <LI><a href="#[321]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;handle_jump_state (via Veneer)
-<LI><a href="#[34e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_leg_height_and_balance (via Veneer)
+<LI><a href="#[34f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_leg_height_and_balance (via Veneer)
 </UL>
 
 <P><STRONG><a name="[312]"></a>ramp_init</STRONG> (Thumb, 44 bytes, Stack size 16 bytes, math_lib.o(.text.ramp_init))
@@ -4109,7 +4115,7 @@ Global Symbols
 <LI><a href="#[310]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_init (via Veneer)
 </UL>
 
-<P><STRONG><a name="[33f]"></a>rc_check_offline</STRONG> (Thumb, 50 bytes, Stack size 4 bytes, prot_dr16.o(.text.rc_check_offline))
+<P><STRONG><a name="[340]"></a>rc_check_offline</STRONG> (Thumb, 50 bytes, Stack size 4 bytes, prot_dr16.o(.text.rc_check_offline))
 <BR><BR>[Stack]<UL><LI>Max Depth = 4<LI>Call Chain = rc_check_offline
 </UL>
 <BR>[Called By]<UL><LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;status_task (via Veneer)
@@ -4128,7 +4134,7 @@ Global Symbols
 <LI><a href="#[e3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;remote_execute
 </UL>
 
-<P><STRONG><a name="[33e]"></a>rc_fsm_init</STRONG> (Thumb, 616 bytes, Stack size 4 bytes, prot_dr16.o(.text.rc_fsm_init))
+<P><STRONG><a name="[33f]"></a>rc_fsm_init</STRONG> (Thumb, 616 bytes, Stack size 4 bytes, prot_dr16.o(.text.rc_fsm_init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 4<LI>Call Chain = rc_fsm_init
 </UL>
 <BR>[Called By]<UL><LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;status_task (via Veneer)
@@ -4166,7 +4172,7 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[225]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_init_g_1_0
 </UL>
-<BR>[Called By]<UL><LI><a href="#[34b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_init (via Veneer)
+<BR>[Called By]<UL><LI><a href="#[34c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_init (via Veneer)
 </UL>
 
 <P><STRONG><a name="[2c3]"></a>ui_init_g_2</STRONG> (Thumb, 8 bytes, Stack size 8 bytes, ui_g.o(.text.ui_init_g_2))
@@ -4174,7 +4180,7 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[228]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_init_g_2_0
 </UL>
-<BR>[Called By]<UL><LI><a href="#[34b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_init (via Veneer)
+<BR>[Called By]<UL><LI><a href="#[34c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_init (via Veneer)
 </UL>
 
 <P><STRONG><a name="[2c4]"></a>ui_init_g_3</STRONG> (Thumb, 8 bytes, Stack size 8 bytes, ui_g.o(.text.ui_init_g_3))
@@ -4182,7 +4188,7 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[229]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_init_g_3_0
 </UL>
-<BR>[Called By]<UL><LI><a href="#[34b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_init (via Veneer)
+<BR>[Called By]<UL><LI><a href="#[34c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_init (via Veneer)
 </UL>
 
 <P><STRONG><a name="[2c5]"></a>ui_init_g_4</STRONG> (Thumb, 8 bytes, Stack size 8 bytes, ui_g.o(.text.ui_init_g_4))
@@ -4190,7 +4196,7 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[22c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_init_g_4_0
 </UL>
-<BR>[Called By]<UL><LI><a href="#[34b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_init (via Veneer)
+<BR>[Called By]<UL><LI><a href="#[34c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_init (via Veneer)
 </UL>
 
 <P><STRONG><a name="[2c6]"></a>ui_init_g_5</STRONG> (Thumb, 12 bytes, Stack size 8 bytes, ui_g.o(.text.ui_init_g_5))
@@ -4199,7 +4205,7 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[22e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_init_g_5_1
 <LI><a href="#[22d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_init_g_5_0
 </UL>
-<BR>[Called By]<UL><LI><a href="#[34b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_init (via Veneer)
+<BR>[Called By]<UL><LI><a href="#[34c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_init (via Veneer)
 </UL>
 
 <P><STRONG><a name="[226]"></a>ui_proc_7_frame</STRONG> (Thumb, 116 bytes, Stack size 16 bytes, ui_interface.o(.text.ui_proc_7_frame))
@@ -4234,7 +4240,7 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[22f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_g_1_0
 </UL>
-<BR>[Called By]<UL><LI><a href="#[34c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_update (via Veneer)
+<BR>[Called By]<UL><LI><a href="#[34d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_update (via Veneer)
 </UL>
 
 <P><STRONG><a name="[2cb]"></a>ui_update_g_2</STRONG> (Thumb, 8 bytes, Stack size 8 bytes, ui_g.o(.text.ui_update_g_2))
@@ -4242,7 +4248,7 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[230]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_g_2_0
 </UL>
-<BR>[Called By]<UL><LI><a href="#[34c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_update (via Veneer)
+<BR>[Called By]<UL><LI><a href="#[34d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_update (via Veneer)
 </UL>
 
 <P><STRONG><a name="[2cc]"></a>ui_update_g_3</STRONG> (Thumb, 8 bytes, Stack size 8 bytes, ui_g.o(.text.ui_update_g_3))
@@ -4250,7 +4256,7 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[231]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_g_3_0
 </UL>
-<BR>[Called By]<UL><LI><a href="#[34c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_update (via Veneer)
+<BR>[Called By]<UL><LI><a href="#[34d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_update (via Veneer)
 </UL>
 
 <P><STRONG><a name="[2cd]"></a>ui_update_g_4</STRONG> (Thumb, 8 bytes, Stack size 8 bytes, ui_g.o(.text.ui_update_g_4))
@@ -4258,7 +4264,7 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[232]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_g_4_0
 </UL>
-<BR>[Called By]<UL><LI><a href="#[34c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_update (via Veneer)
+<BR>[Called By]<UL><LI><a href="#[34d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_update (via Veneer)
 </UL>
 
 <P><STRONG><a name="[2ce]"></a>us_timer_interval_test_end</STRONG> (Thumb, 72 bytes, Stack size 16 bytes, us_time.o(.text.us_timer_interval_test_end))
@@ -4557,7 +4563,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[1eb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;usart_user_handler
 </UL>
 
-<P><STRONG><a name="[340]"></a>vision_check_offline</STRONG> (Thumb, 50 bytes, Stack size 4 bytes, prot_vision.o(.text.vision_check_offline))
+<P><STRONG><a name="[341]"></a>vision_check_offline</STRONG> (Thumb, 50 bytes, Stack size 4 bytes, prot_vision.o(.text.vision_check_offline))
 <BR><BR>[Stack]<UL><LI>Max Depth = 4<LI>Call Chain = vision_check_offline
 </UL>
 <BR>[Called By]<UL><LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;status_task (via Veneer)
@@ -4884,7 +4890,7 @@ Global Symbols
 <LI><a href="#[2ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__set_errno
 </UL>
 <BR>[Called By]<UL><LI><a href="#[31a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gas_spring_F_Calc (via Veneer)
-<LI><a href="#[353]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_forward_solution_five (via Veneer)
+<LI><a href="#[354]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_forward_solution_five (via Veneer)
 </UL>
 
 <P><STRONG><a name="[2f5]"></a>__hardfp_atanf</STRONG> (Thumb, 296 bytes, Stack size 16 bytes, atanf.o(i.__hardfp_atanf))
@@ -4894,7 +4900,7 @@ Global Symbols
 <LI><a href="#[2ee]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__mathlib_flt_infnan
 <LI><a href="#[2f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__ARM_fpclassifyf
 </UL>
-<BR>[Called By]<UL><LI><a href="#[347]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tlm_gnd_roll_calc (via Veneer)
+<BR>[Called By]<UL><LI><a href="#[348]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tlm_gnd_roll_calc (via Veneer)
 </UL>
 
 <P><STRONG><a name="[2f6]"></a>__hardfp_cosf</STRONG> (Thumb, 280 bytes, Stack size 8 bytes, cosf.o(i.__hardfp_cosf))
@@ -4905,7 +4911,7 @@ Global Symbols
 <LI><a href="#[2ee]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__mathlib_flt_infnan
 <LI><a href="#[2ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__set_errno
 </UL>
-<BR>[Called By]<UL><LI><a href="#[355]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_fn_calc (via Veneer)
+<BR>[Called By]<UL><LI><a href="#[356]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_fn_calc (via Veneer)
 </UL>
 
 <P><STRONG><a name="[2f8]"></a>__hardfp_powf</STRONG> (Thumb, 1606 bytes, Stack size 32 bytes, powf.o(i.__hardfp_powf))
@@ -4921,12 +4927,12 @@ Global Symbols
 <LI><a href="#[2ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__set_errno
 </UL>
 <BR>[Called By]<UL><LI><a href="#[31a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gas_spring_F_Calc (via Veneer)
-<LI><a href="#[355]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_fn_calc (via Veneer)
+<LI><a href="#[356]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_fn_calc (via Veneer)
 <LI><a href="#[326]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_inverse_solution_five (via Veneer)
-<LI><a href="#[353]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_forward_solution_five (via Veneer)
+<LI><a href="#[354]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_forward_solution_five (via Veneer)
 </UL>
 
-<P><STRONG><a name="[36b]"></a>__mathlib_powf</STRONG> (Thumb, 0 bytes, Stack size 32 bytes, powf.o(i.__hardfp_powf), UNUSED)
+<P><STRONG><a name="[36c]"></a>__mathlib_powf</STRONG> (Thumb, 0 bytes, Stack size 32 bytes, powf.o(i.__hardfp_powf), UNUSED)
 
 <P><STRONG><a name="[2fc]"></a>__hardfp_sinf</STRONG> (Thumb, 344 bytes, Stack size 16 bytes, sinf.o(i.__hardfp_sinf))
 <BR><BR>[Stack]<UL><LI>Max Depth = 36<LI>Call Chain = __hardfp_sinf &rArr; __mathlib_rredf2
@@ -4939,7 +4945,7 @@ Global Symbols
 <LI><a href="#[2ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__set_errno
 </UL>
 <BR>[Called By]<UL><LI><a href="#[308]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;variable_vw_generate (via Veneer)
-<LI><a href="#[355]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_fn_calc (via Veneer)
+<LI><a href="#[356]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_fn_calc (via Veneer)
 </UL>
 
 <P><STRONG><a name="[2fd]"></a>__hardfp_sqrtf</STRONG> (Thumb, 58 bytes, Stack size 16 bytes, sqrtf.o(i.__hardfp_sqrtf))
@@ -4949,7 +4955,7 @@ Global Symbols
 </UL>
 <BR>[Called By]<UL><LI><a href="#[31a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gas_spring_F_Calc (via Veneer)
 <LI><a href="#[326]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_inverse_solution_five (via Veneer)
-<LI><a href="#[353]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_forward_solution_five (via Veneer)
+<LI><a href="#[354]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_forward_solution_five (via Veneer)
 </UL>
 
 <P><STRONG><a name="[2fe]"></a>__hardfp_tanf</STRONG> (Thumb, 322 bytes, Stack size 16 bytes, tanf.o(i.__hardfp_tanf))
@@ -4962,7 +4968,7 @@ Global Symbols
 <LI><a href="#[2f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__ARM_fpclassifyf
 <LI><a href="#[2ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__set_errno
 </UL>
-<BR>[Called By]<UL><LI><a href="#[349]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tlm_leg_length_calc (via Veneer)
+<BR>[Called By]<UL><LI><a href="#[34a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tlm_leg_length_calc (via Veneer)
 </UL>
 
 <P><STRONG><a name="[240]"></a>malloc</STRONG> (Thumb, 64 bytes, Stack size 32 bytes, mallocr.o(i.__malloc$realloc))
@@ -5023,11 +5029,11 @@ Global Symbols
 <LI><a href="#[2f6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_cosf
 </UL>
 
-<P><STRONG><a name="[36c]"></a>__scatterload_copy</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_copy), UNUSED)
+<P><STRONG><a name="[36d]"></a>__scatterload_copy</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_copy), UNUSED)
 
-<P><STRONG><a name="[36d]"></a>__scatterload_null</STRONG> (Thumb, 2 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_null), UNUSED)
+<P><STRONG><a name="[36e]"></a>__scatterload_null</STRONG> (Thumb, 2 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_null), UNUSED)
 
-<P><STRONG><a name="[36e]"></a>__scatterload_zeroinit</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_zeroinit), UNUSED)
+<P><STRONG><a name="[36f]"></a>__scatterload_zeroinit</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_zeroinit), UNUSED)
 
 <P><STRONG><a name="[2ef]"></a>__set_errno</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, errno.o(i.__set_errno))
 <BR><BR>[Called By]<UL><LI><a href="#[2fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_tanf
@@ -5158,7 +5164,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(.rodata..L__const.MX_FREERTOS_Init.os_thread_def_GimbalTask)
 </UL>
-<P><STRONG><a name="[277]"></a>log_scope_data_pkg</STRONG> (Thumb, 1714 bytes, Stack size 112 bytes, debug_task.o(.text.log_scope_data_pkg))
+<P><STRONG><a name="[277]"></a>log_scope_data_pkg</STRONG> (Thumb, 1746 bytes, Stack size 112 bytes, debug_task.o(.text.log_scope_data_pkg))
 <BR><BR>[Stack]<UL><LI>Max Depth = 144<LI>Call Chain = log_scope_data_pkg &rArr; log_scope_get_data &rArr; float2byte
 </UL>
 <BR>[Calls]<UL><LI><a href="#[279]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;log_scope_get_data (via Veneer)
@@ -5217,30 +5223,30 @@ Global Symbols
 <P><STRONG><a name="[be]"></a>status_task</STRONG> (Thumb, 542 bytes, Stack size 24 bytes, status_task.o(.text.status_task))
 <BR><BR>[Stack]<UL><LI>Max Depth = 140<LI>Call Chain = status_task &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vListInsertEnd
 </UL>
-<BR>[Calls]<UL><LI><a href="#[346]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dm_motor_check_offline (via Veneer)
-<LI><a href="#[345]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dji_motor_check_offline (via Veneer)
-<LI><a href="#[344]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;board_comm_check_offline (via Veneer)
-<LI><a href="#[343]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;imu_check_offline (via Veneer)
-<LI><a href="#[342]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;power_check_offline (via Veneer)
-<LI><a href="#[341]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;judge_check_offline (via Veneer)
-<LI><a href="#[340]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vision_check_offline (via Veneer)
-<LI><a href="#[33f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rc_check_offline (via Veneer)
-<LI><a href="#[33e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rc_fsm_init (via Veneer)
-<LI><a href="#[33d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_IWDG_Refresh (via Veneer)
+<BR>[Calls]<UL><LI><a href="#[347]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dm_motor_check_offline (via Veneer)
+<LI><a href="#[346]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dji_motor_check_offline (via Veneer)
+<LI><a href="#[345]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;board_comm_check_offline (via Veneer)
+<LI><a href="#[344]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;imu_check_offline (via Veneer)
+<LI><a href="#[343]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;power_check_offline (via Veneer)
+<LI><a href="#[342]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;judge_check_offline (via Veneer)
+<LI><a href="#[341]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vision_check_offline (via Veneer)
+<LI><a href="#[340]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rc_check_offline (via Veneer)
+<LI><a href="#[33f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rc_fsm_init (via Veneer)
+<LI><a href="#[33e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_IWDG_Refresh (via Veneer)
 <LI><a href="#[25d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay (via Veneer)
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(.rodata..L__const.MX_FREERTOS_Init.os_thread_def_STATUSTask)
 </UL>
-<P><STRONG><a name="[347]"></a>tlm_gnd_roll_calc</STRONG> (Thumb, 126 bytes, Stack size 32 bytes, wheel_leg_model.o(.text.tlm_gnd_roll_calc))
+<P><STRONG><a name="[348]"></a>tlm_gnd_roll_calc</STRONG> (Thumb, 126 bytes, Stack size 32 bytes, wheel_leg_model.o(.text.tlm_gnd_roll_calc))
 <BR><BR>[Stack]<UL><LI>Max Depth = 144<LI>Call Chain = tlm_gnd_roll_calc &rArr; kalman_filter_update &rArr; kalman_filter_K_update &rArr; arm_mat_inverse_f32
 </UL>
 <BR>[Calls]<UL><LI><a href="#[268]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kalman_filter_update (via Veneer)
 <LI><a href="#[2f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atanf (via Veneer)
 </UL>
-<BR>[Called By]<UL><LI><a href="#[350]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_leg_references
+<BR>[Called By]<UL><LI><a href="#[351]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_leg_references
 </UL>
 
-<P><STRONG><a name="[348]"></a>tlm_init</STRONG> (Thumb, 96 bytes, Stack size 32 bytes, wheel_leg_model.o(.text.tlm_init))
+<P><STRONG><a name="[349]"></a>tlm_init</STRONG> (Thumb, 96 bytes, Stack size 32 bytes, wheel_leg_model.o(.text.tlm_init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 144<LI>Call Chain = tlm_init &rArr; kalman_filter_init &rArr; malloc &rArr; internal_alloc
 </UL>
 <BR>[Calls]<UL><LI><a href="#[265]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kalman_filter_init (via Veneer)
@@ -5248,15 +5254,15 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[311]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_init
 </UL>
 
-<P><STRONG><a name="[349]"></a>tlm_leg_length_calc</STRONG> (Thumb, 592 bytes, Stack size 32 bytes, wheel_leg_model.o(.text.tlm_leg_length_calc))
+<P><STRONG><a name="[34a]"></a>tlm_leg_length_calc</STRONG> (Thumb, 592 bytes, Stack size 32 bytes, wheel_leg_model.o(.text.tlm_leg_length_calc))
 <BR><BR>[Stack]<UL><LI>Max Depth = 68<LI>Call Chain = tlm_leg_length_calc &rArr; __hardfp_tanf &rArr; __mathlib_rredf2
 </UL>
 <BR>[Calls]<UL><LI><a href="#[2fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_tanf (via Veneer)
 </UL>
-<BR>[Called By]<UL><LI><a href="#[350]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_leg_references
+<BR>[Called By]<UL><LI><a href="#[351]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_leg_references
 </UL>
 
-<P><STRONG><a name="[34a]"></a>twm_init</STRONG> (Thumb, 150 bytes, Stack size 48 bytes, wheel_leg_model.o(.text.twm_init))
+<P><STRONG><a name="[34b]"></a>twm_init</STRONG> (Thumb, 150 bytes, Stack size 48 bytes, wheel_leg_model.o(.text.twm_init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = twm_init &rArr; kalman_filter_init &rArr; malloc &rArr; internal_alloc
 </UL>
 <BR>[Calls]<UL><LI><a href="#[265]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kalman_filter_init (via Veneer)
@@ -5264,7 +5270,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[311]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_init
 </UL>
 
-<P><STRONG><a name="[34b]"></a>ui_init</STRONG> (Thumb, 24 bytes, Stack size 8 bytes, ui_task.o(.text.ui_init))
+<P><STRONG><a name="[34c]"></a>ui_init</STRONG> (Thumb, 24 bytes, Stack size 8 bytes, ui_task.o(.text.ui_init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 188<LI>Call Chain = ui_init &rArr; ui_init_g_2 &rArr; _ui_init_g_2_0 &rArr; judge_send_data &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vListInsertEnd
 </UL>
 <BR>[Calls]<UL><LI><a href="#[2c6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_init_g_5 (via Veneer)
@@ -5284,12 +5290,12 @@ Global Symbols
 <LI><a href="#[283]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osKernelSysTick (via Veneer)
 <LI><a href="#[2ce]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;us_timer_interval_test_end (via Veneer)
 <LI><a href="#[2d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;us_timer_interval_test_start (via Veneer)
-<LI><a href="#[34c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_update
-<LI><a href="#[34b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_init
+<LI><a href="#[34d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_update
+<LI><a href="#[34c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_init
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(.rodata..L__const.MX_FREERTOS_Init.os_thread_def_UITask)
 </UL>
-<P><STRONG><a name="[34c]"></a>ui_update</STRONG> (Thumb, 2562 bytes, Stack size 88 bytes, ui_task.o(.text.ui_update))
+<P><STRONG><a name="[34d]"></a>ui_update</STRONG> (Thumb, 2562 bytes, Stack size 88 bytes, ui_task.o(.text.ui_update))
 <BR><BR>[Stack]<UL><LI>Max Depth = 244<LI>Call Chain = ui_update &rArr; ui_update_g_4 &rArr; _ui_update_g_4_0 &rArr; judge_send_data &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vListInsertEnd
 </UL>
 <BR>[Calls]<UL><LI><a href="#[305]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;circle_error (via Veneer)
@@ -5297,18 +5303,18 @@ Global Symbols
 <LI><a href="#[2cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_update_g_3 (via Veneer)
 <LI><a href="#[2cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_update_g_2 (via Veneer)
 <LI><a href="#[2ca]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_update_g_1 (via Veneer)
-<LI><a href="#[34d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_sign_function
+<LI><a href="#[34e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_sign_function
 <LI><a href="#[22a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strcpy (via Veneer)
 </UL>
 <BR>[Called By]<UL><LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_task
 </UL>
 
-<P><STRONG><a name="[353]"></a>vmc_forward_solution_five</STRONG> (Thumb, 2356 bytes, Stack size 288 bytes, leg_vmc.o(.text.vmc_forward_solution_five))
+<P><STRONG><a name="[354]"></a>vmc_forward_solution_five</STRONG> (Thumb, 2356 bytes, Stack size 288 bytes, leg_vmc.o(.text.vmc_forward_solution_five))
 <BR><BR>[Stack]<UL><LI>Max Depth = 320<LI>Call Chain = vmc_forward_solution_five &rArr; aMartix_Mul
 </UL>
 <BR>[Calls]<UL><LI><a href="#[309]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_cos_f32 (via Veneer)
 <LI><a href="#[30a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_sin_f32 (via Veneer)
-<LI><a href="#[354]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;aMartix_Mul (via Veneer)
+<LI><a href="#[355]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;aMartix_Mul (via Veneer)
 <LI><a href="#[2fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_sqrtf (via Veneer)
 <LI><a href="#[2f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_powf (via Veneer)
 <LI><a href="#[2f1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan2f (via Veneer)
@@ -5316,7 +5322,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[319]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[35a]"></a>vmc_init_five</STRONG> (Thumb, 98 bytes, Stack size 12 bytes, leg_vmc.o(.text.vmc_init_five))
+<P><STRONG><a name="[35b]"></a>vmc_init_five</STRONG> (Thumb, 98 bytes, Stack size 12 bytes, leg_vmc.o(.text.vmc_init_five))
 <BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = vmc_init_five
 </UL>
 <BR>[Called By]<UL><LI><a href="#[311]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_init
@@ -5327,7 +5333,7 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[309]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_cos_f32 (via Veneer)
 <LI><a href="#[30a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_sin_f32 (via Veneer)
-<LI><a href="#[354]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;aMartix_Mul (via Veneer)
+<LI><a href="#[355]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;aMartix_Mul (via Veneer)
 <LI><a href="#[2fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_sqrtf (via Veneer)
 <LI><a href="#[2f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_powf (via Veneer)
 <LI><a href="#[2ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_acosf (via Veneer)
@@ -5351,22 +5357,22 @@ Global Symbols
 <LI><a href="#[305]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;circle_error (via Veneer)
 <LI><a href="#[303]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;apply_output_limits
 <LI><a href="#[323]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;map_virtual_force
-<LI><a href="#[359]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;state_predict
+<LI><a href="#[35a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;state_predict
 <LI><a href="#[33c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;stable_velocity_control
-<LI><a href="#[351]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_motion_reference
+<LI><a href="#[352]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_motion_reference
 <LI><a href="#[32e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;select_control_matrix
-<LI><a href="#[350]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_leg_references
-<LI><a href="#[352]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_rotate_state
+<LI><a href="#[351]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_leg_references
+<LI><a href="#[353]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_rotate_state
 <LI><a href="#[322]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;handle_sky_state
 <LI><a href="#[321]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;handle_jump_state
-<LI><a href="#[357]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;reset_jump_state
-<LI><a href="#[34e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_leg_height_and_balance
-<LI><a href="#[356]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_fly_state
+<LI><a href="#[358]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;reset_jump_state
+<LI><a href="#[34f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_leg_height_and_balance
+<LI><a href="#[357]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_fly_state
 <LI><a href="#[31a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gas_spring_F_Calc
-<LI><a href="#[355]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_fn_calc
-<LI><a href="#[353]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_forward_solution_five
-<LI><a href="#[354]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;aMartix_Mul (via Veneer)
-<LI><a href="#[358]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;aMartix_Add (via Veneer)
+<LI><a href="#[356]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_fn_calc
+<LI><a href="#[354]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_forward_solution_five
+<LI><a href="#[355]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;aMartix_Mul (via Veneer)
+<LI><a href="#[359]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;aMartix_Add (via Veneer)
 <LI><a href="#[2bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;data_limit (via Veneer)
 <LI><a href="#[31b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;get_real_vel
 </UL>
@@ -5378,9 +5384,9 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[312]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_init (via Veneer)
 <LI><a href="#[31e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_init (via Veneer)
-<LI><a href="#[34a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;twm_init
-<LI><a href="#[348]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tlm_init
-<LI><a href="#[35a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_init_five
+<LI><a href="#[34b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;twm_init
+<LI><a href="#[349]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tlm_init
+<LI><a href="#[35b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_init_five
 <LI><a href="#[265]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kalman_filter_init (via Veneer)
 </UL>
 <BR>[Called By]<UL><LI><a href="#[310]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_init
@@ -5767,8 +5773,8 @@ Local Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> shoot_task.o(.rodata.mb_callback)
 </UL>
-<P><STRONG><a name="[34d]"></a>ui_sign_function</STRONG> (Thumb, 24 bytes, Stack size 0 bytes, ui_task.o(.text.ui_sign_function))
-<BR><BR>[Called By]<UL><LI><a href="#[34c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_update
+<P><STRONG><a name="[34e]"></a>ui_sign_function</STRONG> (Thumb, 24 bytes, Stack size 0 bytes, ui_task.o(.text.ui_sign_function))
+<BR><BR>[Called By]<UL><LI><a href="#[34d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_update
 </UL>
 
 <P><STRONG><a name="[f0]"></a>vision_data_cb</STRONG> (Thumb, 48 bytes, Stack size 24 bytes, ui_task.o(.text.vision_data_cb))
@@ -5909,7 +5915,7 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[100]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DWT_GetDeltaT
 </UL>
 
-<P><STRONG><a name="[355]"></a>wlr_fn_calc</STRONG> (Thumb, 364 bytes, Stack size 80 bytes, wlr.o(.text.wlr_fn_calc))
+<P><STRONG><a name="[356]"></a>wlr_fn_calc</STRONG> (Thumb, 364 bytes, Stack size 80 bytes, wlr.o(.text.wlr_fn_calc))
 <BR><BR>[Stack]<UL><LI>Max Depth = 116<LI>Call Chain = wlr_fn_calc &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
 <BR>[Calls]<UL><LI><a href="#[2fc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_sinf (via Veneer)
@@ -5931,16 +5937,16 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[319]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[356]"></a>update_fly_state</STRONG> (Thumb, 528 bytes, Stack size 8 bytes, wlr.o(.text.update_fly_state))
+<P><STRONG><a name="[357]"></a>update_fly_state</STRONG> (Thumb, 528 bytes, Stack size 8 bytes, wlr.o(.text.update_fly_state))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = update_fly_state
 </UL>
 <BR>[Called By]<UL><LI><a href="#[319]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[34e]"></a>update_leg_height_and_balance</STRONG> (Thumb, 796 bytes, Stack size 16 bytes, wlr.o(.text.update_leg_height_and_balance))
+<P><STRONG><a name="[34f]"></a>update_leg_height_and_balance</STRONG> (Thumb, 796 bytes, Stack size 16 bytes, wlr.o(.text.update_leg_height_and_balance))
 <BR><BR>[Stack]<UL><LI>Max Depth = 44<LI>Call Chain = update_leg_height_and_balance &rArr; ramp_calc &rArr; data_limit
 </UL>
-<BR>[Calls]<UL><LI><a href="#[34f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_either_leg_flying
+<BR>[Calls]<UL><LI><a href="#[350]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_either_leg_flying
 <LI><a href="#[324]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_both_legs_flying
 <LI><a href="#[2bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;data_limit (via Veneer)
 <LI><a href="#[2bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_calc (via Veneer)
@@ -5948,11 +5954,11 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[319]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[357]"></a>reset_jump_state</STRONG> (Thumb, 100 bytes, Stack size 0 bytes, wlr.o(.text.reset_jump_state))
+<P><STRONG><a name="[358]"></a>reset_jump_state</STRONG> (Thumb, 100 bytes, Stack size 0 bytes, wlr.o(.text.reset_jump_state))
 <BR><BR>[Called By]<UL><LI><a href="#[319]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[321]"></a>handle_jump_state</STRONG> (Thumb, 584 bytes, Stack size 16 bytes, wlr.o(.text.handle_jump_state))
+<P><STRONG><a name="[321]"></a>handle_jump_state</STRONG> (Thumb, 592 bytes, Stack size 16 bytes, wlr.o(.text.handle_jump_state))
 <BR><BR>[Stack]<UL><LI>Max Depth = 44<LI>Call Chain = handle_jump_state &rArr; ramp_calc &rArr; data_limit
 </UL>
 <BR>[Calls]<UL><LI><a href="#[2bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_calc (via Veneer)
@@ -5960,7 +5966,7 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[319]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[322]"></a>handle_sky_state</STRONG> (Thumb, 1420 bytes, Stack size 32 bytes, wlr.o(.text.handle_sky_state))
+<P><STRONG><a name="[322]"></a>handle_sky_state</STRONG> (Thumb, 1432 bytes, Stack size 32 bytes, wlr.o(.text.handle_sky_state))
 <BR><BR>[Stack]<UL><LI>Max Depth = 60<LI>Call Chain = handle_sky_state &rArr; ramp_calc &rArr; data_limit
 </UL>
 <BR>[Calls]<UL><LI><a href="#[2bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;data_limit (via Veneer)
@@ -5969,7 +5975,7 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[319]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[352]"></a>update_rotate_state</STRONG> (Thumb, 348 bytes, Stack size 32 bytes, wlr.o(.text.update_rotate_state))
+<P><STRONG><a name="[353]"></a>update_rotate_state</STRONG> (Thumb, 348 bytes, Stack size 32 bytes, wlr.o(.text.update_rotate_state))
 <BR><BR>[Stack]<UL><LI>Max Depth = 60<LI>Call Chain = update_rotate_state &rArr; ramp_calc &rArr; data_limit
 </UL>
 <BR>[Calls]<UL><LI><a href="#[2bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_calc (via Veneer)
@@ -5977,17 +5983,17 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[319]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[350]"></a>update_leg_references</STRONG> (Thumb, 344 bytes, Stack size 16 bytes, wlr.o(.text.update_leg_references))
+<P><STRONG><a name="[351]"></a>update_leg_references</STRONG> (Thumb, 344 bytes, Stack size 16 bytes, wlr.o(.text.update_leg_references))
 <BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = update_leg_references &rArr; tlm_gnd_roll_calc &rArr; kalman_filter_update &rArr; kalman_filter_K_update &rArr; arm_mat_inverse_f32
 </UL>
 <BR>[Calls]<UL><LI><a href="#[324]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_both_legs_flying
-<LI><a href="#[349]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tlm_leg_length_calc
-<LI><a href="#[347]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tlm_gnd_roll_calc
+<LI><a href="#[34a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tlm_leg_length_calc
+<LI><a href="#[348]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tlm_gnd_roll_calc
 </UL>
 <BR>[Called By]<UL><LI><a href="#[319]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[32e]"></a>select_control_matrix</STRONG> (Thumb, 556 bytes, Stack size 8 bytes, wlr.o(.text.select_control_matrix))
+<P><STRONG><a name="[32e]"></a>select_control_matrix</STRONG> (Thumb, 604 bytes, Stack size 8 bytes, wlr.o(.text.select_control_matrix))
 <BR><BR>[Stack]<UL><LI>Max Depth = 36<LI>Call Chain = select_control_matrix &rArr; aMartix_Cover
 </UL>
 <BR>[Calls]<UL><LI><a href="#[324]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_both_legs_flying
@@ -5996,10 +6002,10 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[319]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[351]"></a>update_motion_reference</STRONG> (Thumb, 672 bytes, Stack size 16 bytes, wlr.o(.text.update_motion_reference))
+<P><STRONG><a name="[352]"></a>update_motion_reference</STRONG> (Thumb, 672 bytes, Stack size 16 bytes, wlr.o(.text.update_motion_reference))
 <BR><BR>[Stack]<UL><LI>Max Depth = 76<LI>Call Chain = update_motion_reference &rArr; pid_calc &rArr; f_changing_intergration_rate
 </UL>
-<BR>[Calls]<UL><LI><a href="#[34f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_either_leg_flying
+<BR>[Calls]<UL><LI><a href="#[350]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_either_leg_flying
 <LI><a href="#[324]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_both_legs_flying
 <LI><a href="#[2bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;data_limit (via Veneer)
 <LI><a href="#[28a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_calc (via Veneer)
@@ -6007,16 +6013,17 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[319]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[33c]"></a>stable_velocity_control</STRONG> (Thumb, 292 bytes, Stack size 16 bytes, wlr.o(.text.stable_velocity_control))
-<BR><BR>[Stack]<UL><LI>Max Depth = 36<LI>Call Chain = stable_velocity_control &rArr; power_control_target_velocity &rArr; supercap_velocity_addmap
+<P><STRONG><a name="[33c]"></a>stable_velocity_control</STRONG> (Thumb, 360 bytes, Stack size 24 bytes, wlr.o(.text.stable_velocity_control))
+<BR><BR>[Stack]<UL><LI>Max Depth = 44<LI>Call Chain = stable_velocity_control &rArr; power_control_target_velocity &rArr; supercap_velocity_addmap
 </UL>
-<BR>[Calls]<UL><LI><a href="#[2bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;data_limit (via Veneer)
+<BR>[Calls]<UL><LI><a href="#[33d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;limit_velocity (via Veneer)
+<LI><a href="#[2bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;data_limit (via Veneer)
 <LI><a href="#[28c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;power_control_target_velocity (via Veneer)
 </UL>
 <BR>[Called By]<UL><LI><a href="#[319]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[359]"></a>state_predict</STRONG> (Thumb, 214 bytes, Stack size 12 bytes, wlr.o(.text.state_predict))
+<P><STRONG><a name="[35a]"></a>state_predict</STRONG> (Thumb, 214 bytes, Stack size 12 bytes, wlr.o(.text.state_predict))
 <BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = state_predict
 </UL>
 <BR>[Called By]<UL><LI><a href="#[319]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
@@ -6046,17 +6053,17 @@ Local Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 4<LI>Call Chain = wlr_both_legs_flying
 </UL>
 <BR>[Called By]<UL><LI><a href="#[323]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;map_virtual_force
-<LI><a href="#[351]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_motion_reference
+<LI><a href="#[352]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_motion_reference
 <LI><a href="#[32e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;select_control_matrix
-<LI><a href="#[350]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_leg_references
-<LI><a href="#[34e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_leg_height_and_balance
+<LI><a href="#[351]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_leg_references
+<LI><a href="#[34f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_leg_height_and_balance
 </UL>
 
-<P><STRONG><a name="[34f]"></a>wlr_either_leg_flying</STRONG> (Thumb, 54 bytes, Stack size 4 bytes, wlr.o(.text.wlr_either_leg_flying))
+<P><STRONG><a name="[350]"></a>wlr_either_leg_flying</STRONG> (Thumb, 54 bytes, Stack size 4 bytes, wlr.o(.text.wlr_either_leg_flying))
 <BR><BR>[Stack]<UL><LI>Max Depth = 4<LI>Call Chain = wlr_either_leg_flying
 </UL>
-<BR>[Called By]<UL><LI><a href="#[351]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_motion_reference
-<LI><a href="#[34e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_leg_height_and_balance
+<BR>[Called By]<UL><LI><a href="#[352]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_motion_reference
+<LI><a href="#[34f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_leg_height_and_balance
 </UL>
 
 <P><STRONG><a name="[325]"></a>handle_quadrant_protection</STRONG> (Thumb, 360 bytes, Stack size 4 bytes, wlr.o(.text.handle_quadrant_protection))
@@ -6298,9 +6305,9 @@ Local Symbols
 <P><STRONG><a name="[b0]"></a>UART_DMAError</STRONG> (Thumb, 128 bytes, Stack size 24 bytes, stm32h7xx_hal_uart.o(.text.UART_DMAError))
 <BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = UART_DMAError &rArr; UART_EndRxTransfer
 </UL>
-<BR>[Calls]<UL><LI><a href="#[1bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_EndRxTransfer
-<LI><a href="#[1bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_ErrorCallback
+<BR>[Calls]<UL><LI><a href="#[1bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_ErrorCallback
 <LI><a href="#[1ed]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_EndTxTransfer
+<LI><a href="#[1bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_EndRxTransfer
 </UL>
 <BR>[Address Reference Count : 2]<UL><LI> stm32h7xx_hal_uart.o(.text.HAL_UART_Transmit_DMA)
 <LI> stm32h7xx_hal_uart.o(.text.UART_Start_Receive_DMA)
@@ -6894,41 +6901,41 @@ Local Symbols
 <BR>[Address Reference Count : 1]<UL><LI> robot_logic.o(.rodata.state_kb_low)
 </UL>
 <P><STRONG><a name="[26b]"></a>get_kb_gimbal_mode</STRONG> (Thumb, 20 bytes, Stack size 0 bytes, robot_logic.o(.text.get_kb_gimbal_mode))
-<BR><BR>[Called By]<UL><LI><a href="#[c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_energy_execute
-<LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ascend_execute
-<LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_double_ter_execute
+<BR><BR>[Called By]<UL><LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_double_ter_execute
 <LI><a href="#[d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ter_run_execute
 <LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ter_ready_execute
 <LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_high_execute
 <LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_spin_execute
 <LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_fight_execute
 <LI><a href="#[cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_low_execute
+<LI><a href="#[c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_energy_execute
+<LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ascend_execute
 </UL>
 
 <P><STRONG><a name="[26c]"></a>get_kb_shoot_mode</STRONG> (Thumb, 4 bytes, Stack size 0 bytes, robot_logic.o(.text.get_kb_shoot_mode))
-<BR><BR>[Called By]<UL><LI><a href="#[c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_energy_execute
-<LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ascend_execute
-<LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_double_ter_execute
+<BR><BR>[Called By]<UL><LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_double_ter_execute
 <LI><a href="#[d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ter_run_execute
 <LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ter_ready_execute
 <LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_high_execute
 <LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_spin_execute
 <LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_fight_execute
 <LI><a href="#[cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_low_execute
+<LI><a href="#[c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_energy_execute
+<LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ascend_execute
 </UL>
 
 <P><STRONG><a name="[26e]"></a>check_key_trigger</STRONG> (Thumb, 70 bytes, Stack size 4 bytes, robot_logic.o(.text.check_key_trigger))
 <BR><BR>[Stack]<UL><LI>Max Depth = 4<LI>Call Chain = check_key_trigger
 </UL>
-<BR>[Called By]<UL><LI><a href="#[c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_energy_execute
-<LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ascend_execute
-<LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_double_ter_execute
+<BR>[Called By]<UL><LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_double_ter_execute
 <LI><a href="#[d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ter_run_execute
 <LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ter_ready_execute
 <LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_high_execute
 <LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_spin_execute
 <LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_fight_execute
 <LI><a href="#[cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_low_execute
+<LI><a href="#[c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_energy_execute
+<LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ascend_execute
 </UL>
 
 <P><STRONG><a name="[c8]"></a>kb_fight_enter</STRONG> (Thumb, 14 bytes, Stack size 0 bytes, robot_logic.o(.text.kb_fight_enter))

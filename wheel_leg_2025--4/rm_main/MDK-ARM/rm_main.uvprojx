@@ -1273,6 +1273,11 @@
               <FileType>1</FileType>
               <FilePath>..\User\Math\dwt.c</FilePath>
             </File>
+            <File>
+              <FileName>velocity_control.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Math\velocity_control.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

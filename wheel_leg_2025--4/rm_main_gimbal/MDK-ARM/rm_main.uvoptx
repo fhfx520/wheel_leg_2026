@@ -542,6 +542,16 @@
           <WinNumber>2</WinNumber>
           <ItemText>online_cnt,0x0A</ItemText>
         </Ww>
+        <Ww>
+          <count>16</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>\\rm_main\../User/Task/gimbal_task.c\gimbal.yaw_angle.ref</ItemText>
+        </Ww>
+        <Ww>
+          <count>17</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>\\rm_main\../User/Task/gimbal_task.c\gimbal.yaw_angle.fdb</ItemText>
+        </Ww>
       </WatchWindow2>
       <MemoryWindow1>
         <Mm>

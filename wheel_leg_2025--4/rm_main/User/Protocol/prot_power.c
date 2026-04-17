@@ -211,7 +211,7 @@ static float supercap_velocity_addmap(void)
     if(supercap.volume_percent < 40.0f)
         return 0.0f;
     else
-        return (supercap.volume_percent - 40.0f) / 60.0f * 0.5f;//线性映射，电容电压从40%到100%时，速度增加0-0.6f
+        return (supercap.volume_percent - 40.0f) / 60.0f * 0.5f;//线性映射，电容电压从40%到100%时，速度增加0-0.5f
 }
 
 float power_control_target_velocity(void)
