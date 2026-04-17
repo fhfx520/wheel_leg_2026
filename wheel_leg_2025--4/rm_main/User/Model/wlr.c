@@ -489,7 +489,7 @@ static void state_predict(void)
     }
 }
 
-//此函数旨在通过观测机体pit来限制速度输入 防止失控
+//限速函数
 static void stable_velocity_control(void)
 {
     if(fabsf(lqr.X_fdb[8]) > 0.3f)
@@ -498,6 +498,9 @@ static void stable_velocity_control(void)
         data_limit(&lqr.X_ref[1],-1.0f,1.0f);
     else if(fabsf(lqr.X_fdb[8]) > 0.1f)
         data_limit(&lqr.X_ref[1],-2.0f,2.0f);
+    if(wlr.sky_flag == WLR_SKY_IDLE && wlr.jump_flag == WLR_JUMP_IDLE && wlr.high_flag == 0)//磕台阶，跳跃，飞坡时不限制速度输入
+        data_limit(&lqr.X_ref[1],-power_control_target_velocity(),power_control_target_velocity());
+    data_limit(&lqr.X_ref[1],-2.6f,2.6f);
 }
 int32_t Last_cnt;
 
@@ -722,7 +725,7 @@ static void handle_sky_state(void)
 		}
 		else
 		{
-            wlr.v_ref = -2.0f;
+            wlr.v_ref = -1.0f;
 			x3_balance_zero = x3_balance_zero_normal;
 			x5_balance_zero = 0.0f;
 		}

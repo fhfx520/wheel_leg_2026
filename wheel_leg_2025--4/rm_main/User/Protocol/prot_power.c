@@ -39,13 +39,13 @@ void power_init(void)
 void power_judge_update(void)
 {
 	if(robot_status.chassis_power_limit != 0)
-    power_control.judge_max_power     = robot_status.chassis_power_limit;
+        power_control.judge_max_power     = robot_status.chassis_power_limit;
 		
     power_control.judge_power_buffer  = power_heat_data.buffer_energy;
 	if (g_robot_ctx.output.chassis == CHASSIS_LOW_SPIN){ 
-			power_control.limit_power = power_control.judge_max_power + power_control.rotate_add_power;
+		power_control.limit_power = power_control.judge_max_power + power_control.rotate_add_power;
     } else 
-			power_control.limit_power = power_control.judge_max_power + power_control.normal_add_power;
+		power_control.limit_power = power_control.judge_max_power + power_control.normal_add_power;
 }
 
 float motor_power_calcu(float current, float wheel_speed_fdb)
@@ -180,7 +180,6 @@ void power_get_data(uint8_t *data)
 
 void power_get_status(uint8_t *data)
 {
-	
     //0x101
     uint8_t cap_state_buf;
     memcpy(&cap_state_buf,data,1);
@@ -193,12 +192,43 @@ void power_get_status(uint8_t *data)
     supercap.state.chassis_msg_miss = cap_state_buf >> 6 & 1;
     supercap.state.judge_msg_miss = cap_state_buf >> 7;
 //    memcpy(&supercap.POWER_MODE,data+1,sizeof(power_mode));
-
 }	
-
-void power_control_target_velocity(void)
+static float power_velocity_table[11][2] = {
+    {35.0f ,1.7f},//节能状态
+    {45.0f ,1.8f},//1
+    {50.0f ,1.8f},//2
+    {55.0f ,1.9f},//3
+    {60.0f ,1.9f},//4
+    {65.0f ,2.0f},//5
+    {70.0f ,2.0f},//6
+    {75.0f ,2.1f},//7
+    {80.0f ,2.2f},//8
+    {90.0f ,2.3f},//9
+    {100.0f,2.4f},//10
+};
+static float supercap_velocity_addmap(void)
 {
-	
+    if(supercap.volume_percent < 40.0f)
+        return 0.0f;
+    else
+        return (supercap.volume_percent - 40.0f) / 60.0f * 0.5f;//线性映射，电容电压从40%到100%时，速度增加0-0.6f
+}
+
+float power_control_target_velocity(void)
+{
+    power_judge_update();
+	static float base_velocity = 0.0f;
+    base_velocity = power_velocity_table[0][1];
+    //更新基础速度
+    for(uint8_t i = 0; i < 11; i++) {
+        if (power_control.judge_max_power == power_velocity_table[i][0])
+            base_velocity = power_velocity_table[i][1];
+        else
+            break;
+    }
+    //根据电容电压进行微调
+    return (base_velocity + supercap_velocity_addmap());
+
 }
 
 uint8_t power_check_offline(void)

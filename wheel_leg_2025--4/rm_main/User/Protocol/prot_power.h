@@ -62,6 +62,7 @@ void power_limit_current(void);
 float power_limit_speed(void);
 void power_get_data(uint8_t *data);
 void power_get_status(uint8_t *data);
+float power_control_target_velocity(void);
 uint8_t power_check_offline(void);
 
 #endif

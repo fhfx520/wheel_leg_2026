@@ -23,7 +23,7 @@
 #include "board_comm.h"
 
 #define row_debug 2 * 10
-uint8_t debug_wave = 7;
+uint8_t debug_wave = 9;
 float test_hex = 1;
 extern FGT_sin_t FGT_sin_chassis;
 extern  uint16_t quadrant_cnt;
@@ -158,7 +158,8 @@ void log_scope_data_pkg(void)
             break;
         } case 9: {//底盘状态观测
 			log_scope_get_data(gimbal_stable.feedback_alpha_speed);
-					
+			log_scope_get_data(gimbal.yaw_output);
+			log_scope_get_data(gimbal_imu.yaw);
             break;
         } case 10: {//状态预测
             log_scope_get_data(wlr.side[0].predict_wy);

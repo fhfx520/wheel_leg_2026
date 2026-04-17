@@ -82,8 +82,8 @@ void ui_update(void)
 	ui_g_1_supcap_voltage->number = (int)(supercap.volage * 1000.0f) / 100 * 100;
 	ui_update_g_1();
 	
-	ui_g_2_target_velocity->number = (int)(chassis_scale.keyboard * 1000.0f) / 100 * 100;
-	ui_g_2_current_velocity->number = (int)(wlr.v_fdb * 1000.0f) / 100 * 100;
+	ui_g_2_target_velocity->number = (int)(lqr.X_ref[1] * 1000.0f) / 100 * 100;
+	ui_g_2_current_velocity->number = (int)(fabsf(wlr.v_fdb) * 1000.0f) / 100 * 100;
 	
 	float yaw_err;
     yaw_err = circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, (float)yaw_motor.ecd / 8192 * 2 * PI, 2 * PI);

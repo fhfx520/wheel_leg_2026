@@ -255,6 +255,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>pid_leg_recover</ItemText>
         </Ww>
+        <Ww>
+          <count>20</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>gimbal_imu</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
@@ -336,6 +341,21 @@
           <count>15</count>
           <WinNumber>2</WinNumber>
           <ItemText>wlr.sky_flag</ItemText>
+        </Ww>
+        <Ww>
+          <count>16</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>yaw_motor,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>17</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>gimbal.yaw_output</ItemText>
+        </Ww>
+        <Ww>
+          <count>18</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>gimbal.start_up</ItemText>
         </Ww>
       </WatchWindow2>
       <MemoryWindow1>
