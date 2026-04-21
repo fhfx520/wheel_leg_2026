@@ -18,7 +18,7 @@ can_std_msg_t motor_msg[CAN_CHANNEL_NUM][4];
 dji_motor_t fric_motor[2];
 dji_motor_t driver_motor[2];
 dji_motor_t pit_motor, yaw_motor;
-dji_motor_t trigger_motor;
+// dji_motor_t trigger_motor;
 
 static const float motor_para_table[3][4] =
 {
@@ -185,7 +185,7 @@ void dji_motor_output_data(void)
 //			continue;
         for (int i = 0; i < 4; i++) {
             if (motor_send_flag[can_channel][i] == 1) {
-				if((status.dji_motor != 2 && status.dji_motor != 3) || trigger_motor.online == 1)
+				if(status.dji_motor != 2 && status.dji_motor != 3)
                     can_std_transmit(can_channel, motor_msg[can_channel][i].id, motor_msg[can_channel][i].data);
                     motor_send_flag[can_channel][i] = 0;
             }

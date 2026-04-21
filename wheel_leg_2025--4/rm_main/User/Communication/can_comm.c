@@ -1,6 +1,7 @@
 #include "can_comm.h"
 #include "drv_dji_motor.h"
 #include "drv_ht_motor.h"
+#include "drv_lk_motor.h"
 #include "prot_imu.h"
 #include "prot_power.h"
 #include "fdcan.h"
@@ -128,7 +129,8 @@ void can_comm_init(void)
 	dji_motor_init(&driver_motor[0], DJI_3508_MOTOR, CAN_CHANNEL_3, DRIVER_MOTOR_LEFT_ID , DJI_3508_WHEEL_TAURUS_REDUCTION_RATIO);
     dji_motor_init(&driver_motor[1], DJI_3508_MOTOR, CAN_CHANNEL_3, DRIVER_MOTOR_RIGHT_ID, DJI_3508_WHEEL_TAURUS_REDUCTION_RATIO);
 	dji_motor_init(&yaw_motor, 		 DJI_6020_MOTOR, CAN_CHANNEL_3, YAW_MOTOR_ID    	 , DJI_6020_ORIGINAL_REDUCTION_RATIO);
-    dji_motor_init(&trigger_motor,   DJI_2006_MOTOR, CAN_CHANNEL_3, TRIGGER_MOTOR_ID	 , DJI_2006_ORIGINAL_REDUCTION_RATIO);
+    // dji_motor_init(&trigger_motor,   DJI_2006_MOTOR, CAN_CHANNEL_3, TRIGGER_MOTOR_ID	 , DJI_2006_ORIGINAL_REDUCTION_RATIO);
+    lk_motor_init(&trigger_motor, CAN_CHANNEL_3, TRIGGER_MOTOR_ID, 0.0f);
 }
 
 /*

@@ -2,6 +2,7 @@
 #include "mode_switch_task.h"
 #include "control_def.h"
 #include "drv_dji_motor.h"
+#include "drv_lk_motor.h"
 #include "prot_judge.h"
 #include "prot_dr16.h"
 #include "prot_vision.h"
@@ -16,10 +17,23 @@
 
 #define SHOOT_SPEED_NUM 15
 #ifndef ABS
-#define ABS(x) ((x>0)? (x): (-(x)))//32818
+    #define ABS(x) ((x>0)? (x): (-(x)))//32818
 #endif
-#define TRIGGER_MOTOR_ECD_SINGLE   (58975.0f)
-#define TRIGGER_MOTOR_ECD_SERIES   (58975.0f)
+
+#ifdef DJI2006
+    #define TRIGGER_MOTOR_ECD_SINGLE   (58975.0f)  //拨盘一颗子弹转过的编码值 8191 * 36 *2/10 = 58975.2f
+    #define TRIGGER_MOTOR_ECD_SERIES   (58975.0f)  //拨盘一颗子弹转过的编码值 8191 * 36 *2/10 = 58975.2f
+    #define TRIGGER_MOTOR_STUCK_CURRENT 7000	   //拨盘卡弹电流阈值 0~16384  
+    #define TRIGGER_MOTOR_STUCK_SPEED   100	       //拨盘卡弹电流阈值 
+#endif
+
+#ifdef MG4005
+    #define	TRIGGER_MOTOR_ECD_SINGLE    (65536.0f)  //拨盘一颗子弹转过的编码值 65536 * 10 / 10 = 65536.0f
+    #define TRIGGER_MOTOR_ECD_SERIES    (65536.0f)	//拨盘一颗子弹转过的编码值 65536 * 10 / 10 = 65536.0f
+    #define TRIGGER_MOTOR_STUCK_CURRENT 2048	    //拨盘卡弹电流阈值 0~2048
+    #define TRIGGER_MOTOR_STUCK_SPEED   1000	    //拨盘卡弹电流阈值  
+#endif
+
 
 static float Heat_ShootPeriod_calc(uint8_t trice_id);
 
@@ -44,55 +58,6 @@ uint8_t microcurrent_flag = 0;		//预制标志位，如果暂时不需要用直�
 float micro_t = 0;					//微电流力矩
 float micro_t_test = 0;				//测试用
 
-/*
-* @brief	微电流（微小力矩）预制弹位，目前可用于dji3508电机，通过微小力矩推动到限位，
-			退小弹位，保证每次拨弹位置一致，可以保证每次打弹精度
- * @prarm[in] void
- * @return    void
-*/
-static void microcurrent_pre_fabricated_firing_position(void)
-{
-	static uint8_t microcurrent_cnt = 10;	//判断抵限位
-	static uint8_t microcurrent_wait_cnt = 100;//给予退弹位时间
-	static uint16_t microcurrent_out_cnt = 15000;//预制时间超过30s直接退出
-	
-	if(microcurrent_flag == 0)	//小力矩推动阶段,缓慢抵达限位处
-	{
-		if(ABS(trigger_motor.speed_rpm) < 60)	//防止力矩持续给力导致速度过快顶过限位	
-			micro_t = 0.30;
-		else
-			micro_t = 0.05f;
-		
-		shoot.trigger_ecd.ref = trigger_motor.total_ecd;//trigger stop下的ref和fbd一样，防止中途退出预制导致拨盘爆炸	
-		
-		if(ABS(trigger_motor.rx_current) > 3300 && ABS(trigger_motor.speed_rpm) < 2 && microcurrent_flag == 0) //判断是否抵住限位
-		{
-			if(microcurrent_cnt > 0)
-				microcurrent_cnt--;
-			else{									//第一阶段结束，进入第二阶段	
-				micro_t = 0;
-				microcurrent_flag = 1;	
-				shoot.trigger_ecd.ref += 2000.0f;	//退大约四分之一颗弹位	
-			}
-		}		
-	}
-	else if(microcurrent_flag == 1){	//重新回到pid位置环控制，往后退一小段位置
-		if(microcurrent_wait_cnt > 0)	//给予退弹位时间
-			microcurrent_wait_cnt--;
-		else
-			microcurrent_flag = 2;				//标志预制成功退出
-	}
-	
-	
-	if (microcurrent_out_cnt > 0)//预制时间超过30s直接退出
-		microcurrent_out_cnt--;
-	else
-		microcurrent_flag = 2;
-	
-}
-//**********************添加预制弹位结束*********************//
-
-
 vision_data_t shoot_get_vision_data_container;
 
 static vision_tx_data_t shoot_set_vision_data_container;
@@ -100,7 +65,7 @@ static vision_tx_data_t shoot_set_vision_data_container;
 // 收到vision数据：
 static void vision_data_cb(uint32_t tag_id, void* data, size_t len) {
 	if(data == NULL || len != sizeof(vision_data_t))
-	return;
+	    return;
     memcpy(&shoot_get_vision_data_container,(vision_data_t*)data,len);
 	
 }
@@ -118,7 +83,6 @@ void shoot_set_container(void)
 	container_set(TAG_SHOOT_VISION_DATA,&shoot_set_vision_data_container,sizeof(shoot_set_vision_data_container),CONTAINER_TYPE_STRUCT);
 }
 
-
 static uint8_t single_shoot_reset(void)
 {
     return (
@@ -133,7 +97,7 @@ static uint8_t single_shoot_enable(void)
         shoot_enable
         && shoot.barrel.heat_remain >= MIN_HEAT
         && ((rc.mouse.l && ctrl_mode == KEYBOARD_MODE) || (rc.ch3 > 500 && ctrl_mode == REMOTER_MODE))
-        && ABS(trigger_ecd_error) < 0.1f * TRIGGER_MOTOR_ECD_SINGLE
+        && ABS(trigger_ecd_error) < 0.2f * TRIGGER_MOTOR_ECD_SINGLE
     );
 }
 
@@ -155,9 +119,22 @@ static uint8_t series_shoot_enable(void)
 				
         && ((shoot.barrel.heat_remain >= MIN_HEAT))  //热量控制
         && frequency_cnt * SHOOT_PERIOD >= shoot.trigger_period  //射频控制
-        && ABS(trigger_ecd_error) <  TRIGGER_MOTOR_ECD_SERIES  //拨盘误差控制		
+        && ABS(trigger_ecd_error) <  0.2f * TRIGGER_MOTOR_ECD_SERIES  //拨盘误差控制		
     );
 }
+
+static void pre_fabricated_trigger_position(void)
+{
+	static uint8_t recover_flag = 0;
+	static uint16_t init_cnt = 0;
+	if(init_cnt < 1000)
+	{	
+		init_cnt++;
+		if(recover_flag == 0) 
+			shoot.trigger_ecd.ref = 64582.0f/65535.0f;			//38400	50%的连发几率			//改这里改变预制的位置，通过读编码值
+    }
+}
+
 uint8_t last_enable;
 static void shoot_control(void)
 {
@@ -200,7 +177,7 @@ static void shoot_control(void)
                 shoot.barrel.heat += 10;
             }
 			//卡蛋反转
-			if(ABS(trigger_motor.rx_current) > 7000 && ABS(trigger_motor.speed_rpm) < 100 )
+			if(ABS(trigger_motor.rx_current) > TRIGGER_MOTOR_STUCK_CURRENT && ABS(trigger_motor.speed_rpm) < TRIGGER_MOTOR_STUCK_SPEED )
 				back_cnt ++;
 			if (back_cnt > 200) {
 				back_flag = 1;
@@ -231,7 +208,7 @@ static void shoot_control(void)
         default:break;
     }
 		
-		last_enable = vision.shoot_enable;
+	last_enable = vision.shoot_enable;
 	global_back_flag = back_flag;
 }
 
@@ -241,8 +218,14 @@ static void shoot_init(void)
     //发射器底层初始化
     pid_init(&shoot.fric_spd[0].pid, NONE, 0.0005f, 0, 0, 0, 0.8);
     pid_init(&shoot.fric_spd[1].pid, NONE, 0.0005f, 0, 0, 0, 0.8);
+    #ifdef DJI2006
     pid_init(&shoot.trigger_ecd.pid, NONE, 0.12f, 0, 0.0f, 0, 10000);
     pid_init(&shoot.trigger_spd.pid, NONE, 0.0015f, 0.00005f, 0, 0.18f, 1.8f);
+    #endif
+    #ifdef MG4005
+    pid_init(&shoot.trigger_ecd.pid, NONE, 0.0f, 0.0f, 0.0f, 0.0f, 255.0f);
+    pid_init(&shoot.trigger_spd.pid, NONE, 0.0f, 0.0f, 0.0f, 0.0f, 2048.0f);
+    #endif
     //发射器模式初始化
     shoot.trigger_mode  = TRIGGER_MODE_PROTECT;
     shoot.fric_mode     = FRIC_MODE_PROTECT;
@@ -268,7 +251,7 @@ static void shoot_pid_calc(void)
     shoot.trigger_output = pid_calc(&shoot.trigger_spd.pid, shoot.trigger_spd.ref, shoot.trigger_spd.fdb);
 		
 	//牛牛卡了反转
-	if(ABS(trigger_motor.rx_current) > 7000 && ABS(trigger_motor.speed_rpm) < 100)
+	if(ABS(trigger_motor.rx_current) > TRIGGER_MOTOR_STUCK_CURRENT && ABS(trigger_motor.speed_rpm) < TRIGGER_MOTOR_STUCK_SPEED)
 		shoot.trigger_output = 0;
 }
 
@@ -282,9 +265,19 @@ static void shoot_data_output(void)
         dji_motor_set_torque(&fric_motor[1], shoot.fric_output[1]);
     }
     if (shoot.trigger_mode == TRIGGER_MODE_PROTECT) {
+        #ifdef DJI2006
         dji_motor_set_torque(&trigger_motor, 0);
+        #endif
+        #ifdef MG4005
+        trigger_motor.tx_current = 0;
+        #endif
     } else {
+        #ifdef DJI2006
         dji_motor_set_torque(&trigger_motor, shoot.trigger_output);
+        #endif
+        #ifdef MG4005
+        trigger_motor.tx_current = shoot.trigger_output;
+        #endif
     }
 }
 

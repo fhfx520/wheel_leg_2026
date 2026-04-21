@@ -1174,6 +1174,11 @@
               <FilePath>..\User\Drivers\drv_dm_motor.c</FilePath>
             </File>
             <File>
+              <FileName>drv_lk_motor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Drivers\drv_lk_motor.c</FilePath>
+            </File>
+            <File>
               <FileName>drv_ws2812b.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\Drivers\drv_ws2812b.c</FilePath>

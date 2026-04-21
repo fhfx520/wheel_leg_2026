@@ -5,7 +5,7 @@
 #include "math.h"
 
 
-#define VISION_DATA_LEN 28
+#define VISION_DATA_LEN 44
 
 #define NAN_PROCESS(now, last)      \
     do {                            \
@@ -39,9 +39,9 @@ typedef struct
     uint32_t new_frame_flag;
     float target_yaw_angle, target_pit_angle;
     float yaw_min_err;
-		float pit_min_err;
+	float pit_min_err;
     uint32_t shoot_enable;
-		uint8_t trace_id;
+	uint8_t trace_id;
     uint8_t online;
     union
     {
@@ -50,10 +50,14 @@ typedef struct
         {
             float yaw;
             float pit;
-            float dis;
-			float dis2;
+            float yaw_vel;
+            float yaw_acc;
+            float pit_vel;
+            float pit_acc;
+            float shoot_yaw_tole;
+			float shoot_pit_tole;
             float fire;
-            float pos;
+            float fire_rf;
             uint8_t empty;
             uint8_t cnt : 6;
             uint8_t ist_flag :1;
@@ -132,46 +136,10 @@ typedef struct
 
 #pragma pack()
 
-#define SUPERPOWER_VISION_TX_DATA_LEN	43
-
-#pragma pack(1)
-typedef struct 
-{
-	uint8_t buff[SUPERPOWER_VISION_TX_DATA_LEN];
-	union
-	{
-		uint8_t head[2];
-		uint8_t mode;  // 0: 空闲, 1: 自瞄, 2: 小符, 3: 大符
-		float q[4];    // wxyz顺序
-		float yaw;
-		float yaw_vel;
-		float pitch;
-		float pitch_vel;
-		float bullet_speed;
-		uint16_t bullet_count;  // 子弹累计发送次数
-		uint16_t crc16;
-	} data;
-} GimbalToVision_t;
-
-typedef struct 
-{
-  uint8_t head[2];
-  uint8_t mode;  // 0: 不控制, 1: 控制云台但不开火，2: 控制云台且开火
-  float yaw;
-  float yaw_vel;
-  float yaw_acc;
-  float pitch;
-  float pitch_vel;
-  float pitch_acc;
-  uint16_t crc16;
-} VisionToGimbal_t;
-#pragma pack()
-
 extern vision_t vision;
 extern vision_tx_msg_t vision_tx_msg;
 void vision_get_data(uint8_t *data);
 void vision_output_data(void);
-void superpower_vision_Tx(void);
 uint8_t vision_check_offline(void);
 void vision_gimbal_get_data(vision_t * vision, uint32_t id, uint8_t *data);
 

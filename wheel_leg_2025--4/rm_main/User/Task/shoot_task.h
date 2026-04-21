@@ -6,6 +6,23 @@
 
 #define SHOOT_PERIOD 2
 
+//**********选择拨盘电机**********//
+//#define DJI2006
+#define MG4005
+//#define DM2325	烂
+//#define DJI3508
+
+//**********定义正侧供，减速比不一样**********//
+#define SIDE_SUPPLY
+
+typedef enum
+{
+    MOTOR_DJI2006,
+    MOTOR_MG4005,
+    MOTOR_DM2325,
+	MOTOR_DJI3508
+} shoot_motor_type_e;
+
 typedef struct
 {
     pid_t pid;
