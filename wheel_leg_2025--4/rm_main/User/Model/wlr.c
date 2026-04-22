@@ -482,14 +482,10 @@ static void stable_velocity_control(void)
         data_limit(&lqr.X_ref[1],-1.0f,1.0f);
     else if(fabsf(lqr.X_fdb[8]) > 0.1f)
         data_limit(&lqr.X_ref[1],-2.0f,2.0f);
-    if(wlr.sky_flag == WLR_SKY_IDLE && wlr.jump_flag == WLR_JUMP_IDLE && wlr.high_flag == 0)//磕台阶，跳跃，飞坡时不限制速度输入
+    if(wlr.sky_flag == WLR_SKY_IDLE && wlr.jump_flag == WLR_JUMP_IDLE && wlr.high_flag == 0 && !wlr.energy_flag)//磕台阶，跳跃，飞坡时不限制速度输入
     {
         data_limit(&lqr.X_ref[1],-power_control_target_velocity(),power_control_target_velocity());
-		
-        global_v = lqr.X_ref[1];
-        limit_velocity(&lqr.X_ref[1],&lqr.X_fdb[3]);
-		
-		
+		limit_velocity(&lqr.X_ref[1],&lqr.X_fdb[3]);
     }
     if(wlr.sky_flag == WLR_SKY_FOLDING)
 		data_limit(&lqr.X_ref[1],-3.0f,3.0f);
@@ -1013,8 +1009,8 @@ static void map_virtual_force(uint8_t index)
         wlr.side[index].Fy = ramp_calc(&Fy_ramp[index], Fy_temp);
     } 
 	else if (rotate_flag || rotate_ramp_flag == 1) {//小陀螺和小陀螺斜坡停
-        wlr.side[index].Fy = pid_calc(&pid_rotate_leg[index], tlm.l_ref[index], vmc[index].L_fdb) - 20.0f;
-//                              + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs) - 20.0f;
+        wlr.side[index].Fy = pid_calc(&pid_rotate_leg[index], tlm.l_ref[index], vmc[index].L_fdb)
+                              + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs) - 20.0f;
     }
 	else if(wlr.jump_flag == WLR_JUMP_ASCEND){//磕台阶站高
 		wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 60.0f

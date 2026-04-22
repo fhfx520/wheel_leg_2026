@@ -150,6 +150,34 @@ static uint8_t check_joint_offstall(uint8_t stall_leg_num)
 		return 0;
 }
 
+float global_wwwxxx;
+//平移小陀螺
+static float gyro_translate_vref(float v_ref_raw, float angle_err, float gain)
+{
+    float scale = arm_cos_f32(angle_err);
+    if (arm_cos_f32(angle_err) >= 0.0f)
+        return v_ref_raw * gain * scale;
+    else
+        return 0.0f;
+}
+
+static float gyro_translate_vref_by_time(float v_ref_raw, float t, float wz_ref)
+{
+    float T;
+    float t_mod;
+
+    if (fabsf(wz_ref) < 1e-3f)
+        return 0.0f;
+
+    T = 2.0f * PI / fabsf(wz_ref);
+    t_mod = fmodf(t, T);
+
+    if (t_mod < 0.5f * T)
+        return v_ref_raw;
+    else
+        return -v_ref_raw;
+}
+
 // 恢复你本来的代码
 static void chassis_ramp(void)
 {
@@ -532,26 +560,27 @@ static void chassis_data_input(void)
             
 //            variable_vw_generate(ramp_calc(&chassis_rotate_ramp , -(CHASSIS_ROTATE_SPEED + (power_control.judge_max_power - 40.0f)/25.0f)));
 //            wlr.wz_ref = variable_rotate_vw;
-			wlr.wz_ref = ramp_calc(&chassis_rotate_ramp , -(CHASSIS_ROTATE_SPEED + (power_control.judge_max_power - 40.0f)/25.0f));
+//			wlr.wz_ref = ramp_calc(&chassis_rotate_ramp , -(CHASSIS_ROTATE_SPEED + (power_control.judge_max_power - 40.0f)/25.0f));
+			wlr.wz_ref = ramp_calc(&chassis_rotate_ramp , -(CHASSIS_ROTATE_SPEED));
 			
-//			if (supercap.volume_percent < 30.0f)
-//				wlr.wz_ref += 6.0f;
-//			else if (supercap.volume_percent < 35.0f)
-//				wlr.wz_ref += 5.5f;
-//			else if (supercap.volume_percent < 40.0f)
-//				wlr.wz_ref += 5.0f;
-//			else if (supercap.volume_percent < 45.0f)
-//				wlr.wz_ref += 4.5f;
-//			else if (supercap.volume_percent < 50.0f)
-//				wlr.wz_ref += 4.0f;
-//			else if (supercap.volume_percent < 55.0f)
-//				wlr.wz_ref += 3.5f;
-//			else if (supercap.volume_percent < 60.0f)
-//				wlr.wz_ref += 3.0f;		
-//			else if (supercap.volume_percent < 65.0f)
-//				wlr.wz_ref += 2.5f;	
-//			else if (supercap.volume_percent < 70.0f)
-//				wlr.wz_ref += 2.0f;
+			if (supercap.volume_percent < 30.0f)
+				wlr.wz_ref += 6.0f;
+			else if (supercap.volume_percent < 35.0f)
+				wlr.wz_ref += 5.5f;
+			else if (supercap.volume_percent < 40.0f)
+				wlr.wz_ref += 5.0f;
+			else if (supercap.volume_percent < 45.0f)
+				wlr.wz_ref += 4.5f;
+			else if (supercap.volume_percent < 50.0f)
+				wlr.wz_ref += 4.0f;
+			else if (supercap.volume_percent < 55.0f)
+				wlr.wz_ref += 3.5f;
+			else if (supercap.volume_percent < 60.0f)
+				wlr.wz_ref += 3.0f;		
+			else if (supercap.volume_percent < 65.0f)
+				wlr.wz_ref += 2.5f;	
+			else if (supercap.volume_percent < 70.0f)
+				wlr.wz_ref += 2.0f;
 			
 			if(g_robot_ctx.input.kb.bit.SHIFT)//按住shift开启变速小陀螺
 				wlr.wz_ref = variable_vw_generate(wlr.wz_ref);
@@ -635,8 +664,20 @@ static void chassis_data_input(void)
         wlr.s_ref += (wlr.v_ref * 0.001f * 2);
     }
     //小陀螺下速度是Vy方向的原因还不知道为何
-    if(g_robot_ctx.output.chassis == CHASSIS_LOW_SPIN)  wlr.v_ref = chassis.output.vy;
-    if(rotate_stop_flag) wlr.v_ref = 0.0f;
+//    if(g_robot_ctx.output.chassis == CHASSIS_LOW_SPIN)  wlr.v_ref = chassis.output.vy;
+	// if(g_robot_ctx.output.chassis == CHASSIS_LOW_SPIN)  {
+	// 	wlr.v_ref = gyro_translate_vref(chassis.output.vx, circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, wlr.yaw_fdb, 2 * PI),0.3f);
+	// 	global_wwwxxx= wlr.v_ref;
+	// }
+	static float spin_time = 0.0f;
+	if (g_robot_ctx.output.chassis == CHASSIS_LOW_SPIN) {
+		spin_time += 0.002f;
+		wlr.v_ref = gyro_translate_vref_by_time(chassis.output.vx, spin_time, wlr.wz_fdb);
+		global_wwwxxx = wlr.v_ref;
+	} else {
+		spin_time = 0.0f;
+	}
+	if(rotate_stop_flag) wlr.v_ref = 0.0f;
         
     wlr.roll_fdb    = -chassis_imu.rol;
     wlr.pit_fdb     = -(chassis_imu.pit + imu_pitch_offset);

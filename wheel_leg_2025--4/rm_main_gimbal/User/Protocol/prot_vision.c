@@ -17,6 +17,7 @@ uint8_t vis_e[2];
 uint32_t fire_Cnt;
 uint32_t shoot_Cnt;
 uint32_t send_cnt;
+
 void vision_get_data(uint8_t *data)
 {
     static vision_aim_status_e last_aim_status;
@@ -34,35 +35,39 @@ void vision_get_data(uint8_t *data)
     vision.rx_status = NORMAL;
     vision.rx_repeat_cnt = 0;
     vision.rx[1].data.cnt = vision.rx[0].data.cnt;
-	vision.trace_id = vision.rx[0].data.trace_id;
+	  vision.trace_id = vision.rx[0].data.trace_id;
     
     NAN_PROCESS(vision.rx[0].data.yaw, vision.rx[1].data.yaw);
     NAN_PROCESS(vision.rx[0].data.pit, vision.rx[1].data.pit);
-    NAN_PROCESS(vision.rx[0].data.dis, vision.rx[1].data.dis);
+    NAN_PROCESS(vision.rx[0].data.shoot_yaw_tole, vision.rx[1].data.shoot_yaw_tole);
     NAN_PROCESS(vision.rx[0].data.fire, vision.rx[1].data.fire);
-    NAN_PROCESS(vision.rx[0].data.pos, vision.rx[1].data.pos);
+    NAN_PROCESS(vision.rx[0].data.fire_rf, vision.rx[1].data.fire_rf);
     
 	if (vision.rx[0].data.aim_flag) {
         vision.aim_status = AIMING;
         vision.new_frame_flag = 1;
-        vision.target_yaw_angle = vision.rx[0].data.yaw / 180.0f * PI;
+        vision.target_yaw_angle = vision.rx[0].data.yaw / 180.00f * PI;
         vision.target_pit_angle = -vision.rx[0].data.pit / 180.0f * PI;
 		if( vision.target_pit_angle < -0.40f )
 			vision.target_pit_angle = -0.40f;
-				
-				
+		
+		if(vision.target_yaw_angle > 2 * PI)	
+			vision.target_yaw_angle -= 2 * PI;
+		else if(vision.target_yaw_angle < 0)	
+			vision.target_yaw_angle += 2 * PI;
+		
 //				if ((vision.target_yaw_angle - gimbal.yaw_angle.fdb) > 1.73f)
-		if( fabs( circle_error(vision.target_yaw_angle,gimbal.yaw_angle.fdb, 2*PI)   ) > 1.73f)
+		if( fabs(circle_error(vision.target_yaw_angle,gimbal.yaw_angle.fdb, 2*PI)) > 1.73f)
 			vision.target_yaw_angle = gimbal.yaw_angle.fdb;
 			
-        vision.yaw_min_err = vision.rx[0].data.dis / 180.0f * PI;
-		vision.pit_min_err = vision.rx[0].data.dis2 / 180.0f * PI;
+        vision.yaw_min_err = vision.rx[0].data.shoot_yaw_tole / 180.0f * PI;
+		vision.pit_min_err = vision.rx[0].data.shoot_pit_tole / 180.0f * PI;
 
         if (ABS(gimbal.yaw_angle.fdb - vision.target_yaw_angle) < vision.yaw_min_err && \
             ABS(gimbal.pit_angle.fdb - vision.target_pit_angle) < vision.pit_min_err && \
-            (vision.rx[0].data.fire == 1 ||vision.rx[0].data.fire == 2) ){				
-            vision.shoot_enable = 1;
-					  shoot_Cnt++;
+            (vision.rx[0].data.fire == 1 || vision.rx[0].data.fire == 2)){				
+				vision.shoot_enable = 1;
+				shoot_Cnt++;
 			}
         else
             vision.shoot_enable = 0;
@@ -89,6 +94,7 @@ void vision_get_data(uint8_t *data)
 	board_comm.tx_vis_msg.data.vision_online = 1;
 	fdcan_board_comm.tx_msg.e.vision_data.vision_online = 1;
 }
+
 uint8_t vision_send_buf[40];
 float kanan;
 void vision_output_data(void)
@@ -172,8 +178,11 @@ void vision_output_data(void)
 	send_cnt++;
 }
 
+
+//***********************同济视觉，待测试************************//
 GimbalToVision_t vision_tx;
 VisionToGimbal_t vision_rx;
+//vision_super_power_t vision_super_power; 
 
 void superpower_vision_RxHandler(uint8_t *data)
 {
@@ -184,7 +193,7 @@ void superpower_vision_RxHandler(uint8_t *data)
 }
 
 void rpy_to_quaternion(float roll, float pitch, float yaw, float *w, float *x, float *y, float *z) {
-    // 计算半角的三角函数值
+    // ???????????????
     float sr = sinf(roll / 2.0f);
     float cr = cosf(roll / 2.0f);
     float sp = sinf(pitch / 2.0f);
@@ -192,26 +201,61 @@ void rpy_to_quaternion(float roll, float pitch, float yaw, float *w, float *x, f
     float sy = sinf(yaw / 2.0f);
     float cy = cosf(yaw / 2.0f);
 
-    // 计算四元数分量
+    // ?????????????
     *w = cr * cp * cy + sr * sp * sy;
     *x = sr * cp * cy - cr * sp * sy;
     *y = cr * sp * cy + sr * cp * sy;
     *z = cr * cp * sy - sr * sp * cy;
 }
-
+uint8_t spvision_send_buf[50];
 void superpower_vision_Tx(void)
 {
-	vision_tx.data.head[0] = 'S',vision_tx.data.head[1] = 'P';
-	rpy_to_quaternion(gimbal_imu.rol,gimbal_imu.pit,gimbal_imu.yaw,&vision_tx.data.q[0],&vision_tx.data.q[1],&vision_tx.data.q[2],&vision_tx.data.q[3]);
-	vision_tx.data.yaw = gimbal_imu.yaw / PI * 180;
-	vision_tx.data.yaw_vel = gimbal_imu.wz / PI * 180;
-	vision_tx.data.pitch = gimbal_imu.pit / PI * 180;
-	vision_tx.data.pitch_vel = gimbal_imu.wy / PI * 180;
-	vision_tx.data.bullet_speed = fdcan_board_comm.rx_msg.e.vision_data.shoot_speed;
-	vision_tx.data.bullet_count = 0;
-	crc16_set_checksum(vision_tx.buff,SUPERPOWER_VISION_TX_DATA_LEN);
-	CDC_Transmit_HS(vision_tx.buff, SUPERPOWER_VISION_TX_DATA_LEN);
+	vision_tx.data.e.head[0] = 'S',vision_tx.data.e.head[1] = 'P';
+	vision_tx.data.e.mode = 1;
+	rpy_to_quaternion(gimbal_imu.rol,gimbal_imu.pit,gimbal_imu.yaw,&vision_tx.data.e.q[0],&vision_tx.data.e.q[1],&vision_tx.data.e.q[2],&vision_tx.data.e.q[3]);
+	vision_tx.data.e.yaw = gimbal_imu.yaw / PI * 180;
+	vision_tx.data.e.yaw_vel = gimbal_imu.wz / PI * 180;
+	vision_tx.data.e.pitch = gimbal_imu.pit / PI * 180;
+	vision_tx.data.e.pitch_vel = gimbal_imu.wy / PI * 180;
+	vision_tx.data.e.bullet_speed = fdcan_board_comm.rx_msg.e.vision_data.shoot_speed;
+	vision_tx.data.e.bullet_count = 0;
+	crc16_set_checksum(vision_tx.data.buff,SUPERPOWER_VISION_TX_DATA_LEN);
+//	vision_tx.data.e.crc16 = 0xffff;
+	memcpy(spvision_send_buf,&vision_tx.data.e,sizeof(vision_tx.data.e));
+	CDC_Transmit_HS(spvision_send_buf, 43);
+} 
+
+void superpower_vision_Rx(uint8_t *data)
+{
+	 
+	memcpy(vision_rx.data.buff, data, 29);
+	if((vision_rx.data.e.head[0] != 'S')||(vision_rx.data.e.head[1] != 'P'))
+	{	
+		return;
+	}
+    vision.online = 1;
+	if(vision_rx.data.e.mode == 1 || vision_rx.data.e.mode == 2)
+	{
+		vision.aim_status = AIMING;
+		vision.new_frame_flag = 1;
+        vision_rx.target_yaw_angle 	= vision_rx.data.e.yaw;
+        vision_rx.target_pit_angle 	= -vision_rx.data.e.pitch;
+		vision_rx.target_pit_vel 	= vision_rx.data.e.pitch_vel ;
+		vision_rx.target_yaw_vel 	= vision_rx.data.e.yaw_vel;
+		
+		if( vision_rx.target_pit_angle < -0.40f )
+			vision_rx.target_pit_angle = -0.40f;
+		if(vision_rx.data.e.mode == 2)
+			vision.shoot_enable = 1;
+	}else {
+        vision.aim_status = UNAIMING;
+        vision.shoot_enable = 0;
+	}
+
 }
+
+
+//***********************同济视觉，待测试，结束************************//
 
 
 uint8_t vision_check_offline(void)

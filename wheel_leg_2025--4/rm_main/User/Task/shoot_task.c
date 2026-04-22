@@ -13,6 +13,7 @@
 #include "robot_logic.h"
 #include "mode_switch_task.h"
 #include "container.h"
+#include "wlr.h"
 
 #define SHOOT_SPEED_NUM 15
 #ifndef ABS
@@ -115,6 +116,8 @@ void shoot_set_container(void)
 	shoot_set_vision_data_container.shoot_speed = shoot_data.initial_speed;
 	shoot_set_vision_data_container.vision_bias_time = vision_send_time;
 	shoot_set_vision_data_container.vision_ID = ID_judge;
+	shoot_set_vision_data_container.energy_flag = wlr.energy_flag;
+	shoot_set_vision_data_container.energy_state = 
 	container_set(TAG_SHOOT_VISION_DATA,&shoot_set_vision_data_container,sizeof(shoot_set_vision_data_container),CONTAINER_TYPE_STRUCT);
 }
 

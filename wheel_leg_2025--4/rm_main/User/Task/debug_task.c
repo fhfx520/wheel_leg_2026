@@ -38,6 +38,7 @@ extern int32_t Last_cnt;
 extern chassis_scale_t chassis_scale;
 extern uint8_t global_back_flag;
 extern vision_data_t vision_data_rec;
+extern float global_wwwxxx;
 void log_scope_data_pkg(void)
 {
     switch(debug_wave) {
@@ -96,9 +97,11 @@ void log_scope_data_pkg(void)
 //          log_scope_get_data(supercap.volage);
             // log_scope_get_data(robot_status.chassis_power_limit);
 //            log_scope_get_data( power_heat_data.chassis_power);
-			log_scope_get_data(global_v);
-			log_scope_get_data(lqr.X_ref[1]);
-			log_scope_get_data(chassis_imu.wz);
+//			log_scope_get_data(global_v);
+//			log_scope_get_data(lqr.X_ref[1]);
+//			log_scope_get_data(chassis_imu.wz);
+			log_scope_get_data(chassis.output.vx);
+			log_scope_get_data(global_wwwxxx);
             break;
         } case 5: {//支持力调试
 //          log_scope_get_data(wlr.side[0].Fn_fdb);

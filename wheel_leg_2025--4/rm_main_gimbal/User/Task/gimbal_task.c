@@ -37,18 +37,18 @@ gimbal_t gimbal;
 
 float body_vector[3];
 float rotate_data[3][3];
-
+const float mpc_k = 1.0f;
 static void gimbal_init(void)
 {
     memset(&gimbal, 0, sizeof(gimbal_t));
 	
-	pid_init(&gimbal.pit_angle.pid, CHANG_I_RATE, 25.0f, 0.6f, 0, 25, 50);//17 0 0 
-    pid_init(&gimbal.pit_spd.pid, CHANG_I_RATE, 1.5f, 0.01f, 0, 3.0f, 7.0f);//0.52 0.165 
+	pid_init(&gimbal.pit_angle.pid, CHANG_I_RATE, 20.0f, 0.0f, 0, 0, 50);//17 0 0 
+    pid_init(&gimbal.pit_spd.pid, CHANG_I_RATE, 1.0f, 0.01f, 0, 1.0f, 7.0f);//0.52 0.165 
 	gimbal.pit_angle.pid.threshold_a = 0.0f;
 	gimbal.pit_angle.pid.threshold_b = 0.0f;
 	
-	pid_init(&gimbal.yaw_angle.pid, CHANG_I_RATE,25.0f, 0.2f, 0.0f, 50, 100);//尝试云台补偿算法
-    pid_init(&gimbal.yaw_spd.pid, CHANG_I_RATE, 8000.0f, 0.00f, 0, 10000.0f, 25000.0f);
+	pid_init(&gimbal.yaw_angle.pid, CHANG_I_RATE,40.0f, 0.2f, 0.0f, 0, 5.0f);//尝试云台补偿算法
+    pid_init(&gimbal.yaw_spd.pid, CHANG_I_RATE, 12000.0f, 50.0f, 0, 2000.0f, 25000.0f);
 	gimbal.yaw_angle.pid.threshold_a = 0.015f;
 	gimbal.yaw_angle.pid.threshold_b = 0.1f; 
 	
@@ -105,8 +105,9 @@ static void gimbal_pid_calc(void)
     if (gimbal.start_up == 0 && fabsf(yaw_err) < 0.03f)//-------------------->无云台控制下注释
         gimbal.start_up = 1;
 	
-    gimbal.yaw_spd.ref = pid_calc(&gimbal.yaw_angle.pid, gimbal.yaw_angle.fdb + yaw_err, gimbal.yaw_angle.fdb);    
-	
+    gimbal.yaw_spd.ref = pid_calc(&gimbal.yaw_angle.pid, gimbal.yaw_angle.fdb + yaw_err, gimbal.yaw_angle.fdb) \
+							+ mpc_k * vision.rx[0].data.yaw_vel;    
+				 
 	//起身先转pitch yaw阻尼
 	if((!(fabsf(gimbal.pit_angle.ref - gimbal.pit_angle.fdb) < 0.08f) && !gimbal.start_up) && gimbal.start_cnt < 200)
 		 gimbal.yaw_spd.ref = 0.0f;
