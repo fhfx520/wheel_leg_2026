@@ -121,10 +121,10 @@ void can_comm_init(void)
     fdcan_tx_message.MessageMarker = 0;
 	
     //driver init 0.01993943
-	dm_motor_init(&joint_motor[0], CAN_CHANNEL_1, JOINT_LB_CMD_ID, -0.328541428f, JOINT_LB_REC_ID);//LB -0.27579996 -0.313300014
-	dm_motor_init(&joint_motor[1], CAN_CHANNEL_1, JOINT_LS_CMD_ID, 4.9667263f, JOINT_LS_REC_ID);//LS 0.564670026 5.52884054
-	dm_motor_init(&joint_motor[2], CAN_CHANNEL_1, JOINT_RB_CMD_ID, 4.54015017f, JOINT_RB_REC_ID);//RB 4.47119999 4.52866888
-	dm_motor_init(&joint_motor[3], CAN_CHANNEL_1, JOINT_RS_CMD_ID, 2.38268852f, JOINT_RS_REC_ID);//RS 2.62299991 2.3627491
+	dm_motor_init(&joint_motor[0], CAN_CHANNEL_1, JOINT_LB_CMD_ID, 4.4036479f, JOINT_LB_REC_ID);//LB -0.27579996 -0.313300014 4.4036479
+	dm_motor_init(&joint_motor[1], CAN_CHANNEL_1, JOINT_LS_CMD_ID, 3.90108585f, JOINT_LS_REC_ID);//LS 0.564670026 5.52884054 3.90108585
+	dm_motor_init(&joint_motor[2], CAN_CHANNEL_1, JOINT_RB_CMD_ID, 6.04196119f, JOINT_RB_REC_ID);//RB 4.47119999 4.52866888			1.68932343 1.63639832
+	dm_motor_init(&joint_motor[3], CAN_CHANNEL_1, JOINT_RS_CMD_ID, 2.43732119f, JOINT_RS_REC_ID);//RS 2.62299991 2.3627491			2.42180824 2.44345903
 	
 	dji_motor_init(&driver_motor[0], DJI_3508_MOTOR, CAN_CHANNEL_3, DRIVER_MOTOR_LEFT_ID , DJI_3508_WHEEL_TAURUS_REDUCTION_RATIO);
     dji_motor_init(&driver_motor[1], DJI_3508_MOTOR, CAN_CHANNEL_3, DRIVER_MOTOR_RIGHT_ID, DJI_3508_WHEEL_TAURUS_REDUCTION_RATIO);
@@ -179,7 +179,10 @@ void HAL_FDCAN_RxFifo1Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo1ITs)
 				fdcan_board_comm_get(fdcan_rx_fifo1_message.Identifier, fdcan_rx_fifo1_data);
         } else if (hfdcan->Instance == FDCAN3) {
 			HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO1, &rx_fifo1_message, rx_fifo1_data);
-			dji_motor_get_data(CAN_CHANNEL_3, rx_fifo1_message.Identifier, rx_fifo1_data);	
+			if(rx_fifo1_message.Identifier == TRIGGER_MOTOR_ID)
+				lk_get_single_data(&trigger_motor,rx_fifo1_data);
+			else
+				dji_motor_get_data(CAN_CHANNEL_3, rx_fifo1_message.Identifier, rx_fifo1_data);	
 			if(rx_fifo1_message.Identifier == YAW_MOTOR_ID)
 				memcpy(fdcan_board_comm.tx_msg.e.gimbal_data.yaw_raw_data,rx_fifo1_data,8);
         }

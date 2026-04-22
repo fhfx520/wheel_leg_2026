@@ -447,10 +447,8 @@ static void shoot_init(void)
 {
     memset(&shoot, 0, sizeof(shoot_t));
     //发射器底层初始化
-//    pid_init(&shoot.fric_spd[0].pid, NONE, 0.00045f, 0, 0, 0, 0.8);
-//    pid_init(&shoot.fric_spd[1].pid, NONE, 0.00045f, 0, 0, 0, 0.8);
-	pid_init(&shoot.fric_spd[0].pid, NONE, 0.00045f, 0, 0, 0, 0);
-    pid_init(&shoot.fric_spd[1].pid, NONE, 0.00045f, 0, 0, 0, 0);
+    pid_init(&shoot.fric_spd[0].pid, NONE, 0.00045f, 0, 0, 0, 0.8);
+    pid_init(&shoot.fric_spd[1].pid, NONE, 0.00045f, 0, 0, 0, 0.8);
 
 #ifdef DJI2006 	
 	

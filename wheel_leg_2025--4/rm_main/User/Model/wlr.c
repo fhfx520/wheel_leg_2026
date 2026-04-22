@@ -1114,7 +1114,7 @@ void wlr_init(void)
 		//PID参数初始化      
         pid_init(&pid_leg_sky_cover[i], NONE, 1800, 1.5f, 0.0f,150,500);		    //空中收腿专用pid
 		pid_init(&pid_leg_sky_jump[i],  NONE,2200, 3.0, 0.0f, 150.0, 500);			//跳跃专用pid
-		pid_init(&pid_leg_recover[i], NONE, 1800, 1.5f, 20000.0f, 300, 500);		//起身专用pid
+		pid_init(&pid_leg_recover[i], NONE, 1800, 1.5f, 20000.0f, 100, 500);		//起身专用pid
         pid_init(&pid_leg_length_fly[i], NONE, 800, 0.0, 20000, 0, 200);			//离地腿长/缓冲腿长pid
         pid_init(&pid_L_test[i], CHANG_I_RATE, 800, 2.0, 30000, 70, 300);			//日常腿长pid
 		pid_L_test[i].threshold_a = 0.01f;
