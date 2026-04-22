@@ -128,7 +128,7 @@ void dm_motor_set_control_cmd(dm_motor_t *motor, uint8_t cmd)
     }
     can_std_transmit(motor->can_channel, motor->can_id, buf);
 }
-float limit_t = 30.0f;
+float limit_t = 25.0f;
 void dm_motor_output_single_data(dm_motor_t *motor)
 {
     static uint8_t buf[8];

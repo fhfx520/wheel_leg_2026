@@ -1,8 +1,8 @@
 supercap2023\bsp_judge.o: ..\bsp\bsp_judge.c
 supercap2023\bsp_judge.o: ..\bsp\bsp_judge.h
-supercap2023\bsp_judge.o: D:\KEIL5\ARM\ARMCC\Bin\..\include\stdint.h
+supercap2023\bsp_judge.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 supercap2023\bsp_judge.o: ../math/crc.h
-supercap2023\bsp_judge.o: D:\KEIL5\ARM\ARMCC\Bin\..\include\string.h
+supercap2023\bsp_judge.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 supercap2023\bsp_judge.o: ../Inc/usart.h
 supercap2023\bsp_judge.o: ../Inc/main.h
 supercap2023\bsp_judge.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h
@@ -19,7 +19,7 @@ supercap2023\bsp_judge.o: ../Drivers/CMSIS/Include/mpu_armv7.h
 supercap2023\bsp_judge.o: ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h
 supercap2023\bsp_judge.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h
 supercap2023\bsp_judge.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
-supercap2023\bsp_judge.o: D:\KEIL5\ARM\ARMCC\Bin\..\include\stddef.h
+supercap2023\bsp_judge.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 supercap2023\bsp_judge.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h
 supercap2023\bsp_judge.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h
 supercap2023\bsp_judge.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h
@@ -45,7 +45,7 @@ supercap2023\bsp_judge.o: ..\bsp\bsp_uart.h
 supercap2023\bsp_judge.o: ../app/power_ctrl_task.h
 supercap2023\bsp_judge.o: ../Inc/hrtim.h
 supercap2023\bsp_judge.o: ../math/pid.h
-supercap2023\bsp_judge.o: D:\KEIL5\ARM\ARMCC\Bin\..\include\stdlib.h
-supercap2023\bsp_judge.o: D:\KEIL5\ARM\ARMCC\Bin\..\include\math.h
+supercap2023\bsp_judge.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+supercap2023\bsp_judge.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 supercap2023\bsp_judge.o: ../math/Include/arm_math.h
 supercap2023\bsp_judge.o: ../Drivers/CMSIS/Include/core_cm4.h

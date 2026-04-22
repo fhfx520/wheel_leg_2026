@@ -93,7 +93,7 @@ void DataWave(UART_HandleTypeDef* huart)
 {
     DataWavePkg();
     CK.Send_Count = DataScope_Data_Generate(CK.Data_Num);
-		HAL_UART_Transmit_DMA(&huart2,CK.OutPut_Buffer,sizeof(CK.OutPut_Buffer));
+	HAL_UART_Transmit_DMA(&huart2,CK.OutPut_Buffer,sizeof(CK.OutPut_Buffer));
     CK.Data_Num=0;
     CK.Send_Count = 0;
 }

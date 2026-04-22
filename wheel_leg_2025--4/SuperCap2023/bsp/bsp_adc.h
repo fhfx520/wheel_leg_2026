@@ -3,7 +3,7 @@
 
 #include "adc.h"
 
-#define ID005
+#define ID004
 
 #define ADC1_BUFF_SIZE	4
 #define ADC2_BUFF_SIZE	4

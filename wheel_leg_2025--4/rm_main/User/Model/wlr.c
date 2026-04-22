@@ -96,8 +96,8 @@ float F_fdb = 0.0f;
 float yw_ddot;
 float Fwy;
 float F_wy[2];
-float ff_Fy_0 = 20.0f;
-float ff_Fy_1 = 20.0f;
+float ff_Fy_0 = 10.0f;
+float ff_Fy_1 = 0.0f;
 //位移 速度 yaw wz 左腿摆角 左腿摆角速度 右腿摆角 右腿摆角速度 机体倾角 机体倾角速度 
 //左轮转矩 右轮转矩 左腿转矩 右腿转矩
 
@@ -799,7 +799,7 @@ static void update_rotate_state(void)
         wlr.high_set = LegLengthRotate;
 		pid_L_test[0].i_out = pid_L_test[1].i_out = 0;
        	 if (g_robot_ctx.output.chassis  == CHASSIS_LOW_SPIN) {
-			x5_balance_zero = 0.06f;
+			x5_balance_zero = -0.02f;
         } else {
             Rotate_balance_zero = 0.063f;
 			x5_balance_zero = 0.06f;
@@ -831,7 +831,7 @@ static void update_leg_references(void)
 {
     tlm_gnd_roll_calc(&tlm, -(wlr.roll_fdb + IMU_Roll_balance_zero), vmc[0].L_fdb, vmc[1].L_fdb);		//计算地形倾角
     if (wlr.sky_flag != 0 || wlr.jump_flag != 0
-        || wlr_both_legs_flying() || chassis.recover_flag != 0 || rotate_flag) {
+        || wlr_both_legs_flying() || chassis.recover_flag != 0) {
         tlm.l_ref[0] = tlm.l_ref[1] = wlr.high_set;
     } else {
         tlm_leg_length_calc(&tlm, wlr.high_set, 0);							//根据地形倾角不断更新两腿腿长，调整到机身与地面平行
@@ -1009,15 +1009,15 @@ static void map_virtual_force(uint8_t index)
         wlr.side[index].Fy = pid_calc(&pid_leg_length_fly[index], tlm.l_ref[index], vmc[index].L_fdb) - 30.0f;
     } 
 	else if ((chassis.recover_flag >= 1 && chassis.rescue_inter_flag == CHASSIS_RESCUE_RECOVER) || wlr.jump_flag == WLR_JUMP_RECOVER_SHORT) {		//进入翻倒自起立 && 进入收腿阶段
-        Fy_temp = pid_calc(&pid_leg_recover[index], wlr.recover_length, vmc[index].L_fdb) - 100.0f;
+        Fy_temp = pid_calc(&pid_leg_recover[index], wlr.recover_length, vmc[index].L_fdb) - 75.0f;
         wlr.side[index].Fy = ramp_calc(&Fy_ramp[index], Fy_temp);
     } 
 	else if (rotate_flag || rotate_ramp_flag == 1) {//小陀螺和小陀螺斜坡停
-        wlr.side[index].Fy = pid_calc(&pid_rotate_leg[index], tlm.l_ref[index], vmc[index].L_fdb) - 20.0f;
-//                              + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs) - 20.0f;
+        wlr.side[index].Fy = pid_calc(&pid_rotate_leg[index], tlm.l_ref[index], vmc[index].L_fdb)
+                              + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs) - 10.0f;
     }
 	else if(wlr.jump_flag == WLR_JUMP_ASCEND){//磕台阶站高
-		wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 60.0f
+		wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 40.0f
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
 	}
 	else if (wlr.sky_flag == WLR_SKY_FOLDING) {//准备跳
@@ -1102,8 +1102,8 @@ void wlr_init(void)
 	ramp_init(&wz_ramp, 0.05f,  0,  3.0f);									//小陀螺加速K矩阵wz项斜坡
 	ramp_init(&sky_ramp[0], 60.0f, -500.0f,  500.0f);						//伸腿支持力斜坡
 	ramp_init(&sky_ramp[1], 60.0f, -500.0f,  500.0f);						//伸腿支持力斜坡
-	ramp_init(&Fy_ramp[0], 4.0f, -600.0f,  600.0f);							//收腿支持力斜坡
-	ramp_init(&Fy_ramp[1], 4.0f, -600.0f,  600.0f);							//收腿支持力斜坡
+	ramp_init(&Fy_ramp[0], 3.0f, -600.0f,  600.0f);							//收腿支持力斜坡
+	ramp_init(&Fy_ramp[1], 3.0f, -600.0f,  600.0f);							//收腿支持力斜坡
 	
     for (int i = 0; i < WLR_SIDE_COUNT; i++) 
 	{
@@ -1114,7 +1114,7 @@ void wlr_init(void)
 		//PID参数初始化      
         pid_init(&pid_leg_sky_cover[i], NONE, 1800, 1.5f, 0.0f,150,500);		    //空中收腿专用pid
 		pid_init(&pid_leg_sky_jump[i],  NONE,2200, 3.0, 0.0f, 150.0, 500);			//跳跃专用pid
-		pid_init(&pid_leg_recover[i], NONE, 1800, 1.5f, 20000.0f, 100, 500);		//起身专用pid
+		pid_init(&pid_leg_recover[i], NONE, 1200, 3.0f, 40000.0f, 100, 500);		//起身专用pid
         pid_init(&pid_leg_length_fly[i], NONE, 800, 0.0, 20000, 0, 200);			//离地腿长/缓冲腿长pid
         pid_init(&pid_L_test[i], CHANG_I_RATE, 800, 2.0, 30000, 70, 300);			//日常腿长pid
 		pid_L_test[i].threshold_a = 0.01f;

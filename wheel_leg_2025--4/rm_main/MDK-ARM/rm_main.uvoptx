@@ -193,7 +193,7 @@
         <Ww>
           <count>7</count>
           <WinNumber>1</WinNumber>
-          <ItemText>supercap</ItemText>
+          <ItemText>supercap,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>8</count>
@@ -299,6 +299,16 @@
           <count>28</count>
           <WinNumber>1</WinNumber>
           <ItemText>lock_flag</ItemText>
+        </Ww>
+        <Ww>
+          <count>29</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>trigger_motor</ItemText>
+        </Ww>
+        <Ww>
+          <count>30</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>joint_motor</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>
@@ -427,7 +437,7 @@
       <DebugFlag>
         <trace>0</trace>
         <periodic>1</periodic>
-        <aLwin>1</aLwin>
+        <aLwin>0</aLwin>
         <aCover>0</aCover>
         <aSer1>0</aSer1>
         <aSer2>0</aSer2>
@@ -519,7 +529,7 @@
 
   <Group>
     <GroupName>Application/User/Core</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
