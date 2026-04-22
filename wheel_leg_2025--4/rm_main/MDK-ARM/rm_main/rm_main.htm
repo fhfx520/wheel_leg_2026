@@ -3,7 +3,7 @@
 <title>Static Call Graph - [rm_main\rm_main.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image rm_main\rm_main.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Thu Apr 23 05:35:51 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Thu Apr 23 06:14:44 2026
 <BR><P>
 <H3>Maximum Stack Usage =        856 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -3706,7 +3706,6 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = fsm_change
 </UL>
 <BR>[Called By]<UL><LI><a href="#[2c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robot_logic_update
-<LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_high_execute
 <LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_spin_execute
 <LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_fight_execute
 <LI><a href="#[cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_low_execute
@@ -3723,6 +3722,7 @@ Global Symbols
 <LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_double_ter_execute
 <LI><a href="#[d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ter_run_execute
 <LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ter_ready_execute
+<LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_high_execute
 </UL>
 
 <P><STRONG><a name="[274]"></a>fsm_init</STRONG> (Thumb, 62 bytes, Stack size 16 bytes, fsm_core.o(.text.fsm_init))
@@ -4573,7 +4573,7 @@ Global Symbols
 <LI><a href="#[2dc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xPortStartScheduler
 </UL>
 
-<P><STRONG><a name="[2d6]"></a>vTfGetData</STRONG> (Thumb, 216 bytes, Stack size 12 bytes, prot_tfmini.o(.text.vTfGetData))
+<P><STRONG><a name="[2d6]"></a>vTfGetData</STRONG> (Thumb, 232 bytes, Stack size 12 bytes, prot_tfmini.o(.text.vTfGetData))
 <BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = vTfGetData
 </UL>
 <BR>[Called By]<UL><LI><a href="#[1ed]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;usart_user_handler
@@ -5224,8 +5224,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mode_switch_task
 </UL>
 
-<P><STRONG><a name="[33e]"></a>shoot_set_container</STRONG> (Thumb, 88 bytes, Stack size 16 bytes, shoot_task.o(.text.shoot_set_container))
-<BR><BR>[Stack]<UL><LI>Max Depth = 300<LI>Call Chain = shoot_set_container &rArr; container_set &rArr; check_init &rArr; container_sys_init &rArr; xQueueCreateMutex &rArr; prvInitialiseMutex &rArr; xQueueGenericSend &rArr; prvCopyDataToQueue &rArr; xTaskPriorityDisinherit &rArr; vListInsertEnd
+<P><STRONG><a name="[33e]"></a>shoot_set_container</STRONG> (Thumb, 166 bytes, Stack size 8 bytes, shoot_task.o(.text.shoot_set_container))
+<BR><BR>[Stack]<UL><LI>Max Depth = 292<LI>Call Chain = shoot_set_container &rArr; container_set &rArr; check_init &rArr; container_sys_init &rArr; xQueueCreateMutex &rArr; prvInitialiseMutex &rArr; xQueueGenericSend &rArr; prvCopyDataToQueue &rArr; xTaskPriorityDisinherit &rArr; vListInsertEnd
 </UL>
 <BR>[Calls]<UL><LI><a href="#[237]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;container_set (via Veneer)
 </UL>
@@ -6938,8 +6938,7 @@ Local Symbols
 <BR>[Address Reference Count : 1]<UL><LI> robot_logic.o(.rodata.state_kb_low)
 </UL>
 <P><STRONG><a name="[26d]"></a>get_kb_gimbal_mode</STRONG> (Thumb, 20 bytes, Stack size 0 bytes, robot_logic.o(.text.get_kb_gimbal_mode))
-<BR><BR>[Called By]<UL><LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_high_execute
-<LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_spin_execute
+<BR><BR>[Called By]<UL><LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_spin_execute
 <LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_fight_execute
 <LI><a href="#[cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_low_execute
 <LI><a href="#[c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_energy_execute
@@ -6947,11 +6946,11 @@ Local Symbols
 <LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_double_ter_execute
 <LI><a href="#[d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ter_run_execute
 <LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ter_ready_execute
+<LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_high_execute
 </UL>
 
 <P><STRONG><a name="[26e]"></a>get_kb_shoot_mode</STRONG> (Thumb, 4 bytes, Stack size 0 bytes, robot_logic.o(.text.get_kb_shoot_mode))
-<BR><BR>[Called By]<UL><LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_high_execute
-<LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_spin_execute
+<BR><BR>[Called By]<UL><LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_spin_execute
 <LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_fight_execute
 <LI><a href="#[cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_low_execute
 <LI><a href="#[c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_energy_execute
@@ -6959,13 +6958,13 @@ Local Symbols
 <LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_double_ter_execute
 <LI><a href="#[d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ter_run_execute
 <LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ter_ready_execute
+<LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_high_execute
 </UL>
 
 <P><STRONG><a name="[270]"></a>check_key_trigger</STRONG> (Thumb, 70 bytes, Stack size 4 bytes, robot_logic.o(.text.check_key_trigger))
 <BR><BR>[Stack]<UL><LI>Max Depth = 4<LI>Call Chain = check_key_trigger
 </UL>
-<BR>[Called By]<UL><LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_high_execute
-<LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_spin_execute
+<BR>[Called By]<UL><LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_spin_execute
 <LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_fight_execute
 <LI><a href="#[cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_low_execute
 <LI><a href="#[c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_energy_execute
@@ -6973,6 +6972,7 @@ Local Symbols
 <LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_double_ter_execute
 <LI><a href="#[d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ter_run_execute
 <LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ter_ready_execute
+<LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_high_execute
 </UL>
 
 <P><STRONG><a name="[c8]"></a>kb_fight_enter</STRONG> (Thumb, 14 bytes, Stack size 0 bytes, robot_logic.o(.text.kb_fight_enter))

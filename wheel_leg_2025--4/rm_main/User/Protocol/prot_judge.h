@@ -132,7 +132,20 @@ typedef __PACKED_STRUCT
 
 typedef __PACKED_STRUCT
 {
-    uint32_t event_data;
+    uint32_t supply_zone_occupied          : 1; // bit 0: 己方补给区占领状态，1为已占领
+    uint32_t reserved_bit_1                : 1; // bit 1: 保留
+    uint32_t supply_zone_occupied_rmul     : 1; // bit 2: RMUL附加补给区占领状态，1为已占领
+    uint32_t small_power_rune_status       : 2; // bit 3-4: 己方小能量机关，0未激活，1已激活，2正在激活
+    uint32_t large_power_rune_status       : 2; // bit 5-6: 己方大能量机关，0未激活，1已激活，2正在激活
+    uint32_t central_highland_occupied     : 2; // bit 7-8: 己方中央高地占领状态
+    uint32_t trapezoid_highland_occupied   : 2; // bit 9-10: 己方梯形高地占领状态
+    uint32_t opponent_dart_hit_time        : 9; // bit 11-19: 对方飞镖最后一次击中己方前哨站或基地的时间，范围0-420
+    uint32_t opponent_dart_hit_target      : 3; // bit 20-22: 对方飞镖最后一次命中的具体目标
+    uint32_t center_gain_point_occupied    : 2; // bit 23-24: 中心增益点占领状态
+    uint32_t fort_gain_point_occupied      : 2; // bit 25-26: 己方堡垒增益点占领状态
+    uint32_t outpost_gain_point_occupied   : 2; // bit 27-28: 己方前哨站增益点占领状态
+    uint32_t base_gain_point_occupied      : 1; // bit 29: 己方基地增益点占领状态，1为已占领
+    uint32_t reserved_bit_30_31            : 2; // bit 30-31: 保留
 } event_data_t;
 
 typedef __PACKED_STRUCT
@@ -517,6 +530,7 @@ extern game_status_t game_status;
 extern robot_status_t robot_status;
 extern shoot_data_t shoot_data;
 extern power_heat_data_t power_heat_data;
+extern event_data_t event_data;
 
 void judge_init(UART_HandleTypeDef *huart);
 uint8_t judge_get_data(uint8_t *data);

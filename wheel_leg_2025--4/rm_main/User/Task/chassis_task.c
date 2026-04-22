@@ -150,6 +150,11 @@ static uint8_t check_joint_offstall(uint8_t stall_leg_num)
 		return 0;
 }
 
+// 工具函数 检测当前跳跃使用哪个激光
+static void check_sky_tfminiplus_dis(float dis_min,float dis_max)
+{
+	
+}
 float global_wwwxxx;
 //平移小陀螺
 static float gyro_translate_vref(float v_ref_raw, float angle_err, float gain)

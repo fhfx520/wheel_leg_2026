@@ -117,7 +117,12 @@ void shoot_set_container(void)
 	shoot_set_vision_data_container.vision_bias_time = vision_send_time;
 	shoot_set_vision_data_container.vision_ID = ID_judge;
 	shoot_set_vision_data_container.energy_flag = wlr.energy_flag;
-	shoot_set_vision_data_container.energy_state = 
+	if(event_data.small_power_rune_status != 0)//如果小能量机关正在激活、已激活
+        shoot_set_vision_data_container.energy_state = 1;
+    else if(event_data.large_power_rune_status != 0)//如果大能量机关正在激活、已激活
+        shoot_set_vision_data_container.energy_state = 2;
+    else
+        shoot_set_vision_data_container.energy_state = 0;
 	container_set(TAG_SHOOT_VISION_DATA,&shoot_set_vision_data_container,sizeof(shoot_set_vision_data_container),CONTAINER_TYPE_STRUCT);
 }
 

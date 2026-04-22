@@ -11,6 +11,7 @@
 #include "math_lib.h"
 #include "bsp_LK_Motor_MG4005.h"
 #include "drv_dm_motor.h"
+#include "board_comm.h"
 
 
 #define SHOOT_SPEED_NUM 15	//没用上
@@ -628,11 +629,19 @@ static void shoot_mode_switch(void)
             } else {
                 shoot.fric_mode = FRIC_MODE_PROTECT;  //摩擦轮断电，软件保护，禁用摩擦轮
             }
-            /* 视觉模式切换 */
-            if (KEY_PRESS_VISION2 ) {
+//            /* 视觉模式切换 */
+//            if (KEY_PRESS_VISION2 ) {
+//				vision_tx_msg.mode_msg.aiming_status = 2;
+////              vision.tx.data.aiming_mode = 2;
+//            } else if (KEY_PRESS_VISION1 ) {
+//               vision_tx_msg.mode_msg.aiming_status = 1;
+//            } else {
+//                vision_tx_msg.mode_msg.aiming_status = 0;
+//            }
+			/* 视觉模式切换 */
+            if (vision_data_rec.energy_flag && vision_data_rec.energy_state == 1) {
 				vision_tx_msg.mode_msg.aiming_status = 2;
-//              vision.tx.data.aiming_mode = 2;
-            } else if (KEY_PRESS_VISION1 ) {
+            } else if (vision_data_rec.energy_flag && vision_data_rec.energy_state == 2 ) {
                vision_tx_msg.mode_msg.aiming_status = 1;
             } else {
                 vision_tx_msg.mode_msg.aiming_status = 0;

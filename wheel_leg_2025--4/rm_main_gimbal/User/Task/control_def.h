@@ -7,11 +7,6 @@
 
 #define KEY_GIMBAL_TURN_R       KB_E
 #define KEY_GIMBAL_TURN_L       KB_Q
-
-#define KEY_PRESS_VISION1       rc.kb.bit.B //大符
-#define KEY_PRESS_VISION2       rc.kb.bit.V //小符
-
-
 /*-----------------------------shoot-----------------------------*/
 //拨盘频率
 #define TRIGGER_PERIOD      40//ms 90->11Hz 40->25Hz 33->30Hz

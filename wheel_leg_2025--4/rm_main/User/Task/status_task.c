@@ -16,6 +16,7 @@
 #include "robot_logic.h"
 #include "container.h"
 #include "board_comm.h"
+#include "prot_tfmini.h"
 
 status_t status;
 

@@ -3,7 +3,7 @@
 
 uint16_t tfmin_distance[2];
 uint16_t tfmin_distance_sum[2];
-
+uint8_t tfmin_online[2];
 /**
   * @brief  TFminiPlus Êý¾Ý½âËã
   * @param  uint8_t *buff
@@ -28,6 +28,28 @@ void vTfGetData(uint8_t *buff,TF_Distance_e TF_Distance)
 			wlr.side[TF_Distance].Front_dis_fdb  = tfmin_distance[TF_Distance]  * 0.01f ;//m
 		
 		}
+		tfmin_online[TF_Distance] = 1;
 	}
+}
+
+uint8_t tfminiplus_check_offline(void)
+{
+	if(tfmin_online[LEFT] == 1 && tfmin_online[RIGHT] == 1) {
+		tfmin_online[LEFT] = 0;
+		tfmin_online[RIGHT] = 0;
+		return 0;
+	}
+	
+	else if(tfmin_online[LEFT] == 0 && tfmin_online[RIGHT] == 1) {
+		tfmin_online[RIGHT] = 0;
+		return 1;
+	}
+		
+	else if(tfmin_online[LEFT] == 1 && tfmin_online[RIGHT] == 0) {
+		tfmin_online[LEFT] = 0;
+		return 2;
+	}
+	else
+		return 3;
 }
 

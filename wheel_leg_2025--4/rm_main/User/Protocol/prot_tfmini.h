@@ -16,5 +16,6 @@ extern uint16_t tfmin_distance[2];
 extern uint16_t tfmin_distance_average[2][100];
 
 void vTfGetData(uint8_t *buff,TF_Distance_e TF_Distance);
+uint8_t tfminiplus_check_offline(void);
 #endif
 
