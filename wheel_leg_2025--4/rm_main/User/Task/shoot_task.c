@@ -14,6 +14,9 @@
 #include "robot_logic.h"
 #include "mode_switch_task.h"
 #include "container.h"
+#include "wlr.h"
+
+
 
 #define SHOOT_SPEED_NUM 15
 #ifndef ABS
@@ -80,6 +83,13 @@ void shoot_set_container(void)
 	shoot_set_vision_data_container.shoot_speed = shoot_data.initial_speed;
 	shoot_set_vision_data_container.vision_bias_time = vision_send_time;
 	shoot_set_vision_data_container.vision_ID = ID_judge;
+	shoot_set_vision_data_container.energy_flag = wlr.energy_flag;
+	if(event_data.small_power_rune_status != 0)//如果小能量机关正在激活、已激活
+        shoot_set_vision_data_container.energy_state = 1;
+    else if(event_data.large_power_rune_status != 0)//如果大能量机关正在激活、已激活
+        shoot_set_vision_data_container.energy_state = 2;
+    else
+        shoot_set_vision_data_container.energy_state = 0;
 	container_set(TAG_SHOOT_VISION_DATA,&shoot_set_vision_data_container,sizeof(shoot_set_vision_data_container),CONTAINER_TYPE_STRUCT);
 }
 
@@ -119,7 +129,7 @@ static uint8_t series_shoot_enable(void)
 				
         && ((shoot.barrel.heat_remain >= MIN_HEAT))  //热量控制
         && frequency_cnt * SHOOT_PERIOD >= shoot.trigger_period  //射频控制
-        && ABS(trigger_ecd_error) <  0.2f * TRIGGER_MOTOR_ECD_SERIES  //拨盘误差控制		
+        && ABS(trigger_ecd_error) <  1.0f * TRIGGER_MOTOR_ECD_SERIES  //拨盘误差控制		
     );
 }
 
@@ -223,8 +233,8 @@ static void shoot_init(void)
     pid_init(&shoot.trigger_spd.pid, NONE, 0.0015f, 0.00005f, 0, 0.18f, 1.8f);
     #endif
     #ifdef MG4005
-    pid_init(&shoot.trigger_ecd.pid, NONE, 0.13f, 0.0f, 0.0f, 0.0f, 4000.0f);
-    pid_init(&shoot.trigger_spd.pid, NONE, 0.18f, 0.001f, 0.0f, 100.0f, 2048.0f);
+    pid_init(&shoot.trigger_ecd.pid, NONE, 0.1f, 0.0f, 0.0f, 0.0f, 4000.0f);
+    pid_init(&shoot.trigger_spd.pid, NONE, 0.14f, 0.001f, 0.0f, 100.0f, 2048.0f);
     #endif
     //发射器模式初始化
     shoot.trigger_mode  = TRIGGER_MODE_PROTECT;
@@ -314,7 +324,7 @@ static void shoot_mode_switch(void)
 	else if(ctrl_mode == REMOTER_MODE && rc_fsm_check(RC_LEFT_LD) && rc_fsm_check(RC_RIGHT_RD))
 		shoot.trigger_period = 100;
     else
-        shoot.trigger_period = 60;
+        shoot.trigger_period = 30;
 
     /* 3. 解析 FSM 大脑的组合状态 */
     switch (g_robot_ctx.output.shoot) {

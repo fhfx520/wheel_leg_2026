@@ -177,9 +177,11 @@ typedef struct //1bytes
 	uint8_t camp;
 } judge_data_t;//裁判系统数据
 
-typedef struct //9bytes
+typedef struct //11bytes
 {
 	uint8_t vision_ID;
+	uint8_t energy_flag;
+	uint8_t energy_state;
 	float vision_bias_time;
 	float shoot_speed;
 } vision_data_t;

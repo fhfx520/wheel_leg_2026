@@ -66,7 +66,7 @@ static void gimbal_pid_calc(void)
 //	//pit_max = -arm_cos_f32(yaw_err) * chassis_imu.pit + 0.32f;
 //    pit_min = -arm_cos_f32(yaw_err) * chassis_imu.pit - 0.35f;
 	
-	pit_max = 0.5f;
+	pit_max = 0.33f;		//0.5 滑槽卡头
 	pit_min = -0.39f;
     data_limit(&gimbal.pit_angle.ref, pit_min, pit_max);
     gimbal.pit_angle.fdb = gimbal_imu.pit;
@@ -202,7 +202,7 @@ void gimbal_task(void const *argu)
 					else
 						gimbal.yaw_angle.ref = gimbal_imu.yaw + (float)yaw_motor.ecd / 8192 * 2 * PI -  (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI;	
 				}
-                gimbal.pit_angle.ref = 0.3f;
+                gimbal.pit_angle.ref = 0.15f;		//0.3 滑槽卡头
                 gimbal.pit_output = 0;
                 gimbal.yaw_output = 0;
                 break;
