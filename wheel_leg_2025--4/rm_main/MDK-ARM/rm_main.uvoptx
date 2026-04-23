@@ -310,55 +310,45 @@
         <Ww>
           <count>8</count>
           <WinNumber>2</WinNumber>
-          <ItemText>ctrl_mode</ItemText>
+          <ItemText>joint_motor,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>9</count>
           <WinNumber>2</WinNumber>
-          <ItemText>joint_motor,0x0A</ItemText>
+          <ItemText>vmc[0].L_fdb</ItemText>
         </Ww>
         <Ww>
           <count>10</count>
           <WinNumber>2</WinNumber>
-          <ItemText>vmc[0].L_fdb</ItemText>
+          <ItemText>vmc[0].q_fdb[0]</ItemText>
         </Ww>
         <Ww>
           <count>11</count>
           <WinNumber>2</WinNumber>
-          <ItemText>vmc[1].L_fdb</ItemText>
+          <ItemText>vmc[1].q_fdb[0]</ItemText>
         </Ww>
         <Ww>
           <count>12</count>
           <WinNumber>2</WinNumber>
-          <ItemText>vmc[0].q_fdb[0]</ItemText>
+          <ItemText>jump_ramp</ItemText>
         </Ww>
         <Ww>
           <count>13</count>
           <WinNumber>2</WinNumber>
-          <ItemText>vmc[1].q_fdb[0]</ItemText>
+          <ItemText>wlr.sky_flag</ItemText>
         </Ww>
         <Ww>
           <count>14</count>
           <WinNumber>2</WinNumber>
-          <ItemText>jump_ramp</ItemText>
+          <ItemText>yaw_motor,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>15</count>
           <WinNumber>2</WinNumber>
-          <ItemText>wlr.sky_flag</ItemText>
-        </Ww>
-        <Ww>
-          <count>16</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>yaw_motor,0x0A</ItemText>
-        </Ww>
-        <Ww>
-          <count>17</count>
-          <WinNumber>2</WinNumber>
           <ItemText>gimbal.yaw_output</ItemText>
         </Ww>
         <Ww>
-          <count>18</count>
+          <count>16</count>
           <WinNumber>2</WinNumber>
           <ItemText>gimbal.start_up</ItemText>
         </Ww>

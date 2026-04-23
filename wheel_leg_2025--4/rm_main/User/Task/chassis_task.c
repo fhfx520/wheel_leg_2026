@@ -349,8 +349,8 @@ static void chassis_execute_fsm(void)
 			g_robot_ctx.jump_finish_flag = 0;
 			if(wlr.sky_flag == WLR_SKY_IDLE)
 				wlr.sky_flag = WLR_SKY_FOLDING; 
-			if(wlr.sky_flag == WLR_SKY_FOLDING && ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f > 0.65f) \
-				&& ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f < 1.2f) && fabsf(jump_ramp.out) == 3.0f)
+			if(wlr.sky_flag == WLR_SKY_FOLDING && ((wlr.side[1].Front_dis_kal + wlr.side[1].Front_dis_kal) / 2.0f > 0.65f) \
+				&& ((wlr.side[1].Front_dis_kal + wlr.side[1].Front_dis_kal) / 2.0f < 1.2f) && fabsf(jump_ramp.out) == 3.0f)
 				g_robot_ctx.sky_start_flag = 1;
             break;
 		}
@@ -389,8 +389,8 @@ static void chassis_execute_fsm(void)
 			wlr.double_flag = 1;
 			if(wlr.sky_flag == WLR_SKY_IDLE && wlr.jump_flag == WLR_JUMP_IDLE)
 				wlr.sky_flag = WLR_SKY_FOLDING; 
-			else if(wlr.sky_flag == WLR_SKY_FOLDING && ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f > 0.45f) \
-				&& ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f < 0.8f) && fabsf(jump_ramp.out) == 2.0f)
+			else if(wlr.sky_flag == WLR_SKY_FOLDING && ((wlr.side[1].Front_dis_kal + wlr.side[1].Front_dis_kal) / 2.0f > 0.45f) \
+				&& ((wlr.side[1].Front_dis_kal + wlr.side[1].Front_dis_kal) / 2.0f < 0.8f) && fabsf(jump_ramp.out) == 2.0f)
 				wlr.sky_flag = WLR_SKY_EXTENDING; 
 			else if(wlr.sky_flag == WLR_SKY_STAND && !g_robot_ctx.sky_finish_flag)
 				g_robot_ctx.sky_finish_flag = 1;

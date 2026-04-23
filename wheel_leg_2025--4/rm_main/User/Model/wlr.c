@@ -1044,7 +1044,7 @@ static void map_virtual_force(uint8_t index)
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
     } 
 	else if (wlr.energy_flag){//击打能量机关
-		wlr.side[index].Fy = pid_calc(&pid_energy_leg[index], tlm.l_ref[index], vmc[index].L_fdb);
+		wlr.side[index].Fy = pid_calc(&pid_energy_leg[index], tlm.l_ref[index], vmc[index].L_fdb) - 30.0f;
 	}
 	else if (wlr.high_flag == 1){//中腿长
         wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - ff_Fy_1
