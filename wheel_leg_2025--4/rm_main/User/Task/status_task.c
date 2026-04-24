@@ -102,7 +102,8 @@ void status_task(void const* argument)
         status.power = power_check_offline();
         status.imu = imu_check_offline();
 		status.board_comm = board_comm_check_offline();
-        status.dji_motor = dji_motor_check_offline();
+//        status.dji_motor = dji_motor_check_offline();
+        status.dji_motor = 1;
         status.dm_motor = dm_motor_check_offline();
         
         if (status.remote == 0 && status.vision == 0 && status.judge == 0 && \

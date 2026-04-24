@@ -210,7 +210,7 @@ void mode_switch_task(void const *argu)
             remote_reset();
 			sw1_mode_handler();
         }
-		if(status.dji_motor)
+		if(status.dji_motor && 0)
 		{
 			lock_flag = 0;
 			ctrl_mode = PROTECT_MODE;
