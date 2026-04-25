@@ -738,7 +738,7 @@ static void handle_sky_state(void)
         
         x5_balance_zero = 0.0f;
         wlr.sky_cnt++;
-        target_cnt = (wlr.double_flag ? 120 : 250);
+        target_cnt = (wlr.double_flag ? 120 : 175);
         if (wlr.sky_cnt > target_cnt) {
             wlr.sky_cnt = 0;
             wlr.sky_flag = WLR_SKY_LANDING;
@@ -1098,10 +1098,10 @@ void wlr_init(void)
 	ramp_init(&sky_height_ramp, 0.001f, LegLengthMin, LegLengthMax);		//空中腿长斜坡
 	ramp_init(&jump_ramp, 0.008f, -3.0f, 3.0f);
 	ramp_init(&wz_ramp, 0.05f,  0,  3.0f);									//小陀螺加速K矩阵wz项斜坡
-	ramp_init(&sky_ramp[0], 10.0f, -400.0f,  400.0f);						//伸腿支持力斜坡
-	ramp_init(&sky_ramp[1], 10.0f, -400.0f,  400.0f);						//伸腿支持力斜坡
-	ramp_init(&Fy_ramp[0], 3.0f, -600.0f,  600.0f);							//收腿支持力斜坡
-	ramp_init(&Fy_ramp[1], 3.0f, -600.0f,  600.0f);							//收腿支持力斜坡
+	ramp_init(&sky_ramp[0], 60.0f, -500.0f,  500.0f);						//伸腿支持力斜坡
+	ramp_init(&sky_ramp[1], 60.0f, -500.0f,  500.0f);						//伸腿支持力斜坡
+	ramp_init(&Fy_ramp[0], 4.0f, -600.0f,  600.0f);							//收腿支持力斜坡
+	ramp_init(&Fy_ramp[1], 4.0f, -600.0f,  600.0f);							//收腿支持力斜坡
 	
     for (int i = 0; i < WLR_SIDE_COUNT; i++) 
 	{
