@@ -9,6 +9,7 @@
 #include "wheel_leg_model.h"
 #include "drv_dji_motor.h"
 #include "drv_dm_motor.h"
+#include "drv_lk_motor.h"
 #include "prot_judge.h"
 #include "prot_power.h"
 #include "prot_imu.h"
@@ -23,7 +24,7 @@
 #include "board_comm.h"
 
 #define row_debug 2 * 10
-uint8_t debug_wave = 4;
+uint8_t debug_wave = 2;
 float test_hex = 1;
 extern FGT_sin_t FGT_sin_chassis;
 extern  uint16_t quadrant_cnt;
@@ -70,6 +71,11 @@ void log_scope_data_pkg(void)
             log_scope_get_data(shoot.trigger_spd.fdb);
             log_scope_get_data(shoot.trigger_ecd.ref);
             log_scope_get_data(shoot.trigger_ecd.fdb);
+			
+			log_scope_get_data(back_flag);
+			log_scope_get_data(trigger_motor.rx_current);
+			log_scope_get_data(trigger_motor.speed_rpm);
+			
 //          log_scope_get_data(shoot.trigger_output);
 //          log_scope_get_data(trigger_motor.tx_current);
 //          log_scope_get_data(wlr.side[0].Tw);

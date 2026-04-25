@@ -33,8 +33,8 @@
 #ifdef MG4005
     #define	TRIGGER_MOTOR_ECD_SINGLE    (65536.0f)  //拨盘一颗子弹转过的编码值 65536 * 10 / 10 = 65536.0f
     #define TRIGGER_MOTOR_ECD_SERIES    (65536.0f)	//拨盘一颗子弹转过的编码值 65536 * 10 / 10 = 65536.0f
-    #define TRIGGER_MOTOR_STUCK_CURRENT 2048	    //拨盘卡弹电流阈值 0~2048
-    #define TRIGGER_MOTOR_STUCK_SPEED   1000	    //拨盘卡弹电流阈值  
+    #define TRIGGER_MOTOR_STUCK_CURRENT 800	    //拨盘卡弹电流阈值 0~2048
+    #define TRIGGER_MOTOR_STUCK_SPEED   1100	    //拨盘卡弹电流阈值  
 #endif
 
 
@@ -49,7 +49,7 @@ static float trigger_ecd_error;
 //用于退蛋反转
 uint32_t back_cnt = 0;
 static uint32_t err_cnt  = 0;
-static uint8_t back_flag = 0;
+uint8_t back_flag = 0;
 
 shoot_t shoot;
 //static buffer_t *shoot_speed_buffer;
@@ -304,8 +304,8 @@ static void shoot_init(void)
     pid_init(&shoot.trigger_spd.pid, NONE, 0.0015f, 0.00005f, 0, 0.18f, 1.8f);
     #endif
     #ifdef MG4005
-    pid_init(&shoot.trigger_ecd.pid, NONE, 0.1f, 0.0f, 0.0f, 0.0f, 4000.0f);
-    pid_init(&shoot.trigger_spd.pid, NONE, 0.14f, 0.001f, 0.0f, 100.0f, 2048.0f);
+    pid_init(&shoot.trigger_ecd.pid, NONE, 0.1f, 0.0f, 0.0f, 0.0f, 12600.0f);
+    pid_init(&shoot.trigger_spd.pid, NONE, 0.2f, 0.0f, 0.12f, 100.0f, 2048.0f);
     #endif
     //发射器模式初始化
     shoot.trigger_mode  = TRIGGER_MODE_PROTECT;
