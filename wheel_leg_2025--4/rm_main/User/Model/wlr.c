@@ -482,7 +482,7 @@ static void stable_velocity_control(void)
         data_limit(&lqr.X_ref[1],-1.0f,1.0f);
     else if(fabsf(lqr.X_fdb[8]) > 0.1f)
         data_limit(&lqr.X_ref[1],-2.0f,2.0f);
-    if(wlr.sky_flag == WLR_SKY_IDLE && wlr.jump_flag == WLR_JUMP_IDLE && wlr.high_flag == 0)//磕台阶，跳跃，飞坡时不限制速度输入
+    if(wlr.sky_flag == WLR_SKY_IDLE && wlr.jump_flag == WLR_JUMP_IDLE && wlr.high_flag == 0 && !g_robot_ctx.output.chassis_speed)//磕台阶，跳跃，飞坡时不限制速度输入
     {
         data_limit(&lqr.X_ref[1],-power_control_target_velocity(),power_control_target_velocity());
 		
