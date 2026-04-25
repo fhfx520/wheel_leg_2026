@@ -637,7 +637,7 @@ static void handle_jump_state(void)
 	{
 		 Fy_ramp[0].out = Fy_ramp[1].out= 0;
 		 pid_leg_recover[0].i_out = 0,pid_leg_recover[1].i_out = 0;
-         jump_leg_length = (wlr.double_flag ? 0.33f : 0.34f);
+         jump_leg_length = (wlr.double_flag ? 0.33f : 0.36f);
 		 limit_q = (wlr.double_flag ? 0.6f : 0.5f);
 		 wlr.high_set = ramp_calc(&height_ramp, jump_leg_length);
 		 x3_balance_zero = x3_balance_zero_normal;
@@ -652,18 +652,18 @@ static void handle_jump_state(void)
 			wlr.v_ref = 0;
             jump_ramp.out = 0.0f;
 			wlr.crash_flag = 1;
-			wlr.high_set = 0.16f;
-			 wlr.jump_flag = WLR_JUMP_RECOVER_SHORT;
+//			wlr.high_set = 0.16f;
+//			 wlr.jump_flag = WLR_JUMP_RECOVER_SHORT;
 		 }
-//		 if((fabs(lqr.X_fdb[4]) > 0.8f && fabs(lqr.X_fdb[6]) > 0.8f && wlr.crash_flag))
-//		 {
-//			wlr.jump_flag = WLR_JUMP_RECOVER_SHORT;
-//			wlr.crash_flag = 0;
-//			wlr.high_flag = 0;
-//			chassis.recover_flag = 1;
-//			chassis.rescue_cnt_R = chassis.rescue_cnt_L = 150;
-////			chassis.rescue_inter_flag = 2;
-//		 }
+		 if((fabs(lqr.X_fdb[4]) > 0.7f && fabs(lqr.X_fdb[6]) > 0.7f && wlr.crash_flag))
+		 {
+			wlr.jump_flag = WLR_JUMP_RECOVER_SHORT;
+			wlr.crash_flag = 0;
+			wlr.high_flag = 0;
+			chassis.recover_flag = 1;
+			chassis.rescue_cnt_R = chassis.rescue_cnt_L = 150;
+//			chassis.rescue_inter_flag = 2;
+		 }
 	}
 	else if(wlr.jump_flag == WLR_JUMP_RECOVER_SHORT)
 	{

@@ -146,7 +146,7 @@ static void gimbal_data_output(void)
     }       
     else{
 		dji_motor_set_torque(&yaw_motor, -1.0f*gimbal.yaw_output);
-//		dm_motor_set_control_para(&pit_motor,0,0,0,0,1.0f*gimbal.pit_output);
+		dm_motor_set_control_para(&pit_motor,0,0,0,0,1.0f*gimbal.pit_output);
     }
 }
 
