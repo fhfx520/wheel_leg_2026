@@ -271,9 +271,11 @@ static void chassis_execute_fsm(void)
     rotate_flag = 0;
 	wlr.energy_flag = 0;
 	wlr.double_flag = 0;
+	static uint16_t sky_ccc = 0;
     switch (g_robot_ctx.output.chassis) {
         case CHASSIS_STOP:
 		{
+			sky_ccc = 0;
             wlr.ctrl_mode = 0; 
             wlr.high_flag = 0;
             wlr.jump_flag = WLR_JUMP_IDLE;
@@ -291,6 +293,7 @@ static void chassis_execute_fsm(void)
 
         case CHASSIS_LOW:
 		{
+			sky_ccc = 0;
             wlr.ctrl_mode = 2; 
             wlr.high_flag = 0; 
             wlr.jump_flag = WLR_JUMP_IDLE;
@@ -349,14 +352,17 @@ static void chassis_execute_fsm(void)
 			g_robot_ctx.jump_finish_flag = 0;
 			if(wlr.sky_flag == WLR_SKY_IDLE)
 				wlr.sky_flag = WLR_SKY_FOLDING; 
+			if(wlr.sky_flag == WLR_SKY_FOLDING)
+				sky_ccc++;
 			if(wlr.sky_flag == WLR_SKY_FOLDING && ((wlr.side[1].Front_dis_kal + wlr.side[1].Front_dis_kal) / 2.0f > 0.65f) \
-				&& ((wlr.side[1].Front_dis_kal + wlr.side[1].Front_dis_kal) / 2.0f < 1.2f) && fabsf(jump_ramp.out) == 3.0f)
+				&& ((wlr.side[1].Front_dis_kal + wlr.side[1].Front_dis_kal) / 2.0f < 1.2f) && fabsf(jump_ramp.out) == 3.0f && sky_ccc > 1000)
 				g_robot_ctx.sky_start_flag = 1;
             break;
 		}
 
         case CHASSIS_TERRAIN_EXECUTING:
 		{
+			sky_ccc = 0;
             wlr.ctrl_mode = 2;
             wlr.high_flag = 0;
 			wlr.jump_flag = WLR_JUMP_IDLE;
@@ -431,8 +437,8 @@ static void chassis_execute_fsm(void)
     }
 
     if (g_robot_ctx.output.chassis == CHASSIS_HIGH) { 
-        if (g_robot_ctx.output.chassis_speed) chassis_scale.keyboard = 2.0f;
-        else chassis_scale.keyboard = 2.0f;
+        if (g_robot_ctx.output.chassis_speed) chassis_scale.keyboard = 2.2f;
+        else chassis_scale.keyboard = 2.2f;
     } else { 
         if (g_robot_ctx.output.chassis_speed) chassis_scale.keyboard = 2.6f;
         else chassis_scale.keyboard = 2.6f;
@@ -444,7 +450,7 @@ static void chassis_execute_fsm(void)
 //    if (supercap.volume_percent < 10 )  chassis_scale.keyboard = 1.4f;
 //    else if (supercap.volume_percent < 20 ) chassis_scale.keyboard = 1.7f;
 
-    if (g_robot_ctx.output.chassis == CHASSIS_HIGH) chassis_scale.remote = 1.0f / 660 * 2.0f;
+    if (g_robot_ctx.output.chassis == CHASSIS_HIGH) chassis_scale.remote = 1.0f / 660 * 2.2f;
     else chassis_scale.remote = 1.0f /660 * 2.6f; 
 	
 	last_chassis_output = g_robot_ctx.output.chassis;

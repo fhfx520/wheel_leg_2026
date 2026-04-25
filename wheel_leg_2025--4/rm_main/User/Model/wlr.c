@@ -633,7 +633,7 @@ static void handle_jump_state(void)
 	{
 		 Fy_ramp[0].out = Fy_ramp[1].out= 0;
 		 pid_leg_recover[0].i_out = 0,pid_leg_recover[1].i_out = 0;
-         jump_leg_length = (wlr.double_flag ? 0.33f : 0.34f);
+         jump_leg_length = (wlr.double_flag ? 0.33f : 0.36f);
 		 limit_q = (wlr.double_flag ? 0.6f : 0.5f);
 		 wlr.high_set = ramp_calc(&height_ramp, jump_leg_length);
 		 x3_balance_zero = x3_balance_zero_normal;
@@ -738,7 +738,7 @@ static void handle_sky_state(void)
         
         x5_balance_zero = 0.0f;
         wlr.sky_cnt++;
-        target_cnt = (wlr.double_flag ? 120 : 175);
+        target_cnt = (wlr.double_flag ? 120 : 250);
         if (wlr.sky_cnt > target_cnt) {
             wlr.sky_cnt = 0;
             wlr.sky_flag = WLR_SKY_LANDING;
@@ -1027,6 +1027,8 @@ static void map_virtual_force(uint8_t index)
 	else if (wlr.sky_flag == WLR_SKY_EXTENDING) {//蹬腿跳
 		Fy_temp = pid_calc(&pid_leg_sky_jump[index], tlm.l_ref[index], vmc[index].L_fdb);
 		wlr.side[index].Fy = ramp_calc(&sky_ramp[index], Fy_temp);
+//		Fy_temp = ((vmc[0].L_fdb > 0.21f) && (vmc[1].L_fdb > 0.21f)) ? 400.0f : 100.0f;
+//		wlr.side[index].Fy = ramp_calc(&sky_ramp[index], Fy_temp);
     } 
 	else if (wlr.sky_flag == WLR_SKY_AIR_FOLDING) {//空中收腿
         Fy_temp = pid_calc(&pid_leg_sky_cover[index], tlm.l_ref[index], vmc[index].L_fdb) - 100.0f ;
@@ -1096,10 +1098,10 @@ void wlr_init(void)
 	ramp_init(&sky_height_ramp, 0.001f, LegLengthMin, LegLengthMax);		//空中腿长斜坡
 	ramp_init(&jump_ramp, 0.008f, -3.0f, 3.0f);
 	ramp_init(&wz_ramp, 0.05f,  0,  3.0f);									//小陀螺加速K矩阵wz项斜坡
-	ramp_init(&sky_ramp[0], 60.0f, -500.0f,  500.0f);						//伸腿支持力斜坡
-	ramp_init(&sky_ramp[1], 60.0f, -500.0f,  500.0f);						//伸腿支持力斜坡
-	ramp_init(&Fy_ramp[0], 4.0f, -600.0f,  600.0f);							//收腿支持力斜坡
-	ramp_init(&Fy_ramp[1], 4.0f, -600.0f,  600.0f);							//收腿支持力斜坡
+	ramp_init(&sky_ramp[0], 10.0f, -400.0f,  400.0f);						//伸腿支持力斜坡
+	ramp_init(&sky_ramp[1], 10.0f, -400.0f,  400.0f);						//伸腿支持力斜坡
+	ramp_init(&Fy_ramp[0], 3.0f, -600.0f,  600.0f);							//收腿支持力斜坡
+	ramp_init(&Fy_ramp[1], 3.0f, -600.0f,  600.0f);							//收腿支持力斜坡
 	
     for (int i = 0; i < WLR_SIDE_COUNT; i++) 
 	{

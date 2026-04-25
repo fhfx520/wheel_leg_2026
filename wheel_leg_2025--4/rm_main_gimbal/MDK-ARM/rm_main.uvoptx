@@ -587,6 +587,16 @@
           <WinNumber>2</WinNumber>
           <ItemText>shoot.fric_spd[1].pid</ItemText>
         </Ww>
+        <Ww>
+          <count>25</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>vision_data_rec</ItemText>
+        </Ww>
+        <Ww>
+          <count>26</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>vision_tx_msg.mode_msg.aiming_status</ItemText>
+        </Ww>
       </WatchWindow2>
       <MemoryWindow1>
         <Mm>

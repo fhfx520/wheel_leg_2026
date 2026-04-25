@@ -3847,18 +3847,18 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
 
-      1058         24          0          0        242       5527   board_comm.o
+      1058         24          0          0        242       5547   board_comm.o
         58          0          0          0          0        629   board_comm_task.o
        968         92          0          0        109       7559   bsp_lk_motor_mg4005.o
-      1148          0          0          1        488       6203   can_comm.o
+      1148          0          0          1        488       6223   can_comm.o
       4312          0          0          0          0      15627   cmsis_os.o
-       172          0          0          0          4        837   comm_task.o
+       172          0          0          0          4        857   comm_task.o
        714          0       1280          0          0       2331   crc.o
-       618          0          0          0        202       5985   data_log.o
-       306          0          0          1          0       1008   debug_task.o
-       270          0          0          0          0       5263   dma.o
-      1876         12         48          8        536       4723   drv_dji_motor.o
-      2316         64          0          8          8       4732   drv_dm_motor.o
+       618          0          0          0        202       6005   data_log.o
+       306          0          0          1          0       1028   debug_task.o
+       270          0          0          0          0       5283   dma.o
+      1876         12         48          8        536       4743   drv_dji_motor.o
+      2316         64          0          8          8       4752   drv_dm_motor.o
       1164          0          0          0        484      10179   fdcan.o
        628          0        305          0       1736       3776   freertos.o
       2156         88          0         20        629       4604   gimbal_task.o
@@ -3913,7 +3913,7 @@ Image component sizes
        244          0          0          0         28       4413   usart_comm.o
        122          0          0          0        732       3127   usb_device.o
       2542         12          0        136          0      10737   usbd_cdc.o
-       328         36          0         20       4096       2474   usbd_cdc_if.o
+       328         36          0         20       4096       2494   usbd_cdc_if.o
       1744          4          0          0       1796      17645   usbd_conf.o
       2334          0          0          0          0       8489   usbd_core.o
       3514         46          0          0          1       8310   usbd_ctlreq.o
@@ -3921,7 +3921,7 @@ Image component sizes
        280          0          0          0          0       4053   usbd_ioreq.o
 
     ----------------------------------------------------------------------
-    224430       1564       2624        320      43620     580814   Object Totals
+    224430       1564       2624        320      43620     580994   Object Totals
          0          0         32          0          0          0   (incl. Generated)
        256         24          3          8         57          0   (incl. Padding)
 
@@ -3986,8 +3986,8 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-    231412       2000       2976        324      43620     581362   Grand Totals
-    231412       2000       2976        324      43620     581362   ELF Image Totals
+    231412       2000       2976        324      43620     581542   Grand Totals
+    231412       2000       2976        324      43620     581542   ELF Image Totals
     231412       2000       2976        324          0          0   ROM Totals
 
 ==============================================================================

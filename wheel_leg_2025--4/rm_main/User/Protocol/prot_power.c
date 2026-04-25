@@ -194,24 +194,24 @@ void power_get_status(uint8_t *data)
 //    memcpy(&supercap.POWER_MODE,data+1,sizeof(power_mode));
 }	
 static float power_velocity_table[11][2] = {
-    {35.0f ,1.7f},//节能状态
-    {45.0f ,1.8f},//1
-    {50.0f ,1.8f},//2
-    {55.0f ,1.9f},//3
-    {60.0f ,1.9f},//4
-    {65.0f ,2.0f},//5
+    {35.0f ,1.5f},//节能状态
+    {45.0f ,1.5f},//1
+    {50.0f ,1.6f},//2
+    {55.0f ,1.7f},//3
+    {60.0f ,1.8f},//4
+    {65.0f ,1.9f},//5
     {70.0f ,2.0f},//6
     {75.0f ,2.1f},//7
     {80.0f ,2.2f},//8
-    {90.0f ,2.3f},//9
-    {100.0f,2.4f},//10
+    {90.0f ,2.2f},//9
+    {100.0f,2.2f},//10
 };
 static float supercap_velocity_addmap(void)
 {
     if(supercap.volume_percent < 40.0f)
         return 0.0f;
     else
-        return (supercap.volume_percent - 40.0f) / 60.0f * 0.5f;//线性映射，电容电压从40%到100%时，速度增加0-0.5f
+        return (supercap.volume_percent - 40.0f) / 60.0f * 0.4f;//线性映射，电容电压从40%到100%时，速度增加0-0.5f
 }
 
 float power_control_target_velocity(void)
