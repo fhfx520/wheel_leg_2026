@@ -255,10 +255,10 @@ float K_Array_Energy[4][10] =
 };
 
 float K_Array_Sky[4][10] = 
-{{-1.40605, -3.30473, -5.61603, -1.73306, -13.261, -1.35136, -5.91916, -0.706618, -6.2552, -1.1978},
-{-1.40605, -3.30473, 5.61603, 1.73306, -5.91916, -0.706618, -13.261, -1.35136, -6.2552, -1.1978},
-{1.75045, 3.95914, -7.73801, -2.51907, 32.5549, 2.70732, -11.7965, -0.645937, -23.9471, -2.87401},
-{1.75045, 3.95914, 7.73801, 2.51907, -11.7965, -0.645937, 32.5549, 2.70732, -23.9471, -2.87401}
+{{0, 0, 0, 0, -13.261, -1.35136, -5.91916, -0.706618, -6.2552, -1.1978},
+{0, 0, 0, 0, -5.91916, -0.706618, -13.261, -1.35136, -6.2552, -1.1978},
+{0, 0, 0, 0, 32.5549, 2.70732, -11.7965, -0.645937, -23.9471, -2.87401},
+{0, 0, 0, 0, -11.7965, -0.645937, 32.5549, 2.70732, -23.9471, -2.87401}
 };
 
 float K_Array_Land[4][10] = 
@@ -549,6 +549,7 @@ static void update_leg_height_and_balance(float yaw_error)
 	wlr.last_high_flag = wlr.high_flag;
 }
 
+static uint16_t sky_ccc = 0;
 static void reset_jump_state(void)
 {
     if (wlr.jump_flag == WLR_JUMP_IDLE) {
@@ -559,6 +560,7 @@ static void reset_jump_state(void)
     }
 
     if (wlr.sky_flag == WLR_SKY_IDLE) {
+		sky_ccc = 0;
 		wlr.sky_over = 0;
 		wlr.sky_cnt = 0;
 		sky_height_ramp.out = 0.23f;
@@ -648,18 +650,18 @@ static void handle_jump_state(void)
 			wlr.v_ref = 0;
             jump_ramp.out = 0.0f;
 			wlr.crash_flag = 1;
-			wlr.high_set = 0.16f;
-			 wlr.jump_flag = WLR_JUMP_RECOVER_SHORT;
+//			wlr.high_set = 0.16f;
+//			 wlr.jump_flag = WLR_JUMP_RECOVER_SHORT;
 		 }
-//		 if((fabs(lqr.X_fdb[4]) > 0.8f && fabs(lqr.X_fdb[6]) > 0.8f && wlr.crash_flag))
-//		 {
-//			wlr.jump_flag = WLR_JUMP_RECOVER_SHORT;
-//			wlr.crash_flag = 0;
-//			wlr.high_flag = 0;
-//			chassis.recover_flag = 1;
-//			chassis.rescue_cnt_R = chassis.rescue_cnt_L = 150;
-////			chassis.rescue_inter_flag = 2;
-//		 }
+		 if((fabs(lqr.X_fdb[4]) > 1.2f && fabs(lqr.X_fdb[6]) > 1.2f && wlr.crash_flag))
+		 {
+			wlr.jump_flag = WLR_JUMP_RECOVER_SHORT;
+			wlr.crash_flag = 0;
+			wlr.high_flag = 0;
+			chassis.recover_flag = 1;
+			chassis.rescue_cnt_R = chassis.rescue_cnt_L = 2500;
+//			chassis.rescue_inter_flag = 2;
+		 }
 	}
 	else if(wlr.jump_flag == WLR_JUMP_RECOVER_SHORT)
 	{
@@ -695,18 +697,23 @@ static void handle_sky_state(void)
 	    pid_leg_sky_cover[0].i_out = pid_leg_sky_cover[1].i_out = \
 	    Fy_ramp[0].out = Fy_ramp[1].out= 0;
 		sky_ramp[0].out = sky_ramp[1].out= 0;
-        if (abs(rc.ch2) > 500) { 
-            wlr.sky_cnt++;
-        }
-        if (wlr.sky_cnt > 50) {
-            wlr.sky_cnt = 0;
-            wlr.sky_flag = WLR_SKY_EXTENDING;
-        }
+		if(g_robot_ctx.output.top_mode == TOP_MODE_REMOTE) {
+			sky_ccc++;
+			if (abs(rc.ch2) > 500) { 
+				wlr.sky_cnt++;
+			}
+			if (wlr.sky_cnt > 50 || (((wlr.side[1].Front_dis_kal + wlr.side[1].Front_dis_kal) / 2.0f > 0.65f) \
+				&& ((wlr.side[1].Front_dis_kal + wlr.side[1].Front_dis_kal) / 2.0f < 1.25f) && fabsf(jump_ramp.out) == 3.0f && sky_ccc > 1000)) {
+				wlr.sky_cnt = 0;
+				wlr.sky_flag = WLR_SKY_EXTENDING;
+			} 
+		}
 		if(wlr.double_flag)
             wlr.v_ref = ramp_calc(&jump_ramp, -2.0f);
         else
             wlr.v_ref = ramp_calc(&jump_ramp, -3.0f);
     } else if (wlr.sky_flag == WLR_SKY_EXTENDING) {
+		sky_ccc = 0;
         wlr.high_set = 0.35f;
         jump_ramp.out = 0.0f;
 		if(wlr.double_flag)
@@ -717,9 +724,9 @@ static void handle_sky_state(void)
 		}
 		else
 		{
-            wlr.v_ref = -1.0f;
-			x3_balance_zero = x3_balance_zero_normal;
-			x5_balance_zero = 0.0f;
+            wlr.v_ref = -2.0f;
+			x3_balance_zero = x3_balance_zero_normal + 0.05f;
+			x5_balance_zero = 0.05f;
 		}
         if (fabsf(0.30f - vmc[0].L_fdb) < 0.03f && fabsf(0.30f - vmc[1].L_fdb) < 0.03f) {
             wlr.sky_cnt++;
@@ -734,7 +741,7 @@ static void handle_sky_state(void)
         if(wlr.double_flag)
             x3_balance_zero = x3_balance_zero_normal;
         else
-            x3_balance_zero = -0.1f;
+            x3_balance_zero = x3_balance_zero_normal;
         
         x5_balance_zero = 0.0f;
         wlr.sky_cnt++;
@@ -871,7 +878,7 @@ static void select_control_matrix(void)
 	else if (wlr.sky_flag == WLR_SKY_FOLDING) {		//平地收腿运动
         aMartix_Cover(lqr.K, (float*)K_Array_Leg_015, 4, 10);
     } 
-    else if (wlr.sky_flag > WLR_SKY_FOLDING) {		//蹬腿、空中收腿、落地缓冲、站立
+    else if (wlr.sky_flag > WLR_SKY_FOLDING && wlr.sky_flag < WLR_SKY_LANDING) {		//蹬腿、空中收腿、落地缓冲、站立
         aMartix_Cover(lqr.K, (float*)K_Array_Sky, 4, 10);
     } 
 	else if (wlr.high_flag == 2) {					//最长腿
@@ -1096,10 +1103,10 @@ void wlr_init(void)
     
 	ramp_init(&height_ramp, 0.001f, LegLengthMin, LegLengthMax);			//日常腿长斜坡
 	ramp_init(&sky_height_ramp, 0.001f, LegLengthMin, LegLengthMax);		//空中腿长斜坡
-	ramp_init(&jump_ramp, 0.008f, -3.0f, 3.0f);
+	ramp_init(&jump_ramp, 0.008f, -3.0f, 3.0f);   
 	ramp_init(&wz_ramp, 0.05f,  0,  3.0f);									//小陀螺加速K矩阵wz项斜坡
-	ramp_init(&sky_ramp[0], 15.0f, -400.0f,  400.0f);						//伸腿支持力斜坡
-	ramp_init(&sky_ramp[1], 15.0f, -400.0f,  400.0f);						//伸腿支持力斜坡
+	ramp_init(&sky_ramp[0], 15.0f, -450.0f,  450.0f);						//伸腿支持力斜坡
+	ramp_init(&sky_ramp[1], 15.0f, -450.0f,  450.0f);						//伸腿支持力斜坡
 	ramp_init(&Fy_ramp[0], 4.0f, -600.0f,  600.0f);							//收腿支持力斜坡
 	ramp_init(&Fy_ramp[1], 4.0f, -600.0f,  600.0f);							//收腿支持力斜坡
 	

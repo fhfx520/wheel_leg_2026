@@ -355,7 +355,7 @@ static void chassis_execute_fsm(void)
 			if(wlr.sky_flag == WLR_SKY_FOLDING)
 				sky_ccc++;
 			if(wlr.sky_flag == WLR_SKY_FOLDING && ((wlr.side[1].Front_dis_kal + wlr.side[1].Front_dis_kal) / 2.0f > 0.65f) \
-				&& ((wlr.side[1].Front_dis_kal + wlr.side[1].Front_dis_kal) / 2.0f < 1.2f) && fabsf(jump_ramp.out) == 3.0f && sky_ccc > 1000)
+				&& ((wlr.side[1].Front_dis_kal + wlr.side[1].Front_dis_kal) / 2.0f < 1.25f) && fabsf(jump_ramp.out) == 3.0f && sky_ccc > 1000)
 				g_robot_ctx.sky_start_flag = 1;
             break;
 		}
@@ -442,7 +442,7 @@ static void chassis_execute_fsm(void)
     } else { 
         if (g_robot_ctx.output.chassis_speed) chassis_scale.keyboard = 2.6f;
         else chassis_scale.keyboard = 2.6f;
-    }
+    }    
 	if(g_robot_ctx.output.chassis == CHASSIS_ASCEND){
 		chassis_scale.keyboard = 2.0f;
 	}
@@ -1250,10 +1250,20 @@ static void chassis_data_output(void)
 				chassis_hardest_rescue();
             if(chassis.recover_flag != 1) {
 				if(wlr.joint_all_online){
-					dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, wlr.side[0].T1);
-					dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, wlr.side[0].T2);
-					dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0,-wlr.side[1].T1);
-					dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0,-wlr.side[1].T2);  
+					if(wlr.crash_flag)
+					{
+						dm_motor_set_control_para(&joint_motor[0], 0, -5, 0, 5, 0);
+						dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);
+						dm_motor_set_control_para(&joint_motor[2], 0, 5, 0, 5, 0);
+						dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0); 
+					}
+					else
+					{
+						dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, wlr.side[0].T1);
+						dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, wlr.side[0].T2);
+						dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0,-wlr.side[1].T1);
+						dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0,-wlr.side[1].T2);
+					}  
 				}
 				else{
 					dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, 0);

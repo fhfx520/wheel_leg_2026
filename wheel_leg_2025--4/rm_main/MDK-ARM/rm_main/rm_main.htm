@@ -3,7 +3,7 @@
 <title>Static Call Graph - [rm_main\rm_main.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image rm_main\rm_main.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Sun Apr 26 22:24:52 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Mon Apr 27 03:21:49 2026
 <BR><P>
 <H3>Maximum Stack Usage =        856 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -3706,7 +3706,6 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = fsm_change
 </UL>
 <BR>[Called By]<UL><LI><a href="#[2c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robot_logic_update
-<LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_spin_execute
 <LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_fight_execute
 <LI><a href="#[cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_low_execute
 <LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rem_ter_ready_execute
@@ -3723,6 +3722,7 @@ Global Symbols
 <LI><a href="#[d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ter_run_execute
 <LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ter_ready_execute
 <LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_high_execute
+<LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_spin_execute
 </UL>
 
 <P><STRONG><a name="[274]"></a>fsm_init</STRONG> (Thumb, 62 bytes, Stack size 16 bytes, fsm_core.o(.text.fsm_init))
@@ -5625,7 +5625,7 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_task
 </UL>
 
-<P><STRONG><a name="[31c]"></a>chassis_execute_fsm</STRONG> (Thumb, 1672 bytes, Stack size 12 bytes, chassis_task.o(.text.chassis_execute_fsm))
+<P><STRONG><a name="[31c]"></a>chassis_execute_fsm</STRONG> (Thumb, 1668 bytes, Stack size 12 bytes, chassis_task.o(.text.chassis_execute_fsm))
 <BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = chassis_execute_fsm
 </UL>
 <BR>[Called By]<UL><LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_task
@@ -5648,8 +5648,8 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_task
 </UL>
 
-<P><STRONG><a name="[30f]"></a>chassis_data_output</STRONG> (Thumb, 1452 bytes, Stack size 120 bytes, chassis_task.o(.text.chassis_data_output))
-<BR><BR>[Stack]<UL><LI>Max Depth = 616<LI>Call Chain = chassis_data_output &rArr; chassis_rescue_test &rArr; dm_motor_set_control_para
+<P><STRONG><a name="[30f]"></a>chassis_data_output</STRONG> (Thumb, 1600 bytes, Stack size 128 bytes, chassis_task.o(.text.chassis_data_output))
+<BR><BR>[Stack]<UL><LI>Max Depth = 624<LI>Call Chain = chassis_data_output &rArr; chassis_rescue_test &rArr; dm_motor_set_control_para
 </UL>
 <BR>[Calls]<UL><LI><a href="#[313]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_hardest_rescue
 <LI><a href="#[312]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_rescue_test
@@ -5991,11 +5991,11 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[31d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[35c]"></a>reset_jump_state</STRONG> (Thumb, 100 bytes, Stack size 0 bytes, wlr.o(.text.reset_jump_state))
+<P><STRONG><a name="[35c]"></a>reset_jump_state</STRONG> (Thumb, 110 bytes, Stack size 0 bytes, wlr.o(.text.reset_jump_state))
 <BR><BR>[Called By]<UL><LI><a href="#[31d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[325]"></a>handle_jump_state</STRONG> (Thumb, 592 bytes, Stack size 16 bytes, wlr.o(.text.handle_jump_state))
+<P><STRONG><a name="[325]"></a>handle_jump_state</STRONG> (Thumb, 712 bytes, Stack size 16 bytes, wlr.o(.text.handle_jump_state))
 <BR><BR>[Stack]<UL><LI>Max Depth = 44<LI>Call Chain = handle_jump_state &rArr; ramp_calc &rArr; data_limit
 </UL>
 <BR>[Calls]<UL><LI><a href="#[2be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_calc (via Veneer)
@@ -6003,7 +6003,7 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[31d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[326]"></a>handle_sky_state</STRONG> (Thumb, 1432 bytes, Stack size 32 bytes, wlr.o(.text.handle_sky_state))
+<P><STRONG><a name="[326]"></a>handle_sky_state</STRONG> (Thumb, 1612 bytes, Stack size 32 bytes, wlr.o(.text.handle_sky_state))
 <BR><BR>[Stack]<UL><LI>Max Depth = 60<LI>Call Chain = handle_sky_state &rArr; ramp_calc &rArr; data_limit
 </UL>
 <BR>[Calls]<UL><LI><a href="#[2bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;data_limit (via Veneer)
@@ -6030,7 +6030,7 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[31d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[332]"></a>select_control_matrix</STRONG> (Thumb, 604 bytes, Stack size 8 bytes, wlr.o(.text.select_control_matrix))
+<P><STRONG><a name="[332]"></a>select_control_matrix</STRONG> (Thumb, 622 bytes, Stack size 8 bytes, wlr.o(.text.select_control_matrix))
 <BR><BR>[Stack]<UL><LI>Max Depth = 36<LI>Call Chain = select_control_matrix &rArr; aMartix_Cover
 </UL>
 <BR>[Calls]<UL><LI><a href="#[328]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_both_legs_flying
@@ -6938,8 +6938,7 @@ Local Symbols
 <BR>[Address Reference Count : 1]<UL><LI> robot_logic.o(.rodata.state_kb_low)
 </UL>
 <P><STRONG><a name="[26d]"></a>get_kb_gimbal_mode</STRONG> (Thumb, 20 bytes, Stack size 0 bytes, robot_logic.o(.text.get_kb_gimbal_mode))
-<BR><BR>[Called By]<UL><LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_spin_execute
-<LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_fight_execute
+<BR><BR>[Called By]<UL><LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_fight_execute
 <LI><a href="#[cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_low_execute
 <LI><a href="#[c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_energy_execute
 <LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ascend_execute
@@ -6947,11 +6946,11 @@ Local Symbols
 <LI><a href="#[d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ter_run_execute
 <LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ter_ready_execute
 <LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_high_execute
+<LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_spin_execute
 </UL>
 
 <P><STRONG><a name="[26e]"></a>get_kb_shoot_mode</STRONG> (Thumb, 4 bytes, Stack size 0 bytes, robot_logic.o(.text.get_kb_shoot_mode))
-<BR><BR>[Called By]<UL><LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_spin_execute
-<LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_fight_execute
+<BR><BR>[Called By]<UL><LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_fight_execute
 <LI><a href="#[cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_low_execute
 <LI><a href="#[c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_energy_execute
 <LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ascend_execute
@@ -6959,13 +6958,13 @@ Local Symbols
 <LI><a href="#[d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ter_run_execute
 <LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ter_ready_execute
 <LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_high_execute
+<LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_spin_execute
 </UL>
 
 <P><STRONG><a name="[270]"></a>check_key_trigger</STRONG> (Thumb, 70 bytes, Stack size 4 bytes, robot_logic.o(.text.check_key_trigger))
 <BR><BR>[Stack]<UL><LI>Max Depth = 4<LI>Call Chain = check_key_trigger
 </UL>
-<BR>[Called By]<UL><LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_spin_execute
-<LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_fight_execute
+<BR>[Called By]<UL><LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_fight_execute
 <LI><a href="#[cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_low_execute
 <LI><a href="#[c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_energy_execute
 <LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ascend_execute
@@ -6973,6 +6972,7 @@ Local Symbols
 <LI><a href="#[d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ter_run_execute
 <LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_ter_ready_execute
 <LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_high_execute
+<LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kb_spin_execute
 </UL>
 
 <P><STRONG><a name="[c8]"></a>kb_fight_enter</STRONG> (Thumb, 14 bytes, Stack size 0 bytes, robot_logic.o(.text.kb_fight_enter))
