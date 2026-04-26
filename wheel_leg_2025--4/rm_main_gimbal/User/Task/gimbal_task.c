@@ -43,7 +43,7 @@ static void gimbal_init(void)
 {
     memset(&gimbal, 0, sizeof(gimbal_t));
 	
-	pid_init(&gimbal.pit_angle.pid, NONE, 30.0f, 0.6f, 0, 0, 50);
+	pid_init(&gimbal.pit_angle.pid, NONE, 10.0f, 0.6f, 0, 0, 50);
     pid_init(&gimbal.pit_spd.pid, NONE, 1.5f, 0.01f, 0, 1.0f, 7.0f);
 	
 	pid_init(&gimbal.yaw_angle.pid, NONE,40.0f, 0.2f, 0.0f, 0.0f, 5.0f);//尝试云台补偿算法

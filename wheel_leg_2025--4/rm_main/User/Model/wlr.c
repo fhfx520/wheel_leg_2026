@@ -66,7 +66,7 @@ float LegLengthMax = 0.37f, LegLengthMin = 0.11f;
 const float LegLengthHighFly = 0.28f; //长腿腿长腾空 0.28
 const float LegLengthFly 	 = 0.20f; //正常腿长腾空
 const float LegLengthHigh2 	 = 0.34f; //超长腿
-const float LegLengthHigh 	 = 0.21f;//长腿 0.23
+const float LegLengthHigh 	 = 0.21f; //长腿 0.23
 const float LegLengthRotate  = 0.15f; //正常
 const float LegLengthNormal  = 0.16f; //正常
 
@@ -512,7 +512,7 @@ static void update_leg_height_and_balance(float yaw_error)
 		
 		(wlr.direction == 0) ? (Last_cnt = 200) : (Last_cnt = 400);
 		
-		DO_LAST(wlr_both_legs_flying(),Last_cnt){     
+		DO_LAST(wlr_both_legs_flying(),Last_cnt){
 			if(wlr.direction == 0){
 				x3_balance_zero = x3_balance_zero_normal;
 				data_limit(&wlr.v_ref,-1.0f,1.0f);
@@ -1013,7 +1013,7 @@ static void map_virtual_force(uint8_t index)
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs) - 10.0f;
     }
 	else if(wlr.jump_flag == WLR_JUMP_ASCEND){//磕台阶站高
-		wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 40.0f
+		wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 60.0f
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
 	}
 	else if (wlr.sky_flag == WLR_SKY_FOLDING) {//准备跳
