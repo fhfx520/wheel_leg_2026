@@ -485,11 +485,7 @@ static void stable_velocity_control(void)
     if(wlr.sky_flag == WLR_SKY_IDLE && wlr.jump_flag == WLR_JUMP_IDLE && wlr.high_flag == 0 && !g_robot_ctx.output.chassis_speed)//磕台阶，跳跃，飞坡时不限制速度输入
     {
         data_limit(&lqr.X_ref[1],-power_control_target_velocity(),power_control_target_velocity());
-		
-        global_v = lqr.X_ref[1];
         limit_velocity(&lqr.X_ref[1],&lqr.X_fdb[3]);
-		
-		
     }
     if(wlr.sky_flag == WLR_SKY_FOLDING)
 		data_limit(&lqr.X_ref[1],-3.0f,3.0f);
@@ -655,7 +651,7 @@ static void handle_jump_state(void)
 //			wlr.high_set = 0.16f;
 //			 wlr.jump_flag = WLR_JUMP_RECOVER_SHORT;
 		 }
-		 if((fabs(lqr.X_fdb[4]) > 0.7f && fabs(lqr.X_fdb[6]) > 0.7f && wlr.crash_flag))
+		 if((fabs(lqr.X_fdb[4]) > 0.9f && fabs(lqr.X_fdb[6]) > 0.9f && wlr.crash_flag))
 		 {
 			wlr.jump_flag = WLR_JUMP_RECOVER_SHORT;
 			wlr.crash_flag = 0;

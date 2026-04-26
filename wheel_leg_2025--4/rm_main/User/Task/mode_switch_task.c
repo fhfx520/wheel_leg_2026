@@ -43,7 +43,7 @@ static const ContainerBusCfg mb_callback[] = {
 
 static void unlock_init(void) {
     if (rc.sw1 == RC_UP && rc.sw2 == RC_UP ) { //左拨杆置上，右拨杆置上
-        if (rc.ch4 < -600 && rc.ch3 > 600) {
+        if (rc.ch4 < -550 && rc.ch3 > 550) {
             lock_flag = 1;  //左控制杆拨至右下
         }
     }
