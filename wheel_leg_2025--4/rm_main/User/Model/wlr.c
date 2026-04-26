@@ -83,7 +83,7 @@ float x3_balance_zero = 0.08f, x5_balance_zero = 0.040f;//腿摆角角度偏置 
 const float x3_balance_zero_normal = 0.02f; //车头朝前正常情况偏置
 
 float Rotate_balance_zero 		 = 0.17f ;
-float IMU_Roll_balance_zero		 = -0.0f;		//陀螺仪roll偏置
+float IMU_Roll_balance_zero		 = 0.0191195458f;		//陀螺仪roll偏置
 
 uint16_t quadrant_cnt = 0;
 static uint8_t kal_init = 0;
@@ -95,9 +95,9 @@ float theta;
 float F_fdb = 0.0f;
 float yw_ddot;
 float Fwy;
-float F_wy[2];
-float ff_Fy_0 = 20.0f;
-float ff_Fy_1 = 20.0f;
+float F_wy[2]; 
+float ff_Fy_0 = 30.0f;
+float ff_Fy_1 = 40.0f;
 //位移 速度 yaw wz 左腿摆角 左腿摆角速度 右腿摆角 右腿摆角速度 机体倾角 机体倾角速度 
 //左轮转矩 右轮转矩 左腿转矩 右腿转矩
 
@@ -1098,8 +1098,8 @@ void wlr_init(void)
 	ramp_init(&sky_height_ramp, 0.001f, LegLengthMin, LegLengthMax);		//空中腿长斜坡
 	ramp_init(&jump_ramp, 0.008f, -3.0f, 3.0f);
 	ramp_init(&wz_ramp, 0.05f,  0,  3.0f);									//小陀螺加速K矩阵wz项斜坡
-	ramp_init(&sky_ramp[0], 60.0f, -500.0f,  500.0f);						//伸腿支持力斜坡
-	ramp_init(&sky_ramp[1], 60.0f, -500.0f,  500.0f);						//伸腿支持力斜坡
+	ramp_init(&sky_ramp[0], 15.0f, -400.0f,  400.0f);						//伸腿支持力斜坡
+	ramp_init(&sky_ramp[1], 15.0f, -400.0f,  400.0f);						//伸腿支持力斜坡
 	ramp_init(&Fy_ramp[0], 4.0f, -600.0f,  600.0f);							//收腿支持力斜坡
 	ramp_init(&Fy_ramp[1], 4.0f, -600.0f,  600.0f);							//收腿支持力斜坡
 	

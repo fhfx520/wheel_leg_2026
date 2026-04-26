@@ -10175,7 +10175,6 @@ Image Symbol Table
     __arm_cp.0_28                            0x2400af10   Number         4  wlr.o(.text.wlr_init)
     __arm_cp.0_29                            0x2400af14   Number         4  wlr.o(.text.wlr_init)
     __arm_cp.0_31                            0x2400af1c   Number         4  wlr.o(.text.wlr_init)
-    __arm_cp.0_32                            0x2400af20   Number         4  wlr.o(.text.wlr_init)
     [Anonymous Symbol]                       0x2400b070   Section        0  wlr.o(.text.wlr_protest)
     mb_callback                              0x2400b4fc   Data          84  board_comm_task.o(.rodata.mb_callback)
     [Anonymous Symbol]                       0x2400b4fc   Section        0  board_comm_task.o(.rodata.mb_callback)
@@ -11132,7 +11131,7 @@ Image Symbol Table
     vmc_inverse_solution_five                0x24009c59   Thumb Code  1578  leg_vmc.o(.text.vmc_inverse_solution_five)
     vtm_remote_data_hanler                   0x2400a289   Thumb Code   234  mode_switch_task.o(.text.vtm_remote_data_hanler)
     wlr_control                              0x2400a3b1   Thumb Code  1520  wlr.o(.text.wlr_control)
-    wlr_init                                 0x2400ab69   Thumb Code  1200  wlr.o(.text.wlr_init)
+    wlr_init                                 0x2400ab69   Thumb Code  1192  wlr.o(.text.wlr_init)
     wlr_protest                              0x2400b071   Thumb Code    72  wlr.o(.text.wlr_protest)
     Long Thumb to Thumb Veneer to kalman_filter_init 0x2400b0b9   Thumb Code    10  anon$$obj.o(Veneer$$Code)
     Long Thumb to Thumb Veneer to kalman_filter_update 0x2400b0c3   Thumb Code    10  anon$$obj.o(Veneer$$Code)
@@ -12801,7 +12800,8 @@ Memory Map of the image
     0x2400a9ee   COMPRESSED   0x00000002   PAD
     0x2400a9f0   0x0802b4e8   0x00000174   Code   RO         1557    .text.wlr_fn_calc   wlr.o
     0x2400ab64   COMPRESSED   0x00000004   PAD
-    0x2400ab68   0x0802b660   0x00000508   Code   RO         1549    .text.wlr_init      wlr.o
+    0x2400ab68   0x0802b660   0x00000504   Code   RO         1549    .text.wlr_init      wlr.o
+    0x2400b06c   COMPRESSED   0x00000004   PAD
     0x2400b070   0x0802bb68   0x00000048   Code   RO         1551    .text.wlr_protest   wlr.o
     0x2400b0b8   0x0802bbb0   0x0000000a   Ven    RO         5179    Veneer$$Code        anon$$obj.o
     0x2400b0c2   0x0802bbba   0x0000000a   Ven    RO         5180    Veneer$$Code        anon$$obj.o
@@ -13398,12 +13398,12 @@ Image component sizes
        232          0          0          0          0       4200   usbd_ioreq.o
        224          8          0          4          4        647   velocity_control.o
        968          4          0          0        988       5081   wheel_leg_model.o
-     13144        364        340       1376       3152      17906   wlr.o
+     13140        360        340       1376       3152      17906   wlr.o
 
     ----------------------------------------------------------------------
     166114       1998       4016       1860      63928     710619   Object Totals
        760          0         48          0          0          0   (incl. Generated)
-      1986        136          4         15         71          0   (incl. Padding)
+      1990        140          4         15         71          0   (incl. Padding)
 
     ----------------------------------------------------------------------
 
