@@ -22,6 +22,15 @@ typedef struct
     float frame_period;
 } ramp_t;
 
+typedef struct
+{
+    float target;
+    float out;
+    float min, max;
+    float frame_period1,frame_period2;
+	float mid;
+} piecewise_ramp_t;
+
 void data_limit(float *data, float min, float max);
 void abs_limit(float *data, float abs_max, float offset);
 float data_fusion(float data1, float data2, float weight);
@@ -30,7 +39,9 @@ void bubble_sort(float *data, uint8_t len);
 float circle_error(float set, float get, float circle_para);
 float ramp_input(float ref, float fdb, float slope);
 void ramp_init(ramp_t *ramp, float frame_period, float min, float max);
+void piecewise_ramp_init(piecewise_ramp_t *piecewise_ramp, float frame_period1,float frame_period2, float min, float max);
 float ramp_calc(ramp_t *ramp, float target);
+float piecewise_ramp_calc(piecewise_ramp_t *piecewise_ramp, float target, float mid);
 void least_square_linear_fit(float x[], float y[], const int num, float *a, float *b);
 float vector_arg(float x, float y);
 float median_filter(int new_data);

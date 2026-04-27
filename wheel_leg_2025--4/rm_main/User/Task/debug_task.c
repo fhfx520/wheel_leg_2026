@@ -23,7 +23,7 @@
 #include "board_comm.h"
 
 #define row_debug 2 * 10
-uint8_t debug_wave = 4;
+uint8_t debug_wave = 11;
 float test_hex = 1;
 extern FGT_sin_t FGT_sin_chassis;
 extern  uint16_t quadrant_cnt;

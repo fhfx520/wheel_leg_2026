@@ -165,6 +165,52 @@ float ramp_calc(ramp_t *ramp, float target)
 }
 
 /*
+ * @brief     分段双斜波函数初始化
+ * @param[in] ramp        : 斜波结构体
+ * @param[in] frame_period: 时间间隔
+ * @param[in] min         : 斜坡最小值
+ * @param[in] max         : 斜坡最大值
+
+ * @retval    void
+ */
+void piecewise_ramp_init(piecewise_ramp_t *piecewise_ramp, float frame_period1,float frame_period2, float min, float max)
+{
+    piecewise_ramp->frame_period1 = frame_period1;
+	piecewise_ramp->frame_period2 = frame_period2;
+    piecewise_ramp->min = min;
+    piecewise_ramp->max = max;
+    piecewise_ramp->out = 0;
+}
+
+/*
+ * @brief     斜波函数计算
+ * @param[in] ramp : 斜波结构体
+ * @param[in] input: 输入值
+ * @param[in] mid         : 分割点
+ * @retval    返回一个斜坡过的输出
+ */
+float piecewise_ramp_calc(piecewise_ramp_t *piecewise_ramp, float target, float mid)
+{
+    piecewise_ramp->target = target;
+	piecewise_ramp->mid = mid;
+    if (piecewise_ramp->out < piecewise_ramp->mid) {
+        piecewise_ramp->out += piecewise_ramp->frame_period1;
+    }
+	else if (piecewise_ramp->out < piecewise_ramp->target) {
+        piecewise_ramp->out += piecewise_ramp->frame_period2;
+        if (piecewise_ramp->out > piecewise_ramp->target)
+            piecewise_ramp->out = target;
+    }	
+	else if (piecewise_ramp->out > piecewise_ramp->target) {
+        piecewise_ramp->out -= piecewise_ramp->frame_period2;
+        if (piecewise_ramp->out < piecewise_ramp->target)
+            piecewise_ramp->out = target;
+    }
+    data_limit(&(piecewise_ramp->out), piecewise_ramp->min, piecewise_ramp->max); 
+    return piecewise_ramp->out;
+}
+
+/*
  * @brief     最小二乘法直线拟合
  * @param[in] x  : 拟合点横坐标数组
  * @param[in] y  : 拟合点纵坐标数组
