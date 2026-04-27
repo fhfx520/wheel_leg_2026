@@ -7,10 +7,10 @@
 // 这样不需要 #include 任何底层文件，保证在任何平台都能无痛编译
 // ==========================================================
 #ifndef RC_LEFT_LU
-#define RC_LEFT_LU  (1 << 0)
+#define RC_LEFT_LU  (1 << 0)        //左拨杆down：站高高上台阶
 #endif
 #ifndef RC_LEFT_LD
-#define RC_LEFT_LD  (1<<3)
+#define RC_LEFT_LD  (1<<3)          //底盘保护 + 开连发
 #endif
 #ifndef RC_RIGHT_RD
 #define RC_RIGHT_RD (1<<6)
@@ -61,7 +61,7 @@ static uint8_t check_key_trigger(uint16_t key_mask) {
     return 0;
 }
 static uint8_t check_ch3_trigger(void) {
-    if (g_robot_ctx.input.ch3 >= 650 && g_robot_ctx.last_ch3 < 650) return 1;
+    if (g_robot_ctx.input.ch3 >= 600 && g_robot_ctx.last_ch3 < 600) return 1;
     return 0;
 }
 static GimbalState_e get_kb_gimbal_mode(void) {

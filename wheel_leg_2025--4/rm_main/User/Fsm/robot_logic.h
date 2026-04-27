@@ -52,18 +52,18 @@ typedef enum {
     CHASSIS_FIGHT,              
     CHASSIS_LOW_SPIN,           
     CHASSIS_HIGH,               
-    CHASSIS_TERRAIN_READY,      
-    CHASSIS_TERRAIN_EXECUTING,
-	CHASSIS_ASCEND,
-	CHASSIS_EXECUTING_FOLLOW_ASCEND,
-	CHASSIS_ENERGY,
+    CHASSIS_TERRAIN_READY,              // 加速靠近障碍物（平地收腿）
+    CHASSIS_TERRAIN_EXECUTING,          // 地形执行中（平地伸腿，空中收腿，空中伸腿，落地）
+	CHASSIS_ASCEND,                     // 站高高，装备上台阶
+	CHASSIS_EXECUTING_FOLLOW_ASCEND,    // 上二级台阶（先跳，再磕）
+	CHASSIS_ENERGY,                     // 能量机关
 } ChassisState_e;
 
 typedef enum { 
     GIMBAL_STOP=0, 
-    GIMBAL_GYRO_STABILIZE, 
-    GIMBAL_MOUSE_CONTROL,  
-    GIMBAL_AUTO_AIM        
+    GIMBAL_GYRO_STABILIZE,      // 遥控
+    GIMBAL_MOUSE_CONTROL,       // 键鼠
+    GIMBAL_AUTO_AIM             // 自瞄 
 } GimbalState_e;
 
 typedef enum { 

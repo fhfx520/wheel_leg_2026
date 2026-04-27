@@ -111,6 +111,7 @@ static uint8_t check_joint_stall(dm_motor_t motor1, dm_motor_t motor2)
 }
 
 // 工具函数 检测腿是否脱离卡死
+// return 1 ：已脱离
 static uint8_t check_joint_offstall(uint8_t stall_leg_num)
 {
 	static uint16_t offstall_cnt;
@@ -299,7 +300,7 @@ static void chassis_execute_fsm(void)
 		{
             wlr.ctrl_mode = 2;
             wlr.high_flag = 0;
-            wlr.jump_flag = 0;
+            wlr.jump_flag = WLR_JUMP_IDLE;
 			wlr.sky_flag = WLR_SKY_IDLE;
 			g_robot_ctx.sky_start_flag = 0;
 			g_robot_ctx.sky_finish_flag = 0;
@@ -454,7 +455,7 @@ static void chassis_data_input(void)
             wlr.yaw_ref = (float)yaw_motor.ecd / 8192 * 2 * PI;
             wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;
             wlr.wz_ref = 0;
-			chassis.turn_back_flag = 0;
+			chassis.turn_ back_flag = 0;
             break;
         }
         case CHASSIS_LOW:

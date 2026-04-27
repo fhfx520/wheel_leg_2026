@@ -36,6 +36,7 @@ extern uint8_t rotate_stop_flag;
 #ifndef DO_LAST
 // condition: 触发条件
 // count:     连续执行的次数
+// 如果condition为真，后面的代码执行count次
 #define DO_LAST(condition, count) \
     static int _UNIQUE_VAR(_burst_cnt_) = 0; \
     if (condition) _UNIQUE_VAR(_burst_cnt_) = (count); \
@@ -61,7 +62,7 @@ const float LegLengthParam_five[5] = {0.215f, 0.258f, 0.258f, 0.215f, 0.0f};
 const float mb = 22.75f , ml = 2.09f, mw = 0.715f;//机体质量 腿部质量 轮子质量 
 const float BodyWidth = 0.48f;//两轮间距
 const float WheelRadius = 0.055f;//0.075f//轮子半径 气胎
-float LegLengthMax = 0.37f, LegLengthMin = 0.11f;
+const float LegLengthMax = 0.37f, LegLengthMin = 0.11f;
 
 const float LegLengthHighFly = 0.28f; //长腿腿长腾空 0.28
 const float LegLengthFly 	 = 0.20f; //正常腿长腾空
@@ -86,7 +87,6 @@ float Rotate_balance_zero 		 = 0.17f ;
 float IMU_Roll_balance_zero		 = -0.0f;		//陀螺仪roll偏置
 
 uint16_t quadrant_cnt = 0;
-static uint8_t kal_init = 0;
 //int32_t double_cnt;
 float real_vel;
 float F_test[2];
@@ -476,7 +476,7 @@ static void state_predict(void)
 //限速函数
 static void stable_velocity_control(void)
 {
-    if(fabsf(lqr.X_fdb[8]) > 0.3f)
+    if(fabsf(lqr.X_fdb[8]) > 0.3f)  
         data_limit(&lqr.X_ref[1],0.0f,0.0f);
     else if(fabsf(lqr.X_fdb[8]) > 0.2f)
         data_limit(&lqr.X_ref[1],-1.0f,1.0f);
@@ -633,16 +633,19 @@ static void handle_jump_state(void)
 	{
 		 Fy_ramp[0].out = Fy_ramp[1].out= 0;
 		 pid_leg_recover[0].i_out = 0,pid_leg_recover[1].i_out = 0;
+
          jump_leg_length = (wlr.double_flag ? 0.33f : 0.36f);
 		 limit_q = (wlr.double_flag ? 0.6f : 0.5f);
 		 wlr.high_set = ramp_calc(&height_ramp, jump_leg_length);
 		 x3_balance_zero = x3_balance_zero_normal;
          x5_balance_zero = -0.05f;
 		 wlr.jump_run++;
+
          if(wlr.double_flag)
             wlr.v_ref = ramp_calc(&jump_ramp, -2.0f);
         else
             jump_ramp.out = 0.0f;
+
 		 if(fabsf(lqr.X_fdb[4]) > limit_q && fabsf(lqr.X_fdb[6]) > limit_q && wlr.jump_run > 200) {
 			wlr.high_set = jump_leg_length;
 			wlr.v_ref = 0;
@@ -690,11 +693,12 @@ static void handle_sky_state(void)
         sky_leg_length = (wlr.double_flag ? 0.16f : 0.11f);
         wlr.high_set = ramp_calc(&sky_height_ramp, sky_leg_length);
         x3_balance_zero = x3_balance_zero_normal;
-        x5_balance_zero = 0.0f;		//0.2f这个参数可以极大的抑制车自己往后跑
+        x5_balance_zero = 0.0f;
         pid_leg_sky_jump[0].i_out = pid_leg_sky_jump[1].i_out = \
 	    pid_leg_sky_cover[0].i_out = pid_leg_sky_cover[1].i_out = \
 	    Fy_ramp[0].out = Fy_ramp[1].out= 0;
 		sky_ramp[0].out = sky_ramp[1].out= 0;
+        
         if (abs(rc.ch2) > 500) { 
             wlr.sky_cnt++;
         }
@@ -806,14 +810,14 @@ static void update_rotate_state(void)
 		{
 			K_Array_Leg_rotate[0][3] = -ramp_calc(&wz_ramp, 0.23574f);		//K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
 			K_Array_Leg_rotate[1][3] = ramp_calc(&wz_ramp, 0.23574f);
-			K_Array_Leg_rotate[2][3] = -1.17273f;		//K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
+			K_Array_Leg_rotate[2][3] = -1.17273f;		                    //K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
 			K_Array_Leg_rotate[3][3] = 1.17273f;
 		}
 		else
 		{
 			K_Array_Leg_rotate[0][3] = -ramp_calc(&wz_ramp, 1.23895f);		//K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
 			K_Array_Leg_rotate[1][3] = ramp_calc(&wz_ramp, 1.23895f);
-			K_Array_Leg_rotate[2][3] = -2.17273f;		//K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
+			K_Array_Leg_rotate[2][3] = -2.17273f;		                    //K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
 			K_Array_Leg_rotate[3][3] = 2.17273f;
 		}
 		

@@ -31,12 +31,20 @@ void comm_task(void const *argument)
         status.task.comm = 1;
         dji_motor_output_data();
 		
- 		if(pit_motor.state == 0 ){
-			dm_motor_set_control_cmd(&pit_motor, CMD_ENABLE_MODE);	 
-		}
-		else
-			dm_motor_output_single_data(&pit_motor);
+// 		if(pit_motor.state == 0 ){
+//			dm_motor_set_control_cmd(&pit_motor, CMD_ENABLE_MODE);	 
+//		} else
+//			dm_motor_output_single_data(&pit_motor);
 		
+		
+        /* state==0:失能→使能  state==1:正常→发控制帧  state>1:报错→RESET清错 */
+        if (pit_motor.state == 0)
+            dm_motor_set_control_cmd(&pit_motor, CMD_ENABLE_MODE);
+        else if (pit_motor.state == 1)
+            dm_motor_output_single_data(&pit_motor);
+		else
+            dm_motor_set_control_cmd(&pit_motor, CMD_RESET_MODE);
+
 	
         if(vision_cnt++ % 2 == 0)
 			vision_output_data();
