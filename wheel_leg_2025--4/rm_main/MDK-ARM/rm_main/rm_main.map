@@ -10187,10 +10187,9 @@ Image Symbol Table
     wlr_fn_calc                              0x2400ab89   Thumb Code   364  wlr.o(.text.wlr_fn_calc)
     [Anonymous Symbol]                       0x2400ab88   Section        0  wlr.o(.text.wlr_fn_calc)
     [Anonymous Symbol]                       0x2400ad00   Section        0  wlr.o(.text.wlr_init)
-    __arm_cp.0_26                            0x2400b0a4   Number         4  wlr.o(.text.wlr_init)
-    __arm_cp.0_27                            0x2400b0a8   Number         4  wlr.o(.text.wlr_init)
-    __arm_cp.0_28                            0x2400b0ac   Number         4  wlr.o(.text.wlr_init)
-    __arm_cp.0_30                            0x2400b0b4   Number         4  wlr.o(.text.wlr_init)
+    __arm_cp.0_25                            0x2400b0a4   Number         4  wlr.o(.text.wlr_init)
+    __arm_cp.0_26                            0x2400b0a8   Number         4  wlr.o(.text.wlr_init)
+    __arm_cp.0_27                            0x2400b0ac   Number         4  wlr.o(.text.wlr_init)
     [Anonymous Symbol]                       0x2400b200   Section        0  wlr.o(.text.wlr_protest)
     mb_callback                              0x2400b6a0   Data          84  board_comm_task.o(.rodata.mb_callback)
     [Anonymous Symbol]                       0x2400b6a0   Section        0  board_comm_task.o(.rodata.mb_callback)
@@ -11151,7 +11150,7 @@ Image Symbol Table
     vmc_inverse_solution_five                0x24009df1   Thumb Code  1578  leg_vmc.o(.text.vmc_inverse_solution_five)
     vtm_remote_data_hanler                   0x2400a421   Thumb Code   234  mode_switch_task.o(.text.vtm_remote_data_hanler)
     wlr_control                              0x2400a549   Thumb Code  1520  wlr.o(.text.wlr_control)
-    wlr_init                                 0x2400ad01   Thumb Code  1192  wlr.o(.text.wlr_init)
+    wlr_init                                 0x2400ad01   Thumb Code  1188  wlr.o(.text.wlr_init)
     wlr_protest                              0x2400b201   Thumb Code    72  wlr.o(.text.wlr_protest)
     Long Thumb to Thumb Veneer to kalman_filter_init 0x2400b249   Thumb Code    10  anon$$obj.o(Veneer$$Code)
     Long Thumb to Thumb Veneer to kalman_filter_update 0x2400b253   Thumb Code    10  anon$$obj.o(Veneer$$Code)
@@ -12826,7 +12825,8 @@ Memory Map of the image
     0x2400ab86   COMPRESSED   0x00000002   PAD
     0x2400ab88   0x0802b7b0   0x00000174   Code   RO         1561    .text.wlr_fn_calc   wlr.o
     0x2400acfc   COMPRESSED   0x00000004   PAD
-    0x2400ad00   0x0802b928   0x00000500   Code   RO         1553    .text.wlr_init      wlr.o
+    0x2400ad00   0x0802b928   0x000004fc   Code   RO         1553    .text.wlr_init      wlr.o
+    0x2400b1fc   COMPRESSED   0x00000004   PAD
     0x2400b200   0x0802be28   0x00000048   Code   RO         1555    .text.wlr_protest   wlr.o
     0x2400b248   0x0802be70   0x0000000a   Ven    RO         5184    Veneer$$Code        anon$$obj.o
     0x2400b252   0x0802be7a   0x0000000a   Ven    RO         5185    Veneer$$Code        anon$$obj.o
@@ -13427,12 +13427,12 @@ Image component sizes
        232          0          0          0          0       4200   usbd_ioreq.o
        224          8          0          4          4        647   velocity_control.o
        968          4          0          0        988       5081   wheel_leg_model.o
-     13404        384        340       1376       3170      18259   wlr.o
+     13400        380        340       1376       3170      18259   wlr.o
 
     ----------------------------------------------------------------------
     166838       2014       4016       1860      63948     711782   Object Totals
        780          0         48          0          0          0   (incl. Generated)
-      1990        136          4         15         73          0   (incl. Padding)
+      1994        140          4         15         73          0   (incl. Padding)
 
     ----------------------------------------------------------------------
 

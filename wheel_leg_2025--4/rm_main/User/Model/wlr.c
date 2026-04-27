@@ -1043,7 +1043,7 @@ static void map_virtual_force(uint8_t index)
 	else if (wlr.sky_flag == WLR_SKY_EXTENDING) {//蹬腿跳
 //		Fy_temp = pid_calc(&pid_leg_sky_jump[index], tlm.l_ref[index], vmc[index].L_fdb);
 		Fy_temp = 500.0f;
-		wlr.side[index].Fy = piecewise_ramp_calc(&sky_ramp[index], Fy_temp, 100.0f);
+		wlr.side[index].Fy = piecewise_ramp_calc(&sky_ramp[index], Fy_temp, 200.0f);
 //		Fy_temp = ((vmc[0].L_fdb > 0.21f) && (vmc[1].L_fdb > 0.21f)) ? 400.0f : 100.0f;
 //		wlr.side[index].Fy = ramp_calc(&sky_ramp[index], Fy_temp);
     } 
@@ -1117,8 +1117,8 @@ void wlr_init(void)
 	ramp_init(&wz_ramp, 0.05f,  0,  3.0f);									//小陀螺加速K矩阵wz项斜坡
 //	ramp_init(&sky_ramp[0], 15.0f, -450.0f,  450.0f);						//伸腿支持力斜坡
 //	ramp_init(&sky_ramp[1], 15.0f, -450.0f,  450.0f);						//伸腿支持力斜坡
-	piecewise_ramp_init(&sky_ramp[0], 5.0f, 80.0f, -600.0f,  600.0f);						//伸腿支持力斜坡
-	piecewise_ramp_init(&sky_ramp[1], 5.0f, 80.0f, -600.0f,  600.0f);						//伸腿支持力斜坡
+	piecewise_ramp_init(&sky_ramp[0], 5.0f, 20.0f, -600.0f,  600.0f);						//伸腿支持力斜坡
+	piecewise_ramp_init(&sky_ramp[1], 5.0f, 20.0f, -600.0f,  600.0f);						//伸腿支持力斜坡
 	ramp_init(&Fy_ramp[0], 5.0f, -600.0f,  600.0f);							//收腿支持力斜坡
 	ramp_init(&Fy_ramp[1], 5.0f, -600.0f,  600.0f);							//收腿支持力斜坡
 	
