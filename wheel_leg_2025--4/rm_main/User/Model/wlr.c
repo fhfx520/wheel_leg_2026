@@ -524,8 +524,8 @@ static void update_leg_height_and_balance(float yaw_error)
 				data_limit(&wlr.v_ref,-1.0f,1.0f);
 			}
 			else{
-				x3_balance_zero = x3_balance_zero_normal;	
-				data_limit(&wlr.v_ref,-0.0f,0.0f);
+				x3_balance_zero = x3_balance_zero_normal + 0.13f;	
+				data_limit(&wlr.v_ref,-1.0f,1.0f);
 			}
 		}
 		x5_balance_zero = 0.0f;
@@ -665,7 +665,8 @@ static void handle_jump_state(void)
 			wlr.crash_flag = 0;
 			wlr.high_flag = 0;
 			chassis.recover_flag = 1;
-			chassis.rescue_cnt_R = chassis.rescue_cnt_L = 2500;
+			up_ready = 100;
+//			chassis.rescue_cnt_R = chassis.rescue_cnt_L = 3000;
 //			chassis.rescue_inter_flag = 2;
 		 }
 	}
