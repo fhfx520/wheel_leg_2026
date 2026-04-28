@@ -9,16 +9,16 @@
 #include "math.h"
 #include "arm_math.h"
 
-#define CHASSIS_MAX_V		43.0f			//���̶���������ѹ
-#define BAT_MIN_V		10.0f			//��ضˣ�����ϵͳ�ˣ���������ѹ
+#define CHASSIS_MAX_V	43.0f	
+#define BAT_MIN_V		10.0f	
 
-#define CAP_MAX_V		33.0f			//���ݶ�����ѹ
-#define CAP_MIN_V		4.0f			//���ݶ���С��ѹ
+#define CAP_MAX_V		33.0f	
+#define CAP_MIN_V		4.0f	
 	
-#define CAP_MAX_I				40.0f	//���ݶ�����������
-#define CHASSIS_MAX_I		25.0f	//���������������
-#define POWER_MIN		40.0f			//����ϵͳ��С�ŵ繦��
-#define DUTY 				27200		//		HRTIM1->sMasterRegs.MPER//pwmռ�ձ�����  ps:��Ҳ��֪��Ϊʲô��仰����ռ��CPU��Դ
+#define CAP_MAX_I		40.0f	
+#define CHASSIS_MAX_I	25.0f	
+#define POWER_MIN		35.0f	//用完20000J之后
+#define DUTY 			27200		
 
 #define MAX_RADIO		24480
 #define MIN_RADIO		2720

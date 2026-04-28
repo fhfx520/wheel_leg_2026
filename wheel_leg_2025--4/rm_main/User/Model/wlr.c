@@ -518,7 +518,7 @@ static void update_leg_height_and_balance(float yaw_error)
 				data_limit(&wlr.v_ref,-1.0f,1.0f);
 			}
 			else{
-				x3_balance_zero = x3_balance_zero_normal;	
+				x3_balance_zero = x3_balance_zero_normal + 0.13f;	
 				data_limit(&wlr.v_ref,-0.0f,0.0f);
 			}
 		}
@@ -654,13 +654,13 @@ static void handle_jump_state(void)
 //			wlr.high_set = 0.16f;
 //			 wlr.jump_flag = WLR_JUMP_RECOVER_SHORT;
 		 }
-		 if((fabs(lqr.X_fdb[4]) > 0.9f && fabs(lqr.X_fdb[6]) > 0.9f && wlr.crash_flag))
+		 if((fabs(lqr.X_fdb[4]) > 1.2f && fabs(lqr.X_fdb[6]) > 1.2f && wlr.crash_flag))
 		 {
 			wlr.jump_flag = WLR_JUMP_RECOVER_SHORT;
 			wlr.crash_flag = 0;
 			wlr.high_flag = 0;
 			chassis.recover_flag = 1;
-			chassis.rescue_cnt_R = chassis.rescue_cnt_L = 150;
+			up_ready = 101;
 //			chassis.rescue_inter_flag = 2;
 		 }
 	}
@@ -1025,7 +1025,7 @@ static void map_virtual_force(uint8_t index)
             wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - ff_Fy_0
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
         else
-            wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 30.0f
+            wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 10.0f
 								+ WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
     } 
 	else if (wlr.sky_flag == WLR_SKY_EXTENDING) {//蹬腿跳
@@ -1246,7 +1246,7 @@ void wlr_control(void)
     } else {
         data_limit(&lqr.X_diff[1], -1.8f, 1.8f);
     }
-	if(chassis.turn_back_flag)//切换跟随时屏蔽运动有关项且限制yaw_err的差值
+ 	if(chassis.turn_back_flag)//切换跟随时屏蔽运动有关项且限制yaw_err的差值
 	{
 		data_limit(&lqr.X_diff[0], 0.0f, 0.0f);
 		data_limit(&lqr.X_diff[1], 0.0f, 0.0f);

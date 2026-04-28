@@ -129,7 +129,7 @@ static uint8_t series_shoot_enable(void)
 				
         && ((shoot.barrel.heat_remain >= MIN_HEAT))  //热量控制
         && frequency_cnt * SHOOT_PERIOD >= shoot.trigger_period  //射频控制
-        && ABS(trigger_ecd_error) <  1.0f * TRIGGER_MOTOR_ECD_SERIES  //拨盘误差控制		
+        && ABS(trigger_ecd_error) <  0.5f * TRIGGER_MOTOR_ECD_SERIES  //拨盘误差控制		
     );
 }
 
@@ -143,7 +143,7 @@ static void pre_fabricated_trigger_position(void)
 		if(recover_flag == 0)
 		{ 
 #ifdef MG4005
-			shoot.trigger_ecd.ref = 13616.0f/65535.0f;			//38400	50%的连发几率			//改这里改变预制的位置，通过读编码值
+			shoot.trigger_ecd.ref = 34258.0f/65535.0f;			//38400	50%的连发几率			//改这里改变预制的位置，通过读编码值
 																//19970 一袋子的弹只连发4次
 
 #endif

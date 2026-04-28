@@ -193,6 +193,11 @@ void power_get_status(uint8_t *data)
     supercap.state.judge_msg_miss = cap_state_buf >> 7;
 //    memcpy(&supercap.POWER_MODE,data+1,sizeof(power_mode));
 }	
+
+
+
+
+
 static float power_velocity_table[11][2] = {
     {35.0f ,1.3f},//节能状态
     {45.0f ,1.3f},//1
@@ -221,14 +226,13 @@ float power_control_target_velocity(void)
     base_velocity = power_velocity_table[0][1];
     //更新基础速度
     for(uint8_t i = 0; i < 11; i++) {
-        if (power_control.judge_max_power == power_velocity_table[i][0])
+        if (power_control.judge_max_power == power_velocity_table[i][0]){
             base_velocity = power_velocity_table[i][1];
-        else
             break;
+		}
     }
     //根据电容电压进行微调
     return (base_velocity + supercap_velocity_addmap());
-
 }
 
 uint8_t power_check_offline(void)

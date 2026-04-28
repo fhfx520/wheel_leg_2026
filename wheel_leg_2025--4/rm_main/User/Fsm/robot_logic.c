@@ -61,7 +61,7 @@ static uint8_t check_key_trigger(uint16_t key_mask) {
     return 0;
 }
 static uint8_t check_ch3_trigger(void) {
-    if (g_robot_ctx.input.ch3 >= 600 && g_robot_ctx.last_ch3 < 600) return 1;
+    if (g_robot_ctx.input.ch3 >= 550 && g_robot_ctx.last_ch3 < 550) return 1;
     return 0;
 }
 static GimbalState_e get_kb_gimbal_mode(void) {
@@ -101,9 +101,9 @@ static void rem_low_execute(void) {
     if (g_robot_ctx.input.sw2 == RC_SW_DOWN) 
 	{
 		if(rc_fsm_check(RC_LEFT_LU))
-			fsm_change(&fsm_remote_sub, &state_rem_ascend);
-		else
 			fsm_change(&fsm_remote_sub, &state_rem_ter_ready);
+		else
+			fsm_change(&fsm_remote_sub, &state_rem_ascend);
 	}
 }
 static const FsmState_t state_rem_low = { .name = "REM_LOW", .enter = rem_low_enter, .execute = rem_low_execute };
@@ -128,9 +128,9 @@ static void rem_high_execute(void) {
     if (g_robot_ctx.input.sw2 == RC_SW_DOWN) 
 	{
 		if(rc_fsm_check(RC_LEFT_LU))
-			fsm_change(&fsm_remote_sub, &state_rem_ascend);
-		else
 			fsm_change(&fsm_remote_sub, &state_rem_ter_ready);
+		else
+			fsm_change(&fsm_remote_sub, &state_rem_ascend);
 	}
 }
 static const FsmState_t state_rem_high = { .name = "REM_HIGH", .enter = rem_high_enter, .execute = rem_high_execute };
