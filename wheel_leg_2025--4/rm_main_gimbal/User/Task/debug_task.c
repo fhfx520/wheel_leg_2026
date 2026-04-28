@@ -18,7 +18,7 @@
 #include "mode_switch_task.h"
 
 #define row_debug 2 * 10
-uint8_t debug_wave = 2;
+uint8_t debug_wave = 1;
 uint32_t aqdihakdhakjhdaukd;
 uint32_t no_online_imu;
 //-D__weak="__attribute__((weak))" -D__packed="__attribute__((__packed__))"  -D__NOINLINE="__attribute__ ( (noinline) )"  -Wno-error=armcc-pragma-import -Wno-error=armcc-pragma-arm
@@ -28,13 +28,19 @@ void log_scope_data_pkg(void)
 {
     switch(debug_wave) {
         case 1: {//云台pid调试
-            log_scope_get_data(gimbal.pit_spd.ref);
-            log_scope_get_data(gimbal.pit_spd.fdb);
+//            log_scope_get_data(gimbal.pit_spd.ref);
+//            log_scope_get_data(gimbal.pit_spd.fdb);
 //   
-//            log_scope_get_data(gimbal.yaw_angle.ref);
-//            log_scope_get_data(gimbal.yaw_angle.fdb);
-			log_scope_get_data(gimbal.pit_angle.ref);
-            log_scope_get_data(gimbal.pit_angle.fdb);
+            log_scope_get_data(gimbal.yaw_angle.ref);
+            log_scope_get_data(gimbal.yaw_angle.fdb);            
+			
+			log_scope_get_data(vision.rx[0].data.yaw_vel);
+			
+			log_scope_get_data(gimbal.yaw_spd.ref);
+            log_scope_get_data(gimbal.yaw_spd.fdb);
+			
+//			log_scope_get_data(gimbal.pit_angle.ref);
+//            log_scope_get_data(gimbal.pit_angle.fdb);
 //						log_scope_get_data(fabs( circle_error(vision.target_yaw_angle,gimbal.yaw_angle.fdb, 2*PI));
 //            log_scope_get_data(yaw_motor.online);
 //            

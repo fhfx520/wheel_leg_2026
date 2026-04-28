@@ -48,7 +48,6 @@ void comm_task(void const *argument)
 	
         if(vision_cnt++ % 2 == 0)
 			vision_output_data();
-//			superpower_vision_Tx();
 					
         taskEXIT_CRITICAL();
         osDelayUntil(&thread_wake_time, 1);
