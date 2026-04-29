@@ -490,7 +490,7 @@ static void stable_velocity_control(void)
     if(wlr.sky_flag == WLR_SKY_FOLDING)
 		data_limit(&lqr.X_ref[1],-3.0f,3.0f);
 	else
-		data_limit(&lqr.X_ref[1],-2.6f,2.6f);
+		data_limit(&lqr.X_ref[1],-2.3f,2.3f);
 }
 int32_t Last_cnt;
 

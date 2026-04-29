@@ -44,7 +44,7 @@ float MIN_HEAT = 40;        //热量控制裕量
 
 static uint16_t frequency_cnt = 0;	//射击周期计算
 static uint8_t  shoot_enable  = 1;  //单发使能标志
-static float trigger_ecd_error;
+float trigger_ecd_error;
 
 //用于退蛋反转
 uint32_t back_cnt = 0;

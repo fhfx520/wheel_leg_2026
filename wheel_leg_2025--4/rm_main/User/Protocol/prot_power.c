@@ -202,21 +202,21 @@ static float power_velocity_table[11][2] = {
     {35.0f ,1.3f},//节能状态
     {45.0f ,1.3f},//1
     {50.0f ,1.3f},//2
-    {55.0f ,1.5f},//3
-    {60.0f ,1.5f},//4
-    {65.0f ,1.7f},//5
-    {70.0f ,2.0f},//6
-    {75.0f ,2.0f},//7
-    {80.0f ,2.1f},//8
-    {90.0f ,2.1f},//9
-    {100.0f,2.1f},//10
+    {55.0f ,1.4f},//3
+    {60.0f ,1.4f},//4
+    {65.0f ,1.5f},//5
+    {70.0f ,1.6f},//6
+    {75.0f ,1.6f},//7
+    {80.0f ,1.7f},//8
+    {90.0f ,1.8f},//9
+    {100.0f,1.9f},//10
 };
 static float supercap_velocity_addmap(void)
 {
-    if(supercap.volume_percent < 40.0f)
+    if(supercap.volume_percent < 50.0f)
         return 0.0f;
     else
-        return (supercap.volume_percent - 40.0f) / 60.0f * 0.4f;//线性映射，电容电压从40%到100%时，速度增加0-0.5f
+        return (supercap.volume_percent - 50.0f) / 50.0f * 0.4f;//线性映射，电容电压从40%到100%时，速度增加0-0.4f
 }
 
 float power_control_target_velocity(void)

@@ -667,11 +667,12 @@ ARM Macro Assembler    Page 11
               00000000 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp.sp --apcs=
 interwork --depend=.\taurus_imu_icm_test\startup_stm32g431xx.d -o.\taurus_imu_i
-cm_test\startup_stm32g431xx.o -I.\RTE\_Taurus_imu_icm_test -ID:\KEIL5\keli_pkg\
-ARM\CMSIS\6.2.0\CMSIS\Core\Include -ID:\KEIL5\keli_pkg\Keil\STM32G4xx_DFP\1.6.0
-\Drivers\CMSIS\Device\ST\STM32G4xx\Include --predefine="__MICROLIB SETA 1" --pr
-edefine="__UVISION_VERSION SETA 543" --predefine="STM32G431xx SETA 1" --predefi
-ne="_RTE_ SETA 1" --list=startup_stm32g431xx.lst startup_stm32g431xx.s
+cm_test\startup_stm32g431xx.o -I.\RTE\_Taurus_imu_icm_test -ID:\Keil_v5\Packs\A
+RM\CMSIS\5.7.0\CMSIS\Core\Include -ID:\Keil_v5\Packs\Keil\STM32G4xx_DFP\1.2.0\D
+rivers\CMSIS\Device\ST\STM32G4xx\Include --predefine="__MICROLIB SETA 1" --pred
+efine="__UVISION_VERSION SETA 534" --predefine="_RTE_ SETA 1" --predefine="STM3
+2G431xx SETA 1" --predefine="_RTE_ SETA 1" --list=startup_stm32g431xx.lst start
+up_stm32g431xx.s
 
 
 

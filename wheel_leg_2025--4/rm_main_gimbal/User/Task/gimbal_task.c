@@ -30,11 +30,11 @@ FGT_agl_t yaw_test = {
 gimbal_scale_t gimbal_scale = {
     .ecd_remote = 0.000005f,//待修改sensity
     .ecd_keyboard = 1,
-    .angle_remote = 0.000007f,
+    .angle_remote = 0.0000045f,
     .angle_keyboard = 0.00003f
 };
 gimbal_t gimbal;
-float vision_mpc_k = 1.0f;		// MPC：调这个前馈比例系数
+float vision_mpc_k = 0.5f;		// MPC：调这个前馈比例系数
 
 float body_vector[3];
 float rotate_data[3][3];
@@ -43,11 +43,19 @@ static void gimbal_init(void)
 {
     memset(&gimbal, 0, sizeof(gimbal_t));
 	
-	pid_init(&gimbal.pit_angle.pid, NONE, 10.0f, 0.6f, 0, 0, 50);
+	pid_init(&gimbal.pit_angle.pid, NONE, 30.0f, 0.6f, 0, 0, 50);
     pid_init(&gimbal.pit_spd.pid, NONE, 1.5f, 0.01f, 0, 1.0f, 7.0f);
 	
-	pid_init(&gimbal.yaw_angle.pid, NONE,40.0f, 0.2f, 0.0f, 0.0f, 5.0f);//尝试云台补偿算法			MPC：调yaw的pid
-    pid_init(&gimbal.yaw_spd.pid, NONE, 10000.0f, 50.0f, 0, 2000.0f, 25000.0f);
+//	pid_init(&gimbal.yaw_angle.pid, NONE,40.0f, 0.2f, 1.0f, 0.0f, 5.0f);//尝试云台补偿算法			MPC：调yaw的pid
+//    pid_init(&gimbal.yaw_spd.pid, NONE, 10000.0f, 50.0f, 0, 2000.0f, 25000.0f);
+	
+	
+	
+	pid_init(&gimbal.yaw_angle.pid, CHANG_I_RATE,30.0f, 0.2f, 0.0f, 0, 4);//尝试云台补偿算法			40
+    pid_init(&gimbal.yaw_spd.pid, NONE, 12000.0f, 50.0f, 0, 1000.0f, 25000.0f);						//  15000
+	gimbal.yaw_angle.pid.threshold_a = 0.015f;
+	gimbal.yaw_angle.pid.threshold_b = 0.1f; 
+	
 	
     pid_init(&gimbal.yaw_ecd.pid, NONE, 10.0f, 0, 0, 0.0f, 30.0f);
 	pid_init(&gimbal.yaw_spd_ecd.pid, NONE, 6000.0f, 10.00f, 0, 1000.0f, 25000.0f);
@@ -66,7 +74,7 @@ static void gimbal_pid_calc(void)
 //	//pit_max = -arm_cos_f32(yaw_err) * chassis_imu.pit + 0.32f;
 //    pit_min = -arm_cos_f32(yaw_err) * chassis_imu.pit - 0.35f;
 	
-	pit_max = 0.33f;		//0.5 滑槽卡头
+	pit_max = 0.5f;		//0.5 滑槽卡头
 	pit_min = -0.39f;
     data_limit(&gimbal.pit_angle.ref, pit_min, pit_max);
     gimbal.pit_angle.fdb = gimbal_imu.pit;
@@ -202,7 +210,7 @@ void gimbal_task(void const *argu)
 					else
 						gimbal.yaw_angle.ref = gimbal_imu.yaw + (float)yaw_motor.ecd / 8192 * 2 * PI -  (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI;	
 				}
-                gimbal.pit_angle.ref = 0.15f;		//0.3 滑槽卡头
+                gimbal.pit_angle.ref = 0.5f;		//0.3 滑槽卡头
                 gimbal.pit_output = 0;
                 gimbal.yaw_output = 0;
                 break;

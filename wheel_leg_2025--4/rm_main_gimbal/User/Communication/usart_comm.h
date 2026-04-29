@@ -8,9 +8,9 @@
 
 
 #define DEBUG_HUART	huart6//debug调试
-#define JUDGE_HUART huart2//裁判系统
+//#define JUDGE_HUART huart2//裁判系统
 #define	DBUS_HUART	huart1//1111 遥控器
-#define VTM_HUART huart6
+#define VTM_HUART huart2
 
 void usart_comm_init(void);
 void usart_user_handler(UART_HandleTypeDef *huart);

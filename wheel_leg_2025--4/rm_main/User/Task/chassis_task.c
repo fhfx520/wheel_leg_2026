@@ -402,20 +402,17 @@ static void chassis_execute_fsm(void)
         if (g_robot_ctx.output.chassis_speed) chassis_scale.keyboard = 2.2f;
         else chassis_scale.keyboard = 2.2f;
     } else { 
-        if (g_robot_ctx.output.chassis_speed) chassis_scale.keyboard = 2.6f;
-        else chassis_scale.keyboard = 2.2f;
+        if (g_robot_ctx.output.chassis_speed) chassis_scale.keyboard = 2.3f;
+        else chassis_scale.keyboard = 2.3f;
     }
 	if(g_robot_ctx.output.chassis == CHASSIS_ASCEND){
-		chassis_scale.keyboard = 2.0f;
+		chassis_scale.keyboard = 1.7f;
 	}
-
-//    if (supercap.volume_percent < 10 )  chassis_scale.keyboard = 1.4f;
-//    else if (supercap.volume_percent < 20 ) chassis_scale.keyboard = 1.7f;
 
     if (g_robot_ctx.output.chassis == CHASSIS_HIGH) 
 		chassis_scale.remote = 1.0f / 660 * 2.2f;
     else 
-		chassis_scale.remote = 1.0f /660 * 2.6f; 
+		chassis_scale.remote = 1.0f /660 * 2.3f; 
 	
 	last_chassis_output = g_robot_ctx.output.chassis;
     

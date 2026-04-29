@@ -62,7 +62,7 @@ void can_comm_init(void)
     can_filter.FilterID2 = SUPERCAP_DATA_ID;
     can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;//通过过滤后给邮箱0
 	HAL_FDCAN_ConfigFilter(&hfdcan2, &can_filter);
-	//board comm
+	//board commn
     can_filter.IdType = FDCAN_STANDARD_ID;//标准帧
     can_filter.FilterIndex = 1;
     can_filter.FilterType = FDCAN_FILTER_DUAL;//等于过滤

@@ -19,15 +19,15 @@ uint8_t vtm_data_rx_buf[VTM_DATA_LEN];
  */
 void usart_comm_init(void)
 {
-//    __HAL_UART_CLEAR_IDLEFLAG(&DEBUG_HUART);
-//    __HAL_UART_ENABLE_IT(&DEBUG_HUART, UART_IT_IDLE);
-//    HAL_UART_Receive_DMA(&DEBUG_HUART, debug_dma_rx_buf, DEBUG_DATA_LEN);
-//    log_init(&DEBUG_HUART);
+    __HAL_UART_CLEAR_IDLEFLAG(&DEBUG_HUART);
+    __HAL_UART_ENABLE_IT(&DEBUG_HUART, UART_IT_IDLE);
+    HAL_UART_Receive_DMA(&DEBUG_HUART, debug_dma_rx_buf, DEBUG_DATA_LEN);
+    log_init(&DEBUG_HUART);
 	
-	__HAL_UART_CLEAR_IDLEFLAG(&JUDGE_HUART);
-    __HAL_UART_ENABLE_IT(&JUDGE_HUART, UART_IT_IDLE);
-    HAL_UART_Receive_DMA(&JUDGE_HUART, judge_data_rx_buf, JUDGE_DATA_LEN);
-    judge_init(&JUDGE_HUART);
+//	__HAL_UART_CLEAR_IDLEFLAG(&JUDGE_HUART);
+//    __HAL_UART_ENABLE_IT(&JUDGE_HUART, UART_IT_IDLE);
+//    HAL_UART_Receive_DMA(&JUDGE_HUART, judge_data_rx_buf, JUDGE_DATA_LEN);
+//    judge_init(&JUDGE_HUART);
 	
 	__HAL_UART_CLEAR_IDLEFLAG(&VTM_HUART);
     __HAL_UART_ENABLE_IT(&VTM_HUART, UART_IT_IDLE);
@@ -52,10 +52,14 @@ void usart_user_handler(UART_HandleTypeDef *huart)
     if (__HAL_UART_GET_FLAG(huart, UART_FLAG_IDLE) != RESET) {
         __HAL_UART_CLEAR_IDLEFLAG(huart);
         HAL_UART_AbortReceive(huart);
-		if(huart == &VTM_HUART)
-		{
+		
+		if(huart == &VTM_HUART) {
 			vtm_get_data(vtm_data_rx_buf);
 			HAL_UART_Receive_DMA(&VTM_HUART, vtm_data_rx_buf, VTM_DATA_LEN);
+		} 
+		else if (huart == &DEBUG_HUART) {
+			dr16_get_data(&rc,debug_dma_rx_buf);
+			HAL_UART_Receive_DMA(huart, debug_dma_rx_buf, DEBUG_DATA_LEN);
 		}
         
 ////            if (huart == &DEBUG_HUART) {
@@ -71,8 +75,8 @@ void usart_user_handler(UART_HandleTypeDef *huart)
 ////            judge_get_data(judge_data_rx_buf);
 ////            HAL_UART_Receive_DMA(huart, judge_data_rx_buf, JUDGE_DATA_LEN);
 //        } else if (huart == &DEBUG_HUART) {
-//						dr16_get_data(&rc,debug_dma_rx_buf);
-//						HAL_UART_Receive_DMA(huart, debug_dma_rx_buf, DEBUG_DATA_LEN);
+//				dr16_get_data(&rc,debug_dma_rx_buf);
+//				HAL_UART_Receive_DMA(huart, debug_dma_rx_buf, DEBUG_DATA_LEN);
 //        }
     }
 
