@@ -34,7 +34,7 @@ gimbal_scale_t gimbal_scale = {
     .angle_keyboard = 0.00003f
 };
 gimbal_t gimbal;
-float vision_mpc_k = 0.5f;		// MPC：调这个前馈比例系数
+float vision_mpc_k = 1.0f;		// MPC：调这个前馈比例系数
 
 float body_vector[3];
 float rotate_data[3][3];
@@ -51,8 +51,8 @@ static void gimbal_init(void)
 	
 	
 	
-	pid_init(&gimbal.yaw_angle.pid, CHANG_I_RATE,30.0f, 0.2f, 0.0f, 0, 4);//尝试云台补偿算法			40
-    pid_init(&gimbal.yaw_spd.pid, NONE, 12000.0f, 50.0f, 0, 1000.0f, 25000.0f);						//  15000
+	pid_init(&gimbal.yaw_angle.pid, CHANG_I_RATE,30.0f, 0.0f, 0.0f, 0, 4);//尝试云台补偿算法			40
+    pid_init(&gimbal.yaw_spd.pid, NONE, 17000.0f, 50.0f, 0, 1000.0f, 25000.0f);						//  15000
 	gimbal.yaw_angle.pid.threshold_a = 0.015f;
 	gimbal.yaw_angle.pid.threshold_b = 0.1f; 
 	
