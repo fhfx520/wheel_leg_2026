@@ -55,6 +55,7 @@ typedef struct
 extern supercap_t supercap;
 extern power_control_t power_control;
 
+
 void power_init(void);
 void power_judge_update(void);
 float motor_power_calcu(float current, float wheel_speed_fdb);
@@ -63,6 +64,7 @@ float power_limit_speed(void);
 void power_get_data(uint8_t *data);
 void power_get_status(uint8_t *data);
 float power_control_target_velocity(void);
+float power_control_target_Vrotate(void);
 uint8_t power_check_offline(void);
 
 #endif

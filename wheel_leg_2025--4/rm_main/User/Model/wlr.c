@@ -395,6 +395,7 @@ pid_t pid_leg_sky_jump[2];
 pid_t pid_leg_length_fly[2];
 pid_t pid_roll;
 pid_t pid_L_test[2];
+pid_t pid_ascend[2];
 pid_t pid_rotate_leg[2];
 pid_t pid_energy_leg[2];
 
@@ -485,8 +486,12 @@ static void stable_velocity_control(void)
     if(wlr.sky_flag == WLR_SKY_IDLE && wlr.jump_flag == WLR_JUMP_IDLE && wlr.high_flag == 0 && !g_robot_ctx.output.chassis_speed)//磕台阶，跳跃，飞坡时不限制速度输入
     {
         data_limit(&lqr.X_ref[1],-power_control_target_velocity(),power_control_target_velocity());
-        limit_velocity(&lqr.X_ref[1],&lqr.X_fdb[3]);
+        limit_velocity(&lqr.X_ref[1],&lqr.X_fdb[3]);//摩擦圆
     }
+	if(rotate_flag)
+	{
+		data_limit(&lqr.X_ref[3],-power_control_target_Vrotate(),power_control_target_Vrotate());
+	}
     if(wlr.sky_flag == WLR_SKY_FOLDING)
 		data_limit(&lqr.X_ref[1],-3.0f,3.0f);
 	else
@@ -507,7 +512,10 @@ static void update_leg_height_and_balance(float yaw_error)
 			x3_balance_zero = x3_balance_zero_normal;
         } else if (wlr.jump_flag == WLR_JUMP_IDLE && wlr.sky_flag == WLR_SKY_IDLE) {
             wlr.high_set = ramp_calc(&height_ramp, LegLengthHigh);
-            x3_balance_zero = x3_balance_zero_normal;
+			if(wlr.direction)
+				x3_balance_zero = 0.06f;
+			else
+				x3_balance_zero = x3_balance_zero_normal;
         }
 		
 		(wlr.direction == 0) ? (Last_cnt = 200) : (Last_cnt = 400);
@@ -518,7 +526,7 @@ static void update_leg_height_and_balance(float yaw_error)
 				data_limit(&wlr.v_ref,-1.0f,1.0f);
 			}
 			else{
-				x3_balance_zero = x3_balance_zero_normal + 0.13f;	
+				x3_balance_zero = x3_balance_zero_normal + 0.18f;	
 				data_limit(&wlr.v_ref,-0.0f,0.0f);
 			}
 		}
@@ -634,11 +642,11 @@ static void handle_jump_state(void)
 		 Fy_ramp[0].out = Fy_ramp[1].out= 0;
 		 pid_leg_recover[0].i_out = 0,pid_leg_recover[1].i_out = 0;
 
-         jump_leg_length = (wlr.double_flag ? 0.33f : 0.36f);
+         jump_leg_length = (wlr.double_flag ? 0.33f : 0.33f);
 		 limit_q = (wlr.double_flag ? 0.6f : 0.5f);
 		 wlr.high_set = ramp_calc(&height_ramp, jump_leg_length);
 		 x3_balance_zero = x3_balance_zero_normal;
-         x5_balance_zero = -0.05f;
+         x5_balance_zero = 0.0f;
 		 wlr.jump_run++;
 
          if(wlr.double_flag)
@@ -1017,8 +1025,8 @@ static void map_virtual_force(uint8_t index)
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs) - 10.0f;
     }
 	else if(wlr.jump_flag == WLR_JUMP_ASCEND){//磕台阶站高
-		wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 60.0f
-                              + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
+		wlr.side[index].Fy = pid_calc(&pid_ascend[index], tlm.l_ref[index], vmc[index].L_fdb)
+                             + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
 	}
 	else if (wlr.sky_flag == WLR_SKY_FOLDING) {//准备跳
         if(wlr.double_flag)
@@ -1122,6 +1130,7 @@ void wlr_init(void)
 		pid_init(&pid_rescue[i], NONE, 2.0f, 0.5f, 0, 45, 50);						//翻倒起身腿转速pid
 		pid_init(&pid_rotate_leg[i], NONE, 1500.0f, 0.0f, 40000.0f, 0, 300);		
 		pid_init(&pid_energy_leg[i], NONE, 1000.0f, 0.0f, 40000.0f, 0, 300);
+		pid_init(&pid_ascend[i], NONE, 800, 0.0, 90000, 0, 300);			//磕台阶腿长pid
 	}
 	pid_init(&pid_roll, NONE, 400, 0, 10000, 0, 50);								//roll偏移支持力补偿
 	//卡尔曼滤波器初始化
@@ -1250,7 +1259,7 @@ void wlr_control(void)
 	{
 		data_limit(&lqr.X_diff[0], 0.0f, 0.0f);
 		data_limit(&lqr.X_diff[1], 0.0f, 0.0f);
-		data_limit(&lqr.X_diff[2], -0.5f, 0.5f);
+		data_limit(&lqr.X_diff[2], -0.3f, 0.3f);
 		data_limit(&lqr.X_diff[3], 0.0f, 0.0f);
 	}
 	//功率限制

@@ -43,19 +43,16 @@ static void gimbal_init(void)
 {
     memset(&gimbal, 0, sizeof(gimbal_t));
 	
-	pid_init(&gimbal.pit_angle.pid, NONE, 30.0f, 0.6f, 0, 0, 50);
+	pid_init(&gimbal.pit_angle.pid, NONE, 30.0f, 0.6f, 0, 0, 20);
     pid_init(&gimbal.pit_spd.pid, NONE, 1.5f, 0.01f, 0, 1.0f, 7.0f);
 	
 //	pid_init(&gimbal.yaw_angle.pid, NONE,40.0f, 0.2f, 1.0f, 0.0f, 5.0f);//尝试云台补偿算法			MPC：调yaw的pid
 //    pid_init(&gimbal.yaw_spd.pid, NONE, 10000.0f, 50.0f, 0, 2000.0f, 25000.0f);
 	
 	
-	
-	pid_init(&gimbal.yaw_angle.pid, CHANG_I_RATE,30.0f, 0.0f, 0.0f, 0, 4);//尝试云台补偿算法			40
-    pid_init(&gimbal.yaw_spd.pid, NONE, 17000.0f, 50.0f, 0, 1000.0f, 25000.0f);						//  15000
-	gimbal.yaw_angle.pid.threshold_a = 0.015f;
-	gimbal.yaw_angle.pid.threshold_b = 0.1f; 
-	
+	//视觉mpc用这个
+	pid_init(&gimbal.yaw_angle.pid, CHANG_I_RATE,30.0f, 0.0f, 0.0f, 0, 4);	
+    pid_init(&gimbal.yaw_spd.pid, NONE, 17000.0f, 50.0f, 0, 1000.0f, 25000.0f);						
 	
     pid_init(&gimbal.yaw_ecd.pid, NONE, 10.0f, 0, 0, 0.0f, 30.0f);
 	pid_init(&gimbal.yaw_spd_ecd.pid, NONE, 6000.0f, 10.00f, 0, 1000.0f, 25000.0f);

@@ -31,9 +31,9 @@
 #define SUPERCAP_CHAGER_VOLAGE    23.6f
 #define SUPERCAP_DISCHAGER_VOLAGE	13.5f //超级电容放电电压下限
 
-#define CHASSIS_YAW_OFFSET  7072		//7427
+#define CHASSIS_YAW_OFFSET  386		//7427
 #define CHASSIS_YAW_FIGHT   ((CHASSIS_YAW_OFFSET + 8192/4) % 8192)
-#define CHASSIS_ROTATE_SPEED  9.0f //rad/s --- 7.5
+#define CHASSIS_ROTATE_SPEED  10.0f //rad/s --- 7.5
 
 /*-----------------------------gimbal----------------------------*/
 

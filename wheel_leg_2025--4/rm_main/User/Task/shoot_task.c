@@ -132,18 +132,18 @@ static uint8_t series_shoot_enable(void)
         && ABS(trigger_ecd_error) <  0.5f * TRIGGER_MOTOR_ECD_SERIES  //拨盘误差控制		
     );
 }
-
+static uint16_t init_cnt = 0;
+static uint8_t recover_flag = 0;
 static void pre_fabricated_trigger_position(void)
 {
-	static uint8_t recover_flag = 0;
-	static uint16_t init_cnt = 0;
 	if(init_cnt < 1000)
 	{	
 		init_cnt++;
 		if(recover_flag == 0)
 		{ 
 #ifdef MG4005
-			shoot.trigger_ecd.ref = 34258.0f/65535.0f;			//38400	50%的连发几率			//改这里改变预制的位置，通过读编码值
+//			shoot.trigger_ecd.ref = 13418.0f/65535.0f;			//38400	50%的连发几率			//改这里改变预制的位置，通过读编码值
+			shoot.trigger_ecd.ref = 13418.0f;
 																//19970 一袋子的弹只连发4次
 
 #endif
@@ -218,6 +218,9 @@ static void shoot_control(void)
             shoot.trigger_ecd.ref = trigger_motor.total_ecd;
             shoot.trigger_spd.pid.i_out = 0;
             shoot.trigger_output = 0;
+			init_cnt = 0;
+			recover_flag = 0;
+			trigger_motor.round_cnt = 0;
             break;
         }
         case TRIGGER_MODE_STOP: { //拨盘停止模式，保持静止，有力
@@ -226,6 +229,10 @@ static void shoot_control(void)
             
             shoot.trigger_ecd.ref = trigger_motor.total_ecd;
             shoot.trigger_spd.pid.i_out = 0;
+			
+			trigger_motor.round_cnt = 0;
+			init_cnt = 0;
+			recover_flag = 0;
             break;
         }
         case TRIGGER_MODE_SINGLE: { //拨盘单发模式，连续开枪请求，只响应一次
@@ -304,8 +311,8 @@ static void shoot_init(void)
     pid_init(&shoot.trigger_spd.pid, NONE, 0.0015f, 0.00005f, 0, 0.18f, 1.8f);
     #endif
     #ifdef MG4005
-    pid_init(&shoot.trigger_ecd.pid, NONE, 0.1f, 0.0f, 0.0f, 0.0f, 12600.0f);
-    pid_init(&shoot.trigger_spd.pid, NONE, 0.2f, 0.0f, 0.12f, 100.0f, 2048.0f);
+    pid_init(&shoot.trigger_ecd.pid, NONE, 0.3f, 0.0f, 0.0f, 0.0f, 12600.0f);
+    pid_init(&shoot.trigger_spd.pid, NONE, 0.12f, 0.0001f, 0.0f, 50.0f, 2048.0f);
     #endif
     //发射器模式初始化
     shoot.trigger_mode  = TRIGGER_MODE_PROTECT;

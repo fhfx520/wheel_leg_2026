@@ -211,6 +211,20 @@ static float power_velocity_table[11][2] = {
     {90.0f ,1.8f},//9
     {100.0f,1.9f},//10
 };
+
+static float power_rotate_table[11][2] = {
+    {35.0f ,4.0f},//节能状态
+    {45.0f ,5.0f},//1
+    {50.0f ,5.0f},//2
+    {55.0f ,6.0f},//3
+    {60.0f ,6.0f},//4
+    {65.0f ,7.0f},//5
+    {70.0f ,7.0f},//6
+    {75.0f ,8.0f},//7
+    {80.0f ,8.0f},//8
+    {90.0f ,9.0f},//9
+    {100.0f,10.0f},//10
+};
 static float supercap_velocity_addmap(void)
 {
     if(supercap.volume_percent < 50.0f)
@@ -233,6 +247,22 @@ float power_control_target_velocity(void)
     }
     //根据电容电压进行微调
     return (base_velocity + supercap_velocity_addmap());
+}
+
+float power_control_target_Vrotate(void)
+{
+    power_judge_update();
+	static float base_rotate = 0.0f;
+    base_rotate = power_rotate_table[0][1];
+    //更新基础速度
+    for(uint8_t i = 0; i < 11; i++) {
+        if (power_control.judge_max_power == power_rotate_table[i][0]){
+            base_rotate = power_rotate_table[i][1];
+            break;
+		}
+    }
+    //根据电容电压进行微调
+    return (base_rotate + supercap_velocity_addmap());
 }
 
 uint8_t power_check_offline(void)
