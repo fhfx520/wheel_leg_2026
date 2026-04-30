@@ -76,11 +76,11 @@ void can_std_transmit(FDCAN_HandleTypeDef *hfdcan, uint32_t id, uint8_t *data)
 	
 	if(HAL_FDCAN_AddMessageToTxFifoQ(hfdcan, &tx_message, data) == HAL_OK){
 		if(iwdg_cnt>0)
-		iwdg_cnt--;
+			iwdg_cnt--;
 	}
 	else
 		iwdg_cnt++;
 	
 	if(iwdg_cnt < 500)
-	HAL_IWDG_Refresh(&hiwdg);
+		HAL_IWDG_Refresh(&hiwdg);
 }

@@ -490,7 +490,10 @@ static void stable_velocity_control(void)
     }
 	if(rotate_flag)
 	{
-		data_limit(&lqr.X_ref[3],-power_control_target_Vrotate(),power_control_target_Vrotate());
+		if(g_robot_ctx.output.chassis_speed)
+			data_limit(&lqr.X_ref[3],-9.0f,9.0f);
+		else
+			data_limit(&lqr.X_ref[3],-power_control_target_Vrotate(),power_control_target_Vrotate());
 	}
     if(wlr.sky_flag == WLR_SKY_FOLDING)
 		data_limit(&lqr.X_ref[1],-3.0f,3.0f);
