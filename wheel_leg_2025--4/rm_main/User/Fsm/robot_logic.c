@@ -249,7 +249,7 @@ static void kb_spin_execute(void) {
     g_robot_ctx.output.shoot  = get_kb_shoot_mode();
 
     if (check_key_trigger(KEY_R)) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
-    if (check_key_trigger(KEY_A) || check_key_trigger(KEY_D)) { fsm_change(&fsm_keyboard_sub, &state_kb_fight); return; }
+//    if (check_key_trigger(KEY_A) || check_key_trigger(KEY_D)) { fsm_change(&fsm_keyboard_sub, &state_kb_fight); return; }
 }
 static const FsmState_t state_kb_spin = { .name = "KB_SPIN", .enter = kb_spin_enter, .execute = kb_spin_execute };
 

@@ -114,7 +114,7 @@ int main(void)
   MX_TIM1_Init();
   MX_FDCAN1_Init();
   MX_TIM3_Init();
-//  MX_IWDG_Init();
+  MX_IWDG_Init();
   /* USER CODE BEGIN 2 */
 #ifndef Fdcan
   MY_FDCAN1_Init();
@@ -275,7 +275,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			can_std_transmit(&hfdcan1,0x014,imu_msg_send.cha_angle_msg.array);
 		}
 #else
-		can_std_transmit(&hfdcan1,0x015,imu_msg_send.all_angle_msg.array);
+		can_std_transmit(&hfdcan1,0x016,imu_msg_send.all_angle_msg.array);
 #endif
 //		
 		

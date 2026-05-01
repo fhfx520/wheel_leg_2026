@@ -95,7 +95,7 @@ void vision_get_data(uint8_t *data)
 	fdcan_board_comm.tx_msg.e.vision_data.vision_online = 1;
 }
 
-uint8_t vision_send_buf[40];
+uint8_t vision_send_buf[29];
 float kanan;
 void vision_output_data(void)
 {
@@ -174,7 +174,7 @@ void vision_output_data(void)
 
     memcpy(vision_send_buf, &vision_tx_msg, sizeof(vision_tx_msg));
 		
-    CDC_Transmit_HS(vision_send_buf, 30);
+    CDC_Transmit_HS(vision_send_buf, 29);
 	send_cnt++;
 }
 

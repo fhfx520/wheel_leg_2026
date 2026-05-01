@@ -96,8 +96,8 @@ float F_fdb = 0.0f;
 float yw_ddot;
 float Fwy;
 float F_wy[2];
-float ff_Fy_0 = 10.0f;
-float ff_Fy_1 = 0.0f;
+float ff_Fy_0 = 30.0f;
+float ff_Fy_1 = 20.0f;
 //位移 速度 yaw wz 左腿摆角 左腿摆角速度 右腿摆角 右腿摆角速度 机体倾角 机体倾角速度 
 //左轮转矩 右轮转矩 左腿转矩 右腿转矩
 
@@ -677,7 +677,7 @@ static void handle_jump_state(void)
 	}
 	else if(wlr.jump_flag == WLR_JUMP_RECOVER_SHORT)
 	{
-		 wlr.high_set = 0.16f;
+		 wlr.high_set = 0.2f;
 		 if (vmc[0].L_fdb - wlr.high_set < 0.0f && vmc[1].L_fdb - wlr.high_set < 0.0f) {
 			 wlr.jump_cnt++;
 			 if(wlr.jump_cnt > 50)
@@ -703,7 +703,7 @@ static void handle_sky_state(void)
     if (wlr.sky_flag == WLR_SKY_FOLDING) {
         sky_leg_length = (wlr.double_flag ? 0.16f : 0.11f);
         wlr.high_set = ramp_calc(&sky_height_ramp, sky_leg_length);
-        x3_balance_zero = x3_balance_zero_normal;
+        x3_balance_zero = x3_balance_zero_normal ;
         x5_balance_zero = 0.0f;
         pid_leg_sky_jump[0].i_out = pid_leg_sky_jump[1].i_out = \
 	    pid_leg_sky_cover[0].i_out = pid_leg_sky_cover[1].i_out = \
@@ -732,8 +732,8 @@ static void handle_sky_state(void)
 		}
 		else
 		{
-            wlr.v_ref = -1.0f;
-			x3_balance_zero = x3_balance_zero_normal;
+            wlr.v_ref = -2.5f;
+			x3_balance_zero = x3_balance_zero_normal + 0.1f;
 			x5_balance_zero = 0.0f;
 		}
         if (fabsf(0.30f - vmc[0].L_fdb) < 0.03f && fabsf(0.30f - vmc[1].L_fdb) < 0.03f) {
@@ -1020,15 +1020,15 @@ static void map_virtual_force(uint8_t index)
         wlr.side[index].Fy = pid_calc(&pid_leg_length_fly[index], tlm.l_ref[index], vmc[index].L_fdb) - 30.0f;
     } 
 	else if ((chassis.recover_flag >= 1 && chassis.rescue_inter_flag == CHASSIS_RESCUE_RECOVER) || wlr.jump_flag == WLR_JUMP_RECOVER_SHORT) {		//进入翻倒自起立 && 进入收腿阶段
-        Fy_temp = pid_calc(&pid_leg_recover[index], wlr.recover_length, vmc[index].L_fdb) - 75.0f;
+        Fy_temp = pid_calc(&pid_leg_recover[index], wlr.recover_length, vmc[index].L_fdb) - 100.0f;
         wlr.side[index].Fy = ramp_calc(&Fy_ramp[index], Fy_temp);
     } 
 	else if (rotate_flag || rotate_ramp_flag == 1) {//小陀螺和小陀螺斜坡停
         wlr.side[index].Fy = pid_calc(&pid_rotate_leg[index], tlm.l_ref[index], vmc[index].L_fdb)
-                              + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs) - 10.0f;
+                              + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs) - 20.0f;
     }
 	else if(wlr.jump_flag == WLR_JUMP_ASCEND){//磕台阶站高
-		wlr.side[index].Fy = pid_calc(&pid_ascend[index], tlm.l_ref[index], vmc[index].L_fdb)
+		wlr.side[index].Fy = pid_calc(&pid_ascend[index], tlm.l_ref[index], vmc[index].L_fdb) - 30.0f
                              + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
 	}
 	else if (wlr.sky_flag == WLR_SKY_FOLDING) {//准备跳
@@ -1036,11 +1036,12 @@ static void map_virtual_force(uint8_t index)
             wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - ff_Fy_0
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
         else
-            wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 10.0f
+            wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 30.0f
 								+ WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
     } 
 	else if (wlr.sky_flag == WLR_SKY_EXTENDING) {//蹬腿跳
-		Fy_temp = pid_calc(&pid_leg_sky_jump[index], tlm.l_ref[index], vmc[index].L_fdb);
+//		Fy_temp = pid_calc(&pid_leg_sky_jump[index], tlm.l_ref[index], vmc[index].L_fdb);
+		Fy_temp = 500.0f;
 		wlr.side[index].Fy = ramp_calc(&sky_ramp[index], Fy_temp);
     } 
 	else if (wlr.sky_flag == WLR_SKY_AIR_FOLDING) {//空中收腿
@@ -1059,7 +1060,7 @@ static void map_virtual_force(uint8_t index)
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
     } 
 	else if (wlr.energy_flag){//击打能量机关
-		wlr.side[index].Fy = pid_calc(&pid_energy_leg[index], tlm.l_ref[index], vmc[index].L_fdb);
+		wlr.side[index].Fy = pid_calc(&pid_energy_leg[index], tlm.l_ref[index], vmc[index].L_fdb) - 30.0f;
 	}
 	else if (wlr.high_flag == 1){//中腿长
         wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - ff_Fy_1
@@ -1111,10 +1112,10 @@ void wlr_init(void)
 	ramp_init(&sky_height_ramp, 0.001f, LegLengthMin, LegLengthMax);		//空中腿长斜坡
 	ramp_init(&jump_ramp, 0.008f, -3.0f, 3.0f);
 	ramp_init(&wz_ramp, 0.05f,  0,  3.0f);									//小陀螺加速K矩阵wz项斜坡
-	ramp_init(&sky_ramp[0], 60.0f, -500.0f,  500.0f);						//伸腿支持力斜坡
-	ramp_init(&sky_ramp[1], 60.0f, -500.0f,  500.0f);						//伸腿支持力斜坡
-	ramp_init(&Fy_ramp[0], 3.0f, -600.0f,  600.0f);							//收腿支持力斜坡
-	ramp_init(&Fy_ramp[1], 3.0f, -600.0f,  600.0f);							//收腿支持力斜坡
+	ramp_init(&sky_ramp[0], 15.0f, -450.0f,  450.0f);						//伸腿支持力斜坡
+	ramp_init(&sky_ramp[1], 15.0f, -450.0f,  450.0f);						//伸腿支持力斜坡
+	ramp_init(&Fy_ramp[0], 4.0f, -600.0f,  600.0f);							//收腿支持力斜坡
+	ramp_init(&Fy_ramp[1], 4.0f, -600.0f,  600.0f);							//收腿支持力斜坡
 	
     for (int i = 0; i < WLR_SIDE_COUNT; i++) 
 	{
@@ -1124,8 +1125,8 @@ void wlr_init(void)
 		vmc_init_five(&vmc[i], LegLengthParam_five);
 		//PID参数初始化      
         pid_init(&pid_leg_sky_cover[i], NONE, 1800, 1.5f, 0.0f,150,500);		    //空中收腿专用pid
-		pid_init(&pid_leg_sky_jump[i],  NONE,2200, 3.0, 0.0f, 150.0, 500);			//跳跃专用pid
-		pid_init(&pid_leg_recover[i], NONE, 1200, 3.0f, 40000.0f, 100, 500);		//起身专用pid
+		pid_init(&pid_leg_sky_jump[i],  NONE, 2500, 3.0, 0.0f, 150.0, 500);			//跳跃专用pid
+		pid_init(&pid_leg_recover[i], NONE, 1800, 1.5f, 20000.0f, 300, 500);		//起身专用pid
         pid_init(&pid_leg_length_fly[i], NONE, 800, 0.0, 20000, 0, 200);			//离地腿长/缓冲腿长pid
         pid_init(&pid_L_test[i], CHANG_I_RATE, 800, 2.0, 30000, 70, 300);			//日常腿长pid
 		pid_L_test[i].threshold_a = 0.01f;
@@ -1133,7 +1134,7 @@ void wlr_init(void)
 		pid_init(&pid_rescue[i], NONE, 2.0f, 0.5f, 0, 45, 50);						//翻倒起身腿转速pid
 		pid_init(&pid_rotate_leg[i], NONE, 1500.0f, 0.0f, 40000.0f, 0, 300);		
 		pid_init(&pid_energy_leg[i], NONE, 1000.0f, 0.0f, 40000.0f, 0, 300);
-		pid_init(&pid_ascend[i], NONE, 800, 0.0, 90000, 0, 300);			//磕台阶腿长pid
+		pid_init(&pid_ascend[i], NONE, 800, 0.0f, 120000, 70, 300);			//磕台阶腿长pid
 	}
 	pid_init(&pid_roll, NONE, 400, 0, 10000, 0, 50);								//roll偏移支持力补偿
 	//卡尔曼滤波器初始化

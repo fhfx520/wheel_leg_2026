@@ -23,6 +23,7 @@
 
 /* USER CODE BEGIN INCLUDE */
 #include "prot_vision.h"
+#include "string.h"
 /* USER CODE END INCLUDE */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -92,7 +93,7 @@
 uint8_t UserRxBufferHS[APP_RX_DATA_SIZE];
 
 /** Data to send over USB CDC are stored in this buffer   */
-uint8_t UserTxBufferHS[APP_TX_DATA_SIZE];
+uint8_t UserTxBufferHS[APP_TX_DATA_SIZE] __attribute__((aligned(32)));
 
 /* USER CODE BEGIN PRIVATE_VARIABLES */
 
@@ -129,6 +130,7 @@ static int8_t CDC_Receive_HS(uint8_t* pbuf, uint32_t *Len);
 static int8_t CDC_TransmitCplt_HS(uint8_t *pbuf, uint32_t *Len, uint8_t epnum);
 
 /* USER CODE BEGIN PRIVATE_FUNCTIONS_DECLARATION */
+static void CDC_CleanDCache(uint8_t *buf, uint32_t len);
 
 /* USER CODE END PRIVATE_FUNCTIONS_DECLARATION */
 
@@ -266,7 +268,8 @@ static int8_t CDC_Receive_HS(uint8_t* Buf, uint32_t *Len)
   /* USER CODE BEGIN 11 */
   USBD_CDC_SetRxBuffer(&hUsbDeviceHS, &Buf[0]);
   USBD_CDC_ReceivePacket(&hUsbDeviceHS);
-    vision_get_data(Buf);
+   vision_get_data(Buf);
+
 //    CDC_Transmit_HS(Buf, (uint16_t)*Len);
   return (USBD_OK);
   /* USER CODE END 11 */
@@ -284,10 +287,17 @@ uint8_t CDC_Transmit_HS(uint8_t* Buf, uint16_t Len)
   uint8_t result = USBD_OK;
   /* USER CODE BEGIN 12 */
   USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef*)hUsbDeviceHS.pClassData;
+  if ((Buf == NULL) || (Len > APP_TX_DATA_SIZE)){
+    return USBD_FAIL;
+  }
   if (hcdc->TxState != 0){
     return USBD_BUSY;
   }
-  USBD_CDC_SetTxBuffer(&hUsbDeviceHS, Buf, Len);
+  if (Buf != UserTxBufferHS){
+    memcpy(UserTxBufferHS, Buf, Len);
+  }
+  CDC_CleanDCache(UserTxBufferHS, Len);
+  USBD_CDC_SetTxBuffer(&hUsbDeviceHS, UserTxBufferHS, Len);
   result = USBD_CDC_TransmitPacket(&hUsbDeviceHS);
   /* USER CODE END 12 */
   return result;
@@ -317,6 +327,13 @@ static int8_t CDC_TransmitCplt_HS(uint8_t *Buf, uint32_t *Len, uint8_t epnum)
 }
 
 /* USER CODE BEGIN PRIVATE_FUNCTIONS_IMPLEMENTATION */
+static void CDC_CleanDCache(uint8_t *buf, uint32_t len)
+{
+  uint32_t start_addr = (uint32_t)buf & ~31U;
+  uint32_t end_addr = ((uint32_t)buf + len + 31U) & ~31U;
+
+  SCB_CleanDCache_by_Addr((uint32_t *)start_addr, (int32_t)(end_addr - start_addr));
+}
 
 /* USER CODE END PRIVATE_FUNCTIONS_IMPLEMENTATION */
 

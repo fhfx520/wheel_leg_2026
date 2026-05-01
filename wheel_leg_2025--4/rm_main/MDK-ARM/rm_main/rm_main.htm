@@ -3,7 +3,7 @@
 <title>Static Call Graph - [rm_main\rm_main.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image rm_main\rm_main.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6160001: Last Updated: Fri May  1 02:14:44 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6160001: Last Updated: Sat May  2 01:12:07 2026
 <BR><P>
 <H3>Maximum Stack Usage =        864 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -5420,8 +5420,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_task
 </UL>
 
-<P><STRONG><a name="[315]"></a>wlr_init</STRONG> (Thumb, 1316 bytes, Stack size 136 bytes, wlr.o(.text.wlr_init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 296<LI>Call Chain = wlr_init &rArr; twm_init &rArr; kalman_filter_init &rArr; malloc &rArr; internal_alloc
+<P><STRONG><a name="[315]"></a>wlr_init</STRONG> (Thumb, 1320 bytes, Stack size 152 bytes, wlr.o(.text.wlr_init))
+<BR><BR>[Stack]<UL><LI>Max Depth = 312<LI>Call Chain = wlr_init &rArr; twm_init &rArr; kalman_filter_init &rArr; malloc &rArr; internal_alloc
 </UL>
 <BR>[Calls]<UL><LI><a href="#[265]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kalman_filter_init (via Veneer)
 <LI><a href="#[322]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_init (via Veneer)
@@ -5664,7 +5664,7 @@ Local Symbols
 </UL>
 
 <P><STRONG><a name="[314]"></a>chassis_init</STRONG> (Thumb, 456 bytes, Stack size 48 bytes, chassis_task.o(.text.chassis_init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 344<LI>Call Chain = chassis_init &rArr; wlr_init &rArr; twm_init &rArr; kalman_filter_init &rArr; malloc &rArr; internal_alloc
+<BR><BR>[Stack]<UL><LI>Max Depth = 360<LI>Call Chain = chassis_init &rArr; wlr_init &rArr; twm_init &rArr; kalman_filter_init &rArr; malloc &rArr; internal_alloc
 </UL>
 <BR>[Calls]<UL><LI><a href="#[265]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kalman_filter_init (via Veneer)
 <LI><a href="#[318]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;FGT_sin_init (via Veneer)
@@ -6004,7 +6004,7 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[31d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[328]"></a>map_virtual_force</STRONG> (Thumb, 2172 bytes, Stack size 24 bytes, wlr.o(.text.map_virtual_force))
+<P><STRONG><a name="[328]"></a>map_virtual_force</STRONG> (Thumb, 2128 bytes, Stack size 24 bytes, wlr.o(.text.map_virtual_force))
 <BR><BR>[Stack]<UL><LI>Max Depth = 264<LI>Call Chain = map_virtual_force &rArr; vmc_inverse_solution_five &rArr; aMartix_Mul
 </UL>
 <BR>[Calls]<UL><LI><a href="#[329]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_both_legs_flying
@@ -6956,7 +6956,7 @@ Local Symbols
 <P><STRONG><a name="[ce]"></a>kb_spin_enter</STRONG> (Thumb, 14 bytes, Stack size 0 bytes, robot_logic.o(.text.kb_spin_enter))
 <BR>[Address Reference Count : 1]<UL><LI> robot_logic.o(.rodata.state_kb_spin)
 </UL>
-<P><STRONG><a name="[cf]"></a>kb_spin_execute</STRONG> (Thumb, 122 bytes, Stack size 16 bytes, robot_logic.o(.text.kb_spin_execute))
+<P><STRONG><a name="[cf]"></a>kb_spin_execute</STRONG> (Thumb, 80 bytes, Stack size 16 bytes, robot_logic.o(.text.kb_spin_execute))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = kb_spin_execute &rArr; fsm_change
 </UL>
 <BR>[Calls]<UL><LI><a href="#[26c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;get_kb_shoot_mode
