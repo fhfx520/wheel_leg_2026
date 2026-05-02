@@ -1,13 +1,13 @@
+/* USER CODE BEGIN Header */
 /**
   ******************************************************************************
-  * @file    custom_tof_conf.h
-  * @author  IMG SW Application Team
-  * @brief   This file contains definitions of the TOF components bus interfaces
-  *          for custom boards
+  * @file    memorymap.h
+  * @brief   This file contains all the function prototypes for
+  *          the memorymap.c file
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2023 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -16,33 +16,33 @@
   *
   ******************************************************************************
   */
-
+/* USER CODE END Header */
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __CUSTOM_TOF_CONF_H__
-#define __CUSTOM_TOF_CONF_H__
+#ifndef __MEMORYMAP_H__
+#define __MEMORYMAP_H__
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32h7xx_hal.h"
-#include "custom_bus.h"
-#include "custom_errno.h"
+#include "main.h"
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN Includes */
 
-/* USER CODE END 1 */
+/* USER CODE END Includes */
 
-#define USE_CUSTOM_RANGING_VL53L4CD (1U)
+/* USER CODE BEGIN Private defines */
 
-#define CUSTOM_VL53L4CD_I2C_INIT      BSP_I2C1_Init
-#define CUSTOM_VL53L4CD_I2C_DEINIT    BSP_I2C1_DeInit
-#define CUSTOM_VL53L4CD_I2C_WRITEREG  BSP_I2C1_Send
-#define CUSTOM_VL53L4CD_I2C_READREG   BSP_I2C1_Recv
+/* USER CODE END Private defines */
+
+/* USER CODE BEGIN Prototypes */
+
+/* USER CODE END Prototypes */
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* __CUSTOM_TOF_CONF_H__*/
+#endif /* __MEMORYMAP_H__ */
+

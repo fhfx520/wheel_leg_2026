@@ -15,7 +15,6 @@
 #include "drv_dm_motor.h"
 #include "prot_tfmini.h"
 #include "velocity_control.h"
-#include "custom_ranging_sensor.h"
 extern uint32_t rescue_cnt_L;
 extern uint32_t rescue_cnt_R;
 extern uint8_t rotate_ramp_flag;
@@ -660,7 +659,7 @@ static void handle_jump_state(void)
             jump_ramp.out = 0.0f;
 
 		 if(fabsf(lqr.X_fdb[4]) > limit_q && fabsf(lqr.X_fdb[6]) > limit_q && wlr.jump_run > 200) {
-			wlr.high_set = jump_leg_length;
+			wlr.high_set = 0.21;
 			wlr.v_ref = 0;
             jump_ramp.out = 0.0f;
 			wlr.crash_flag = 1;
@@ -673,7 +672,7 @@ static void handle_jump_state(void)
 			wlr.crash_flag = 0;
 			wlr.high_flag = 0;
 			chassis.recover_flag = 1;
-			up_ready = 101;
+//			up_ready = 40;
 //			chassis.rescue_inter_flag = 2;
 		 }
 	}
@@ -1147,7 +1146,7 @@ void wlr_init(void)
 		pid_init(&pid_rescue[i], NONE, 2.0f, 0.5f, 0, 45, 50);						//翻倒起身腿转速pid
 		pid_init(&pid_rotate_leg[i], NONE, 1500.0f, 0.0f, 40000.0f, 0, 300);		
 		pid_init(&pid_energy_leg[i], NONE, 1000.0f, 0.0f, 40000.0f, 0, 300);
-		pid_init(&pid_ascend[i], NONE, 800, 0.0f, 120000, 70, 300);			//磕台阶腿长pid
+		pid_init(&pid_ascend[i], NONE, 700, 0.0f, 80000, 70, 300);			//磕台阶腿长pid
 	}
 	pid_init(&pid_roll, NONE, 400, 0, 10000, 0, 50);								//roll偏移支持力补偿
 	//卡尔曼滤波器初始化
@@ -1228,11 +1227,11 @@ void wlr_control(void)
     lqr.dot_leg_w[1] = (lqr.X_fdb[7] - lqr.last_leg_w[1]) / 0.002f;
     lqr.last_leg_w[1] = lqr.X_fdb[7];
 
-    for (int i = 0; i < WLR_SIDE_COUNT; i++) {
-        tfmini_fn[i].measured_vector[0] = (float)(Result.ZoneResult->Distance[0] * 0.001f);
-        kalman_filter_update(&tfmini_fn[i]);
-        wlr.side[i].Front_dis_kal = tfmini_fn[i].filter_vector[0];
-    }
+//    for (int i = 0; i < WLR_SIDE_COUNT; i++) {
+//        tfmini_fn[i].measured_vector[0] = (float)(Result.ZoneResult->Distance[0] * 0.001f);
+//        kalman_filter_update(&tfmini_fn[i]);
+//        wlr.side[i].Front_dis_kal = tfmini_fn[i].filter_vector[0];
+//    }
 
     for (int i = 0; i < WLR_SIDE_COUNT; i++) {
         float L0_array[3] = {vmc[i].L_fdb, vmc[i].V_fdb.e.vy0_fdb, vmc[i].Acc_fdb.L0_ddot};

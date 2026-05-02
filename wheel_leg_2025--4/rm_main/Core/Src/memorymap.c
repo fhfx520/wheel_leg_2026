@@ -1,9 +1,9 @@
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
-  * @file
-  * @author  MCD Application Team
-  * @version V2.0.0
+  * @file    memorymap.c
+  * @brief   This file provides code for the configuration
+  *          of the MEMORYMAP instances.
   ******************************************************************************
   * @attention
   *
@@ -17,14 +17,13 @@
   ******************************************************************************
   */
 /* USER CODE END Header */
-  /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef  __RTE_COMPONENTS_H__
-#define  __RTE_COMPONENTS_H__
+/* Includes ------------------------------------------------------------------*/
+#include "memorymap.h"
 
-/* Defines ------------------------------------------------------------------*/
-/* STMicroelectronics.X-CUBE-TOF1.3.4.3 */
-#define VL53L4CD_SIMPLE_RANGING
-#define VL53L4CD
-#define BSP_RANGING_SENSOR
+/* USER CODE BEGIN 0 */
 
-#endif /* __RTE_COMPONENTS_H__ */
+/* USER CODE END 0 */
+
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
