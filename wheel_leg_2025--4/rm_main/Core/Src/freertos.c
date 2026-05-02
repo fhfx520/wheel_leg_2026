@@ -37,6 +37,7 @@
 #include "tim.h"
 #include "board_comm_task.h"
 #include "container_task.h"
+#include "app_tof.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -139,7 +140,7 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the thread(s) */
   /* definition and creation of StartTask */
-  osThreadDef(StartTask, start_task, osPriorityNormal, 0, 128);
+  osThreadDef(StartTask, start_task, osPriorityLow, 0, 256);
   StartTaskHandle = osThreadCreate(osThread(StartTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -193,7 +194,8 @@ __weak void start_task(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-      osDelay(100);
+//	  MX_TOF_Process();
+      osDelay(10);
   }
   /* USER CODE END start_task */
 }

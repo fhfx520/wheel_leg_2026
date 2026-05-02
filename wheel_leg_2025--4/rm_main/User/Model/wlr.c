@@ -15,7 +15,7 @@
 #include "drv_dm_motor.h"
 #include "prot_tfmini.h"
 #include "velocity_control.h"
-
+#include "custom_ranging_sensor.h"
 extern uint32_t rescue_cnt_L;
 extern uint32_t rescue_cnt_R;
 extern uint8_t rotate_ramp_flag;
@@ -560,6 +560,8 @@ static void update_leg_height_and_balance(float yaw_error)
 	wlr.last_high_flag = wlr.high_flag;
 }
 
+static uint16_t sky_ccc = 0;
+
 static void reset_jump_state(void)
 {
     if (wlr.jump_flag == WLR_JUMP_IDLE) {
@@ -710,18 +712,23 @@ static void handle_sky_state(void)
 	    Fy_ramp[0].out = Fy_ramp[1].out= 0;
 		sky_ramp[0].out = sky_ramp[1].out= 0;
         
-        if (abs(rc.ch2) > 500) { 
-            wlr.sky_cnt++;
-        }
-        if (wlr.sky_cnt > 50) {
-            wlr.sky_cnt = 0;
-            wlr.sky_flag = WLR_SKY_EXTENDING;
-        }
+        if(g_robot_ctx.output.top_mode == TOP_MODE_REMOTE) {
+			sky_ccc++;
+			if (abs(rc.ch2) > 500) { 
+				wlr.sky_cnt++;
+			}
+			if (wlr.sky_cnt > 50 || (((wlr.side[1].Front_dis_kal + wlr.side[1].Front_dis_kal) / 2.0f > 0.65f) \
+				&& ((wlr.side[1].Front_dis_kal + wlr.side[1].Front_dis_kal) / 2.0f < 1.25f) && sky_ccc > 1000)) {
+				wlr.sky_cnt = 0;
+				wlr.sky_flag = WLR_SKY_EXTENDING;
+			} 
+		}
 		if(wlr.double_flag)
             wlr.v_ref = ramp_calc(&jump_ramp, -2.0f);
         else
             wlr.v_ref = ramp_calc(&jump_ramp, -3.0f);
     } else if (wlr.sky_flag == WLR_SKY_EXTENDING) {
+		sky_ccc = 0;
         wlr.high_set = 0.35f;
         jump_ramp.out = 0.0f;
 		if(wlr.double_flag)
@@ -1222,7 +1229,7 @@ void wlr_control(void)
     lqr.last_leg_w[1] = lqr.X_fdb[7];
 
     for (int i = 0; i < WLR_SIDE_COUNT; i++) {
-        tfmini_fn[i].measured_vector[0] = wlr.side[i].Front_dis_fdb;
+        tfmini_fn[i].measured_vector[0] = (float)(Result.ZoneResult->Distance[0] * 0.001f);
         kalman_filter_update(&tfmini_fn[i]);
         wlr.side[i].Front_dis_kal = tfmini_fn[i].filter_vector[0];
     }

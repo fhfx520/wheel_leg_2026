@@ -25,6 +25,7 @@
 #include "prot_hipnuc.h"
 #include "board_comm.h"
 #include "container.h"
+#include "app_tof.h"
 
 ChassisState_e last_chassis_output;
 
@@ -1257,6 +1258,8 @@ void chassis_task(void const *argu)
     {   
         thread_wake_time = osKernelSysTick();
         
+		
+//		
         // 2. 将 FSM 状态直接挂载到执行参数
         chassis_execute_fsm();
         
@@ -1264,7 +1267,7 @@ void chassis_task(void const *argu)
         chassis_data_input();
         
         // 4. 恢复你本来的执行逻辑结构
-        if(g_robot_ctx.output.chassis != CHASSIS_STOP)
+        if(g_robot_ctx.output.chassis != CHASSIS_STOP || 1)
             wlr_control();
         else
             chassis_init(); // 恢复你的原有保护调用

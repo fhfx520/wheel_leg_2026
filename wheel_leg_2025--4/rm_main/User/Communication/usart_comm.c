@@ -40,9 +40,9 @@ void usart_comm_init(void)
     __HAL_UART_ENABLE_IT(&TF_LEFT_HUART, UART_IT_IDLE);
     HAL_UART_Receive_DMA(&TF_LEFT_HUART, TFminiPlusBuffArray_Front_Left, TFMINIPLUS_BUFF_SIZE);
 	
-	__HAL_UART_CLEAR_IDLEFLAG(&TF_RIGHT_HUART);
-    __HAL_UART_ENABLE_IT(&TF_RIGHT_HUART, UART_IT_IDLE);
-    HAL_UART_Receive_DMA(&TF_RIGHT_HUART, TFminiPlusBuffArray_Front_Right, TFMINIPLUS_BUFF_SIZE);
+//	__HAL_UART_CLEAR_IDLEFLAG(&TF_RIGHT_HUART);
+//    __HAL_UART_ENABLE_IT(&TF_RIGHT_HUART, UART_IT_IDLE);
+//    HAL_UART_Receive_DMA(&TF_RIGHT_HUART, TFminiPlusBuffArray_Front_Right, TFMINIPLUS_BUFF_SIZE);
 }
 
 /*
@@ -67,11 +67,12 @@ void usart_user_handler(UART_HandleTypeDef *huart)
 			vTfGetData(TFminiPlusBuffArray_Front_Left, LEFT);
 			memset(TFminiPlusBuffArray_Front_Left, 0, TFMINIPLUS_BUFF_SIZE);
 			HAL_UART_Receive_DMA(huart, (uint8_t *)TFminiPlusBuffArray_Front_Left, TFMINIPLUS_BUFF_SIZE); 
-		} else if (huart == &TF_RIGHT_HUART) { 
-			vTfGetData(TFminiPlusBuffArray_Front_Right, RIGHT);
-			memset(TFminiPlusBuffArray_Front_Right, 0, TFMINIPLUS_BUFF_SIZE);
-			HAL_UART_Receive_DMA(huart, (uint8_t *)TFminiPlusBuffArray_Front_Right, TFMINIPLUS_BUFF_SIZE); 
-		}
+		} 
+//		else if (huart == &TF_RIGHT_HUART) { 
+//			vTfGetData(TFminiPlusBuffArray_Front_Right, RIGHT);
+//			memset(TFminiPlusBuffArray_Front_Right, 0, TFMINIPLUS_BUFF_SIZE);
+//			HAL_UART_Receive_DMA(huart, (uint8_t *)TFminiPlusBuffArray_Front_Right, TFMINIPLUS_BUFF_SIZE); 
+//		}
   
     }
 }

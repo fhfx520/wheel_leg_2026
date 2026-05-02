@@ -8,7 +8,7 @@
 #define	DBUS_HUART	 huart1
 #define JUDGE_HUART  huart2
 #define TF_LEFT_HUART huart9
-#define TF_RIGHT_HUART huart4
+//#define TF_RIGHT_HUART huart4
 
 #define DEBUG_HUART	 huart6
 

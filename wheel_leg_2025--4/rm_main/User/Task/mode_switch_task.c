@@ -9,7 +9,7 @@
 #include "board_comm.h"
 #include "container.h"
 #include "prot_imu.h"
-
+#include "app_tof.h"
 uint8_t lock_flag = 0;
 uint8_t reset_flag = 0;
 ctrl_mode_e ctrl_mode;
@@ -199,6 +199,7 @@ void mode_switch_task(void const *argu)
     for (;;) {
 		vtm_remote_data_hanler();
 		remote_reset();
+//		MX_TOF_Process();
         if (!lock_flag) {
             if (game_status.game_progress == 4) {//比赛中直接解锁
                 lock_flag = 1;
