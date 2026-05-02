@@ -213,7 +213,7 @@ void mode_switch_task(void const *argu)
 		if(status.dji_motor)
 		{
 			lock_flag = 0;
-			ctrl_mode = PROTECT_MODE;
+			g_robot_ctx.output.chassis = CHASSIS_STOP;
 		}
 		//决定键鼠数据来源
 		decide_to_use_Witch_KbData();

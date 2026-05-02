@@ -311,8 +311,8 @@ static void shoot_init(void)
     pid_init(&shoot.trigger_spd.pid, NONE, 0.0015f, 0.00005f, 0, 0.18f, 1.8f);
     #endif
     #ifdef MG4005
-    pid_init(&shoot.trigger_ecd.pid, NONE, 0.3f, 0.0f, 0.0f, 0.0f, 12600.0f);
-    pid_init(&shoot.trigger_spd.pid, NONE, 0.12f, 0.0001f, 0.0f, 50.0f, 2048.0f);
+    pid_init(&shoot.trigger_ecd.pid, NONE, 0.3f, 0.0f, 0.0f, 0.0f, 10000.0f);
+    pid_init(&shoot.trigger_spd.pid, NONE, 0.12f, 0.0001f, 0.0f, 500.0f, 2048.0f);
     #endif
     //发射器模式初始化
     shoot.trigger_mode  = TRIGGER_MODE_PROTECT;

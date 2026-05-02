@@ -665,7 +665,7 @@ static void handle_jump_state(void)
 //			wlr.high_set = 0.16f;
 //			 wlr.jump_flag = WLR_JUMP_RECOVER_SHORT;
 		 }
-		 if((fabs(lqr.X_fdb[4]) > 1.2f && fabs(lqr.X_fdb[6]) > 1.2f && wlr.crash_flag))
+		 if((fabs(lqr.X_fdb[4]) > 1.0f && fabs(lqr.X_fdb[6]) > 1.0f && wlr.crash_flag))
 		 {
 			wlr.jump_flag = WLR_JUMP_RECOVER_SHORT;
 			wlr.crash_flag = 0;
@@ -677,8 +677,8 @@ static void handle_jump_state(void)
 	}
 	else if(wlr.jump_flag == WLR_JUMP_RECOVER_SHORT)
 	{
-		 wlr.high_set = 0.2f;
-		 if (vmc[0].L_fdb - wlr.high_set < 0.0f && vmc[1].L_fdb - wlr.high_set < 0.0f) {
+		 wlr.high_set = 0.16f;
+		 if (fabsf(vmc[0].L_fdb - wlr.high_set) < 0.05f && fabsf(vmc[1].L_fdb - wlr.high_set) < 0.05f) {
 			 wlr.jump_cnt++;
 			 if(wlr.jump_cnt > 50)
 			 {
@@ -1019,9 +1019,15 @@ static void map_virtual_force(uint8_t index)
         && wlr.sky_flag == WLR_SKY_IDLE && !chassis.recover_flag) {	// && 未进入翻倒自起立 && 跳跃未完成
         wlr.side[index].Fy = pid_calc(&pid_leg_length_fly[index], tlm.l_ref[index], vmc[index].L_fdb) - 30.0f;
     } 
-	else if ((chassis.recover_flag >= 1 && chassis.rescue_inter_flag == CHASSIS_RESCUE_RECOVER) || wlr.jump_flag == WLR_JUMP_RECOVER_SHORT) {		//进入翻倒自起立 && 进入收腿阶段
-        Fy_temp = pid_calc(&pid_leg_recover[index], wlr.recover_length, vmc[index].L_fdb) - 100.0f;
-        wlr.side[index].Fy = ramp_calc(&Fy_ramp[index], Fy_temp);
+	else if (chassis.recover_flag >= 1 && chassis.rescue_inter_flag == CHASSIS_RESCUE_RECOVER) {		//进入翻倒自起立 && 进入收腿阶段
+		if(wlr.jump_flag == WLR_JUMP_RECOVER_SHORT) {
+			Fy_temp = pid_calc(&pid_leg_recover[index], wlr.recover_length, vmc[index].L_fdb) - 75.0f;
+			wlr.side[index].Fy = ramp_calc(&Fy_ramp[index], Fy_temp);
+		}
+		else {
+			Fy_temp = pid_calc(&pid_leg_recover[index], wlr.recover_length, vmc[index].L_fdb) - 100.0f;
+			wlr.side[index].Fy = ramp_calc(&Fy_ramp[index], Fy_temp);
+		}
     } 
 	else if (rotate_flag || rotate_ramp_flag == 1) {//小陀螺和小陀螺斜坡停
         wlr.side[index].Fy = pid_calc(&pid_rotate_leg[index], tlm.l_ref[index], vmc[index].L_fdb)

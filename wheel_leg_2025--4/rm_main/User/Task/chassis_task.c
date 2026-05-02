@@ -1175,9 +1175,9 @@ static void chassis_data_output(void)
             if(chassis.recover_flag != 1) {
 				if(wlr.joint_all_online){
 					if(wlr.crash_flag) {
-						dm_motor_set_control_para(&joint_motor[0], 0, -5, 0, 5, 0);
+						dm_motor_set_control_para(&joint_motor[0], 0, -4, 0, 5, 0);
 						dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);	
-						dm_motor_set_control_para(&joint_motor[2], 0, 5, 0, 5, 0);
+						dm_motor_set_control_para(&joint_motor[2], 0, 4, 0, 5, 0);
 						dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
 					} else {
 						dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, wlr.side[0].T1);
@@ -1264,7 +1264,7 @@ void chassis_task(void const *argu)
         chassis_data_input();
         
         // 4. 恢复你本来的执行逻辑结构
-        if(g_robot_ctx.output.chassis != CHASSIS_STOP || 1)
+        if(g_robot_ctx.output.chassis != CHASSIS_STOP)
             wlr_control();
         else
             chassis_init(); // 恢复你的原有保护调用
