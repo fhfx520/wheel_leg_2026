@@ -117,7 +117,7 @@ static void MX_VL53L4CD_SimpleRanging_Process(void)
 
   status = CUSTOM_RANGING_SENSOR_Start(CUSTOM_VL53L4CD, RS_MODE_BLOCKING_CONTINUOUS);
 	
-	status = CUSTOM_RANGING_SENSOR_GetDistance(CUSTOM_VL53L4CD, &Result);
+  status = CUSTOM_RANGING_SENSOR_GetDistance(CUSTOM_VL53L4CD, &Result);
 
 //  while (1)
 //  {
