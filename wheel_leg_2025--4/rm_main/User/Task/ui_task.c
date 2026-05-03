@@ -16,6 +16,7 @@
 #include "chassis_task.h"
 #include "board_comm.h"
 #include "container.h"
+#include "shoot_task.h"
 
 us_time_t ui_time;
 int32_t lowhz_cnt;
@@ -59,11 +60,16 @@ void ui_init(void)
 	ui_init_g_2();
 	ui_init_g_3();
 	ui_init_g_4();
-	ui_init_g_5();
 }
 
 void ui_update(void)
 {	
+	static uint8_t one_second = 0;
+	
+	one_second++;
+	if(one_second > 200)
+		one_second = 0;
+	//ui_group1 update begin
 	ui_g_1_left_big_leg->end_x = ui_g_1_left_big_leg->start_x - ui_sign_function() * (vmc[((!wlr.direction) ? 1 : 0)].mp_fdb.xd * 300);
 	ui_g_1_left_big_leg->end_y = ui_g_1_left_big_leg->start_y - (vmc[((!wlr.direction) ? 1 : 0)].mp_fdb.yd * 300);
 	ui_g_1_left_small_leg->start_x = ui_g_1_left_big_leg->end_x;
@@ -80,10 +86,30 @@ void ui_update(void)
 	
 	ui_g_1_supercap_capcity->end_x = ui_g_1_supercap_capcity->start_x + (570.0f) * (supercap.volume_percent / 100.0f);
 	ui_g_1_supcap_voltage->number = (int)(supercap.volage * 1000.0f) / 100 * 100;
+	if(supercap.volage < 20.0f)
+	{
+		ui_g_1_supercap_capcity->color = 4;
+		ui_g_1_supcap_voltage->color = 5;
+	}
+
+	if(wlr.high_flag == 1)
+		ui_g_1_current_high_flag->start_y = 735;
+	else if(wlr.jump_flag == WLR_JUMP_ASCEND)
+		ui_g_1_current_high_flag->start_y = 685;
+	else if(wlr.high_flag == 0)
+		ui_g_1_current_high_flag->start_y = 785;
+
+	if(one_second <= 100)
+		ui_g_1_current_high_flag->width = 10;
+	else		
+		ui_g_1_current_high_flag->width = 0;
+
 	ui_update_g_1();
+	//ui_group1 update end
 	
-	ui_g_2_target_velocity->number = (int)(lqr.X_ref[1] * 1000.0f) / 100 * 100;
-	ui_g_2_current_velocity->number = (int)(fabsf(wlr.v_fdb) * 1000.0f) / 100 * 100;
+	//ui_group2 update begin
+	ui_g_2_target_trigger->number = (int)((shoot.trigger_ecd.fdb / 65535.0f * 360.0f) * 1000.0f) / 100 * 100;
+	ui_g_2_current_trigger->number = (int)((shoot.trigger_ecd.ref / 65535.0f * 360.0f) * 1000.0f) / 100 * 100;
 	
 	float yaw_err;
     yaw_err = circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, (float)yaw_motor.ecd / 8192 * 2 * PI, 2 * PI);
@@ -105,46 +131,24 @@ void ui_update(void)
 	
 	ui_g_2_vision_order_id->number = ID_judge;
 	ui_g_2_vision_trice_id->number = ui_get_vision_data_container.vision_trace_id;
+	
 	ui_g_2_current_shoot_mode->start_y = (wlr.energy_flag ? 638 : 673);
+	if(one_second <= 100)
+		ui_g_2_current_shoot_mode->width = 10;
+	else		
+		ui_g_2_current_shoot_mode->width = 0;
 	
 	ui_g_2_vision_frame->color = (ui_get_vision_data_container.vision_trace_id ? (ui_get_vision_data_container.vision_enanle ? 4 : 1) : 8);
 	
 	ui_update_g_2();
+	//ui_group2 update end
 	
-	if(last_status_high != wlr.high_flag)
-		lowhz_cnt += 20;
-	if(last_status_jump != wlr.jump_flag && wlr.jump_flag == WLR_JUMP_ASCEND)
-		lowhz_cnt += 20;
-	if(last_status_sky != wlr.sky_flag && wlr.sky_flag == WLR_SKY_FOLDING)
-		lowhz_cnt += 20;
-	if(last_status_sky != wlr.sky_flag && wlr.sky_flag >= WLR_SKY_EXTENDING)
-		lowhz_cnt += 20;
+	//ui_group4 update begin
 	if(wlr.side[0].fly_flag == 1 && wlr.side[1].fly_flag == 1)
 		fly_cnt += 20;
-	if(lowhz_cnt > 60)
-		lowhz_cnt = 60;
 	if(fly_cnt > 20)
 		fly_cnt = 20;
-	last_status_high = wlr.high_flag;
-	last_status_jump = wlr.jump_flag;
-	last_status_sky = wlr.sky_flag;
 	
-	if(lowhz_cnt > 0){
-		lowhz_cnt--;
-		if(wlr.jump_flag == WLR_JUMP_ASCEND)
-			strcpy(ui_g_3_high_flag->string, "High ");
-		else if(wlr.sky_flag == WLR_SKY_FOLDING)
-			strcpy(ui_g_3_high_flag->string, "Short");
-		else if(wlr.sky_flag > WLR_SKY_FOLDING)
-			strcpy(ui_g_3_high_flag->string, "Fly  ");
-		else if (wlr.high_flag == 0)
-			strcpy(ui_g_3_high_flag->string, "Low  ");
-		else if (wlr.high_flag == 1)
-			strcpy(ui_g_3_high_flag->string, "Mid  ");
-		else
-			strcpy(ui_g_3_high_flag->string, "Man  ");
-		ui_update_g_3();
-	}
 	if(fly_cnt > 0)
 	{
 		fly_cnt--;
@@ -156,6 +160,7 @@ void ui_update(void)
 		strcpy(ui_g_4_fly_flag->string, "        ");
 		ui_update_g_4();
 	}
+	//ui_group4 update end
 	
 	
 }

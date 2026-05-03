@@ -25,9 +25,6 @@ void ui_remove_g_3();
 void ui_init_g_4();
 void ui_update_g_4();
 void ui_remove_g_4();
-void ui_init_g_5();
-void ui_update_g_5();
-void ui_remove_g_5();
 
 #ifdef __cplusplus
 }
