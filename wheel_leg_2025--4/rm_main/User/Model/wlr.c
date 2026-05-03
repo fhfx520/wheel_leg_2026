@@ -706,7 +706,7 @@ static void handle_sky_state(void)
         sky_leg_length = (wlr.double_flag ? 0.16f : 0.11f);
         wlr.high_set = ramp_calc(&sky_height_ramp, sky_leg_length);
         x3_balance_zero = x3_balance_zero_normal- 0.03f;
-        x5_balance_zero = -0.1f;
+        x5_balance_zero = -0.05f;
         pid_leg_sky_jump[0].i_out = pid_leg_sky_jump[1].i_out = \
 	    pid_leg_sky_cover[0].i_out = pid_leg_sky_cover[1].i_out = \
 	    Fy_ramp[0].out = Fy_ramp[1].out= 0;
@@ -741,7 +741,7 @@ static void handle_sky_state(void)
 		{
             wlr.v_ref = -2.5f;
 			x3_balance_zero = x3_balance_zero_normal;
-			x5_balance_zero = -0.1f;
+			x5_balance_zero = -0.05f;
 		}
         if (fabsf(0.30f - vmc[0].L_fdb) < 0.03f && fabsf(0.30f - vmc[1].L_fdb) < 0.03f) {
             wlr.sky_cnt++;
