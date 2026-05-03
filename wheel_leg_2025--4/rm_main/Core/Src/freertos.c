@@ -194,7 +194,7 @@ __weak void start_task(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-//	  MX_TOF_Process();
+	  MX_TOF_Process();
       osDelay(10);
   }
   /* USER CODE END start_task */
