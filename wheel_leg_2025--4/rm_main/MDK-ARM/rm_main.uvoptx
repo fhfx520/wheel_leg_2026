@@ -542,6 +542,11 @@
           <WinNumber>2</WinNumber>
           <ItemText>hfdcan2</ItemText>
         </Ww>
+        <Ww>
+          <count>22</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>\\rm_main\../User/Task/shoot_task.c\shoot.trigger_spd</ItemText>
+        </Ww>
       </WatchWindow2>
       <MemoryWindow1>
         <Mm>
@@ -2145,7 +2150,7 @@
 
   <Group>
     <GroupName>Application/User/TOF/Target</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -2165,7 +2170,7 @@
 
   <Group>
     <GroupName>Application/User/TOF/App</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
