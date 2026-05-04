@@ -67,18 +67,16 @@ void log_scope_data_pkg(void)
 //			log_scope_get_data(lqr.X_diff[9]);
             break;
         } case 2: {//拨盘pid调试
-//            log_scope_get_data(shoot.trigger_spd.ref);
-//            log_scope_get_data(shoot.trigger_spd.fdb);
-//            log_scope_get_data(shoot.trigger_ecd.ref);
-//            log_scope_get_data(shoot.trigger_ecd.fdb);
+            log_scope_get_data(shoot.trigger_spd.ref);
+           log_scope_get_data(shoot.trigger_spd.fdb);
+            log_scope_get_data(shoot.trigger_ecd.ref);
+            log_scope_get_data(shoot.trigger_ecd.fdb);
+			log_scope_get_data(shoot.trigger_output);
+			log_scope_get_data(shoot_data.initial_speed);
 //			
 //			log_scope_get_data(back_flag);
 //			log_scope_get_data(trigger_motor.rx_current);
 //			log_scope_get_data(trigger_motor.speed_rpm);
-			
-			
-			log_scope_get_data(wlr.side[0].Front_dis_kal);
-			log_scope_get_data(wlr.sky_flag);
 			
 //          log_scope_get_data(shoot.trigger_output);
 //          log_scope_get_data(trigger_motor.tx_current);
