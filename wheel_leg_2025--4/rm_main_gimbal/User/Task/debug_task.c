@@ -31,21 +31,21 @@ void log_scope_data_pkg(void)
 //            log_scope_get_data(gimbal.pit_spd.ref);
 //            log_scope_get_data(gimbal.pit_spd.fdb);
 //   
-//            log_scope_get_data(gimbal.yaw_angle.ref);
-//            log_scope_get_data(gimbal.yaw_angle.fdb);            
-//			
+            log_scope_get_data(gimbal.yaw_angle.ref);
+            log_scope_get_data(gimbal.yaw_angle.fdb);            
+			
 //			log_scope_get_data(vision.rx[0].data.yaw_vel);
-//			
-//			log_scope_get_data(gimbal.yaw_spd.ref);
-//            log_scope_get_data(gimbal.yaw_spd.fdb);
+			
+			log_scope_get_data(gimbal.yaw_spd.ref);
+            log_scope_get_data(gimbal.yaw_spd.fdb);
 			
 			
 			
-            log_scope_get_data(gimbal.pit_angle.ref);
-            log_scope_get_data(gimbal.pit_angle.fdb);            
+//            log_scope_get_data(gimbal.pit_angle.ref);
+//            log_scope_get_data(gimbal.pit_angle.fdb);            
 
-			log_scope_get_data(gimbal.pit_spd.ref);
-            log_scope_get_data(gimbal.pit_spd.fdb);
+//			log_scope_get_data(gimbal.pit_spd.ref);
+//            log_scope_get_data(gimbal.pit_spd.fdb);
 
 //			log_scope_get_data(gimbal.pit_angle.ref);
 //            log_scope_get_data(gimbal.pit_angle.fdb);

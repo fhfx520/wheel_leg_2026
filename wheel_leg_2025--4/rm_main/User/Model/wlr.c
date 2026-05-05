@@ -69,6 +69,7 @@ const float LegLengthFly 	 = 0.20f; //正常腿长腾空
 const float LegLengthHigh2 	 = 0.34f; //超长腿
 const float LegLengthHigh 	 = 0.21f; //长腿 0.23
 const float LegLengthRotate  = 0.15f; //正常
+const float LegLengthRotateHigh  = 0.23f; //正常
 const float LegLengthNormal  = 0.16f; //正常
 
 const float gas_spring_F = 310.0f;	//气弹簧行程为0时力	N
@@ -717,8 +718,8 @@ static void handle_sky_state(void)
 			if (abs(rc.ch2) > 500) { 
 				wlr.sky_cnt++;
 			}
-			if (wlr.sky_cnt > 50 || (((wlr.side[1].Front_dis_kal + wlr.side[1].Front_dis_kal) / 2.0f > 0.25f) \
-				&& ((wlr.side[1].Front_dis_kal + wlr.side[1].Front_dis_kal) / 2.0f < 1.15f) && sky_ccc > 1000)) {
+			if (wlr.sky_cnt > 50 || (((wlr.side[1].Front_dis_kal + wlr.side[1].Front_dis_kal) / 2.0f > 1.1f) \
+				&& sky_ccc > 1000)) {
 				wlr.sky_cnt = 0;
 				wlr.sky_flag = WLR_SKY_EXTENDING;
 			} 
@@ -815,6 +816,10 @@ static void update_rotate_state(void)
 {
     if (rotate_flag) {
         wlr.high_set = LegLengthRotate;
+		if(g_robot_ctx.input.kb.bit.C)
+			wlr.high_set = LegLengthRotateHigh;
+		else
+			wlr.high_set = LegLengthRotate;
 		pid_L_test[0].i_out = pid_L_test[1].i_out = 0;
        	 if (g_robot_ctx.output.chassis  == CHASSIS_LOW_SPIN) {
 			x5_balance_zero = -0.02f;

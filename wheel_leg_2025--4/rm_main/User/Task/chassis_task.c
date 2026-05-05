@@ -323,8 +323,8 @@ static void chassis_execute_fsm(void)
 				wlr.sky_flag = WLR_SKY_FOLDING; 
 			if(wlr.sky_flag == WLR_SKY_FOLDING)
 				sky_ccc++; 
-			if(wlr.sky_flag == WLR_SKY_FOLDING && ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f > 0.25f) \
-				&& ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f < 1.15f) && sky_ccc > 1000)
+			if(wlr.sky_flag == WLR_SKY_FOLDING && ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f > 1.0f) \
+				&& ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f < 1.25f) && sky_ccc > 1000)
 				g_robot_ctx.sky_start_flag = 1;
             break;
 		}

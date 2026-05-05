@@ -375,8 +375,8 @@ static void remote_execute(void) {
 	
 	if (rc_fsm_check(RC_RIGHT_LU))
          g_robot_ctx.output.shoot    = SHOOT_PROTECT;
-//	if (rc_fsm_check(RC_LEFT_LD))
-//		g_robot_ctx.output.chassis  = CHASSIS_STOP;
+	if (rc_fsm_check(RC_LEFT_LD) || (rc_fsm_check(RC_LEFT_LD) && rc_fsm_check(RC_RIGHT_RD)))
+		g_robot_ctx.output.chassis  = CHASSIS_STOP;
 }
 const FsmState_t state_remote = { .name = "REMOTE", .enter = remote_enter, .execute = remote_execute };
 

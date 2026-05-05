@@ -24,7 +24,7 @@
 #include "board_comm.h"
 
 #define row_debug 2 * 10
-uint8_t debug_wave = 2;
+uint8_t debug_wave = 19;
 float test_hex = 1;
 extern FGT_sin_t FGT_sin_chassis;
 extern  uint16_t quadrant_cnt;
@@ -260,6 +260,10 @@ void log_scope_data_pkg(void)
 			log_scope_get_data(lqr.X_fdb[3]);
 			log_scope_get_data(lqr.X_ref[3]);
 			log_scope_get_data(chassis.input.vx);
+			break;
+		}
+		case 19:{
+			log_scope_get_data(wlr.side[0].Front_dis_kal);
 			break;
 		}
         default:break;
