@@ -1232,11 +1232,12 @@ void wlr_control(void)
     lqr.X_fdb[7] = lqr.X_fdb[9] + vmc[1].V_fdb.e.vw0_fdb;
     lqr.dot_leg_w[1] = (lqr.X_fdb[7] - lqr.last_leg_w[1]) / 0.002f;
     lqr.last_leg_w[1] = lqr.X_fdb[7];
-
+	
     for (int i = 0; i < WLR_SIDE_COUNT; i++) {
-        tfmini_fn[i].measured_vector[0] = (float)(Result.ZoneResult->Distance[0] * 0.001f);
-        kalman_filter_update(&tfmini_fn[i]);
-        wlr.side[i].Front_dis_kal = tfmini_fn[i].filter_vector[0];
+		wlr.side[i].Front_dis_fdb = (float)(Result.ZoneResult->Distance[0] * 0.001f);
+        // tfmini_fn[i].measured_vector[0] = (float)(Result.ZoneResult->Distance[0] * 0.001f);
+        // kalman_filter_update(&tfmini_fn[i]);
+        // wlr.side[i].Front_dis_kal = tfmini_fn[i].filter_vector[0];
     }
 
     for (int i = 0; i < WLR_SIDE_COUNT; i++) {

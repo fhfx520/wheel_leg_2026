@@ -151,6 +151,17 @@ static uint8_t check_joint_offstall(uint8_t stall_leg_num)
 	else
 		return 0;
 }
+//工具函数 用来检测激光下降沿产生跳跃
+static uint8_t check_tof_jump(float dis_up, float dis_down)
+{
+	static float last_dis[2] = {0};
+	last_dis[0] = wlr.side[0].Front_dis_fdb;
+	last_dis[1] = wlr.side[1].Front_dis_fdb;
+	if((last_dis[0] + last_dis[1]) > 2 * dis_up && (wlr.side[0].Front_dis_fdb + wlr.side[1].Front_dis_fdb) < 2 * dis_down)
+		return 1;
+	else
+		return 0;
+}
 
 // 恢复你本来的代码
 static void chassis_ramp(void)
@@ -323,8 +334,9 @@ static void chassis_execute_fsm(void)
 				wlr.sky_flag = WLR_SKY_FOLDING; 
 			if(wlr.sky_flag == WLR_SKY_FOLDING)
 				sky_ccc++; 
-			if(wlr.sky_flag == WLR_SKY_FOLDING && ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f > 1.0f) \
-				&& ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f < 1.25f) && sky_ccc > 1000)
+			// if(wlr.sky_flag == WLR_SKY_FOLDING && ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f > 1.0f) \
+			// 	&& ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f < 1.25f) && sky_ccc > 1000)
+			if(wlr.sky_flag == WLR_SKY_FOLDING && check_tof_jump(0.8f,0.8f) && sky_ccc > 1000)
 				g_robot_ctx.sky_start_flag = 1;
             break;
 		}
