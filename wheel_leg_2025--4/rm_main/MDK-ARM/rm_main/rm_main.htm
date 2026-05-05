@@ -3,7 +3,7 @@
 <title>Static Call Graph - [rm_main\rm_main.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image rm_main\rm_main.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6160001: Last Updated: Wed May  6 01:25:03 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6160001: Last Updated: Wed May  6 02:11:01 2026
 <BR><P>
 <H3>Maximum Stack Usage =        856 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -3495,7 +3495,7 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> vl53l4cd.o(.data.VL53L4CD_RANGING_SENSOR_Driver)
 </UL>
 <P><STRONG><a name="[1d]"></a>VL53L4CD_GetDistance</STRONG> (Thumb, 156 bytes, Stack size 24 bytes, vl53l4cd.o(.text.VL53L4CD_GetDistance))
-<BR><BR>[Stack]<UL><LI>Max Depth = 176<LI>Call Chain = VL53L4CD_GetDistance &rArr; vl53l4cd_get_result &rArr; VL53L4CD_GetResult &rArr; VL53L4CD_RdWord &rArr; _I2CWrite
+<BR><BR>[Stack]<UL><LI>Max Depth = 168<LI>Call Chain = VL53L4CD_GetDistance &rArr; vl53l4cd_get_result &rArr; VL53L4CD_GetResult &rArr; VL53L4CD_RdWord &rArr; _I2CWrite
 </UL>
 <BR>[Calls]<UL><LI><a href="#[260]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vl53l4cd_poll_for_measurement
 <LI><a href="#[261]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vl53l4cd_get_result
@@ -3508,12 +3508,11 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> vl53l4cd.o(.data.VL53L4CD_RANGING_SENSOR_Driver)
 </UL>
-<P><STRONG><a name="[262]"></a>VL53L4CD_GetResult</STRONG> (Thumb, 292 bytes, Stack size 56 bytes, vl53l4cd_api.o(.text.VL53L4CD_GetResult))
-<BR><BR>[Stack]<UL><LI>Max Depth = 112<LI>Call Chain = VL53L4CD_GetResult &rArr; VL53L4CD_RdWord &rArr; _I2CWrite
+<P><STRONG><a name="[262]"></a>VL53L4CD_GetResult</STRONG> (Thumb, 94 bytes, Stack size 48 bytes, vl53l4cd_api.o(.text.VL53L4CD_GetResult))
+<BR><BR>[Stack]<UL><LI>Max Depth = 104<LI>Call Chain = VL53L4CD_GetResult &rArr; VL53L4CD_RdWord &rArr; _I2CWrite
 </UL>
 <BR>[Calls]<UL><LI><a href="#[263]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy
 <LI><a href="#[264]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;VL53L4CD_RdWord
-<LI><a href="#[25b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;VL53L4CD_RdByte
 </UL>
 <BR>[Called By]<UL><LI><a href="#[261]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vl53l4cd_get_result
 </UL>
@@ -3532,7 +3531,6 @@ Global Symbols
 <LI><a href="#[268]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_I2CRead
 </UL>
 <BR>[Called By]<UL><LI><a href="#[265]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;VL53L4CD_SensorInit
-<LI><a href="#[262]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;VL53L4CD_GetResult
 <LI><a href="#[25a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;VL53L4CD_CheckForDataReady
 </UL>
 
@@ -7719,7 +7717,7 @@ Local Symbols
 </UL>
 
 <P><STRONG><a name="[261]"></a>vl53l4cd_get_result</STRONG> (Thumb, 158 bytes, Stack size 40 bytes, vl53l4cd.o(.text.vl53l4cd_get_result))
-<BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = vl53l4cd_get_result &rArr; VL53L4CD_GetResult &rArr; VL53L4CD_RdWord &rArr; _I2CWrite
+<BR><BR>[Stack]<UL><LI>Max Depth = 144<LI>Call Chain = vl53l4cd_get_result &rArr; VL53L4CD_GetResult &rArr; VL53L4CD_RdWord &rArr; _I2CWrite
 </UL>
 <BR>[Calls]<UL><LI><a href="#[262]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;VL53L4CD_GetResult
 </UL>

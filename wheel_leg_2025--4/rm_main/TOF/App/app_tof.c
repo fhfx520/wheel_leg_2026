@@ -33,7 +33,7 @@ extern "C" {
 /* Private typedef -----------------------------------------------------------*/
 
 /* Private define ------------------------------------------------------------*/
-#define TIMING_BUDGET (30U) /* 10 ms < TimingBudget < 200 ms */
+#define TIMING_BUDGET (10U) /* 10 ms < TimingBudget < 200 ms */
 #define POLLING_PERIOD (250U) /* refresh rate for polling mode (ms, shall be consistent with TimingBudget value) */
 
 /* Private variables ---------------------------------------------------------*/
@@ -109,8 +109,8 @@ static void MX_VL53L4CD_SimpleRanging_Process(void)
   Profile.RangingProfile = VL53L4CD_PROFILE_CONTINUOUS;
   Profile.TimingBudget = TIMING_BUDGET;
   Profile.Frequency = 0; /* Induces intermeasurement period, NOT USED for normal ranging */
-  Profile.EnableAmbient = 1; /* Enable: 1, Disable: 0 */
-  Profile.EnableSignal = 1; /* Enable: 1, Disable: 0 */
+  Profile.EnableAmbient = 0; /* Enable: 1, Disable: 0 */
+  Profile.EnableSignal = 0; /* Enable: 1, Disable: 0 */
 
   /* set the profile if different from default one */
   CUSTOM_RANGING_SENSOR_ConfigProfile(CUSTOM_VL53L4CD, &Profile);
