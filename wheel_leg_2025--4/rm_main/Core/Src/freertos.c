@@ -163,7 +163,7 @@ void MX_FREERTOS_Init(void) {
   osThreadDef(ShootTask, shoot_task, osPriorityNormal, 0, 128);
   ShootTaskHandle = osThreadCreate(osThread(ShootTask), NULL);
   
-  osThreadDef(DebugTask, debug_task, osPriorityLow, 0, 128);
+  osThreadDef(DebugTask, debug_task, osPriorityLow, 0, 512);
   DebugTaskHandle = osThreadCreate(osThread(DebugTask), NULL);
 	
   osThreadDef(UITask, ui_task, osPriorityLow, 0, 512);

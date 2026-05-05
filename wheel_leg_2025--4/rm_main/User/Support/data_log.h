@@ -31,7 +31,7 @@ extern "C"
  */
 #define DATA_LOG_MODE   2U
 #define DATA_MAX_NUM    16                    //VOFA+示波器最大通道数
-#define DATA_LOG_LEN    128                   //使用DMA_printf时字符串最大长度
+#define DATA_LOG_LEN    256                   //使用DMA_printf时字符串最大长度
 
 /* Log格式使能 */
 #define LOG_TIMESTAMP_EN     1

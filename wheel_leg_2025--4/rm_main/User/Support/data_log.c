@@ -38,18 +38,26 @@ void log_init(UART_HandleTypeDef *huart)
 
 void log_printf(const char *format, ...)
 {
-    uint16_t len = 0;
+    int len = 0;
     va_list args;
     va_start(args, format);
     //如果串口对应的DMA还未发送完就等待，防止变量UartTxBuf被CPU和DMA同时使用。
     while (log_huart->gState != HAL_UART_STATE_READY)
     {
-    osDelay(1);
+        osDelay(1);
     }
 //    len = vsnprintf((char*)log_str, sizeof(log_str)+1, (char*)format, args);
-		len = vsnprintf((char*)log_str, sizeof(log_str), (char*)format, args);
+    len = vsnprintf((char*)log_str, sizeof(log_str), (char*)format, args);
     va_end(args);
-    HAL_UART_Transmit_DMA(log_huart, (uint8_t*)log_str, len);
+    if (len < 0)
+    {
+        return;
+    }
+    if (len >= (int)sizeof(log_str))
+    {
+        len = sizeof(log_str) - 1;
+    }
+    HAL_UART_Transmit_DMA(log_huart, (uint8_t*)log_str, (uint16_t)len);
 }
 
 int log_printf_to_buffer(char *buff, int size, char *format, ...)
