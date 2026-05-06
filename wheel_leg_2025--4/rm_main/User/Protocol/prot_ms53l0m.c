@@ -41,7 +41,7 @@ uint8_t ms53l0m_normal_get_data(uint8_t *buff, uint16_t len)
 
             distance = next_distance;
             found_digit = 1;
-        } else if (buff[i] == 'm') {
+        } else if (buff[i] == ' ' && buff[i+1] == 'm' && buff[i+2] == 'm') {
             if (found_digit == 0) {
                 return 1;
             }

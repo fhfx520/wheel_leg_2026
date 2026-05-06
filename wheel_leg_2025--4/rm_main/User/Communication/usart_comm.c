@@ -33,9 +33,9 @@ void usart_comm_init(void)
     HAL_UART_Receive_DMA(&JUDGE_HUART, judge_data_rx_buf, JUDGE_DATA_LEN);
     judge_init(&JUDGE_HUART);
 
-    __HAL_UART_CLEAR_IDLEFLAG(&DEBUG_HUART);
-    __HAL_UART_ENABLE_IT(&DEBUG_HUART, UART_IT_IDLE);
-    HAL_UART_Receive_DMA(&DEBUG_HUART, debug_dma_rx_buf, DEBUG_DATA_LEN);
+//    __HAL_UART_CLEAR_IDLEFLAG(&DEBUG_HUART);
+//    __HAL_UART_ENABLE_IT(&DEBUG_HUART, UART_IT_IDLE);
+//    HAL_UART_Receive_DMA(&DEBUG_HUART, debug_dma_rx_buf, DEBUG_DATA_LEN);
     log_init(&DEBUG_HUART);
 	
 	__HAL_UART_CLEAR_IDLEFLAG(&TF_LEFT_HUART);
@@ -62,14 +62,10 @@ void usart_user_handler(UART_HandleTypeDef *huart)
         HAL_UART_AbortReceive(huart);
         if (huart == &DBUS_HUART) {
             dr16_get_data(&rc, dr16_dma_rx_buf);
-			memset(dr16_dma_rx_buf,0,DR16_DATA_LEN);
             HAL_UART_Receive_DMA(huart, dr16_dma_rx_buf, DR16_DATA_LEN);
         } else if (huart == &JUDGE_HUART) {
             judge_get_data(judge_data_rx_buf);
             HAL_UART_Receive_DMA(huart, judge_data_rx_buf, JUDGE_DATA_LEN);
-        } else if (huart == &DEBUG_HUART) {
-			dr16_get_data(&rc,debug_dma_rx_buf);
-			HAL_UART_Receive_DMA(huart, debug_dma_rx_buf, DEBUG_DATA_LEN);
         } else if (huart == &TF_LEFT_HUART) { 
 			vTfGetData(TFminiPlusBuffArray_Front_Left, LEFT);
 			memset(TFminiPlusBuffArray_Front_Left, 0, TFMINIPLUS_BUFF_SIZE);
@@ -82,7 +78,7 @@ void usart_user_handler(UART_HandleTypeDef *huart)
 //		}
         else if (huart == &MS53L0M_HUART) {
             ms53l0m_normal_get_data(MS53L0MBuffArray, MS53L0M_NORMAL_RX_BUF_SIZE);
-            memset(MS53L0MBuffArray, 0, MS53L0M_NORMAL_RX_BUF_SIZE);
+//            memset(MS53L0MBuffArray, 0, MS53L0M_NORMAL_RX_BUF_SIZE);
             HAL_UART_Receive_DMA(huart, MS53L0MBuffArray, MS53L0M_NORMAL_RX_BUF_SIZE);
         }
   
