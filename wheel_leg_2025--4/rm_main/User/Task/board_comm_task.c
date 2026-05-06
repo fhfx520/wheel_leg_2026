@@ -68,11 +68,8 @@ void board_comm_task(const void *argu)
 	{
 		thread_wake_time = osKernelSysTick();
 		
-		taskENTER_CRITICAL();
-		
 		board_comm_container_set();//set container
 
-		taskEXIT_CRITICAL();
 		osDelayUntil(&thread_wake_time,2);
 	}
 }

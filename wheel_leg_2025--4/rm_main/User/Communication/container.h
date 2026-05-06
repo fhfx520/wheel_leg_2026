@@ -30,8 +30,8 @@ typedef struct {
 } ContainerStat;
 
 typedef enum {
-	CONTAINER_ERROR_INVALID_PARAM = 0,
-	CONTAINER_ERROR_NOMEM_PARAM,
+	CONTAINER_ERROR_INVALID_PARAM = -1,
+	CONTAINER_ERROR_NOMEM_PARAM = -2,
 } ContainerErrorType;
 
 /**

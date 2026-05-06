@@ -1,5 +1,7 @@
 #include "container_bus.h"
 #include "container.h"
+#include "FreeRTOS.h"
+#include "task.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -41,8 +43,10 @@ int container_bus_init(const ContainerBusCfg* cfg_table, size_t count) {
         }
         
         // 插入链表 (头插法)
+        taskENTER_CRITICAL();
         sub->next = g_sub_head;
         g_sub_head = sub;
+        taskEXIT_CRITICAL();
     }
     
     return 0;

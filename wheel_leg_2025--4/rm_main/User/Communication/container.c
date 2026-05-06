@@ -118,6 +118,7 @@ int container_set(uint32_t tag_id, const void* data, size_t data_len, ContainerD
 	if (node) {
 		if (data_len > node->length) {
 			// 不能覆盖，因为新数据更大（固定缓冲区无法扩容）
+			xSemaphoreGive(g_instance->mutex);
 			return CONTAINER_ERROR_INVALID_PARAM;
 		}
 		// 2. 直接覆盖原内存（不重新分配）
@@ -137,6 +138,9 @@ int container_set(uint32_t tag_id, const void* data, size_t data_len, ContainerD
 		 new_node->next = g_instance->head;
 		 g_instance->head = new_node;
 		 g_instance->used_size = aligned_offset + data_len;
+	 } else {
+		 xSemaphoreGive(g_instance->mutex);
+		 return CONTAINER_ERROR_NOMEM_PARAM;
 	 }
  }
 
