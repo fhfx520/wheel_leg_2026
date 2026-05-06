@@ -134,8 +134,8 @@ static uint8_t series_shoot_enable(void)
 }
 static uint16_t init_cnt = 0;
 static uint8_t recover_flag = 0;
-//uint16_t sbtrigger = 17000;
-uint16_t sbtrigger = 8000;
+uint16_t sbtrigger = 6200;
+//uint16_t sbtrigger = 8000;
 static void pre_fabricated_trigger_position(void)
 {
 	if(init_cnt < 1000)
@@ -220,9 +220,6 @@ static void shoot_control(void)
             shoot.trigger_ecd.ref = trigger_motor.total_ecd;
             shoot.trigger_spd.pid.i_out = 0;
             shoot.trigger_output = 0;
-			init_cnt = 0;
-			recover_flag = 0;
-			trigger_motor.round_cnt = 0;
             break;
         }
         case TRIGGER_MODE_STOP: { //拨盘停止模式，保持静止，有力
@@ -232,9 +229,6 @@ static void shoot_control(void)
             shoot.trigger_ecd.ref = trigger_motor.total_ecd;
             shoot.trigger_spd.pid.i_out = 0;
 			
-			trigger_motor.round_cnt = 0;
-			init_cnt = 0;
-			recover_flag = 0;
             break;
         }
         case TRIGGER_MODE_SINGLE: { //拨盘单发模式，连续开枪请求，只响应一次
@@ -314,7 +308,7 @@ static void shoot_init(void)
     #endif
     #ifdef MG4005
     pid_init(&shoot.trigger_ecd.pid, NONE, 0.4f, 0.0f, 0.0f, 0.0f, 18000.0f);
-    pid_init(&shoot.trigger_spd.pid, NONE, 0.04f, 0.00005f, 0.0f, 400.0f, 2048.0f);
+    pid_init(&shoot.trigger_spd.pid, NONE, 0.06f, 0.00005f, 0.0f, 400.0f, 2048.0f);
     #endif
     //发射器模式初始化
     shoot.trigger_mode  = TRIGGER_MODE_PROTECT;

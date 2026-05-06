@@ -150,9 +150,10 @@ void vtm_remote_data_hanler(void)
 	//0 -> 1 1 -> 3 2 -> 2
 	vtm.sw1 = ((modesw_get_remote_data_container.sw == 0) ? 1 : ((modesw_get_remote_data_container.sw == 1) ? 3 : 2));
 	//键鼠模式下才生效
-	if(status.remote && modesw_get_keyboard_data_container.online && !status.board_comm && vtm.sw1 == 2)
+	if(status.remote && modesw_get_keyboard_data_container.online && !status.board_comm)
 	{
 		memcpy(&rc,&vtm,sizeof(dr16_t));
+		rc.sw2 = 1;
 	}
 }
 
@@ -174,9 +175,9 @@ void decide_to_use_Witch_KbData(void)
 	else if(status.remote && !modesw_get_keyboard_data_container.online) //都不在线 
 	{
 		off_line_cnt++;
-		if(off_line_cnt > 100)
+		if(off_line_cnt > 30)
 		{
-			off_line_cnt = 101;
+			off_line_cnt = 31;
 			//无法解锁
 			lock_flag = 0;
 		}

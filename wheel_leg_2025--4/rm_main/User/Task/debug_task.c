@@ -144,14 +144,14 @@ static const char* debug_sky_name(uint16_t state)
 
 static void debug_log_fsm_status(void)
 {
-    log_printf("[fsm] top=%s chassis=%s gimbal=%s shoot=%s online=%u lock=%u spd=%u\r\n",
+    log_printf("[fsm] top=%s chassis=%s gimbal=%s shoot=%s online=%u lock=%u ch1=%u\r\n",
                debug_top_mode_name(g_robot_ctx.output.top_mode),
                debug_chassis_name(g_robot_ctx.output.chassis),
                debug_gimbal_name(g_robot_ctx.output.gimbal),
                debug_shoot_name(g_robot_ctx.output.shoot),
                g_robot_ctx.is_online,
                lock_flag,
-               g_robot_ctx.output.chassis_speed);
+               rc.ch1);
 }
 
 static void debug_log_chassis_status(void)

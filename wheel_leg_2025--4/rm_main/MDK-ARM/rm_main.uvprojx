@@ -1279,6 +1279,11 @@
               <FileType>1</FileType>
               <FilePath>..\User\Protocol\prot_tfmini.c</FilePath>
             </File>
+            <File>
+              <FileName>prot_ms53l0m.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Protocol\prot_ms53l0m.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -4614,9 +4619,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>::CMSIS</GroupName>
-        </Group>
-        <Group>
           <GroupName>Drivers/BSP/Components</GroupName>
           <GroupOption>
             <CommonProperty>
@@ -4913,6 +4915,9 @@
               </FileOption>
             </File>
           </Files>
+        </Group>
+        <Group>
+          <GroupName>::CMSIS</GroupName>
         </Group>
       </Groups>
     </Target>

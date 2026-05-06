@@ -62,6 +62,7 @@ void usart_user_handler(UART_HandleTypeDef *huart)
         HAL_UART_AbortReceive(huart);
         if (huart == &DBUS_HUART) {
             dr16_get_data(&rc, dr16_dma_rx_buf);
+			memset(dr16_dma_rx_buf,0,DR16_DATA_LEN);
             HAL_UART_Receive_DMA(huart, dr16_dma_rx_buf, DR16_DATA_LEN);
         } else if (huart == &JUDGE_HUART) {
             judge_get_data(judge_data_rx_buf);

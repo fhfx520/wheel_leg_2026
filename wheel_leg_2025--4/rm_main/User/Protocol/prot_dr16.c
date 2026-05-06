@@ -28,7 +28,7 @@ int kb_status[15] = {0};
 /*
  * @brief     dr16遥控器数据接收函数
  * @param[in] rc: 遥控器数据结构体
- * @param[in] data: 数据指针
+ * @param[in] dat	a: 数据指针
  * @retval    数据正常返回0，异常返回1
  */
 uint8_t dr16_get_data(dr16_t *rc, uint8_t *data)

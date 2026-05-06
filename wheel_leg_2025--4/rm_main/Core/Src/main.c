@@ -121,8 +121,8 @@ int main(void)
   MX_TIM3_Init();
   MX_SPI1_Init();
 //  MX_IWDG1_Init();
-  MX_I2C2_Init();
-  MX_TOF_Init();
+//  MX_I2C2_Init();
+//  MX_TOF_Init();
   /* USER CODE BEGIN 2 */
   HAL_Delay(300);
   us_timer_start();
@@ -216,7 +216,7 @@ void SystemClock_Config(void)
 
   /** Enables the Clock Security System
   */
-  HAL_RCC_EnableCSS();
+//  HAL_RCC_EnableCSS();
 }
 
 /**

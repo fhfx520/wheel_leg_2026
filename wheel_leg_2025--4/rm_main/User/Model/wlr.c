@@ -97,7 +97,7 @@ float F_fdb = 0.0f;
 float yw_ddot;
 float Fwy;
 float F_wy[2];
-float ff_Fy_0 = 30.0f;
+float ff_Fy_0 = 20.0f;
 float ff_Fy_1 = 20.0f;
 //位移 速度 yaw wz 左腿摆角 左腿摆角速度 右腿摆角 右腿摆角速度 机体倾角 机体倾角速度 
 //左轮转矩 右轮转矩 左腿转矩 右腿转矩
@@ -674,7 +674,7 @@ static void handle_jump_state(void)
 			wlr.crash_flag = 0;
 			wlr.high_flag = 0;
 			chassis.recover_flag = 1;
-			up_ready = 101;
+//			up_ready = 101;
 //			chassis.rescue_inter_flag = 2;
 		 }
 	}
@@ -1152,7 +1152,7 @@ void wlr_init(void)
 		pid_init(&pid_rescue[i], NONE, 2.0f, 0.5f, 0, 45, 50);						//翻倒起身腿转速pid
 		pid_init(&pid_rotate_leg[i], NONE, 1500.0f, 0.0f, 40000.0f, 0, 300);		
 		pid_init(&pid_energy_leg[i], NONE, 1000.0f, 0.0f, 40000.0f, 0, 300);
-		pid_init(&pid_ascend[i], NONE, 800, 0.0f, 120000, 70, 300);			//磕台阶腿长pid
+		pid_init(&pid_ascend[i], NONE, 700, 0.0f, 80000, 70, 300);			//磕台阶腿长pid
 	}
 	pid_init(&pid_roll, NONE, 400, 0, 10000, 0, 50);								//roll偏移支持力补偿
 	//卡尔曼滤波器初始化
@@ -1277,7 +1277,7 @@ void wlr_control(void)
     } else {
         data_limit(&lqr.X_diff[1], -1.8f, 1.8f);
     }
- 	if(chassis.turn_back_flag)//切换跟随时屏蔽运动有关项且限制yaw_err的差值
+ 	if(chassis.turn_back_flag || (g_robot_ctx.output.chassis == CHASSIS_ASCEND && wlr.direction == 1))//切换跟随时屏蔽运动有关项且限制yaw_err的差值
 	{
 		data_limit(&lqr.X_diff[0], 0.0f, 0.0f);
 		data_limit(&lqr.X_diff[1], 0.0f, 0.0f);
