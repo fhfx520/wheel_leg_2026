@@ -94,8 +94,8 @@ static void MX_VL53L4CD_SimpleRanging_Init(void)
 
 //  if (status != BSP_ERROR_NONE)
 //  {
-////    printf("CUSTOM_RANGING_SENSOR_Init failed\n");
-////    while (1);
+//    printf("CUSTOM_RANGING_SENSOR_Init failed\n");
+//    while (1);
 //  }
 }
 
