@@ -718,8 +718,8 @@ static void handle_sky_state(void)
 			if (abs(rc.ch2) > 500) { 
 				wlr.sky_cnt++;
 			}
-			if (wlr.sky_cnt > 50 || (((wlr.side[1].Front_dis_kal + wlr.side[1].Front_dis_kal) / 2.0f > 1.1f) \
-				&& sky_ccc > 1000)) {
+			if (wlr.sky_cnt > 50 || check_tof_jump(0.8f,0.8f) \
+				&& sky_ccc > 1000) {
 				wlr.sky_cnt = 0;
 				wlr.sky_flag = WLR_SKY_EXTENDING;
 			} 

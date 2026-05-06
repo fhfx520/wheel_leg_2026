@@ -50,10 +50,10 @@ uint8_t microcurrent_flag = 0;
 float micro_t = 0;
 
 //**********选择拨盘电机**********//
-//#define DJI2006
+#define DJI2006
 //#define MG4005
 //#define DM2325	烂
-#define DJI3508
+//#define DJI3508
 
 //**********定义正侧供，减速比不一样**********//
 #define SIDE_SUPPLY
@@ -448,8 +448,8 @@ static void shoot_init(void)
 {
     memset(&shoot, 0, sizeof(shoot_t));
     //发射器底层初始化
-    pid_init(&shoot.fric_spd[0].pid, NONE, 0.00045f, 0, 0, 0, 0.8);
-    pid_init(&shoot.fric_spd[1].pid, NONE, 0.00045f, 0, 0, 0, 0.8);
+    pid_init(&shoot.fric_spd[0].pid, NONE, 0.00045f, 0.000005f, 0, 0.005, 0.8);
+    pid_init(&shoot.fric_spd[1].pid, NONE, 0.00045f, 0.000005f, 0, 0.005, 0.8);
 
 #ifdef DJI2006 	
 	
@@ -539,8 +539,8 @@ static void shoot_data_output(void)
         dji_motor_set_torque(&fric_motor[0], 0);
         dji_motor_set_torque(&fric_motor[1], 0);
     } else {
-        dji_motor_set_torque(&fric_motor[0], shoot.fric_output[0]-feed_torque);
-        dji_motor_set_torque(&fric_motor[1], shoot.fric_output[1]-feed_torque);
+        dji_motor_set_torque(&fric_motor[0], shoot.fric_output[0]);
+        dji_motor_set_torque(&fric_motor[1], shoot.fric_output[1]);
     }
     if (shoot.trigger_mode == TRIGGER_MODE_PROTECT) {
         dji_motor_set_torque(&trigger_motor, 0);

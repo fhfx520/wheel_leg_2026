@@ -72,6 +72,7 @@ extern kalman_filter_t kal_fusion_vel;
 extern float up_ready;
 
 void Fusion_Vel_Acc_Test(void);
+uint8_t check_tof_jump(float dis_up, float dis_down);
 void chassis_task(void const *argu);
 
 #endif
