@@ -22,8 +22,7 @@ UART_HandleTypeDef *log_huart;
 
 int fputc(int ch, FILE *f)
 {
-    while (__HAL_UART_GET_FLAG(log_huart, UART_FLAG_TC) == RESET);
-    HAL_UART_Transmit(log_huart, (uint8_t*)&ch, 1, 0xFF);
+    (void)f;
     return ch;
 }
 
