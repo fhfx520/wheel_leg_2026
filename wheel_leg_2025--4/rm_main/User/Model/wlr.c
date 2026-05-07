@@ -16,6 +16,7 @@
 #include "prot_tfmini.h"
 #include "velocity_control.h"
 #include "custom_ranging_sensor.h"
+#include "prot_ms53l2m.h"
 extern uint32_t rescue_cnt_L;
 extern uint32_t rescue_cnt_R;
 extern uint8_t rotate_ramp_flag;
@@ -582,41 +583,103 @@ static void reset_jump_state(void)
 
 static void handle_jump_state(void)
 {
+//    if (wlr.jump_flag == WLR_JUMP_ASCEND && (wlr.jump_pre || 1) ){
+////        if (double_cnt <= 0) {
+//////			sky_height_ramp.out = wlr.high_set;
+////            wlr.v_ref = ramp_calc(&jump_ramp, -1.5f);
+////        } else {
+////            wlr.v_ref = ramp_calc(&jump_ramp, -0.8f);
+////        }
+//        wlr.jump_cnt++;
+//        if (wlr.jump_cnt > 30) {
+//            if (double_cnt <= 0) {
+//                wlr.high_set = ramp_calc(&height_ramp, 0.35f);
+//				wlr.v_ref = ramp_calc(&jump_ramp, -1.5f);
+//            } else {
+//                wlr.high_set = ramp_calc(&height_ramp, 0.28f);
+//            }
+//            wlr.jump_run++;
+//        } else {
+//            jump_ramp.out = wlr.v_fdb;
+//        }
+
+//        if (double_cnt <= 0 && wlr.jump_run > 400) {
+//			wlr.v_ref = ramp_calc(&jump_ramp, -1.5f);
+//            if (fabsf(lqr.X_fdb[4]) > 0.30f && fabsf(lqr.X_fdb[6]) > 0.30f) {
+//                wlr.high_set = 0.35f;
+//                wlr.v_ref = 0;
+//                wlr.crash_flag = 1;
+//            }
+//        } else if (double_cnt > 0 && wlr.jump_run > 400) {
+//            if (fabsf(lqr.X_fdb[4]) > 0.20f && fabsf(lqr.X_fdb[6]) > 0.20f) {
+//                wlr.high_set = 0.12f;
+//                wlr.v_ref = 0;
+//                wlr.crash_flag = 1;
+//                wlr.jump2_over = 1;
+//            }
+//        }
+
+//        if ((fabs(lqr.X_fdb[4]) > 1.40f && fabs(lqr.X_fdb[6]) > 1.40f && wlr.crash_flag && double_cnt <= 0)
+//            || (fabs(lqr.X_fdb[4]) > 1.50f && fabs(lqr.X_fdb[6]) > 1.50f && wlr.crash_flag && double_cnt > 0)) {
+//            if (wlr.crash_flag) {
+//                wlr.jump_flag = WLR_JUMP_RECOVER_SHORT;
+//                wlr.crash_flag = 0;
+//                wlr.high_flag = 0;
+//                chassis.recover_flag = 1;
+//                chassis.rescue_inter_flag = 2;
+//            }
+//        }
+//    } else if (wlr.jump_flag == WLR_JUMP_RECOVER_SHORT) {
+//        wlr.high_set = 0.12f;
+//        double_cnt = 3000;
+//        if (fabs(wlr.high_set - vmc[0].L_fdb) < 0.06f && fabs(wlr.high_set - vmc[1].L_fdb) < 0.06f) {
+//            wlr.jump_flag = WLR_JUMP_RECOVER_LONG;
+//            wlr.crash_flag = 0;
+//            height_ramp.out = 0.12f;
+//        } else if (wlr.jump_flag == WLR_JUMP_RECOVER_LONG) {
+//            wlr.high_set = 0.12f;
+//        }
+//    }
+//    if (double_cnt) {
+//        double_cnt--;
+//    }
     static float jump_leg_length = 0.0f;
 	static float limit_q = 0.0f;
 	if(wlr.jump_flag == WLR_JUMP_ASCEND)
 	{
-        Fy_ramp[0].out = Fy_ramp[1].out= 0;
-        pid_leg_recover[0].i_out = 0,pid_leg_recover[1].i_out = 0;
+		 Fy_ramp[0].out = Fy_ramp[1].out= 0;
+		 pid_leg_recover[0].i_out = 0,pid_leg_recover[1].i_out = 0;
 
-        jump_leg_length = (wlr.double_flag ? 0.33f : 0.33f);
-        limit_q = (wlr.double_flag ? 0.6f : 0.5f);
-        wlr.high_set = ramp_calc(&height_ramp, jump_leg_length);
-        x3_balance_zero = x3_balance_zero_normal;
-        x5_balance_zero = 0.0f;
-        wlr.jump_run++;
+         jump_leg_length = (wlr.double_flag ? 0.33f : 0.33f);
+		 limit_q = (wlr.double_flag ? 0.6f : 0.5f);
+		 wlr.high_set = ramp_calc(&height_ramp, jump_leg_length);
+		 x3_balance_zero = x3_balance_zero_normal;
+         x5_balance_zero = 0.0f;
+		 wlr.jump_run++;
 
-        if(wlr.double_flag)
+         if(wlr.double_flag)
             wlr.v_ref = ramp_calc(&jump_ramp, -2.0f);
         else
             jump_ramp.out = 0.0f;
 
-        if((fabsf(lqr.X_fdb[4]) > limit_q && fabsf(lqr.X_fdb[6]) > limit_q) && wlr.jump_run > 200) {
+		 if(fabsf(lqr.X_fdb[4]) > limit_q && fabsf(lqr.X_fdb[6]) > limit_q && wlr.jump_run > 200) {
+			wlr.high_set = jump_leg_length;
 			wlr.v_ref = 0;
             jump_ramp.out = 0.0f;
 			wlr.crash_flag = 1;
-			wlr.high_set = 0.16f;
-			 wlr.jump_flag = WLR_JUMP_RECOVER_SHORT;
+//			wlr.high_set = 0.16f;
+//			 wlr.jump_flag = WLR_JUMP_RECOVER_SHORT;
 		 }
-//		 if((fabs(lqr.X_fdb[4]) > 1.0f && fabs(lqr.X_fdb[6]) > 1.0f && wlr.crash_flag))
-//		 {
-//			wlr.jump_flag = WLR_JUMP_RECOVER_SHORT;
-//			wlr.crash_flag = 0;
-//			wlr.high_flag = 0;
-//			chassis.recover_flag = 1;
-////			up_ready = 101;
-////			chassis.rescue_inter_flag = 2;
-//		 }
+		 if((fabs(lqr.X_fdb[4]) > 1.0f && fabs(lqr.X_fdb[6]) > 1.0f && wlr.crash_flag))
+		 {
+			wlr.jump_flag = WLR_JUMP_RECOVER_SHORT;
+			wlr.crash_flag = 0;
+			wlr.high_flag = 0;
+			chassis.recover_flag = 1;
+//			up_ready = 101;
+//			up_ready = 101;
+//			chassis.rescue_inter_flag = 2;
+		 }
 	}
 	else if(wlr.jump_flag == WLR_JUMP_RECOVER_SHORT)
 	{
@@ -631,20 +694,12 @@ static void handle_jump_state(void)
 				 pid_leg_recover[0].i_out = 0;
 				 pid_leg_recover[1].i_out = 0;
 			 }
-       }
+        }
 	}
-	// else if(wlr.jump_flag == WLR_JUMP_RECOVER_LONG)
-	// {
-	// 	x3_balance_zero = 0.1f;
-	// 	wlr.high_set = 0.25f;
-	// 	if(wlr.side[0].Fn_kal > 150.0f || wlr.side[1].Fn_kal > 150.0f)
-	// 		wlr.jump_flag = WLR_JUMP_RECOVER_LONGHSORT;
-	// }
-	// else if(wlr.jump_flag == WLR_JUMP_RECOVER_LONGHSORT)
-	// {
-	// 	x3_balance_zero = x3_balance_zero_normal;
-	// 	wlr.high_set = 0.16f;
-	// }
+//	else if(wlr.jump_flag == WLR_JUMP_RECOVER_LONG)
+//	{
+//		wlr.high_set = ramp_calc(&height_ramp, 0.18f);
+//	}
 }
 
 static void handle_sky_state(void)
@@ -768,7 +823,7 @@ static void handle_stair_state(void)
 		 wlr.high_set = ramp_calc(&height_ramp, LegLengthStair);
 		 x3_balance_zero = x3_balance_zero_normal;
          x5_balance_zero = 0.0f;
-		 if(fabsf(lqr.X_fdb[4]) > 0.2f || fabsf(lqr.X_fdb[6]) > 0.2f) {
+		 if(fabsf(wlr.pit_fdb) > 0.06f) {
 			wlr.v_ref = 0;
 			wlr.high_set = 0.12f;
 			wlr.stair_flag = WLR_STAIR_RECOVER_SHORT;
@@ -778,7 +833,7 @@ static void handle_stair_state(void)
 	{
 		data_limit(&wlr.v_ref,-1.0f,1.0f);
         wlr.high_set = 0.12f;
-        x3_balance_zero = 1.5f;
+        x3_balance_zero = x3_balance_zero_normal;
         if (fabsf(wlr.high_set - vmc[0].L_fdb) < 0.03f && fabsf(wlr.high_set - vmc[1].L_fdb) < 0.03f) {
 			wlr.stair_flag = WLR_STAIR_RECOVER_LONG;
 			height_ramp.out = 0.12f;
@@ -787,7 +842,8 @@ static void handle_stair_state(void)
     else if(wlr.stair_flag == WLR_STAIR_RECOVER_LONG)
 	{
 		data_limit(&wlr.v_ref,-1.0f,1.0f);
-		x3_balance_zero = 0.1f;
+		
+		x3_balance_zero = 1.5f;
 		wlr.high_set = 0.25f;
 		if(wlr.side[0].Fn_kal > 150.0f || wlr.side[1].Fn_kal > 150.0f)
 			wlr.stair_flag = WLR_STAIR_LANDING;
@@ -1088,7 +1144,7 @@ static void apply_output_limits(void)
 
         data_limit(&lqr.U_ref[i], -4.0f, 4.0f);
         
-        if (wlr.crash_flag || wlr.energy_flag) {
+        if (wlr.crash_flag || wlr.energy_flag || (wlr.jump_flag == WLR_JUMP_RECOVER_SHORT)) {
             lqr.U_ref[i] *= 0.0f;
         } else if (chassis.recover_flag >= 1 || wlr.sky_flag == WLR_SKY_AIR_FOLDING || wlr.sky_flag == WLR_SKY_LANDING) {
             lqr.U_ref[i] *= 0.0f;
@@ -1137,7 +1193,7 @@ void wlr_init(void)
 		pid_init(&pid_energy_leg[i], NONE, 1000.0f, 0.0f, 40000.0f, 0, 300);
 		pid_init(&pid_ascend[i], NONE, 700, 0.0f, 80000, 70, 300);			//磕台阶腿长pid
 	}
-	pid_init(&pid_roll, NONE, 400, 0, 10000, 0, 50);								//roll偏移支持力补偿
+	pid_init(&pid_roll, NONE, 800, 0,0, 0, 100);								//roll偏移支持力补偿
 	//卡尔曼滤波器初始化
 	DO_ONCE({
 		twm_init(&twm, BodyWidth, WheelRadius);
@@ -1217,7 +1273,8 @@ void wlr_control(void)
     lqr.last_leg_w[1] = lqr.X_fdb[7];
 
     for (int i = 0; i < WLR_SIDE_COUNT; i++) {
-        tfmini_fn[i].measured_vector[0] = (float)(Result.ZoneResult->Distance[0] * 0.001f);
+		wlr.side[i].Front_dis_fdb = ms53l2m_distance_m;
+        tfmini_fn[i].measured_vector[0] = wlr.side[i].Front_dis_fdb;
         kalman_filter_update(&tfmini_fn[i]);
         wlr.side[i].Front_dis_kal = tfmini_fn[i].filter_vector[0];
     }

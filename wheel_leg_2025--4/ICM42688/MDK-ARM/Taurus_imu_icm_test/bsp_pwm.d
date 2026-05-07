@@ -1,6 +1,6 @@
 .\taurus_imu_icm_test\bsp_pwm.o: ..\Bsp\bsp_PWM.c
 .\taurus_imu_icm_test\bsp_pwm.o: ..\Bsp\bsp_PWM.h
-.\taurus_imu_icm_test\bsp_pwm.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\taurus_imu_icm_test\bsp_pwm.o: D:\KEIL5\ARM\ARMCC\Bin\..\include\stdint.h
 .\taurus_imu_icm_test\bsp_pwm.o: ../Core/Inc/tim.h
 .\taurus_imu_icm_test\bsp_pwm.o: ../Core/Inc/main.h
 .\taurus_imu_icm_test\bsp_pwm.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h
@@ -17,7 +17,7 @@
 .\taurus_imu_icm_test\bsp_pwm.o: ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h
 .\taurus_imu_icm_test\bsp_pwm.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h
 .\taurus_imu_icm_test\bsp_pwm.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
-.\taurus_imu_icm_test\bsp_pwm.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+.\taurus_imu_icm_test\bsp_pwm.o: D:\KEIL5\ARM\ARMCC\Bin\..\include\stddef.h
 .\taurus_imu_icm_test\bsp_pwm.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h
 .\taurus_imu_icm_test\bsp_pwm.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h
 .\taurus_imu_icm_test\bsp_pwm.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h

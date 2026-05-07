@@ -1245,6 +1245,11 @@
           <GroupName>User/Protocol</GroupName>
           <Files>
             <File>
+              <FileName>data_list.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\User\Support\data_list.h</FilePath>
+            </File>
+            <File>
               <FileName>prot_dr16.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\Protocol\prot_dr16.c</FilePath>
@@ -1280,9 +1285,9 @@
               <FilePath>..\User\Protocol\prot_tfmini.c</FilePath>
             </File>
             <File>
-              <FileName>prot_ms53l0m.c</FileName>
+              <FileName>prot_ms53l2m.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\User\Protocol\prot_ms53l0m.c</FilePath>
+              <FilePath>..\User\Protocol\prot_ms53l2m.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1453,11 +1458,6 @@
         <Group>
           <GroupName>User/Support</GroupName>
           <Files>
-            <File>
-              <FileName>data_list.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\User\Support\data_list.h</FilePath>
-            </File>
             <File>
               <FileName>data_buffer.c</FileName>
               <FileType>1</FileType>

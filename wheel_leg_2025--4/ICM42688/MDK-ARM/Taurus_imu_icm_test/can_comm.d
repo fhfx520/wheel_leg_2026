@@ -3,7 +3,7 @@
 .\taurus_imu_icm_test\can_comm.o: ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h
 .\taurus_imu_icm_test\can_comm.o: ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h
 .\taurus_imu_icm_test\can_comm.o: ../Drivers/CMSIS/Include/core_cm4.h
-.\taurus_imu_icm_test\can_comm.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\taurus_imu_icm_test\can_comm.o: D:\KEIL5\ARM\ARMCC\Bin\..\include\stdint.h
 .\taurus_imu_icm_test\can_comm.o: ../Drivers/CMSIS/Include/cmsis_version.h
 .\taurus_imu_icm_test\can_comm.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
 .\taurus_imu_icm_test\can_comm.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
@@ -15,7 +15,7 @@
 .\taurus_imu_icm_test\can_comm.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h
 .\taurus_imu_icm_test\can_comm.o: ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h
 .\taurus_imu_icm_test\can_comm.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
-.\taurus_imu_icm_test\can_comm.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+.\taurus_imu_icm_test\can_comm.o: D:\KEIL5\ARM\ARMCC\Bin\..\include\stddef.h
 .\taurus_imu_icm_test\can_comm.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h
 .\taurus_imu_icm_test\can_comm.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h
 .\taurus_imu_icm_test\can_comm.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h

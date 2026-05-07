@@ -18,6 +18,7 @@ uint8_t TFminiPlusBuffArray_Front_Left[TFMINIPLUS_BUFF_SIZE];
 uint8_t TFminiPlusBuffArray_Front_Right[TFMINIPLUS_BUFF_SIZE];
 uint8_t MS53L2MBuffArray[MS53L2M_NORMAL_RX_BUF_SIZE];
 uint8_t Hipnuc_buff[82];
+uint32_t ccnct;
 /*
  * @brief  串口初始化，开启空闲中断并开始DMA接收数据
  * @retval void
@@ -80,6 +81,7 @@ void usart_user_handler(UART_HandleTypeDef *huart)
             ms53l2m_normal_get_data(MS53L2MBuffArray, MS53L2M_NORMAL_RX_BUF_SIZE);
             memset(MS53L2MBuffArray, 0, MS53L2M_NORMAL_RX_BUF_SIZE);
             HAL_UART_Receive_DMA(huart, MS53L2MBuffArray, MS53L2M_NORMAL_RX_BUF_SIZE);
+			ccnct++;
         }
   
     }

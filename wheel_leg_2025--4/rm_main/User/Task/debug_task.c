@@ -484,9 +484,10 @@ void log_scope_data_pkg(void)
 	{
 		case 1: { /* 拨盘 PID */
 			
-			log_scope_get_data(shoot.trigger_ecd.fdb);
-            log_scope_get_data(shoot.trigger_ecd.ref);
-			
+//			log_scope_get_data(shoot.trigger_ecd.fdb);
+//            log_scope_get_data(shoot.trigger_ecd.ref);
+			log_scope_get_data(wlr.side[0].Front_dis_fdb);
+            log_scope_get_data(wlr.side[0].Front_dis_kal);
 //			log_scope_get_data(wlr.side[1].Fn_kal);
 			break;
 		}
