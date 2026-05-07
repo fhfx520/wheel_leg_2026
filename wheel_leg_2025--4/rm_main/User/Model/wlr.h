@@ -12,7 +12,6 @@ typedef enum {
     WLR_JUMP_ASCEND = 1,
     WLR_JUMP_RECOVER_SHORT = 2,
     WLR_JUMP_RECOVER_LONG = 3,
-	WLR_JUMP_RECOVER_LONGHSORT = 4,
 } wlr_jump_state_e;
 
 typedef enum {
@@ -23,6 +22,14 @@ typedef enum {
     WLR_SKY_LANDING = 4,		//落地
 	WLR_SKY_STAND = 5,		
 } wlr_sky_state_e;
+
+typedef enum {
+    WLR_STAIR_IDLE = 0,
+    WLR_STAIR_ASCEND = 1,
+    WLR_STAIR_RECOVER_SHORT = 2,
+    WLR_STAIR_RECOVER_LONG = 3,
+	WLR_STAIR_LANDING = 4,
+} wlr_stair_state_e;
 
 typedef enum {
     WLR_SIDE_LEFT = 0,
@@ -81,6 +88,9 @@ typedef struct
 		sky_cnt		跳跃计数变量
 		sky_over 	=1完成跳跃
 		jump2_over  =1机体已磕上第二级台阶 */
+    
+    wlr_stair_state_e stair_flag;//下二级台阶
+    
     uint8_t double_flag;//是否上二级台阶标志位
 	
 	uint16_t s_wait;//定点wait

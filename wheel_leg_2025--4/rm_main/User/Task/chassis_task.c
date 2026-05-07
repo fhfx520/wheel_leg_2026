@@ -261,6 +261,7 @@ static void chassis_execute_fsm(void)
             wlr.high_flag = 0;
             wlr.jump_flag = WLR_JUMP_IDLE;
             wlr.sky_flag = WLR_SKY_IDLE;
+			wlr.stair_flag = WLR_STAIR_IDLE;
             chassis.rescue_cnt_L = 0;
             chassis.rescue_cnt_R = 0;
 			chassis.recover_flag = 0;
@@ -279,6 +280,7 @@ static void chassis_execute_fsm(void)
             wlr.high_flag = 0; 
             wlr.jump_flag = WLR_JUMP_IDLE;
             wlr.sky_flag = WLR_SKY_IDLE;
+			wlr.stair_flag = WLR_STAIR_IDLE;
 			g_robot_ctx.sky_start_flag = 0;
 			g_robot_ctx.sky_finish_flag = 0;
 			g_robot_ctx.jump_finish_flag = 0;
@@ -293,6 +295,7 @@ static void chassis_execute_fsm(void)
             wlr.high_flag = 1; 
             wlr.jump_flag = WLR_JUMP_IDLE;
             wlr.sky_flag = WLR_SKY_IDLE;
+			wlr.stair_flag = WLR_STAIR_IDLE;
 			g_robot_ctx.sky_start_flag = 0;
 			g_robot_ctx.sky_finish_flag = 0;
 			g_robot_ctx.jump_finish_flag = 0;
@@ -306,6 +309,7 @@ static void chassis_execute_fsm(void)
             rotate_flag = 1;   
 			wlr.jump_flag = WLR_JUMP_IDLE;
 			wlr.sky_flag = WLR_SKY_IDLE;
+			wlr.stair_flag = WLR_STAIR_IDLE;
 			g_robot_ctx.sky_start_flag = 0;
 			g_robot_ctx.sky_finish_flag = 0;
 			g_robot_ctx.jump_finish_flag = 0;
@@ -318,6 +322,7 @@ static void chassis_execute_fsm(void)
             wlr.high_flag = 0;
             wlr.jump_flag = WLR_JUMP_IDLE;
 			wlr.sky_flag = WLR_SKY_IDLE;
+			wlr.stair_flag = WLR_STAIR_IDLE;
 			g_robot_ctx.sky_start_flag = 0;
 			g_robot_ctx.sky_finish_flag = 0;
 			g_robot_ctx.jump_finish_flag = 0;
@@ -329,6 +334,7 @@ static void chassis_execute_fsm(void)
             wlr.ctrl_mode = 2;
             wlr.high_flag = 0;
             wlr.jump_flag = WLR_JUMP_IDLE;
+			wlr.stair_flag = WLR_STAIR_IDLE;
 			g_robot_ctx.sky_finish_flag = 0;
 			g_robot_ctx.jump_finish_flag = 0;
 			if(wlr.sky_flag == WLR_SKY_IDLE)
@@ -347,6 +353,7 @@ static void chassis_execute_fsm(void)
             wlr.ctrl_mode = 2;
             wlr.high_flag = 0;
 			wlr.jump_flag = WLR_JUMP_IDLE;
+			wlr.stair_flag = WLR_STAIR_IDLE;
 			g_robot_ctx.sky_start_flag = 0;
             if(wlr.sky_flag == WLR_SKY_FOLDING) 
 				wlr.sky_flag = WLR_SKY_EXTENDING; 
@@ -361,11 +368,12 @@ static void chassis_execute_fsm(void)
 			wlr.ctrl_mode = 2;
 			wlr.high_flag = 0;
 			wlr.sky_flag = WLR_SKY_IDLE;
+			wlr.stair_flag = WLR_STAIR_IDLE;
 			g_robot_ctx.sky_start_flag = 0;
-			if(wlr.jump_flag == WLR_JUMP_IDLE) 
+			if(wlr.jump_flag == WLR_JUMP_IDLE && wlr.direction == 0) 
 				wlr.jump_flag = WLR_JUMP_ASCEND; 
-//			if(wlr.jump_flag == WLR_JUMP_RECOVER_LONG && !g_robot_ctx.jump_finish_flag)
-//				g_robot_ctx.jump_finish_flag = 1;
+			if(wlr.jump_flag == WLR_JUMP_RECOVER_LONG && !g_robot_ctx.jump_finish_flag)
+				g_robot_ctx.jump_finish_flag = 1;
 			break;
 		}
 		
@@ -397,16 +405,30 @@ static void chassis_execute_fsm(void)
 			wlr.high_flag = 0;
 			wlr.sky_flag = WLR_SKY_IDLE;
 			wlr.jump_flag = WLR_JUMP_IDLE;
+			wlr.stair_flag = WLR_STAIR_IDLE;
 			wlr.energy_flag = 1;
+			break;
+		}
+		
+		case CHASSIS_STAIR:
+		{
+			wlr.ctrl_mode = 2;
+			wlr.high_flag = 0;
+			wlr.sky_flag = WLR_SKY_IDLE;
+			wlr.jump_flag = WLR_JUMP_IDLE;
+			if(wlr.stair_flag == WLR_STAIR_IDLE)
+				wlr.stair_flag = WLR_STAIR_ASCEND;
 			break;
 		}
 		
         default:
 		{
+			sky_ccc = 0;
             wlr.ctrl_mode = 0; 
             wlr.high_flag = 0;
             wlr.jump_flag = WLR_JUMP_IDLE;
             wlr.sky_flag = WLR_SKY_IDLE;
+			wlr.stair_flag = WLR_STAIR_IDLE;
             chassis.rescue_cnt_L = 0;
             chassis.rescue_cnt_R = 0;
             chassis.recover_flag = 0;
@@ -476,8 +498,8 @@ static void chassis_data_input(void)
         }
         case CHASSIS_LOW:
         case CHASSIS_HIGH:
+		case CHASSIS_STAIR:
         case CHASSIS_TERRAIN_READY:
-		case CHASSIS_ASCEND:
         case CHASSIS_TERRAIN_EXECUTING:
 		case CHASSIS_EXECUTING_FOLLOW_ASCEND:			{ // 整合了原版的所有 FOLLOW 和 PRONE
 			if((key_scan_clear(KB_CTRL) || check_ch3_trigger()) && gimbal.start_up)
@@ -534,14 +556,14 @@ static void chassis_data_input(void)
 			chassis_rotate_ramp.out =0;
             break;
         }
-//        case CHASSIS_ASCEND: {
-//			wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
-//			wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;  
-//			wlr.wz_ref = 0;
-//			wlr.yaw_err = circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
-//			if(fabsf(wlr.yaw_err) < PI / 8.0f) wlr.direction = 0;
-//			break;
-//		}
+       case CHASSIS_ASCEND: {
+			wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
+			wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;  
+			wlr.wz_ref = 0;
+			wlr.yaw_err = circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
+			if(fabsf(wlr.yaw_err) < PI / 8.0f) wlr.direction = 0;
+			break;
+		}
         case CHASSIS_FIGHT: {
             wlr.yaw_ref = (float)CHASSIS_YAW_FIGHT / 8192 * 2 * PI;
             wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;
