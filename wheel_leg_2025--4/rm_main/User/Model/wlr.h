@@ -12,6 +12,7 @@ typedef enum {
     WLR_JUMP_ASCEND = 1,
     WLR_JUMP_RECOVER_SHORT = 2,
     WLR_JUMP_RECOVER_LONG = 3,
+	WLR_JUMP_RECOVER_LONGHSORT = 4,
 } wlr_jump_state_e;
 
 typedef enum {

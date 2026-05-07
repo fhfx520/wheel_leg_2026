@@ -25,7 +25,7 @@
 #define row_debug 2 * 10
 #define DEBUG_TEXT_LOG_DIV       2u
 #define DEBUG_TEXT_LOG_SLOT_NUM  21u
-uint8_t debug_wave = 0;
+uint8_t debug_wave = 1;
 uint8_t debug_text_log_enable = 1;
 float test_hex = 1;
 extern FGT_sin_t FGT_sin_chassis;
@@ -483,8 +483,9 @@ void log_scope_data_pkg(void)
 	{
 		case 1: { /* 拨盘 PID */
 			
-			log_scope_get_data(wlr.side[0].Fn_kal);
-			log_scope_get_data(wlr.side[1].Fn_kal);
+			log_scope_get_data(wlr.jump_flag);
+			
+//			log_scope_get_data(wlr.side[1].Fn_kal);
 			break;
 		}
 		case 4: { /* 摩擦轮 */
@@ -517,10 +518,10 @@ void debug_task(void const* argument)
     {
         thread_wake_time = osKernelSysTick();
         log_scope_data_output();
-        if (++text_log_div >= DEBUG_TEXT_LOG_DIV) {
-            text_log_div = 0;
-            debug_log_text_output();
-        }
+//        if (++text_log_div >= DEBUG_TEXT_LOG_DIV) {
+//            text_log_div = 0;
+//            debug_log_text_output();
+//        }
         osDelayUntil(&thread_wake_time, 2);
     }
 }

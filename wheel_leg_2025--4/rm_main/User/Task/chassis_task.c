@@ -362,10 +362,10 @@ static void chassis_execute_fsm(void)
 			wlr.high_flag = 0;
 			wlr.sky_flag = WLR_SKY_IDLE;
 			g_robot_ctx.sky_start_flag = 0;
-			if(wlr.jump_flag == WLR_JUMP_IDLE && wlr.direction == 0) 
+			if(wlr.jump_flag == WLR_JUMP_IDLE) 
 				wlr.jump_flag = WLR_JUMP_ASCEND; 
-			if(wlr.jump_flag == WLR_JUMP_RECOVER_LONG && !g_robot_ctx.jump_finish_flag)
-				g_robot_ctx.jump_finish_flag = 1;
+//			if(wlr.jump_flag == WLR_JUMP_RECOVER_LONG && !g_robot_ctx.jump_finish_flag)
+//				g_robot_ctx.jump_finish_flag = 1;
 			break;
 		}
 		
@@ -477,6 +477,7 @@ static void chassis_data_input(void)
         case CHASSIS_LOW:
         case CHASSIS_HIGH:
         case CHASSIS_TERRAIN_READY:
+		case CHASSIS_ASCEND:
         case CHASSIS_TERRAIN_EXECUTING:
 		case CHASSIS_EXECUTING_FOLLOW_ASCEND:			{ // 整合了原版的所有 FOLLOW 和 PRONE
 			if((key_scan_clear(KB_CTRL) || check_ch3_trigger()) && gimbal.start_up)
@@ -533,14 +534,14 @@ static void chassis_data_input(void)
 			chassis_rotate_ramp.out =0;
             break;
         }
-        case CHASSIS_ASCEND: {
-			wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
-			wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;  
-			wlr.wz_ref = 0;
-			wlr.yaw_err = circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
-			if(fabsf(wlr.yaw_err) < PI / 8.0f) wlr.direction = 0;
-			break;
-		}
+//        case CHASSIS_ASCEND: {
+//			wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
+//			wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;  
+//			wlr.wz_ref = 0;
+//			wlr.yaw_err = circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
+//			if(fabsf(wlr.yaw_err) < PI / 8.0f) wlr.direction = 0;
+//			break;
+//		}
         case CHASSIS_FIGHT: {
             wlr.yaw_ref = (float)CHASSIS_YAW_FIGHT / 8192 * 2 * PI;
             wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;
@@ -1199,17 +1200,18 @@ static void chassis_data_output(void)
 				chassis_hardest_rescue();
             if(chassis.recover_flag != 1) {
 				if(wlr.joint_all_online){
-					if(wlr.crash_flag) {
-						dm_motor_set_control_para(&joint_motor[0], 0, -4, 0, 5, 0);
-						dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);	
-						dm_motor_set_control_para(&joint_motor[2], 0, 4, 0, 5, 0);
-						dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
-					} else {
+//					if(wlr.crash_flag) {
+//						dm_motor_set_control_para(&joint_motor[0], 0, -4, 0, 5, 0);
+//						dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);	
+//						dm_motor_set_control_para(&joint_motor[2], 0, 4, 0, 5, 0);
+//						dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
+//					} 
+//				else {
 						dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, wlr.side[0].T1);
 						dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, wlr.side[0].T2);
 						dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0,-wlr.side[1].T1);
 						dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0,-wlr.side[1].T2);  
-					}
+//					}
 				}
 				else{
 					dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, 0);
@@ -1289,7 +1291,7 @@ void chassis_task(void const *argu)
         chassis_data_input();
         
         // 4. 恢复你本来的执行逻辑结构
-        if(g_robot_ctx.output.chassis != CHASSIS_STOP)
+        if(g_robot_ctx.output.chassis != CHASSIS_STOP || 1)
             wlr_control();
         else
             chassis_init(); // 恢复你的原有保护调用
