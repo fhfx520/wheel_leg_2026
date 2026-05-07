@@ -5,7 +5,7 @@
 #include "data_log.h"
 #include "prot_tfmini.h"
 #include "prot_hipnuc.h"
-#include "prot_ms53l0m.h"
+#include "prot_ms53l2m.h"
 
 #define DEBUG_DATA_LEN 10
 #define JUDGE_DATA_LEN 150
@@ -16,7 +16,7 @@ uint8_t judge_data_rx_buf[JUDGE_DATA_LEN];
 uint8_t debug_dma_rx_buf[DEBUG_DATA_LEN];
 uint8_t TFminiPlusBuffArray_Front_Left[TFMINIPLUS_BUFF_SIZE];
 uint8_t TFminiPlusBuffArray_Front_Right[TFMINIPLUS_BUFF_SIZE];
-uint8_t MS53L0MBuffArray[MS53L0M_NORMAL_RX_BUF_SIZE];
+uint8_t MS53L2MBuffArray[MS53L2M_NORMAL_RX_BUF_SIZE];
 uint8_t Hipnuc_buff[82];
 /*
  * @brief  串口初始化，开启空闲中断并开始DMA接收数据
@@ -46,9 +46,9 @@ void usart_comm_init(void)
 //    __HAL_UART_ENABLE_IT(&TF_RIGHT_HUART, UART_IT_IDLE);
 //    HAL_UART_Receive_DMA(&TF_RIGHT_HUART, TFminiPlusBuffArray_Front_Right, TFMINIPLUS_BUFF_SIZE);
 
-    __HAL_UART_CLEAR_IDLEFLAG(&MS53L0M_HUART);
-    __HAL_UART_ENABLE_IT(&MS53L0M_HUART, UART_IT_IDLE);
-    HAL_UART_Receive_DMA(&MS53L0M_HUART, MS53L0MBuffArray, MS53L0M_NORMAL_RX_BUF_SIZE);
+    __HAL_UART_CLEAR_IDLEFLAG(&MS53L2M_HUART);
+    __HAL_UART_ENABLE_IT(&MS53L2M_HUART, UART_IT_IDLE);
+    HAL_UART_Receive_DMA(&MS53L2M_HUART, MS53L2MBuffArray, MS53L2M_NORMAL_RX_BUF_SIZE);
 }
 
 /*
@@ -76,10 +76,10 @@ void usart_user_handler(UART_HandleTypeDef *huart)
 //			memset(TFminiPlusBuffArray_Front_Right, 0, TFMINIPLUS_BUFF_SIZE);
 //			HAL_UART_Receive_DMA(huart, (uint8_t *)TFminiPlusBuffArray_Front_Right, TFMINIPLUS_BUFF_SIZE); 
 //		}
-        else if (huart == &MS53L0M_HUART) {
-            ms53l0m_normal_get_data(MS53L0MBuffArray, MS53L0M_NORMAL_RX_BUF_SIZE);
-//            memset(MS53L0MBuffArray, 0, MS53L0M_NORMAL_RX_BUF_SIZE);
-            HAL_UART_Receive_DMA(huart, MS53L0MBuffArray, MS53L0M_NORMAL_RX_BUF_SIZE);
+        else if (huart == &MS53L2M_HUART) {
+            ms53l2m_normal_get_data(MS53L2MBuffArray, MS53L2M_NORMAL_RX_BUF_SIZE);
+            memset(MS53L2MBuffArray, 0, MS53L2M_NORMAL_RX_BUF_SIZE);
+            HAL_UART_Receive_DMA(huart, MS53L2MBuffArray, MS53L2M_NORMAL_RX_BUF_SIZE);
         }
   
     }
