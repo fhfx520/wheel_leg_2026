@@ -33,7 +33,7 @@
 #ifdef MG4005
     #define	TRIGGER_MOTOR_ECD_SINGLE    (65536.0f)  //拨盘一颗子弹转过的编码值 65536 * 10 / 10 = 65536.0f
     #define TRIGGER_MOTOR_ECD_SERIES    (65536.0f)	//拨盘一颗子弹转过的编码值 65536 * 10 / 10 = 65536.0f
-    #define TRIGGER_MOTOR_STUCK_CURRENT 800	    //拨盘卡弹电流阈值 0~2048
+    #define TRIGGER_MOTOR_STUCK_CURRENT 600	    //拨盘卡弹电流阈值 0~2048
     #define TRIGGER_MOTOR_STUCK_SPEED   1100	    //拨盘卡弹电流阈值  
 #endif
 
@@ -129,7 +129,7 @@ static uint8_t series_shoot_enable(void)
 				
         && ((shoot.barrel.heat_remain >= MIN_HEAT))  //热量控制
         && frequency_cnt * SHOOT_PERIOD >= shoot.trigger_period  //射频控制
-        && ABS(trigger_ecd_error) <  0.2f * TRIGGER_MOTOR_ECD_SERIES  //拨盘误差控制		
+        && ABS(trigger_ecd_error) <  0.1f * TRIGGER_MOTOR_ECD_SERIES  //拨盘误差控制		
     );
 }
 static uint16_t init_cnt = 0;
@@ -307,8 +307,10 @@ static void shoot_init(void)
     pid_init(&shoot.trigger_spd.pid, NONE, 0.0015f, 0.00005f, 0, 0.18f, 1.8f);
     #endif
     #ifdef MG4005
-    pid_init(&shoot.trigger_ecd.pid, NONE, 0.4f, 0.0f, 0.0f, 0.0f, 18000.0f);
-    pid_init(&shoot.trigger_spd.pid, NONE, 0.06f, 0.00005f, 0.0f, 400.0f, 2048.0f);
+    pid_init(&shoot.trigger_ecd.pid, NONE, 0.45f, 0.0f, 0.0f, 0.0f, 30000.0f);
+    pid_init(&shoot.trigger_spd.pid, NONE, 0.03f, 0.00001f, 0.0f, 50.0f, 2048.0f);
+	
+	
     #endif
     //发射器模式初始化
     shoot.trigger_mode  = TRIGGER_MODE_PROTECT;

@@ -21,6 +21,7 @@
 #include "chassis_task.h"
 #include "mode_switch_task.h"
 #include "board_comm.h"
+#include "shoot_task.h"
 
 #define row_debug 2 * 10
 #define DEBUG_TEXT_LOG_DIV       2u
@@ -483,7 +484,8 @@ void log_scope_data_pkg(void)
 	{
 		case 1: { /* 拨盘 PID */
 			
-			log_scope_get_data(wlr.stair_flag);
+			log_scope_get_data(shoot.trigger_ecd.fdb);
+            log_scope_get_data(shoot.trigger_ecd.ref);
 			
 //			log_scope_get_data(wlr.side[1].Fn_kal);
 			break;

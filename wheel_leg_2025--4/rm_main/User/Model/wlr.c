@@ -518,7 +518,7 @@ static void update_leg_height_and_balance(float yaw_error)
         } else if (wlr.jump_flag == WLR_JUMP_IDLE && wlr.sky_flag == WLR_SKY_IDLE) {
             wlr.high_set = ramp_calc(&height_ramp, LegLengthHigh);
 			if(wlr.direction)
-				x3_balance_zero = 0.06f;
+				x3_balance_zero = x3_balance_zero_normal;
 			else
 				x3_balance_zero = x3_balance_zero_normal;
         }
@@ -552,7 +552,7 @@ static void update_leg_height_and_balance(float yaw_error)
     }
 
     if (wlr.jump_flag == WLR_JUMP_ASCEND) {
-        x3_balance_zero = 0.0f;
+        x3_balance_zero = 0.0f;   
     }
 	if(wlr.last_high_flag != wlr.high_flag && chassis.recover_flag == 0)
 	{

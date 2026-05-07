@@ -465,6 +465,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>distance,0x0A</ItemText>
         </Ww>
+        <Ww>
+          <count>62</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>\\rm_main\../User/Task/shoot_task.c\shoot.trigger_spd.pid.kp</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
@@ -601,6 +606,11 @@
           <count>26</count>
           <WinNumber>2</WinNumber>
           <ItemText>MS53L0MBuffArray</ItemText>
+        </Ww>
+        <Ww>
+          <count>27</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>sbtrigger,0x0A</ItemText>
         </Ww>
       </WatchWindow2>
       <MemoryWindow1>
