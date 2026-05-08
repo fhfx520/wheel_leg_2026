@@ -3,7 +3,7 @@
 <title>Static Call Graph - [rm_main\rm_main.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image rm_main\rm_main.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Fri May  8 15:50:48 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Fri May  8 17:01:00 2026
 <BR><P>
 <H3>Maximum Stack Usage =        856 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -5185,7 +5185,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(.rodata..L__const.MX_FREERTOS_Init.os_thread_def_GimbalTask)
 </UL>
-<P><STRONG><a name="[282]"></a>log_scope_data_pkg</STRONG> (Thumb, 344 bytes, Stack size 32 bytes, debug_task.o(.text.log_scope_data_pkg))
+<P><STRONG><a name="[282]"></a>log_scope_data_pkg</STRONG> (Thumb, 380 bytes, Stack size 32 bytes, debug_task.o(.text.log_scope_data_pkg))
 <BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = log_scope_data_pkg &rArr; log_scope_get_data &rArr; float2byte
 </UL>
 <BR>[Calls]<UL><LI><a href="#[284]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;log_scope_get_data (via Veneer)
@@ -5723,8 +5723,8 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;shoot_task
 </UL>
 
-<P><STRONG><a name="[344]"></a>shoot_pid_calc</STRONG> (Thumb, 260 bytes, Stack size 32 bytes, shoot_task.o(.text.shoot_pid_calc))
-<BR><BR>[Stack]<UL><LI>Max Depth = 92<LI>Call Chain = shoot_pid_calc &rArr; pid_calc &rArr; f_changing_intergration_rate
+<P><STRONG><a name="[344]"></a>shoot_pid_calc</STRONG> (Thumb, 190 bytes, Stack size 24 bytes, shoot_task.o(.text.shoot_pid_calc))
+<BR><BR>[Stack]<UL><LI>Max Depth = 84<LI>Call Chain = shoot_pid_calc &rArr; pid_calc &rArr; f_changing_intergration_rate
 </UL>
 <BR>[Calls]<UL><LI><a href="#[295]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_calc (via Veneer)
 </UL>

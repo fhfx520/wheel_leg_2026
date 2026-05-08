@@ -527,11 +527,13 @@ void log_scope_data_pkg(void)
 		
             log_scope_get_data(trigger_motor.rx_current);
             log_scope_get_data(trigger_motor.speed_rpm);
+            log_scope_get_data(shoot.trigger_output);
 		
 			
 			
             log_scope_get_data(back_cnt);
             log_scope_get_data(back_flag);
+            log_scope_get_data(err_cnt);
 			
 		
 
