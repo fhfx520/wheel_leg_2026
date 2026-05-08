@@ -6,7 +6,7 @@
 #include "prot_tfmini.h"
 #include "prot_hipnuc.h"
 #include "prot_ms53l2m.h"
-
+#include "prot_ms53l0m.h"
 #define DEBUG_DATA_LEN 10
 #define JUDGE_DATA_LEN 150
 #define TFMINIPLUS_BUFF_SIZE 50
@@ -78,9 +78,9 @@ void usart_user_handler(UART_HandleTypeDef *huart)
 //			HAL_UART_Receive_DMA(huart, (uint8_t *)TFminiPlusBuffArray_Front_Right, TFMINIPLUS_BUFF_SIZE); 
 //		}
         else if (huart == &MS53L2M_HUART) {
-            ms53l2m_normal_get_data(MS53L2MBuffArray, MS53L2M_NORMAL_RX_BUF_SIZE);
-            memset(MS53L2MBuffArray, 0, MS53L2M_NORMAL_RX_BUF_SIZE);
-            HAL_UART_Receive_DMA(huart, MS53L2MBuffArray, MS53L2M_NORMAL_RX_BUF_SIZE);
+            ms53l0m_normal_get_data(MS53L2MBuffArray, MS53L0M_NORMAL_RX_BUF_SIZE);
+            memset(MS53L2MBuffArray, 0, MS53L0M_NORMAL_RX_BUF_SIZE);
+            HAL_UART_Receive_DMA(huart, MS53L2MBuffArray, MS53L0M_NORMAL_RX_BUF_SIZE);
 			ccnct++;
         }
   

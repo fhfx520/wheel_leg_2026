@@ -386,6 +386,7 @@ kalman_filter_t tfmini_fn[2];
 	
 ramp_t height_ramp;
 ramp_t jump_ramp;
+ramp_t stair_ramp;
 ramp_t wz_ramp;
 ramp_t Fy_ramp[2];	
 ramp_t sky_ramp[2];
@@ -819,11 +820,12 @@ static void handle_stair_state(void)
 {
     if(wlr.stair_flag == WLR_STAIR_ASCEND)
 	{
+		 wlr.v_ref = ramp_calc(&stair_ramp, 1.3f);
 		 Fy_ramp[0].out = Fy_ramp[1].out= 0;
 		 wlr.high_set = ramp_calc(&height_ramp, LegLengthStair);
 		 x3_balance_zero = x3_balance_zero_normal;
          x5_balance_zero = 0.0f;
-		 if(fabsf(wlr.pit_fdb) > 0.06f) {
+		 if(fabsf(wlr.pit_fdb) > 0.1f) {
 			wlr.v_ref = 0;
 			wlr.high_set = 0.12f;
 			wlr.stair_flag = WLR_STAIR_RECOVER_SHORT;
@@ -831,7 +833,8 @@ static void handle_stair_state(void)
 	}
     else if(wlr.stair_flag == WLR_STAIR_RECOVER_SHORT)
 	{
-		data_limit(&wlr.v_ref,-1.0f,1.0f);
+		stair_ramp.out = 0.0f;
+		data_limit(&wlr.v_ref,-1.5f,1.5f);
         wlr.high_set = 0.12f;
         x3_balance_zero = x3_balance_zero_normal;
         if (fabsf(wlr.high_set - vmc[0].L_fdb) < 0.03f && fabsf(wlr.high_set - vmc[1].L_fdb) < 0.03f) {
@@ -841,7 +844,7 @@ static void handle_stair_state(void)
 	}
     else if(wlr.stair_flag == WLR_STAIR_RECOVER_LONG)
 	{
-		data_limit(&wlr.v_ref,-1.0f,1.0f);
+		data_limit(&wlr.v_ref,-1.5f,1.5f);
 		
 		x3_balance_zero = 1.5f;
 		wlr.high_set = 0.25f;
@@ -850,7 +853,7 @@ static void handle_stair_state(void)
 	}
     else if(wlr.stair_flag == WLR_STAIR_LANDING)
 	{
-		data_limit(&wlr.v_ref,-1.0f,1.0f);
+		data_limit(&wlr.v_ref,-1.5f,1.5f);
 		x3_balance_zero = x3_balance_zero_normal;
 		wlr.high_set = 0.16f;
 	}
@@ -1168,6 +1171,7 @@ void wlr_init(void)
 	ramp_init(&height_ramp, 0.001f, LegLengthMin, LegLengthMax);			//日常腿长斜坡
 	ramp_init(&sky_height_ramp, 0.001f, LegLengthMin, LegLengthMax);		//空中腿长斜坡
 	ramp_init(&jump_ramp, 0.008f, -3.0f, 3.0f);
+	ramp_init(&stair_ramp, 0.004f, -1.5f, 1.5f);
 	ramp_init(&wz_ramp, 0.05f,  0,  3.0f);									//小陀螺加速K矩阵wz项斜坡
 	ramp_init(&sky_ramp[0], 15.0f, -450.0f,  450.0f);						//伸腿支持力斜坡
 	ramp_init(&sky_ramp[1], 15.0f, -450.0f,  450.0f);						//伸腿支持力斜坡
