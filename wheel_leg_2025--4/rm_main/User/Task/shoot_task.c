@@ -266,6 +266,12 @@ static void shoot_control(void)
 			//卡蛋反转
 			if(/* ABS(trigger_motor.rx_current) > TRIGGER_MOTOR_STUCK_CURRENT && */ ABS(trigger_motor.speed_rpm) < TRIGGER_MOTOR_STUCK_SPEED )
 				back_cnt ++;
+			else {
+				back_flag = 0;
+				back_cnt = 0;
+				err_cnt = 0;
+		}
+			
 			if (back_cnt > 50) {
 				back_flag = 1;
 				err_cnt ++;
@@ -274,6 +280,7 @@ static void shoot_control(void)
 					back_cnt = 0;
 					err_cnt = 0;
 					back_flag = 0;
+					shoot.trigger_ecd.ref = trigger_motor.total_ecd;
 				}
 			}
             break;
@@ -340,8 +347,8 @@ static void shoot_pid_calc(void)
     shoot.trigger_output = pid_calc(&shoot.trigger_spd.pid, shoot.trigger_spd.ref, shoot.trigger_spd.fdb);
 		
 	//牛牛卡了反转
-//	if(/*ABS(trigger_motor.rx_current) > TRIGGER_MOTOR_STUCK_CURRENT && */ ABS(trigger_motor.speed_rpm) < TRIGGER_MOTOR_STUCK_SPEED && back_flag == 1)
-//		shoot.trigger_output = 0;
+	if(/*ABS(trigger_motor.rx_current) > TRIGGER_MOTOR_STUCK_CURRENT && */ ABS(trigger_motor.speed_rpm) < TRIGGER_MOTOR_STUCK_SPEED && back_flag == 1)
+		shoot.trigger_output = 0;
 }
 
 static void shoot_data_output(void)

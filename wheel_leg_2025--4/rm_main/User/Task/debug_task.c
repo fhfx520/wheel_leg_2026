@@ -518,8 +518,8 @@ void log_scope_data_pkg(void)
             break;
 		}
 	case 8: { /* 拨盘 */
-//            log_scope_get_data(shoot.trigger_ecd.ref);
-//            log_scope_get_data(shoot.trigger_ecd.fdb);
+            log_scope_get_data(shoot.trigger_ecd.ref);
+            log_scope_get_data(shoot.trigger_ecd.fdb);
 //		
 //            log_scope_get_data(shoot.trigger_spd.ref);
 //            log_scope_get_data(shoot.trigger_spd.fdb);
