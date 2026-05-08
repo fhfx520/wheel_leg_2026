@@ -826,7 +826,6 @@ static void handle_stair_state(void)
 		 x3_balance_zero = x3_balance_zero_normal;
          x5_balance_zero = 0.0f;
 		 if(fabsf(wlr.pit_fdb) > 0.1f) {
-			wlr.v_ref = 0;
 			wlr.high_set = 0.12f;
 			wlr.stair_flag = WLR_STAIR_RECOVER_SHORT;
 		 }
