@@ -33,8 +33,8 @@
 #ifdef MG4005
     #define	TRIGGER_MOTOR_ECD_SINGLE    (65536.0f)  //拨盘一颗子弹转过的编码值 65536 * 10 / 10 = 65536.0f
     #define TRIGGER_MOTOR_ECD_SERIES    (65536.0f)	//拨盘一颗子弹转过的编码值 65536 * 10 / 10 = 65536.0f
-    #define TRIGGER_MOTOR_STUCK_CURRENT 600	    //拨盘卡弹电流阈值 0~2048
-    #define TRIGGER_MOTOR_STUCK_SPEED   1100	    //拨盘卡弹电流阈值  
+    #define TRIGGER_MOTOR_STUCK_CURRENT 304	    //拨盘卡弹电流阈值 0~2048
+    #define TRIGGER_MOTOR_STUCK_SPEED   100	    //拨盘卡弹转速阈值  
 #endif
 
 
@@ -134,7 +134,7 @@ static uint8_t series_shoot_enable(void)
 }
 static uint16_t init_cnt = 0;
 static uint8_t recover_flag = 0;
-uint16_t sbtrigger = 6200;
+uint16_t sbtrigger = 37000;
 //uint16_t sbtrigger = 8000;
 static void pre_fabricated_trigger_position(void)
 {
@@ -220,6 +220,9 @@ static void shoot_control(void)
             shoot.trigger_ecd.ref = trigger_motor.total_ecd;
             shoot.trigger_spd.pid.i_out = 0;
             shoot.trigger_output = 0;
+			init_cnt = 0; 
+			recover_flag = 0;
+			trigger_motor.round_cnt = 0;
             break;
         }
         case TRIGGER_MODE_STOP: { //拨盘停止模式，保持静止，有力
@@ -261,9 +264,9 @@ static void shoot_control(void)
                 shoot.barrel.heat += 10;
             }
 			//卡蛋反转
-			if(ABS(trigger_motor.rx_current) > TRIGGER_MOTOR_STUCK_CURRENT && ABS(trigger_motor.speed_rpm) < TRIGGER_MOTOR_STUCK_SPEED )
+			if(/* ABS(trigger_motor.rx_current) > TRIGGER_MOTOR_STUCK_CURRENT && */ ABS(trigger_motor.speed_rpm) < TRIGGER_MOTOR_STUCK_SPEED )
 				back_cnt ++;
-			if (back_cnt > 200) {
+			if (back_cnt > 50) {
 				back_flag = 1;
 				err_cnt ++;
 				shoot.trigger_ecd.ref = trigger_motor.total_ecd - TRIGGER_MOTOR_ECD_SERIES;
@@ -307,8 +310,8 @@ static void shoot_init(void)
     pid_init(&shoot.trigger_spd.pid, NONE, 0.0015f, 0.00005f, 0, 0.18f, 1.8f);
     #endif
     #ifdef MG4005
-    pid_init(&shoot.trigger_ecd.pid, NONE, 0.45f, 0.0f, 0.0f, 0.0f, 30000.0f);
-    pid_init(&shoot.trigger_spd.pid, NONE, 0.03f, 0.00001f, 0.0f, 50.0f, 2048.0f);
+    pid_init(&shoot.trigger_ecd.pid, NONE, 0.25f, 0.0f, 0.15f, 0.0f, 30000.0f);
+    pid_init(&shoot.trigger_spd.pid, NONE, 0.1f, 0.0f, 0.0f, 200.0f, 1224.0f);
 	
 	
     #endif
@@ -337,7 +340,7 @@ static void shoot_pid_calc(void)
     shoot.trigger_output = pid_calc(&shoot.trigger_spd.pid, shoot.trigger_spd.ref, shoot.trigger_spd.fdb);
 		
 	//牛牛卡了反转
-	if(ABS(trigger_motor.rx_current) > TRIGGER_MOTOR_STUCK_CURRENT && ABS(trigger_motor.speed_rpm) < TRIGGER_MOTOR_STUCK_SPEED)
+	if(/*ABS(trigger_motor.rx_current) > TRIGGER_MOTOR_STUCK_CURRENT && */ ABS(trigger_motor.speed_rpm) < TRIGGER_MOTOR_STUCK_SPEED)
 		shoot.trigger_output = 0;
 }
 

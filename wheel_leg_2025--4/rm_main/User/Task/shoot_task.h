@@ -80,6 +80,7 @@ typedef struct
 extern shoot_t shoot;
 extern uint8_t back_flag;
 extern float vision_send_time;
+extern uint32_t back_cnt;
 void shoot_task(void const *argu);
 
 #endif

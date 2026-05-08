@@ -23,11 +23,12 @@
 #include "board_comm.h"
 #include "shoot_task.h"
 #include "prot_ms53l0m.h"
+#include "drv_lk_motor.h"
 
 #define row_debug 2 * 10
 #define DEBUG_TEXT_LOG_DIV       2u
 #define DEBUG_TEXT_LOG_SLOT_NUM  21u
-uint8_t debug_wave = 0;
+uint8_t debug_wave = 8;
 uint8_t debug_text_log_enable = 1;
 float test_hex = 1;
 extern FGT_sin_t FGT_sin_chassis;
@@ -516,6 +517,26 @@ void log_scope_data_pkg(void)
             log_scope_get_data(ms53l0m_distance_m);
             break;
 		}
+	case 8: { /* 拨盘 */
+//            log_scope_get_data(shoot.trigger_ecd.ref);
+//            log_scope_get_data(shoot.trigger_ecd.fdb);
+//		
+//            log_scope_get_data(shoot.trigger_spd.ref);
+//            log_scope_get_data(shoot.trigger_spd.fdb);
+//            log_scope_get_data(shoot.trigger_output);
+		
+            log_scope_get_data(trigger_motor.rx_current);
+            log_scope_get_data(trigger_motor.speed_rpm);
+		
+			
+			
+            log_scope_get_data(back_cnt);
+            log_scope_get_data(back_flag);
+			
+		
+
+            break;
+		}
 	}
 }
 /* 串口上位机数据发送任务 */
@@ -526,11 +547,11 @@ void debug_task(void const* argument)
     for(;;)
     {
         thread_wake_time = osKernelSysTick();
-//        log_scope_data_output();
-        if (++text_log_div >= DEBUG_TEXT_LOG_DIV) {
-            text_log_div = 0;
-            debug_log_text_output();
-        }
+        log_scope_data_output();
+//        if (++text_log_div >= DEBUG_TEXT_LOG_DIV) {
+//            text_log_div = 0;
+//            debug_log_text_output();
+//        }
         osDelayUntil(&thread_wake_time, 2);
     }
 }
