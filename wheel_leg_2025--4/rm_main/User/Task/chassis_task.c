@@ -384,8 +384,10 @@ static void chassis_execute_fsm(void)
 			wlr.double_flag = 1;
 			if(wlr.sky_flag == WLR_SKY_IDLE && wlr.jump_flag == WLR_JUMP_IDLE)
 				wlr.sky_flag = WLR_SKY_FOLDING; 
-			else if(wlr.sky_flag == WLR_SKY_FOLDING && ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f > 0.45f) \
-				&& ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f < 0.8f) && sky_ccc > 1000)
+			else if(wlr.sky_flag == WLR_SKY_FOLDING)
+				sky_ccc++;
+			if(wlr.sky_flag == WLR_SKY_FOLDING && ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f > 0.25f) \
+				&& ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f < 0.5f) && sky_ccc > 250)
 				wlr.sky_flag = WLR_SKY_EXTENDING; 
 			else if(wlr.sky_flag == WLR_SKY_STAND && !g_robot_ctx.sky_finish_flag)
 				g_robot_ctx.sky_finish_flag = 1;

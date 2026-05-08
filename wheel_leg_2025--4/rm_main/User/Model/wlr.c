@@ -708,14 +708,15 @@ static void handle_sky_state(void)
     static float sky_leg_length = 0.0f;
 	static uint16_t target_cnt = 0;
     if (wlr.sky_flag == WLR_SKY_FOLDING) {
-        sky_leg_length = (wlr.double_flag ? 0.16f : 0.11f);
-        wlr.high_set = ramp_calc(&sky_height_ramp, sky_leg_length);
-        x3_balance_zero = x3_balance_zero_normal- 0.03f;
-        x5_balance_zero = -0.1f;
         pid_leg_sky_jump[0].i_out = pid_leg_sky_jump[1].i_out = \
 	    pid_leg_sky_cover[0].i_out = pid_leg_sky_cover[1].i_out = \
 	    Fy_ramp[0].out = Fy_ramp[1].out= 0;
 		sky_ramp[0].out = sky_ramp[1].out= 0;
+
+        sky_leg_length = (wlr.double_flag ? 0.16f : 0.11f);
+        x3_balance_zero = x3_balance_zero_normal- 0.03f;
+        x5_balance_zero = (wlr.double_flag ? 0.0f : -0.1f);
+        wlr.high_set = ramp_calc(&sky_height_ramp, sky_leg_length);
         
 //        if(g_robot_ctx.output.top_mode == TOP_MODE_REMOTE) {
 //			sky_ccc++;
@@ -729,26 +730,20 @@ static void handle_sky_state(void)
 //			} 
 //		}
 		if(wlr.double_flag)
-            wlr.v_ref = ramp_calc(&jump_ramp, -2.0f);
+            wlr.v_ref = ramp_calc(&jump_ramp, -1.5f);
         else
             wlr.v_ref = ramp_calc(&jump_ramp, -3.0f);
     } else if (wlr.sky_flag == WLR_SKY_EXTENDING) {
 		sky_ccc = 0;
         wlr.high_set = 0.35f;
         jump_ramp.out = 0.0f;
-		if(wlr.double_flag)
-		{
-            wlr.v_ref = -2.5f;
-			x3_balance_zero = 0.08f;
-			x5_balance_zero = 0.0f;
-		}
-		else
-		{
-            wlr.v_ref = -2.5f;
-			x3_balance_zero = x3_balance_zero_normal;
-			x5_balance_zero = -0.05f;
-		}
-        if (fabsf(0.30f - vmc[0].L_fdb) < 0.03f && fabsf(0.30f - vmc[1].L_fdb) < 0.03f) {
+        wlr.v_ref = -2.5f;
+        x3_balance_zero = x3_balance_zero_normal;
+        x5_balance_zero = (wlr.double_flag ? -0.02f : -0.05f);
+        if (fabsf(0.30f - vmc[0].L_fdb) < 0.03f && fabsf(0.30f - vmc[1].L_fdb) < 0.03f && !wlr.double_flag) {
+            wlr.sky_cnt++;
+        }
+        else if (vmc[0].L_fdb - 0.25f > 0.0f && vmc[1].L_fdb - 0.25f > 0.0f && wlr.double_flag) {
             wlr.sky_cnt++;
         }
         if (wlr.sky_cnt > 5) {
@@ -942,7 +937,10 @@ static void select_control_matrix(void)
         aMartix_Cover(lqr.K, (float*)K_Array_Leg_030, 4, 10);
     } 
 	else if (wlr.sky_flag == WLR_SKY_FOLDING) {		//平地收腿运动
-        aMartix_Cover(lqr.K, (float*)K_Array_Leg_015, 4, 10);
+        if(wlr.double_flag)
+            aMartix_Cover(lqr.K, (float*)K_Array_Leg_018, 4, 10);
+        else
+            aMartix_Cover(lqr.K, (float*)K_Array_Leg_015, 4, 10);
     } 
     else if (wlr.sky_flag > WLR_SKY_FOLDING) {		//蹬腿、空中收腿、落地缓冲、站立
         aMartix_Cover(lqr.K, (float*)K_Array_Sky, 4, 10);

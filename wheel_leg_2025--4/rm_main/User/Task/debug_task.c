@@ -27,7 +27,7 @@
 #define row_debug 2 * 10
 #define DEBUG_TEXT_LOG_DIV       2u
 #define DEBUG_TEXT_LOG_SLOT_NUM  21u
-uint8_t debug_wave = 1;
+uint8_t debug_wave = 0;
 uint8_t debug_text_log_enable = 1;
 float test_hex = 1;
 extern FGT_sin_t FGT_sin_chassis;
@@ -91,8 +91,9 @@ static const char* debug_chassis_name(ChassisState_e state)
         case CHASSIS_TERRAIN_READY:            return "TERRAIN_RDY";
         case CHASSIS_TERRAIN_EXECUTING:        return "TERRAIN_RUN";
         case CHASSIS_ASCEND:                   return "ASCEND";
-        case CHASSIS_EXECUTING_FOLLOW_ASCEND:  return "ASCEND_RUN";
+        case CHASSIS_EXECUTING_FOLLOW_ASCEND:  return "DOUBLE";
         case CHASSIS_ENERGY:                   return "ENERGY";
+		case CHASSIS_STAIR:					   return "STAIR";
         default:                               return "UNKNOWN";
     }
 }
@@ -525,11 +526,11 @@ void debug_task(void const* argument)
     for(;;)
     {
         thread_wake_time = osKernelSysTick();
-        log_scope_data_output();
-//        if (++text_log_div >= DEBUG_TEXT_LOG_DIV) {
-//            text_log_div = 0;
-//            debug_log_text_output();
-//        }
+//        log_scope_data_output();
+        if (++text_log_div >= DEBUG_TEXT_LOG_DIV) {
+            text_log_div = 0;
+            debug_log_text_output();
+        }
         osDelayUntil(&thread_wake_time, 2);
     }
 }
