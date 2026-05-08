@@ -293,7 +293,7 @@ static void kb_ter_ready_enter(void) {
 static void kb_ter_ready_execute(void) {
     g_robot_ctx.output.chassis = CHASSIS_TERRAIN_READY;
     g_robot_ctx.output.gimbal = get_kb_gimbal_mode();
-    g_robot_ctx.output.shoot  = get_kb_shoot_mode(); 
+    g_robot_ctx.output.shoot  = SHOOT_STOP; 
     
 	if (check_key_trigger(KEY_F)) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
 	if (check_key_trigger(KEY_C)) { fsm_change(&fsm_keyboard_sub, &state_kb_high); return; }
@@ -306,7 +306,7 @@ static void kb_ter_run_enter(void) { g_robot_ctx.output.chassis = CHASSIS_TERRAI
 static void kb_ter_run_execute(void) {
     g_robot_ctx.output.chassis = CHASSIS_TERRAIN_EXECUTING;
     g_robot_ctx.output.gimbal = get_kb_gimbal_mode();
-    g_robot_ctx.output.shoot  = get_kb_shoot_mode();
+    g_robot_ctx.output.shoot  = SHOOT_STOP;
 
 	if (g_robot_ctx.sky_finish_flag) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
 	if (check_key_trigger(KEY_F)) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }

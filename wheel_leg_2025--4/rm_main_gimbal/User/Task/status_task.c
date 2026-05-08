@@ -21,11 +21,13 @@ void status_task(void const* argument)
 	MX_IWDG1_Init();
     for(;;)
     {
+		status.dm_motor = dm_motor_check_offline();
         if (status.task.comm == 1 &&
             status.task.gimbal == 1 &&
 			status.task.board == 1 &&
             status.task.shoot == 1 &&
-            status.task.mode_switch == 1) {
+            status.task.mode_switch == 1 &&
+			status.dm_motor == 0) {
             status.task.comm = 0;
             status.task.gimbal = 0;
             status.task.chassis = 0;
@@ -46,7 +48,7 @@ void status_task(void const* argument)
 				
         status.imu = imu_check_offline();
         status.dji_motor = dji_motor_check_offline();
-        status.dm_motor = dm_motor_check_offline();
+        
         
         if (status.remote == 0 && status.vision == 0 && status.judge == 0 && \
             status.vtm == 0 && status.imu == 0 && status.dji_motor == 0 && \

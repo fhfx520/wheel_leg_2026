@@ -22,6 +22,7 @@
 #include "mode_switch_task.h"
 #include "board_comm.h"
 #include "shoot_task.h"
+#include "prot_ms53l0m.h"
 
 #define row_debug 2 * 10
 #define DEBUG_TEXT_LOG_DIV       2u
@@ -508,6 +509,10 @@ void log_scope_data_pkg(void)
             log_scope_get_data(chassis_imu.pit);
             log_scope_get_data(wlr.roll_fdb);
             log_scope_get_data(tlm.gnd_roll_fdb);
+            break;
+		}        
+	case 7: { /* 激光 */
+            log_scope_get_data(ms53l0m_distance_m);
             break;
 		}
 	}
