@@ -190,6 +190,16 @@
           <WinNumber>1</WinNumber>
           <ItemText>pit_motor,0x0A</ItemText>
         </Ww>
+        <Ww>
+          <count>7</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>fric_motor[1],0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>8</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>fric_motor[0],0x0A</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
@@ -201,6 +211,11 @@
           <count>1</count>
           <WinNumber>2</WinNumber>
           <ItemText>status.dm_motor</ItemText>
+        </Ww>
+        <Ww>
+          <count>2</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>pit_motor,0x0A</ItemText>
         </Ww>
       </WatchWindow2>
       <MemoryWindow1>

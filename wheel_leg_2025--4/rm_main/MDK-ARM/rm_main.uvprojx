@@ -1285,19 +1285,9 @@
               <FilePath>..\User\Protocol\prot_tfmini.c</FilePath>
             </File>
             <File>
-              <FileName>prot_ms53l2m.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\User\Protocol\prot_ms53l2m.c</FilePath>
-            </File>
-            <File>
               <FileName>prot_ms53l0m.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\Protocol\prot_ms53l0m.c</FilePath>
-            </File>
-            <File>
-              <FileName>prot_ms53l0m.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\User\Protocol\prot_ms53l0m.h</FilePath>
             </File>
           </Files>
         </Group>
