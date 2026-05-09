@@ -156,9 +156,20 @@ static uint8_t check_joint_offstall(uint8_t stall_leg_num)
 uint8_t check_tof_jump(float dis_up, float dis_down)
 {
 	static float last_dis[2] = {0};
-	last_dis[0] = wlr.side[0].Front_dis_fdb;
-	last_dis[1] = wlr.side[1].Front_dis_fdb;
-	if((last_dis[0] + last_dis[1]) > 2 * dis_up && (wlr.side[0].Front_dis_fdb + wlr.side[1].Front_dis_fdb) < 2 * dis_down)
+	static uint8_t tof_cnt = 0;
+	if((wlr.side[0].Front_dis_kal + wlr.side[1].Front_dis_kal) / 2.0f < (last_dis[0] + last_dis[1]) / 2.0f && 
+		(wlr.side[0].Front_dis_kal + wlr.side[1].Front_dis_kal) / 2.0f > dis_down && 
+		(wlr.side[0].Front_dis_kal + wlr.side[1].Front_dis_kal) / 2.0f < dis_up)
+	{
+		tof_cnt++;
+	}
+	else
+	{
+		tof_cnt = 0;
+	}
+	last_dis[0] = wlr.side[0].Front_dis_kal;
+	last_dis[1] = wlr.side[1].Front_dis_kal;
+	if(tof_cnt >= 1)
 		return 1;
 	else
 		return 0;
@@ -339,10 +350,12 @@ static void chassis_execute_fsm(void)
 			g_robot_ctx.jump_finish_flag = 0;
 			if(wlr.sky_flag == WLR_SKY_IDLE)
 				wlr.sky_flag = WLR_SKY_FOLDING; 
-			if(wlr.sky_flag == WLR_SKY_FOLDING)
+			if(wlr.sky_flag == WLR_SKY_FOLDING) 
 				sky_ccc++; 
-			if(wlr.sky_flag == WLR_SKY_FOLDING && ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f > 0.65f) \
-				&& ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f < 1.45f) && g_robot_ctx.input.mouse.l)
+			// if(wlr.sky_flag == WLR_SKY_FOLDING && ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f > 0.65f) \
+			// 	&& ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f < 1.3f) && g_robot_ctx.input.mouse.l && check_tof_jump(0,0))
+			// 	g_robot_ctx.sky_start_flag = 1;
+			if(wlr.sky_flag == WLR_SKY_FOLDING && check_tof_jump(1.4f,0.65f) && sky_ccc > 1000)
 				g_robot_ctx.sky_start_flag = 1;
             break;
 		}
@@ -387,7 +400,7 @@ static void chassis_execute_fsm(void)
 			else if(wlr.sky_flag == WLR_SKY_FOLDING)
 				sky_ccc++;
 			if(wlr.sky_flag == WLR_SKY_FOLDING && ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f > 0.25f) \
-				&& ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f < 0.5f) && sky_ccc > 250)
+				&& ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f < 0.6f) && sky_ccc > 250)
 				wlr.sky_flag = WLR_SKY_EXTENDING; 
 			else if(wlr.sky_flag == WLR_SKY_STAND && !g_robot_ctx.sky_finish_flag)
 				g_robot_ctx.sky_finish_flag = 1;
@@ -564,6 +577,14 @@ static void chassis_data_input(void)
 			wlr.wz_ref = 0;
 			wlr.yaw_err = circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
 			if(fabsf(wlr.yaw_err) < PI / 8.0f) wlr.direction = 0;
+			break;
+		}
+		 {
+			wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI;
+			wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;  
+			wlr.wz_ref = 0;
+			wlr.yaw_err = circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
+			if(fabsf(wlr.yaw_err) < PI / 8.0f) wlr.direction = 1;
 			break;
 		}
         case CHASSIS_FIGHT: {

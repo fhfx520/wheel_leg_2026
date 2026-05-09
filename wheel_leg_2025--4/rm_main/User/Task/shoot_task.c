@@ -280,6 +280,7 @@ static void shoot_control(void)
 					back_cnt = 0;
 					err_cnt = 0;
 					back_flag = 0;
+					shoot.trigger_ecd.ref = trigger_motor.total_ecd;
 				}
 			}
             break;
