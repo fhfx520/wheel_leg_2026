@@ -544,11 +544,12 @@ static void update_leg_height_and_balance(float yaw_error)
             x3_balance_zero = 0.0f;
         } else if (wlr.jump_flag == WLR_JUMP_IDLE && wlr.sky_flag == WLR_SKY_IDLE && !wlr.energy_flag) {
             wlr.high_set = ramp_calc(&height_ramp, LegLengthNormal);
-            x3_balance_zero = x3_balance_zero_normal;
+            x3_balance_zero = (wlr.direction == 0 ? x3_balance_zero_normal : -x3_balance_zero_normal - 0.01f);
+			
         }
 		else if (wlr.energy_flag) {
 			wlr.high_set = 0.12f;
-			x3_balance_zero = x3_balance_zero_normal + 0.3f;
+			x3_balance_zero = x3_balance_zero_normal + 0.1f;
 		}
 		x5_balance_zero = 0.00f;
     }
@@ -1122,7 +1123,7 @@ static void map_virtual_force(uint8_t index)
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
     } 
 	else if (wlr.energy_flag){//击打能量机关
-		wlr.side[index].Fy = pid_calc(&pid_energy_leg[index], tlm.l_ref[index], vmc[index].L_fdb) - 30.0f;
+		wlr.side[index].Fy = pid_calc(&pid_energy_leg[index], tlm.l_ref[index], vmc[index].L_fdb) - 60.0f;
 	}
 	else if (wlr.high_flag == 1){//中腿长
         wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - ff_Fy_1
