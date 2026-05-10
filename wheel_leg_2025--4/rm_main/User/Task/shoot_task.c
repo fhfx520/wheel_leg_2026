@@ -33,7 +33,7 @@
 #ifdef MG4005
     #define	TRIGGER_MOTOR_ECD_SINGLE    (65536.0f)  //拨盘一颗子弹转过的编码值 65536 * 10 / 10 = 65536.0f
     #define TRIGGER_MOTOR_ECD_SERIES    (65536.0f)	//拨盘一颗子弹转过的编码值 65536 * 10 / 10 = 65536.0f
-    #define TRIGGER_MOTOR_STUCK_CURRENT 600	    //拨盘卡弹电流阈值 0~2048
+    #define TRIGGER_MOTOR_STUCK_CURRENT 300	    //拨盘卡弹电流阈值 0~2048
     #define TRIGGER_MOTOR_STUCK_SPEED   1500	    //拨盘卡弹转速阈值  
 #endif
 
@@ -134,8 +134,10 @@ static uint8_t series_shoot_enable(void)
 }
 static uint16_t init_cnt = 0;
 static uint8_t recover_flag = 0;
-uint16_t sbtrigger = 37000;
+//uint16_t sbtrigger = 37000;
+uint16_t sbtrigger = 52937;		//2026-5-11 0:29
 //uint16_t sbtrigger = 8000;
+
 static void pre_fabricated_trigger_position(void)
 {
 	if(init_cnt < 1000)

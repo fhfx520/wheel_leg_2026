@@ -475,6 +475,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>ccnct,0x0A</ItemText>
         </Ww>
+        <Ww>
+          <count>64</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>trigger_motor,0x0A</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
