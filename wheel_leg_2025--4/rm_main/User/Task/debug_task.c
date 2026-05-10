@@ -28,7 +28,7 @@
 #define row_debug 2 * 10
 #define DEBUG_TEXT_LOG_DIV       2u
 #define DEBUG_TEXT_LOG_SLOT_NUM  21u
-uint8_t debug_wave = 1;
+uint8_t debug_wave = 8;
 uint8_t debug_text_log_enable = 1;
 float test_hex = 1;
 extern FGT_sin_t FGT_sin_chassis;
@@ -544,7 +544,7 @@ void log_scope_data_pkg(void)
 //            log_scope_get_data(shoot.trigger_spd.fdb);
 //            log_scope_get_data(shoot.trigger_output);
 		
-            log_scope_get_data(trigger_motor.rx_current);
+            log_scope_get_data(shoot_delay_time);
             log_scope_get_data(trigger_motor.speed_rpm);
             log_scope_get_data(shoot.trigger_output);
 		
@@ -569,7 +569,7 @@ void debug_task(void const* argument)
     {
         thread_wake_time = osKernelSysTick();
         log_scope_data_output();
-        debug_log_shoot_delay_update();
+//        debug_log_shoot_delay_update();
 //        if (++text_log_div >= DEBUG_TEXT_LOG_DIV) {
 //            text_log_div = 0;
 //            debug_log_text_output();

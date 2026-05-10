@@ -207,7 +207,7 @@ static uint8_t series_shoot_enable(void)
 				
         && ((shoot.barrel.heat_remain >= MIN_HEAT))  //热量控制
         && frequency_cnt * SHOOT_PERIOD >= shoot.trigger_period  //射频控制
-        && ABS(trigger_ecd_error) <  0.1f * TRIGGER_MOTOR_ECD_SERIES  //拨盘误差控制		
+        && ABS(trigger_ecd_error) <  0.05f * TRIGGER_MOTOR_ECD_SERIES  //拨盘误差控制		
     );
 }
 static uint16_t init_cnt = 0;
@@ -402,7 +402,7 @@ static void shoot_init(void)
     #endif
     #ifdef MG4005
     pid_init(&shoot.trigger_ecd.pid, NONE, 0.17f, 0.0f, 0.15f, 0.0f, 30000.0f);
-    pid_init(&shoot.trigger_spd.pid, NONE, 0.12f, 0.0001f, 0.0f, 500.0f, 1224.0f);
+    pid_init(&shoot.trigger_spd.pid, NONE, 0.12f, 0.001f, 0.0f, 1500.0f, 2048.0f);
 	
 	
     #endif
@@ -494,13 +494,14 @@ static void shoot_mode_switch(void)
 	else if(ctrl_mode == REMOTER_MODE && rc_fsm_check(RC_LEFT_LD) && rc_fsm_check(RC_RIGHT_RD))
 		shoot.trigger_period = 100;
     else
-        shoot.trigger_period = 30;
+        shoot.trigger_period = 100;
 
     /* 3. 解析 FSM 大脑的组合状态 */
     switch (g_robot_ctx.output.shoot) {
         case SHOOT_PROTECT:{
             shoot.fric_mode = FRIC_MODE_STOP;
             shoot.trigger_mode = TRIGGER_MODE_PROTECT;
+			shoot_delay_reset();
             break;}
             
         case SHOOT_STOP:{
