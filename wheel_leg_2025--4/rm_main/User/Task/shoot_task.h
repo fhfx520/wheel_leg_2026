@@ -80,6 +80,10 @@ typedef struct
 extern shoot_t shoot;
 extern uint8_t back_flag;
 extern float vision_send_time;
+extern float shoot_delay_time;
+extern uint32_t shoot_delay_update_cnt;
+extern uint32_t shoot_delay_overflow_cnt;
+extern uint32_t shoot_delay_timeout_cnt;
 extern uint32_t back_cnt;
 extern uint32_t err_cnt;
 

@@ -404,6 +404,24 @@ static void debug_log_fly_right_status(void)
                wlr.side[1].T_adapt);
 }
 
+static void debug_log_shoot_delay_update(void)
+{
+    static uint32_t last_shoot_delay_update_cnt = 0;
+
+    if (last_shoot_delay_update_cnt == shoot_delay_update_cnt) {
+        return;
+    }
+
+    last_shoot_delay_update_cnt = shoot_delay_update_cnt;
+    log_printf("[shoot-delay] raw=%.1f filter=%.1f speed=%.2f update=%lu overflow=%lu timeout=%lu\r\n",
+               shoot_delay_time,
+               vision_send_time,
+               shoot_data.initial_speed,
+               (unsigned long)shoot_delay_update_cnt,
+               (unsigned long)shoot_delay_overflow_cnt,
+               (unsigned long)shoot_delay_timeout_cnt);
+}
+
 static void debug_log_text_output(void)
 {
     static uint8_t log_slot = 0;
@@ -551,6 +569,7 @@ void debug_task(void const* argument)
     {
         thread_wake_time = osKernelSysTick();
         log_scope_data_output();
+        debug_log_shoot_delay_update();
 //        if (++text_log_div >= DEBUG_TEXT_LOG_DIV) {
 //            text_log_div = 0;
 //            debug_log_text_output();

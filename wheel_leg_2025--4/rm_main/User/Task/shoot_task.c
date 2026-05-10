@@ -37,6 +37,9 @@
     #define TRIGGER_MOTOR_STUCK_SPEED   1500	    //拨盘卡弹转速阈值  
 #endif
 
+#define SHOOT_DELAY_QUEUE_SIZE      8
+#define SHOOT_DELAY_TIMEOUT_MS      500u
+#define SHOOT_SPEED_CHANGE_EPS      (1e-3f)
 
 static float Heat_ShootPeriod_calc(uint8_t trice_id);
 
@@ -53,6 +56,81 @@ uint8_t back_flag = 0;
 
 shoot_t shoot;
 //static buffer_t *shoot_speed_buffer;
+
+float vision_send_time;
+float shoot_delay_time;          // latest raw delay from trigger command to judge shoot speed update
+float last_shoot_speed;
+uint32_t shoot_delay_update_cnt;
+uint32_t shoot_delay_overflow_cnt;
+uint32_t shoot_delay_timeout_cnt;
+
+typedef struct
+{
+    uint32_t start_tick;
+} shoot_delay_pending_t;
+
+static shoot_delay_pending_t shoot_delay_queue[SHOOT_DELAY_QUEUE_SIZE];
+static uint8_t shoot_delay_head;
+static uint8_t shoot_delay_tail;
+static uint8_t shoot_delay_cnt;
+
+static void shoot_delay_pop(void)
+{
+    if (shoot_delay_cnt == 0) {
+        return;
+    }
+
+    shoot_delay_head++;
+    if (shoot_delay_head >= SHOOT_DELAY_QUEUE_SIZE) {
+        shoot_delay_head = 0;
+    }
+    shoot_delay_cnt--;
+}
+
+static void shoot_delay_reset(void)
+{
+    shoot_delay_head = 0;
+    shoot_delay_tail = 0;
+    shoot_delay_cnt = 0;
+    shoot_delay_time = 0.0f;
+    vision_send_time = 0.0f;
+    last_shoot_speed = shoot_data.initial_speed;
+    shoot_delay_update_cnt = 0;
+    shoot_delay_overflow_cnt = 0;
+    shoot_delay_timeout_cnt = 0;
+}
+
+static void shoot_delay_record_fire(void)
+{
+    if (shoot_delay_cnt == 0) {
+        last_shoot_speed = shoot_data.initial_speed;
+    }
+
+    if (shoot_delay_cnt >= SHOOT_DELAY_QUEUE_SIZE) {
+        shoot_delay_pop();
+        shoot_delay_overflow_cnt++;
+    }
+
+    shoot_delay_queue[shoot_delay_tail].start_tick = osKernelSysTick();
+    shoot_delay_tail++;
+    if (shoot_delay_tail >= SHOOT_DELAY_QUEUE_SIZE) {
+        shoot_delay_tail = 0;
+    }
+    shoot_delay_cnt++;
+    shoot.barrel.shoot_cnt++;
+}
+
+static void shoot_delay_drop_timeout(uint32_t now_tick)
+{
+    while (shoot_delay_cnt > 0) {
+        uint32_t wait_tick = now_tick - shoot_delay_queue[shoot_delay_head].start_tick;
+        if (wait_tick <= SHOOT_DELAY_TIMEOUT_MS) {
+            break;
+        }
+        shoot_delay_pop();
+        shoot_delay_timeout_cnt++;
+    }
+}
 
 uint8_t global_back_flag;
 //**********************添加预制弹位*************************//
@@ -250,6 +328,7 @@ static void shoot_control(void)
                 shoot_enable = 0;
                 shoot.trigger_ecd.ref += TRIGGER_MOTOR_ECD_SINGLE;
                 shoot.barrel.heat += 10;
+                shoot_delay_record_fire();
             }
             break;
         }
@@ -265,6 +344,7 @@ static void shoot_control(void)
 				shoot.trigger_ecd.ref += 1 * TRIGGER_MOTOR_ECD_SERIES;
 			    shoot.trigger_ecd.pid.i_out = 0.0f;
                 shoot.barrel.heat += 10;
+                shoot_delay_record_fire();
             }
 			//卡蛋反转
 			if(ABS(trigger_motor.rx_current) > TRIGGER_MOTOR_STUCK_CURRENT && ABS(trigger_motor.speed_rpm) < TRIGGER_MOTOR_STUCK_SPEED ) {
@@ -312,6 +392,7 @@ static void shoot_control(void)
 static void shoot_init(void)
 {
     memset(&shoot, 0, sizeof(shoot_t));
+    shoot_delay_reset();
     //发射器底层初始化
     pid_init(&shoot.fric_spd[0].pid, NONE, 0.0005f, 0, 0, 0, 0.8);
     pid_init(&shoot.fric_spd[1].pid, NONE, 0.0005f, 0, 0, 0, 0.8);
@@ -465,27 +546,22 @@ static void shoot_mode_switch(void)
     }
 }
 
-int last_tri_ref;
-float last_shoot_speed;
-float vision_send_time;
 static void vision_shoot_delay(void){
-	
-	 static uint8_t bias_time_check;
-	 static float bias_time_cnt;
-	
-	if( shoot.trigger_ecd.ref - last_tri_ref >=  0.8F * TRIGGER_MOTOR_ECD_SERIES )
-		bias_time_check = 1;
-	
-	if(bias_time_check){
-		bias_time_cnt++;
-		if( fabs(shoot_data.initial_speed - last_shoot_speed) > 1e-3 ){
-			vision_send_time = median_filter(bias_time_cnt * 2.0f);
-			bias_time_cnt = 0;
-			bias_time_check = 0;
-		}
-	}	
-	last_tri_ref = shoot.trigger_ecd.ref;
-	last_shoot_speed = shoot_data.initial_speed;
+    float cur_shoot_speed = shoot_data.initial_speed;
+    uint32_t now_tick = osKernelSysTick();
+
+    shoot_delay_drop_timeout(now_tick);
+
+    if (ABS(cur_shoot_speed - last_shoot_speed) > SHOOT_SPEED_CHANGE_EPS) {
+        if (shoot_delay_cnt > 0) {
+            uint32_t delay_tick = now_tick - shoot_delay_queue[shoot_delay_head].start_tick;
+            shoot_delay_time = (float)delay_tick;
+            vision_send_time = median_filter((int)delay_tick);
+            shoot_delay_update_cnt++;
+            shoot_delay_pop();
+        }
+        last_shoot_speed = cur_shoot_speed;
+    }
 }
 
 //根据当前热量线性控制射频
