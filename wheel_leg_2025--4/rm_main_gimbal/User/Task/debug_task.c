@@ -39,13 +39,14 @@ void log_scope_data_pkg(void)
 			
 			log_scope_get_data(vision.rx[0].data.yaw_vel);
 			
+			log_scope_get_data(gimbal.yaw_angle.pid.p_out);
 			log_scope_get_data(gimbal.yaw_spd.ref);
             log_scope_get_data(gimbal.yaw_spd.fdb);
 			
-			log_scope_get_data(shoot.fric_spd[0].fdb);
-            log_scope_get_data(shoot.fric_spd[1].fdb);
-			log_scope_get_data(shoot.fric_output[0]);
-            log_scope_get_data(shoot.fric_output[1]);
+//			log_scope_get_data(shoot.fric_spd[0].fdb);
+//            log_scope_get_data(shoot.fric_spd[1].fdb);
+//			log_scope_get_data(shoot.fric_output[0]);
+//            log_scope_get_data(shoot.fric_output[1]);
 			
 			
 //            log_scope_get_data(gimbal.pit_angle.ref);
