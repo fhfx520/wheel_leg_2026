@@ -84,7 +84,7 @@ const float Hinge_gas_Lengh = 0.0481f;//大小腿转轴到气弹簧固定支座�
 	
 
 float x3_balance_zero = 0.08f, x5_balance_zero = 0.040f;//腿摆角角度偏置   负值：腿摆角向膝关节方向偏	正值：腿摆角向膝关节反方向偏
-const float x3_balance_zero_normal = 0.02f; //车头朝前正常情况偏置
+const float x3_balance_zero_normal = 0.0f; //车头朝前正常情况偏置
 
 float Rotate_balance_zero 		 = 0.17f ;
 float IMU_Roll_balance_zero		 = -0.0f;		//陀螺仪roll偏置
@@ -667,7 +667,7 @@ static void handle_jump_state(void)
 		 wlr.jump_run++;
 
          if(wlr.double_flag)
-            wlr.v_ref = ramp_calc(&jump_ramp, -2.0f);
+            wlr.v_ref = ramp_calc(&jump_ramp, -2.5f);
         else
             jump_ramp.out = 0.0f;
 
@@ -746,7 +746,7 @@ static void handle_sky_state(void)
         jump_ramp.out = 0.0f;
         wlr.v_ref = -2.5f;
         x3_balance_zero = x3_balance_zero_normal;
-        x5_balance_zero = (wlr.double_flag ? -0.02f : -0.1f);
+        x5_balance_zero = (wlr.double_flag ? -0.02f : -0.05f);
 
         if (fabsf(0.30f - vmc[0].L_fdb) < 0.03f && fabsf(0.30f - vmc[1].L_fdb) < 0.03f && !wlr.double_flag) {
             wlr.sky_cnt++;

@@ -7,9 +7,9 @@
 //串口定义
 #define	DBUS_HUART	 huart1
 #define JUDGE_HUART  huart2
-#define TF_LEFT_HUART huart9
+#define MS53L2M_RIGHT_HUART huart3
 //#define TF_RIGHT_HUART huart4
-#define MS53L2M_HUART huart10
+#define MS53L2M_LEFT_HUART huart10
 
 #define DEBUG_HUART	 huart6
 
