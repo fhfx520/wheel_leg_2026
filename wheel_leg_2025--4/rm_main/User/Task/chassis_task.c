@@ -25,7 +25,6 @@
 #include "prot_hipnuc.h"
 #include "board_comm.h"
 #include "container.h"
-#include "app_tof.h"
 
 ChassisState_e last_chassis_output;
 

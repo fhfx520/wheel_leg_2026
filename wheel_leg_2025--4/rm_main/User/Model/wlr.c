@@ -15,7 +15,6 @@
 #include "drv_dm_motor.h"
 #include "prot_tfmini.h"
 #include "velocity_control.h"
-#include "custom_ranging_sensor.h"
 #include "prot_ms53l0m.h"
 extern uint32_t rescue_cnt_L;
 extern uint32_t rescue_cnt_R;
@@ -1310,7 +1309,7 @@ void wlr_control(void)
     lqr.last_leg_w[1] = lqr.X_fdb[7];
 
     for (int i = 0; i < WLR_SIDE_COUNT; i++) {
-		wlr.side[i].Front_dis_fdb = ms53l0m_distance_m;
+		wlr.side[i].Front_dis_fdb = ms53l0m_distance_m[i];
         tfmini_fn[i].measured_vector[0] = wlr.side[i].Front_dis_fdb;
         kalman_filter_update(&tfmini_fn[i]);
         wlr.side[i].Front_dis_kal = tfmini_fn[i].filter_vector[0];

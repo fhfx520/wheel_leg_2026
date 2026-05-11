@@ -16,7 +16,8 @@ uint8_t judge_data_rx_buf[JUDGE_DATA_LEN];
 uint8_t debug_dma_rx_buf[DEBUG_DATA_LEN];
 //uint8_t TFminiPlusBuffArray_Front_Left[TFMINIPLUS_BUFF_SIZE];
 //uint8_t TFminiPlusBuffArray_Front_Right[TFMINIPLUS_BUFF_SIZE];
-uint8_t MS53L2MBuffArray[MS53L2M_NORMAL_RX_BUF_SIZE];
+uint8_t MS53L2MBuffArray_LEFT[MS53L2M_NORMAL_RX_BUF_SIZE];
+uint8_t MS53L2MBuffArray_RIGHT[MS53L2M_NORMAL_RX_BUF_SIZE];
 //uint8_t Hipnuc_buff[82];
 uint32_t ccnct;
 /*
@@ -38,18 +39,14 @@ void usart_comm_init(void)
 //    __HAL_UART_ENABLE_IT(&DEBUG_HUART, UART_IT_IDLE);
 //    HAL_UART_Receive_DMA(&DEBUG_HUART, debug_dma_rx_buf, DEBUG_DATA_LEN);
     log_init(&DEBUG_HUART);
-	
-//	__HAL_UART_CLEAR_IDLEFLAG(&TF_LEFT_HUART);
-//    __HAL_UART_ENABLE_IT(&TF_LEFT_HUART, UART_IT_IDLE);
-//    HAL_UART_Receive_DMA(&TF_LEFT_HUART, TFminiPlusBuffArray_Front_Left, TFMINIPLUS_BUFF_SIZE);
-	
-//	__HAL_UART_CLEAR_IDLEFLAG(&TF_RIGHT_HUART);
-//    __HAL_UART_ENABLE_IT(&TF_RIGHT_HUART, UART_IT_IDLE);
-//    HAL_UART_Receive_DMA(&TF_RIGHT_HUART, TFminiPlusBuffArray_Front_Right, TFMINIPLUS_BUFF_SIZE);
 
     __HAL_UART_CLEAR_IDLEFLAG(&MS53L2M_LEFT_HUART);
     __HAL_UART_ENABLE_IT(&MS53L2M_LEFT_HUART, UART_IT_IDLE);
-    HAL_UART_Receive_DMA(&MS53L2M_LEFT_HUART, MS53L2MBuffArray, MS53L2M_NORMAL_RX_BUF_SIZE);
+    HAL_UART_Receive_DMA(&MS53L2M_LEFT_HUART, MS53L2MBuffArray_LEFT, MS53L2M_NORMAL_RX_BUF_SIZE);
+	
+	__HAL_UART_CLEAR_IDLEFLAG(&MS53L2M_RIGHT_HUART);
+    __HAL_UART_ENABLE_IT(&MS53L2M_RIGHT_HUART, UART_IT_IDLE);
+    HAL_UART_Receive_DMA(&MS53L2M_RIGHT_HUART, MS53L2MBuffArray_LEFT, MS53L2M_NORMAL_RX_BUF_SIZE);
 }
 
 /*
@@ -68,19 +65,15 @@ void usart_user_handler(UART_HandleTypeDef *huart)
             judge_get_data(judge_data_rx_buf);
             HAL_UART_Receive_DMA(huart, judge_data_rx_buf, JUDGE_DATA_LEN);
         } else if (huart == &MS53L2M_RIGHT_HUART) { 
-		
+			ms53l0m_normal_get_data(MS53L2MBuffArray_RIGHT, MS53L0M_NORMAL_RX_BUF_SIZE,1);
+            memset(MS53L2MBuffArray_RIGHT, 0, MS53L0M_NORMAL_RX_BUF_SIZE);
+            HAL_UART_Receive_DMA(huart, MS53L2MBuffArray_RIGHT, MS53L0M_NORMAL_RX_BUF_SIZE);
 		} 
-//		else if (huart == &TF_RIGHT_HUART) { 
-//			vTfGetData(TFminiPlusBuffArray_Front_Right, RIGHT);
-//			memset(TFminiPlusBuffArray_Front_Right, 0, TFMINIPLUS_BUFF_SIZE);
-//			HAL_UART_Receive_DMA(huart, (uint8_t *)TFminiPlusBuffArray_Front_Right, TFMINIPLUS_BUFF_SIZE); 
-//		}
         else if (huart == &MS53L2M_LEFT_HUART) {
-            ms53l0m_normal_get_data(MS53L2MBuffArray, MS53L0M_NORMAL_RX_BUF_SIZE);
-            memset(MS53L2MBuffArray, 0, MS53L0M_NORMAL_RX_BUF_SIZE);
-            HAL_UART_Receive_DMA(huart, MS53L2MBuffArray, MS53L0M_NORMAL_RX_BUF_SIZE);
+            ms53l0m_normal_get_data(MS53L2MBuffArray_LEFT, MS53L0M_NORMAL_RX_BUF_SIZE,0);
+            memset(MS53L2MBuffArray_LEFT, 0, MS53L0M_NORMAL_RX_BUF_SIZE);
+            HAL_UART_Receive_DMA(huart, MS53L2MBuffArray_LEFT, MS53L0M_NORMAL_RX_BUF_SIZE);
 			ccnct++;
         }
-  
     }
 }

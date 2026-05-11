@@ -2,18 +2,18 @@
 
 #include <stddef.h>
 
-volatile uint16_t ms53l0m_distance_mm;
-volatile float ms53l0m_distance_m;
-volatile uint8_t ms53l0m_data_valid;
+volatile uint16_t ms53l0m_distance_mm[2];
+volatile float ms53l0m_distance_m[2];
+volatile uint8_t ms53l0m_data_valid[2];
 
-uint8_t ms53l0m_normal_get_data(uint8_t *buff, uint16_t len)
+uint8_t ms53l0m_normal_get_data(uint8_t *buff, uint16_t len, uint8_t side)
 {
     uint16_t i;
     uint16_t distance = 0;
     uint8_t found_head = 0;
     uint8_t found_digit = 0;
 
-    ms53l0m_data_valid = 0;
+    ms53l0m_data_valid[i] = 0;
 
     if (buff == NULL || len < 4) {
         return 1;
@@ -46,9 +46,9 @@ uint8_t ms53l0m_normal_get_data(uint8_t *buff, uint16_t len)
                 return 1;
             }
 
-            ms53l0m_distance_mm = distance;
-            ms53l0m_distance_m = (float)distance * 0.001f;
-            ms53l0m_data_valid = 1;
+            ms53l0m_distance_mm[i] = distance;
+            ms53l0m_distance_m[i] = (float)distance * 0.001f;
+            ms53l0m_data_valid[i] = 1;
             return 0;
         } else if (found_digit != 0) {
             return 1;

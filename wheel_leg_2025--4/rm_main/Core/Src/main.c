@@ -22,7 +22,6 @@
 #include "cmsis_os.h"
 #include "dma.h"
 #include "fdcan.h"
-#include "i2c.h"
 #include "iwdg.h"
 #include "rng.h"
 #include "spi.h"
@@ -30,7 +29,6 @@
 #include "usart.h"
 #include "usb_device.h"
 #include "gpio.h"
-#include "app_tof.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -121,8 +119,7 @@ int main(void)
   MX_TIM3_Init();
   MX_SPI1_Init();
 //  MX_IWDG1_Init();
-//  MX_I2C2_Init();
-//  MX_TOF_Init();
+  MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
   HAL_Delay(300);
   us_timer_start();
@@ -216,7 +213,7 @@ void SystemClock_Config(void)
 
   /** Enables the Clock Security System
   */
-//  HAL_RCC_EnableCSS();
+  HAL_RCC_EnableCSS();
 }
 
 /**

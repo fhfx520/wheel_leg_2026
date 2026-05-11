@@ -9,7 +9,6 @@
 #include "board_comm.h"
 #include "container.h"
 #include "prot_imu.h"
-#include "app_tof.h"
 uint8_t lock_flag = 0;
 uint8_t reset_flag = 0;
 ctrl_mode_e ctrl_mode;
