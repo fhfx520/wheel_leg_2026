@@ -18,7 +18,7 @@ status_t status;
 int iwdg_test = 1;
 void status_task(void const* argument)
 {
-	MX_IWDG1_Init();
+//	MX_IWDG1_Init();
     for(;;)
     {
 		status.dm_motor = dm_motor_check_offline();

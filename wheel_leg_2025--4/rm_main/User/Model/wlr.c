@@ -72,7 +72,7 @@ const float LegLengthHigh 	 = 0.21f; //长腿 0.23
 const float LegLengthRotate  = 0.15f; //正常
 const float LegLengthRotateHigh  = 0.23f; //正常
 const float LegLengthNormal  = 0.16f; //正常
-const float LegLengthStair   = 0.18f; //磕碰下台阶腿长
+const float LegLengthStair   = 0.16f; //磕碰下台阶腿长
 
 const float gas_spring_F = 310.0f;	//气弹簧行程为0时力	N
 const float gas_spring_S = 0.1f;    //气弹簧行程  m 
@@ -432,6 +432,22 @@ static float gas_spring_F_Calc(vmc_t v)
 	return Fn_fdb;
 }
 
+static uint8_t check_is_statir(void)
+{
+	static float last_v_fdb;
+	static uint8_t stair_cnt = 0;
+	if(fabsf(last_v_fdb) > fabsf(wlr.v_fdb) && fabsf(wlr.v_fdb) < 0.9f && fabsf(wlr.v_fdb) > 0.3f)
+		stair_cnt++;
+	else 
+		stair_cnt = 0;
+	last_v_fdb = wlr.v_fdb;
+	if(stair_cnt > 5)
+		return 1;
+	else
+		return 0;
+	
+}
+
 static void k_array_fit(float K[4][10], float Ll_fdb, float Lr_fdb)
 {
     float temp;
@@ -533,10 +549,7 @@ static void update_leg_height_and_balance(float yaw_error)
 		}
 		x5_balance_zero = 0.0f;
     } else {
-        if (wlr_both_legs_flying()) {
-            wlr.high_set = ramp_calc(&height_ramp, LegLengthFly);
-            x3_balance_zero = 0.0f;
-        } else if (wlr.jump_flag == WLR_JUMP_IDLE && wlr.sky_flag == WLR_SKY_IDLE && !wlr.energy_flag) {
+        if (wlr.jump_flag == WLR_JUMP_IDLE && wlr.sky_flag == WLR_SKY_IDLE && wlr.stair_flag == WLR_STAIR_IDLE && !wlr.energy_flag) {
             wlr.high_set = ramp_calc(&height_ramp, LegLengthNormal);
             x3_balance_zero = (wlr.direction == 0 ? x3_balance_zero_normal : -x3_balance_zero_normal - 0.01f);
 			
@@ -809,25 +822,30 @@ static void handle_sky_state(void)
 
 static void handle_stair_state(void)
 {
+	static uint8_t stair_cnt;
+	static uint8_t stair_ascend;
     if(wlr.stair_flag == WLR_STAIR_ASCEND)
 	{
-		wlr.v_ref = ramp_calc(&stair_ramp, (wlr.direction == 1) ? 0.8f : -1.3f);
+		stair_cnt = 0;
+		wlr.v_ref = ramp_calc(&stair_ramp, (wlr.direction == 1) ? 1.0f : -1.5f);
 		 Fy_ramp[0].out = Fy_ramp[1].out= 0;
 		 wlr.high_set = ramp_calc(&height_ramp, LegLengthStair);
 		 x3_balance_zero = x3_balance_zero_normal;
          x5_balance_zero = 0.0f;
-		 if(fabsf(wlr.pit_fdb) > 0.1f) {
+		 if(check_is_statir())
+			 stair_ascend = 1;
+		 if(fabsf(wlr.pit_fdb) > 0.06f && stair_ascend) {
+			 stair_ascend = 0;
 			wlr.high_set = 0.12f;
 			wlr.stair_flag = WLR_STAIR_RECOVER_SHORT;
 		 }
 	}
     else if(wlr.stair_flag == WLR_STAIR_RECOVER_SHORT)
 	{
-		wlr.v_ref = ramp_calc(&stair_ramp, (wlr.direction == 1) ? 0.8f : -1.3f);
-//		data_limit(&wlr.v_ref,-1.5f,1.5f);
-        wlr.high_set = 0.12f;
+		wlr.high_set = 0.12f;
+		wlr.v_ref = ramp_calc(&stair_ramp, (wlr.direction == 1) ? 1.0f : -1.5);//		data_limit(&wlr.v_ref,-1.5f,1.5f);        wlr.high_set = 0.12f;
         x3_balance_zero = x3_balance_zero_normal;
-        if (fabsf(wlr.high_set - vmc[0].L_fdb) < 0.03f && fabsf(wlr.high_set - vmc[1].L_fdb) < 0.03f) {
+        if (fabsf(wlr.high_set - vmc[0].L_fdb) < 0.015f && fabsf(wlr.high_set - vmc[1].L_fdb) < 0.015f) {
 			wlr.stair_flag = WLR_STAIR_RECOVER_LONG;
 			height_ramp.out = 0.12f;
         }
@@ -835,21 +853,36 @@ static void handle_stair_state(void)
     else if(wlr.stair_flag == WLR_STAIR_RECOVER_LONG)
 	{
 //		data_limit(&wlr.v_ref,-1.5f,1.5f);
-		wlr.v_ref = ramp_calc(&stair_ramp, (wlr.direction == 1) ? 0.8f : -1.3f);
-		x3_balance_zero = ((wlr.direction == 1) ? 1.5f : -1.5f);
-		wlr.high_set = 0.25f;
-		if(wlr.side[0].Fn_kal > 150.0f || wlr.side[1].Fn_kal > 150.0f)
+		wlr.v_ref = ramp_calc(&stair_ramp, (wlr.direction == 1) ? 1.0f : -1.5f);
+		x3_balance_zero = ((wlr.direction == 1) ? 1.5f : -2.0f);
+		wlr.high_set = 0.12f;
+		stair_cnt++;
+		if(stair_cnt > 25){
+			stair_cnt = 0;
 			wlr.stair_flag = WLR_STAIR_LANDING;
+			
+		}
 	}
     else if(wlr.stair_flag == WLR_STAIR_LANDING)
 	{
 //		data_limit(&wlr.v_ref,-1.5f,1.5f);
-		wlr.v_ref = ramp_calc(&stair_ramp, (wlr.direction == 1) ? 0.8f : -1.3f);
+		wlr.v_ref = ramp_calc(&stair_ramp, (wlr.direction == 1) ? 2.0f : -2.0f);
 		x3_balance_zero = x3_balance_zero_normal;
-		wlr.high_set = 0.16f;
+		wlr.high_set = 0.21f;
+		DO_LAST(wlr_both_legs_flying(),100){
+			if(wlr.direction == 0){
+				x3_balance_zero = x3_balance_zero_normal;
+				data_limit(&wlr.v_ref,-1.0f,1.0f);
+			}
+			else{
+				x3_balance_zero = x3_balance_zero_normal + 0.18f;	
+				data_limit(&wlr.v_ref,-1.0f,1.0f);
+			}
+		}
 	}
 	else if(wlr.stair_flag == WLR_STAIR_IDLE) {
 		stair_ramp.out = 0.0f;
+		stair_ascend = 0;
 	}
 }
 
@@ -894,7 +927,7 @@ static void update_rotate_state(void)
 static void update_leg_references(void)
 {
     tlm_gnd_roll_calc(&tlm, -(wlr.roll_fdb + IMU_Roll_balance_zero), vmc[0].L_fdb, vmc[1].L_fdb);		//计算地形倾角
-    if (wlr.sky_flag != 0 || wlr.jump_flag != 0
+    if (wlr.sky_flag != 0 || wlr.jump_flag != 0 || wlr.stair_flag != 0
         || wlr_both_legs_flying() || chassis.recover_flag != 0) {
         tlm.l_ref[0] = tlm.l_ref[1] = wlr.high_set;
     } else {
@@ -1025,7 +1058,7 @@ static void update_motion_reference(void)
 
 static void update_fly_state(uint8_t index, float yaw_err)
 {
-    if ( fabs(chassis_imu.pit) < 0.50f &&  wlr.side[index].Fn_kal < 145.0f && rotate_flag == 0 && wlr.high_flag == 1 && chassis.recover_flag == 0
+    if ( fabs(chassis_imu.pit) < 0.50f &&  wlr.side[index].Fn_kal < 145.0f && rotate_flag == 0 && chassis.recover_flag == 0
 		&& (wlr.sky_flag == WLR_SKY_IDLE) && (wlr.sky_flag == WLR_JUMP_IDLE))  {
         wlr.side[index].fly_cnt += 10;
     } else if (wlr.side[index].fly_cnt > 0) {
