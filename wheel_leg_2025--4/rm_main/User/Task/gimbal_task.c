@@ -279,9 +279,12 @@ static void gimbal_execute_fsm(void)
 
 void gimbal_set_container(void)
 {
-	gimbal_set_gimbal_data_container.feedback_alpha_speed_input = 0.0F;
+	if(g_robot_ctx.output.chassis == CHASSIS_LOW_SPIN)
+		gimbal_set_gimbal_data_container.feedback_alpha_speed_input = -chassis_imu.wz;
+	else
+		gimbal_set_gimbal_data_container.feedback_alpha_speed_input = 0.0f;
 	gimbal_set_gimbal_data_container.feedback_beta_speed_input = 0.0F;
-	memcpy(gimbal_set_gimbal_data_container.yaw_raw_data,yaw_raw_data,8);
+//	memcpy(gimbal_set_gimbal_data_container.yaw_raw_data,yaw_raw_data,8);
 	container_set(TAG_GIMBAL_CTRL_DATA,&gimbal_set_gimbal_data_container,sizeof(gimbal_set_gimbal_data_container),CONTAINER_TYPE_STRUCT);	
 }
 
@@ -298,7 +301,7 @@ void gimbal_task(void const *argu)
 		
 		gimbal_data_output();
 		
-//		gimbal_set_container();
+		gimbal_set_container();
 		
 		//help 拆头 + 了下面两个函数     不拆头就不加
 //		yaw_control();

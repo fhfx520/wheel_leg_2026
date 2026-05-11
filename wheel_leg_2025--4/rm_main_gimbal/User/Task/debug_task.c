@@ -16,7 +16,7 @@
 #include "us_time.h"
 #include "gimbal_task.h"
 #include "mode_switch_task.h"
-
+#include "math_lib.h"
 #define row_debug 2 * 10
 uint8_t debug_wave = 1;
 uint32_t aqdihakdhakjhdaukd;
@@ -39,10 +39,10 @@ void log_scope_data_pkg(void)
 			
 			log_scope_get_data(vision.rx[0].data.yaw_vel);
 			
-			log_scope_get_data(gimbal.yaw_angle.pid.p_out);
+			log_scope_get_data(gimbal.yaw_angle.pid.output);
 			log_scope_get_data(gimbal.yaw_spd.ref);
             log_scope_get_data(gimbal.yaw_spd.fdb);
-			
+			log_scope_get_data(circle_error(gimbal.yaw_angle.ref, gimbal.yaw_angle.fdb, 2*PI));
 //			log_scope_get_data(shoot.fric_spd[0].fdb);
 //            log_scope_get_data(shoot.fric_spd[1].fdb);
 //			log_scope_get_data(shoot.fric_output[0]);

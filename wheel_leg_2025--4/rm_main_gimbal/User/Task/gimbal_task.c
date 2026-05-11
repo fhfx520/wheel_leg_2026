@@ -15,7 +15,7 @@
 #include "smc.h"
 #include "drv_dm_motor.h"
 #include "gimbal_decoupling.h"
-
+#include "board_comm.h"
 float yaw_err_up;
 FGT_agl_t yaw_test = {
     .Td = 1,
@@ -34,7 +34,7 @@ gimbal_scale_t gimbal_scale = {
     .angle_keyboard = 0.00003f
 };
 gimbal_t gimbal;
-float vision_mpc_k = 1.0f;		// MPC：调这个前馈比例系数
+float vision_mpc_k = 1.5f;		// MPC：调这个前馈比例系数
 
 float body_vector[3];
 float rotate_data[3][3];
@@ -51,14 +51,15 @@ static void gimbal_init(void)
 	
 	
 	//视觉mpc用这个
-	pid_init(&gimbal.yaw_angle.pid, CHANG_I_RATE,30.0f, 0.0f, 0.0f, 0, 4);	
-    pid_init(&gimbal.yaw_spd.pid, NONE, 15000.0f, 50.0f, 0, 1000.0f, 25000.0f);						
+	pid_init(&gimbal.yaw_angle.pid, CHANG_I_RATE,20.0f, 0.0f, 0.0f, 0, 5);	
+    pid_init(&gimbal.yaw_spd.pid, NONE, 17000.0f, 50.0f, 0, 0.0f, 25000.0f);						
 	
     pid_init(&gimbal.yaw_ecd.pid, NONE, 10.0f, 0, 0, 0.0f, 30.0f);
 	pid_init(&gimbal.yaw_spd_ecd.pid, NONE, 6000.0f, 10.00f, 0, 1000.0f, 25000.0f);
 }
 float yaw_err;
 float slope_feed,last_yaw_ref,slope_feed_pit,last_pit_ref;
+float kkkkk = 500;
 static void gimbal_pid_calc(void)
 {
     float  pit_max, pit_min;
@@ -73,6 +74,9 @@ static void gimbal_pid_calc(void)
 	
 	pit_max = 0.5f;		//0.5 滑槽卡头
 	pit_min = -0.39f;
+	
+	gimbal.feedback_alpha_speed_input = gimbal_data_rec.feedback_alpha_speed_input;
+	
     data_limit(&gimbal.pit_angle.ref, pit_min, pit_max);
     gimbal.pit_angle.fdb = gimbal_imu.pit;
 		
@@ -103,7 +107,7 @@ static void gimbal_pid_calc(void)
 
 	slope_feed = 0;
 		
-    yaw_err = circle_error(gimbal.yaw_angle.ref + gimbal.feedback_alpha_speed_input * 0.000f + slope_feed  , gimbal.yaw_angle.fdb, 2*PI);
+    yaw_err = circle_error(gimbal.yaw_angle.ref + slope_feed  , gimbal.yaw_angle.fdb, 2*PI);
     if (gimbal.start_up == 0 && fabsf(yaw_err) < 0.03f)//-------------------->无云台控制下注释
         gimbal.start_up = 1;
 	
@@ -119,14 +123,18 @@ static void gimbal_pid_calc(void)
 		gimbal.yaw_spd.pid.ki = 50.0f;
 		gimbal.yaw_spd.pid.i_max = 1000.0f;
 	}
+	if(gimbal.feedback_alpha_speed_input == 0)
+		vision_mpc_k = 1.0f;
+	else
+		vision_mpc_k = 2.0f;
 	gimbal.yaw_spd.ref = pid_calc(&gimbal.yaw_angle.pid, gimbal.yaw_angle.fdb + yaw_err, gimbal.yaw_angle.fdb) \
-                                + vision_mpc_k * vision.rx[0].data.yaw_vel;
+                                + vision_mpc_k * vision.rx[0].data.yaw_vel ;
 	//起身先转pitch yaw阻尼
 	if((!(fabsf(gimbal.pit_angle.ref - gimbal.pit_angle.fdb) < 0.08f) && !gimbal.start_up) && gimbal.start_cnt < 200)
 		 gimbal.yaw_spd.ref = 0.0f;
 	
     gimbal.yaw_spd.fdb = gimbal_imu.wz;
-    gimbal.yaw_output = pid_calc(&gimbal.yaw_spd.pid, gimbal.yaw_spd.ref, gimbal.yaw_spd.fdb);//SMC
+    gimbal.yaw_output = pid_calc(&gimbal.yaw_spd.pid, gimbal.yaw_spd.ref, gimbal.yaw_spd.fdb) + gimbal.feedback_alpha_speed_input * kkkkk;//SMC
 //	//起身先转pitch
 //	if((!(fabsf(gimbal.pit_angle.ref - gimbal.pit_angle.fdb) < 0.03f) && !gimbal.start_up) && gimbal.start_cnt < 200)
 //		gimbal.yaw_output = 0.0f;

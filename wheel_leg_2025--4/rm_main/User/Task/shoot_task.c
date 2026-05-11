@@ -401,8 +401,8 @@ static void shoot_init(void)
     pid_init(&shoot.trigger_spd.pid, NONE, 0.0015f, 0.00005f, 0, 0.18f, 1.8f);
     #endif
     #ifdef MG4005
-    pid_init(&shoot.trigger_ecd.pid, NONE, 0.17f, 0.0f, 0.15f, 0.0f, 30000.0f);
-    pid_init(&shoot.trigger_spd.pid, NONE, 0.12f, 0.001f, 0.0f, 1500.0f, 2048.0f);
+    pid_init(&shoot.trigger_ecd.pid, NONE, 0.15f, 0.0f, 0.15f, 0.0f, 30000.0f);
+    pid_init(&shoot.trigger_spd.pid, NONE, 0.1f, 0.001f, 0.0f, 1500.0f, 2048.0f);
 	
 	
     #endif
