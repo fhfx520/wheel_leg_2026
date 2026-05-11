@@ -66,7 +66,7 @@ void usart_user_handler(UART_HandleTypeDef *huart)
             HAL_UART_Receive_DMA(huart, judge_data_rx_buf, JUDGE_DATA_LEN);
         } else if (huart == &MS53L2M_RIGHT_HUART) { 
 			ms53l0m_normal_get_data(MS53L2MBuffArray_RIGHT, MS53L0M_NORMAL_RX_BUF_SIZE,1);
-            memset(MS53L2MBuffArray_RIGHT, 0, MS53L0M_NORMAL_RX_BUF_SIZE);
+//            memset(MS53L2MBuffArray_RIGHT, 0, MS53L0M_NORMAL_RX_BUF_SIZE);
             HAL_UART_Receive_DMA(huart, MS53L2MBuffArray_RIGHT, MS53L0M_NORMAL_RX_BUF_SIZE);
 		} 
         else if (huart == &MS53L2M_LEFT_HUART) {

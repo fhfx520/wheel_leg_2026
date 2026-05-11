@@ -378,42 +378,42 @@
         <Ww>
           <count>44</count>
           <WinNumber>1</WinNumber>
-          <ItemText>status.remote</ItemText>
+          <ItemText>status.dji_motor</ItemText>
         </Ww>
         <Ww>
           <count>45</count>
           <WinNumber>1</WinNumber>
-          <ItemText>status.dji_motor</ItemText>
+          <ItemText>tlm</ItemText>
         </Ww>
         <Ww>
           <count>46</count>
           <WinNumber>1</WinNumber>
-          <ItemText>tlm</ItemText>
+          <ItemText>pid_L_test</ItemText>
         </Ww>
         <Ww>
           <count>47</count>
           <WinNumber>1</WinNumber>
-          <ItemText>pid_L_test</ItemText>
+          <ItemText>gimbal_imu</ItemText>
         </Ww>
         <Ww>
           <count>48</count>
           <WinNumber>1</WinNumber>
-          <ItemText>gimbal_imu</ItemText>
+          <ItemText>\\rm_main\../User/Protocol/prot_imu.c\chassis_imu.ax</ItemText>
         </Ww>
         <Ww>
           <count>49</count>
           <WinNumber>1</WinNumber>
-          <ItemText>\\rm_main\../User/Protocol/prot_imu.c\chassis_imu.ax</ItemText>
+          <ItemText>pid_ascend</ItemText>
         </Ww>
         <Ww>
           <count>50</count>
           <WinNumber>1</WinNumber>
-          <ItemText>pid_ascend</ItemText>
+          <ItemText>ff_Fy_1</ItemText>
         </Ww>
         <Ww>
           <count>51</count>
           <WinNumber>1</WinNumber>
-          <ItemText>ff_Fy_1</ItemText>
+          <ItemText>Result,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>52</count>
@@ -428,57 +428,62 @@
         <Ww>
           <count>54</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Result,0x0A</ItemText>
+          <ItemText>lock_flag</ItemText>
         </Ww>
         <Ww>
           <count>55</count>
           <WinNumber>1</WinNumber>
-          <ItemText>lock_flag</ItemText>
+          <ItemText>sbtrigger,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>56</count>
           <WinNumber>1</WinNumber>
-          <ItemText>sbtrigger,0x0A</ItemText>
+          <ItemText>shoot.trigger_spd.pid.kp</ItemText>
         </Ww>
         <Ww>
           <count>57</count>
           <WinNumber>1</WinNumber>
-          <ItemText>shoot.trigger_spd.pid.kp</ItemText>
+          <ItemText>vtm</ItemText>
         </Ww>
         <Ww>
           <count>58</count>
           <WinNumber>1</WinNumber>
-          <ItemText>vtm</ItemText>
+          <ItemText>MS53L0M_HUART</ItemText>
         </Ww>
         <Ww>
           <count>59</count>
           <WinNumber>1</WinNumber>
-          <ItemText>MS53L0M_HUART</ItemText>
+          <ItemText>i,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>60</count>
           <WinNumber>1</WinNumber>
-          <ItemText>i,0x0A</ItemText>
+          <ItemText>distance,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>61</count>
           <WinNumber>1</WinNumber>
-          <ItemText>distance,0x0A</ItemText>
+          <ItemText>\\rm_main\../User/Task/shoot_task.c\shoot.trigger_spd.pid.kp</ItemText>
         </Ww>
         <Ww>
           <count>62</count>
           <WinNumber>1</WinNumber>
-          <ItemText>\\rm_main\../User/Task/shoot_task.c\shoot.trigger_spd.pid.kp</ItemText>
+          <ItemText>ccnct,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>63</count>
           <WinNumber>1</WinNumber>
-          <ItemText>ccnct,0x0A</ItemText>
+          <ItemText>trigger_motor,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>64</count>
           <WinNumber>1</WinNumber>
-          <ItemText>trigger_motor,0x0A</ItemText>
+          <ItemText>MS53L2MBuffArray_LEFT</ItemText>
+        </Ww>
+        <Ww>
+          <count>65</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>MS53L2MBuffArray_RIGHT</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>
@@ -1562,18 +1567,6 @@
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
-    <File>
-      <GroupNumber>11</GroupNumber>
-      <FileNumber>65</FileNumber>
-      <FileType>1</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>..\User\Model\wlr.c</PathWithFileName>
-      <FilenameWithoutPath>wlr.c</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
   </Group>
 
   <Group>
@@ -1584,7 +1577,7 @@
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>12</GroupNumber>
-      <FileNumber>66</FileNumber>
+      <FileNumber>65</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1596,7 +1589,7 @@
     </File>
     <File>
       <GroupNumber>12</GroupNumber>
-      <FileNumber>67</FileNumber>
+      <FileNumber>66</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1608,7 +1601,7 @@
     </File>
     <File>
       <GroupNumber>12</GroupNumber>
-      <FileNumber>68</FileNumber>
+      <FileNumber>67</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1620,13 +1613,25 @@
     </File>
     <File>
       <GroupNumber>12</GroupNumber>
-      <FileNumber>69</FileNumber>
+      <FileNumber>68</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\User\Support\func_generator.c</PathWithFileName>
       <FilenameWithoutPath>func_generator.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>12</GroupNumber>
+      <FileNumber>69</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\User\Model\wlr.c</PathWithFileName>
+      <FilenameWithoutPath>wlr.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

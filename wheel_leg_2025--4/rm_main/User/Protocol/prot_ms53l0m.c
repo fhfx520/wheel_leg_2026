@@ -13,7 +13,7 @@ uint8_t ms53l0m_normal_get_data(uint8_t *buff, uint16_t len, uint8_t side)
     uint8_t found_head = 0;
     uint8_t found_digit = 0;
 
-    ms53l0m_data_valid[i] = 0;
+    ms53l0m_data_valid[side] = 2;
 
     if (buff == NULL || len < 4) {
         return 1;
@@ -46,9 +46,9 @@ uint8_t ms53l0m_normal_get_data(uint8_t *buff, uint16_t len, uint8_t side)
                 return 1;
             }
 
-            ms53l0m_distance_mm[i] = distance;
-            ms53l0m_distance_m[i] = (float)distance * 0.001f;
-            ms53l0m_data_valid[i] = 1;
+            ms53l0m_distance_mm[side] = distance;
+            ms53l0m_distance_m[side] = (float)distance * 0.001f;
+            ms53l0m_data_valid[side] = buff[6] - '0';
             return 0;
         } else if (found_digit != 0) {
             return 1;

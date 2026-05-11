@@ -25,6 +25,7 @@
 #include "prot_hipnuc.h"
 #include "board_comm.h"
 #include "container.h"
+#include "prot_ms53l0m.h"
 
 ChassisState_e last_chassis_output;
 
@@ -157,7 +158,7 @@ uint8_t check_tof_jump(float dis_up, float dis_down)
 	static float last_dis[2] = {0};
 	static uint8_t tof_cnt = 0;
 	if((wlr.side[0].Front_dis_kal + wlr.side[1].Front_dis_kal) / 2.0f <= (last_dis[0] + last_dis[1]) / 2.0f && 
-		(wlr.side[0].Front_dis_kal + wlr.side[1].Front_dis_kal) / 2.0f > dis_down && 
+		(wlr.side[0].Front_dis_kal + wlr.side[1].Front_dis_kal) / 2.0f > dis_down && \
 		(wlr.side[0].Front_dis_kal + wlr.side[1].Front_dis_kal) / 2.0f < dis_up)
 	{
 		tof_cnt++;
@@ -354,7 +355,7 @@ static void chassis_execute_fsm(void)
 			// if(wlr.sky_flag == WLR_SKY_FOLDING && ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f > 0.65f) \
 			// 	&& ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f < 1.3f) && g_robot_ctx.input.mouse.l && check_tof_jump(0,0))
 			// 	g_robot_ctx.sky_start_flag = 1;
-			if(wlr.sky_flag == WLR_SKY_FOLDING && check_tof_jump(1.4f,0.65f) && sky_ccc > 900)
+			if(wlr.sky_flag == WLR_SKY_FOLDING && check_tof_jump(1.4f,0.65f) && sky_ccc > 700 && (ms53l0m_data_valid[0] == 0 || ms53l0m_data_valid[0] == 7)  && (ms53l0m_data_valid[1] == 0 || ms53l0m_data_valid[1] == 7))
 				g_robot_ctx.sky_start_flag = 1;
             break;
 		}

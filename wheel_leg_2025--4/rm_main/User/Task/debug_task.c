@@ -538,9 +538,12 @@ void log_scope_data_pkg(void)
             break;
 		}        
 	case 7: { /* 激光 */
-            log_scope_get_data(ms53l0m_distance_m[0]);
+            log_scope_get_data(wlr.side[1].Front_dis_kal);
 			log_scope_get_data(wlr.side[0].Front_dis_kal);
 			log_scope_get_data(wlr.sky_flag);
+			log_scope_get_data(wlr.pit_fdb);
+			log_scope_get_data(ms53l0m_data_valid[0]);
+			log_scope_get_data(ms53l0m_data_valid[1]);
             break;
 		}
 	case 8: { /* 拨盘 */
