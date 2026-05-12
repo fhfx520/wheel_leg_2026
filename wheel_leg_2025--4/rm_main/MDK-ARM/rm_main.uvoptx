@@ -485,6 +485,41 @@
           <WinNumber>1</WinNumber>
           <ItemText>MS53L2MBuffArray_RIGHT</ItemText>
         </Ww>
+        <Ww>
+          <count>66</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>ctrl_mode</ItemText>
+        </Ww>
+        <Ww>
+          <count>67</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>modesw_set_rc_data_container</ItemText>
+        </Ww>
+        <Ww>
+          <count>68</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>g_robot_ctx,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>69</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>modesw_set_rc_data_container,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>70</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>vtm,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>71</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>chassis</ItemText>
+        </Ww>
+        <Ww>
+          <count>72</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>status.dji_motor</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
@@ -651,6 +686,26 @@
           <count>32</count>
           <WinNumber>2</WinNumber>
           <ItemText>shoot</ItemText>
+        </Ww>
+        <Ww>
+          <count>33</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>gimbal_data_rec,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>34</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>lock_flag</ItemText>
+        </Ww>
+        <Ww>
+          <count>35</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>motor_send_flag</ItemText>
+        </Ww>
+        <Ww>
+          <count>36</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>&amp;hfdcan3</ItemText>
         </Ww>
       </WatchWindow2>
       <MemoryWindow1>

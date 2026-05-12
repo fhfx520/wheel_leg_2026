@@ -355,7 +355,7 @@ static void chassis_execute_fsm(void)
 			// if(wlr.sky_flag == WLR_SKY_FOLDING && ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f > 0.65f) \
 			// 	&& ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f < 1.3f) && g_robot_ctx.input.mouse.l && check_tof_jump(0,0))
 			// 	g_robot_ctx.sky_start_flag = 1;
-			if(wlr.sky_flag == WLR_SKY_FOLDING && check_tof_jump(1.4f,0.65f) && sky_ccc > 700 && (ms53l0m_data_valid[0] == 0 || ms53l0m_data_valid[0] == 7)  && (ms53l0m_data_valid[1] == 0 || ms53l0m_data_valid[1] == 7))
+			if(wlr.sky_flag == WLR_SKY_FOLDING && check_tof_jump(1.75f,0.65f) && sky_ccc > 700 && (ms53l0m_data_valid[0] == 0 || ms53l0m_data_valid[0] == 7)  && (ms53l0m_data_valid[1] == 0 || ms53l0m_data_valid[1] == 7))
 				g_robot_ctx.sky_start_flag = 1;
             break;
 		}
@@ -513,7 +513,6 @@ static void chassis_data_input(void)
         }
         case CHASSIS_LOW:
         case CHASSIS_HIGH:
-		case CHASSIS_STAIR:
         case CHASSIS_TERRAIN_READY:
         case CHASSIS_TERRAIN_EXECUTING:
 		case CHASSIS_EXECUTING_FOLLOW_ASCEND:			{ // 整合了原版的所有 FOLLOW 和 PRONE
@@ -579,6 +578,7 @@ static void chassis_data_input(void)
 			if(fabsf(wlr.yaw_err) < PI / 8.0f) wlr.direction = 0;
 			break;
 		}
+	   case CHASSIS_STAIR:
 		 {
 			wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI;
 			wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;  
@@ -991,7 +991,7 @@ static void chassis_rescue_test(void)
 				up_ready=0;
 			}
         }
-		if(rescue_cnt >= 2000) {//收腿时长超过600ms则认为收腿第一象限卡死
+		if(rescue_cnt >= 500) {//收腿时长超过600ms则认为收腿第一象限卡死
 			chassis.rescue_inter_flag = CHASSIS_RESCUE_RECOVER_STUCK;
 			rescue_cnt = 0;
 		}
@@ -1198,9 +1198,9 @@ static void chassis_rescue_test(void)
 		//检测摆角
 		if(fabsf(vmc[0].q_fdb[0] - PI / 2.0f) < 0.5f && fabsf(vmc[1].q_fdb[0] - PI / 2.0f) < 0.5f)
 			chassis.recover_cnt++;
-		if(fabsf(vmc[0].q_fdb[0] - PI / 2.0f) < 0.85f && fabsf(vmc[1].q_fdb[0] - PI / 2.0f) < 0.85f)
+		if(fabsf(vmc[0].q_fdb[0] - PI / 2.0f) < 0.7f && fabsf(vmc[1].q_fdb[0] - PI / 2.0f) < 0.7f)
 			chassis.recover_cnt++;
-		if(chassis.recover_cnt > 50) {
+		if(chassis.recover_cnt > 70) {
 			chassis.recover_cnt = 0;
 			chassis.recover_flag = 0;
 			chassis.rescue_inter_flag = CHASSIS_RESCUE_IDLE;

@@ -120,8 +120,10 @@ void modesw_set_container(void)
 	modesw_set_rc_data_container.rc_init_status = rc.init_status;
 	modesw_set_rc_data_container.ctrl_mode = ctrl_mode;
 	//整车翻倒保护头
-	if (chassis.recover_flag == 1 && fabsf(chassis_imu.pit) > 0.3f)
+//	if (chassis.recover_flag == 1 || fabsf(chassis_imu.pit) > PI / 3.0f)
+	if (chassis.recover_flag == 1 && fabsf(chassis_imu.pit) > 0.3)
 		modesw_set_rc_data_container.ctrl_mode = PROTECT_MODE;
+	
 	container_set(TAG_DR16_RC_DATA,&modesw_set_rc_data_container,sizeof(modesw_set_rc_data_container),CONTAINER_TYPE_STRUCT);
 	
 	modesw_set_kb_data_container.l = rc.mouse.l;
@@ -199,7 +201,6 @@ void mode_switch_task(void const *argu)
     for (;;) {
 		vtm_remote_data_hanler();
 		remote_reset();
-//		MX_TOF_Process();
         if (!lock_flag) {
             if (game_status.game_progress == 4) {//比赛中直接解锁
                 lock_flag = 1;
@@ -219,7 +220,11 @@ void mode_switch_task(void const *argu)
 		//决定键鼠数据来源
 		decide_to_use_Witch_KbData();
 		//运行 FSM 大脑 解锁后激活 否则一直保护
-        robot_logic_update((lock_flag == 1) ? (const RC_Ctrl_t*)&rc : NULL);
+		if(lock_flag)
+			robot_logic_update((const RC_Ctrl_t*)&rc);
+		else
+			robot_logic_update(NULL);
+		
 		//遥控数据打包发送
 		modesw_set_container();
 		

@@ -439,6 +439,7 @@ void robot_logic_update(const RC_Ctrl_t* rc_data) {
     } else {
         g_robot_ctx.is_online = 0;
         fsm_change(&g_top_fsm, &state_protect);
+		
     }
 	
     fsm_run(&g_top_fsm);

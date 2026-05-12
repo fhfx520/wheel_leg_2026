@@ -12,7 +12,7 @@
 #define REDUCTION_RATIO 3
 
 static list_t object_list = {&object_list, &object_list};
-static uint8_t motor_send_flag[CAN_CHANNEL_NUM][4] = {0};
+uint8_t motor_send_flag[CAN_CHANNEL_NUM][4] = {0};
 can_std_msg_t motor_msg[CAN_CHANNEL_NUM][4];
 
 dji_motor_t fric_motor[2];
@@ -177,17 +177,16 @@ static void dji_motor_fill_data(void)
 void dji_motor_output_data(void)
 {
     dji_motor_fill_data();
-//	motor_send_flag[CAN_CHANNEL_3][2] = 0;
-//	motor_send_flag[CAN_CHANNEL_3][3] = 0;
     for (can_channel_e can_channel = CAN_CHANNEL_3; can_channel != CAN_CHANNEL_NUM; can_channel++)
 	{
-//		if(can_channel == CAN_CHANNEL_2)
-//			continue;
+		if(status.dji_motor == 1)//yaw离线
+			motor_send_flag[can_channel][2] = 0;
+		else if(status.dji_motor == 2 || status.dji_motor == 3)//轮电机离线
+			motor_send_flag[can_channel][0] = 0;
         for (int i = 0; i < 4; i++) {
             if (motor_send_flag[can_channel][i] == 1) {
-				if(status.dji_motor != 2 && status.dji_motor != 3)
-                    can_std_transmit(can_channel, motor_msg[can_channel][i].id, motor_msg[can_channel][i].data);
-                    motor_send_flag[can_channel][i] = 0;
+				can_std_transmit(can_channel, motor_msg[can_channel][i].id, motor_msg[can_channel][i].data);
+				motor_send_flag[can_channel][i] = 0;
             }
         }
     }

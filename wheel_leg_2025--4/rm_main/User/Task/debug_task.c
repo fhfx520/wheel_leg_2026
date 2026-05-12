@@ -480,7 +480,7 @@ static void debug_log_text_output(void)
             debug_log_power_status();
             break;
         case 16:
-            debug_log_stack_status();
+//            debug_log_stack_status();
             break;
         case 17:
             debug_log_fly_status();
@@ -563,7 +563,7 @@ void log_scope_data_pkg(void)
             log_scope_get_data(back_cnt);
             log_scope_get_data(back_flag);
             log_scope_get_data(err_cnt);
-			
+			 
 		
 
             break;
