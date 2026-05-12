@@ -210,10 +210,12 @@ static uint8_t series_shoot_enable(void)
         && ABS(trigger_ecd_error) <  0.05f * TRIGGER_MOTOR_ECD_SERIES  //拨盘误差控制		
     );
 }
-static uint16_t init_cnt = 0;
+static uint16_t init_cnt = 0; 
 static uint8_t recover_flag = 0;
 //uint16_t sbtrigger = 37000;
-uint16_t sbtrigger = 52937;		//2026-5-11 0:29
+//uint16_t sbtrigger = 52937;		//2026-5-11 0:29
+uint16_t sbtrigger = 31328;		//2026-5-13 0:38
+
 //uint16_t sbtrigger = 8000;
 
 static void pre_fabricated_trigger_position(void)
