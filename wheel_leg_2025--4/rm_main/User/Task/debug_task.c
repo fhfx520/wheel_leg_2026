@@ -28,7 +28,7 @@
 #define row_debug 2 * 10
 #define DEBUG_TEXT_LOG_DIV       2u
 #define DEBUG_TEXT_LOG_SLOT_NUM  21u
-uint8_t debug_wave = 7;
+uint8_t debug_wave = 9;
 uint8_t debug_text_log_enable = 1;
 float test_hex = 1;
 extern FGT_sin_t FGT_sin_chassis;
@@ -568,6 +568,16 @@ void log_scope_data_pkg(void)
 
             break;
 		}
+	case 9:
+	{
+		log_scope_get_data(chassis_imu.rol);
+		log_scope_get_data(tlm.l_ref[0]);
+		log_scope_get_data(tlm.l_ref[1]);
+		log_scope_get_data(tlm.l_fdb[0]);
+		log_scope_get_data(tlm.l_fdb[1]);
+		log_scope_get_data(wlr.roll_offs);
+		break;
+	}
 	}
 }
 /* 串口上位机数据发送任务 */
@@ -579,11 +589,11 @@ void debug_task(void const* argument)
     {
         thread_wake_time = osKernelSysTick();
         log_scope_data_output();
-//        debug_log_shoot_delay_update();
-//        if (++text_log_div >= DEBUG_TEXT_LOG_DIV) {
-//            text_log_div = 0;
-//            debug_log_text_output();
-//        }
+        debug_log_shoot_delay_update();
+        if (++text_log_div >= DEBUG_TEXT_LOG_DIV) {
+            text_log_div = 0;
+            debug_log_text_output();
+        }
         osDelayUntil(&thread_wake_time, 2);
     }
 }

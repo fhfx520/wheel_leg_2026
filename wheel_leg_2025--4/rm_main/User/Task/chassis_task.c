@@ -400,7 +400,7 @@ static void chassis_execute_fsm(void)
 			else if(wlr.sky_flag == WLR_SKY_FOLDING)
 				sky_ccc++;
 			if(wlr.sky_flag == WLR_SKY_FOLDING && ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f > 0.25f) \
-				&& ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f < 0.6f) && sky_ccc > 250)
+				&& ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f < 0.9f) && sky_ccc > 250)
 				wlr.sky_flag = WLR_SKY_EXTENDING; 
 			else if(wlr.sky_flag == WLR_SKY_STAND && !g_robot_ctx.sky_finish_flag)
 				g_robot_ctx.sky_finish_flag = 1;
@@ -1246,9 +1246,9 @@ static void chassis_data_output(void)
             if(chassis.recover_flag != 1) {
 				if(wlr.joint_all_online){
 					if(wlr.crash_flag) {
-						dm_motor_set_control_para(&joint_motor[0], 0, -4, 0, 5, 0);
+						dm_motor_set_control_para(&joint_motor[0], 0, -3, 0, 5, 0);
 						dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);	
-						dm_motor_set_control_para(&joint_motor[2], 0, 4, 0, 5, 0);
+						dm_motor_set_control_para(&joint_motor[2], 0, 3, 0, 5, 0);
 						dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
 					} 
 				else {
@@ -1336,7 +1336,7 @@ void chassis_task(void const *argu)
         chassis_data_input();
         
         // 4. 恢复你本来的执行逻辑结构
-        if(g_robot_ctx.output.chassis != CHASSIS_STOP || 1)
+        if(g_robot_ctx.output.chassis != CHASSIS_STOP)
             wlr_control();
         else
             chassis_init(); // 恢复你的原有保护调用

@@ -33,7 +33,7 @@
 #ifdef MG4005
     #define	TRIGGER_MOTOR_ECD_SINGLE    (65536.0f)  //拨盘一颗子弹转过的编码值 65536 * 10 / 10 = 65536.0f
     #define TRIGGER_MOTOR_ECD_SERIES    (65536.0f)	//拨盘一颗子弹转过的编码值 65536 * 10 / 10 = 65536.0f
-    #define TRIGGER_MOTOR_STUCK_CURRENT 300	    //拨盘卡弹电流阈值 0~2048
+    #define TRIGGER_MOTOR_STUCK_CURRENT 800	    //拨盘卡弹电流阈值 0~2048
     #define TRIGGER_MOTOR_STUCK_SPEED   1500	    //拨盘卡弹转速阈值  
 #endif
 
@@ -162,9 +162,9 @@ void shoot_set_container(void)
 	shoot_set_vision_data_container.vision_bias_time = vision_send_time;
 	shoot_set_vision_data_container.vision_ID = ID_judge;
 	shoot_set_vision_data_container.energy_flag = wlr.energy_flag;
-	if(event_data.small_power_rune_status != 0)//如果小能量机关正在激活、已激活
+	if(wlr.energy_flag && !g_robot_ctx.input.kb.bit.CTRL)//如果小能量机关正在激活、已激活
         shoot_set_vision_data_container.energy_state = 1;
-    else if(event_data.large_power_rune_status != 0)//如果大能量机关正在激活、已激活
+    else if(wlr.energy_flag && g_robot_ctx.input.kb.bit.CTRL)//如果大能量机关正在激活、已激活
         shoot_set_vision_data_container.energy_state = 2;
     else
         shoot_set_vision_data_container.energy_state = 0;
@@ -212,10 +212,11 @@ static uint8_t series_shoot_enable(void)
 }
 static uint16_t init_cnt = 0; 
 static uint8_t recover_flag = 0;
+
 //uint16_t sbtrigger = 37000;
 //uint16_t sbtrigger = 52937;		//2026-5-11 0:29
-uint16_t sbtrigger = 31328;		//2026-5-13 0:38
-
+//uint16_t sbtrigger = 31328;		//2026-5-13 0:38
+uint16_t sbtrigger = 60822;			//2026-5-14 3:59
 //uint16_t sbtrigger = 8000;
 
 static void pre_fabricated_trigger_position(void)
@@ -403,7 +404,7 @@ static void shoot_init(void)
     pid_init(&shoot.trigger_spd.pid, NONE, 0.0015f, 0.00005f, 0, 0.18f, 1.8f);
     #endif
     #ifdef MG4005
-    pid_init(&shoot.trigger_ecd.pid, NONE, 0.15f, 0.0f, 0.15f, 0.0f, 30000.0f);
+    pid_init(&shoot.trigger_ecd.pid, NONE, 0.13f, 0.0f, 0.15f, 0.0f, 30000.0f);
     pid_init(&shoot.trigger_spd.pid, NONE, 0.1f, 0.001f, 0.0f, 1500.0f, 2048.0f);
 	
 	

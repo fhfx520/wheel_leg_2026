@@ -640,7 +640,7 @@ static void shoot_mode_switch(void)
 //            }
 			 if ( vision_data_rec.energy_flag == 1 &&  vision_data_rec.energy_state == 1) {
 				vision_tx_msg.mode_msg.aiming_status = 2;
-            } else if (vision_data_rec.energy_flag == 1 &&  vision_data_rec.energy_state == 2 ) {
+            } else if (vision_data_rec.energy_flag == 1 && vision_data_rec.energy_state == 2 ) {
                vision_tx_msg.mode_msg.aiming_status = 1;
             } else {
                 vision_tx_msg.mode_msg.aiming_status = 0;

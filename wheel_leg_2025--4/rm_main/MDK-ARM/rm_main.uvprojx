@@ -420,16 +420,6 @@
               <FilePath>../Core/Src/freertos.c</FilePath>
             </File>
             <File>
-              <FileName>dma.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Core/Src/dma.c</FilePath>
-            </File>
-            <File>
-              <FileName>fdcan.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Core/Src/fdcan.c</FilePath>
-            </File>
-            <File>
               <FileName>iwdg.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/Src/iwdg.c</FilePath>
@@ -484,6 +474,16 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
+            </File>
+            <File>
+              <FileName>dma.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Core/Src/dma.c</FilePath>
+            </File>
+            <File>
+              <FileName>fdcan.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Core/Src/fdcan.c</FilePath>
             </File>
             <File>
               <FileName>rng.c</FileName>
@@ -1327,6 +1327,11 @@
           </GroupOption>
           <Files>
             <File>
+              <FileName>wlr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Model\wlr.c</FilePath>
+            </File>
+            <File>
               <FileName>leg_vmc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\Model\leg_vmc.c</FilePath>
@@ -1360,11 +1365,6 @@
               <FileName>func_generator.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\Support\func_generator.c</FilePath>
-            </File>
-            <File>
-              <FileName>wlr.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\User\Model\wlr.c</FilePath>
             </File>
             <File>
               <FileName>us_time.c</FileName>

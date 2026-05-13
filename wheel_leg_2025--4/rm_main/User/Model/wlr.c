@@ -276,10 +276,15 @@ float K_Array_Leg_recover[4][10] =
 // {2.14217, 4.62548, -4.29755, -1.33799, 34.645, 3.37157, -11.0435, -0.516346, -12.1034, -2.70762},
 // {2.14217, 4.62548, 4.29755, 1.33799, -11.0435, -0.516346, 34.645, 3.37157, -12.1034, -2.70762}
 
-{{-1.1748, -3.31187, -4.23326, -1.23388, -11.8564, -1.17728, -5.02947, -0.618422, -6.03779, -1.26463},
-{-1.1748, -3.31187, 4.23326, 1.23388, -5.02947, -0.618422, -11.8564, -1.17728, -6.03779, -1.26463},
-{0.916372, 2.49038, -4.58822, -1.51198, 20.057, 1.67002, -8.81508, -0.599521, -18.1845, -2.40576},
-{0.916372, 2.49038, 4.58822, 1.51198, -8.81508, -0.599521, 20.057, 1.67002, -18.1845, -2.40576}
+//{{-1.1748, -3.31187, -4.23326, -1.23388, -11.8564, -1.17728, -5.02947, -0.618422, -6.03779, -1.26463},
+//{-1.1748, -3.31187, 4.23326, 1.23388, -5.02947, -0.618422, -11.8564, -1.17728, -6.03779, -1.26463},
+//{0.916372, 2.49038, -4.58822, -1.51198, 20.057, 1.67002, -8.81508, -0.599521, -18.1845, -2.40576},
+//{0.916372, 2.49038, 4.58822, 1.51198, -8.81508, -0.599521, 20.057, 1.67002, -18.1845, -2.40576}
+
+{{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+{0, 0, 0, 0, 32.6298, 2.71171, -11.8714, -0.650329, 0, 0},
+{0, 0, 0, 0, -11.8714, -0.650329, 32.6298, 2.71171, 0, 0}
 };
 
 float K_Array_Leg_rotate[4][10] = 
@@ -395,7 +400,7 @@ pid_t pid_L_test[2];
 pid_t pid_ascend[2];
 pid_t pid_rotate_leg[2];
 pid_t pid_energy_leg[2];
-
+pid_t pid_rotate_balance_zero;
 float global_v;
 
 static float wlr_fn_calc(float az, float Fy_fdb, float T0_fdb, float L0[3], float theta[3])
@@ -684,8 +689,7 @@ static void handle_jump_state(void)
 			wlr.crash_flag = 0;
 			wlr.high_flag = 0;
 			chassis.recover_flag = 1;
-//			up_ready = 101;
-//			up_ready = 101;
+			up_ready = 101;
 //			chassis.rescue_inter_flag = 2;
 		 }
 	}
@@ -736,7 +740,7 @@ static void handle_sky_state(void)
 			} 
 		}
 		if(wlr.double_flag)
-            wlr.v_ref = ramp_calc(&jump_ramp, -1.5f);
+            wlr.v_ref = ramp_calc(&jump_ramp, -2.0f);
         else
             wlr.v_ref = ramp_calc(&jump_ramp, -3.0f);
     } else if (wlr.sky_flag == WLR_SKY_EXTENDING) {
@@ -744,8 +748,8 @@ static void handle_sky_state(void)
         wlr.high_set = 0.35f;
         jump_ramp.out = 0.0f;
         wlr.v_ref = -2.5f;
-        x3_balance_zero = x3_balance_zero_normal;
-        x5_balance_zero = (wlr.double_flag ? -0.02f : -0.05f);
+        x3_balance_zero = x3_balance_zero_normal + 0.05F;
+        x5_balance_zero = (wlr.double_flag ? -0.0f : -0.05f);
 
         if (fabsf(0.30f - vmc[0].L_fdb) < 0.03f && fabsf(0.30f - vmc[1].L_fdb) < 0.03f && !wlr.double_flag) {
             wlr.sky_cnt++;
@@ -896,6 +900,7 @@ static void update_rotate_state(void)
 		pid_L_test[0].i_out = pid_L_test[1].i_out = 0;
        	 if (g_robot_ctx.output.chassis  == CHASSIS_LOW_SPIN) {
 			x5_balance_zero = -0.02f;
+			Rotate_balance_zero = pid_calc(&pid_rotate_balance_zero,0,(fabsf(driver_motor[0].velocity) - fabsf(driver_motor[1].velocity)));
         } else {
             Rotate_balance_zero = 0.063f;
 			x5_balance_zero = 0.06f;
@@ -1120,7 +1125,7 @@ static void map_virtual_force(uint8_t index)
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs) - 20.0f;
     }
 	else if(wlr.jump_flag == WLR_JUMP_ASCEND){//磕台阶站高
-		wlr.side[index].Fy = pid_calc(&pid_ascend[index], tlm.l_ref[index], vmc[index].L_fdb) - 30.0f
+		wlr.side[index].Fy = pid_calc(&pid_ascend[index], tlm.l_ref[index], vmc[index].L_fdb) - 20.0f
                             + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
 	}
 	else if (wlr.sky_flag == WLR_SKY_FOLDING) {//准备跳
@@ -1228,6 +1233,7 @@ void wlr_init(void)
 		pid_init(&pid_rotate_leg[i], NONE, 1500.0f, 0.0f, 40000.0f, 0, 300);		
 		pid_init(&pid_energy_leg[i], NONE, 1000.0f, 0.0f, 40000.0f, 0, 300);
 		pid_init(&pid_ascend[i], NONE, 700, 0.0f, 80000, 70, 300);			//磕台阶腿长pid
+		pid_init(&pid_rotate_balance_zero, NONE, 0.015f, 0.0f, 0, 0.0f, 0.1f);			//磕台阶腿长pid
 	}
 	pid_init(&pid_roll, NONE, 800, 0,0, 0, 100);								//roll偏移支持力补偿
 	//卡尔曼滤波器初始化
@@ -1363,7 +1369,7 @@ void wlr_control(void)
         data_limit(&lqr.X_diff[3], 0.0f, 0.0f);
     }
 	//功率限制
-    power_limit_current();
+//    power_limit_current();
 	//LQR的K增益带入计算
     aMartix_Mul(lqr.K, lqr.X_diff, lqr.U_ref, 4, 10, 1);
 
