@@ -70,7 +70,7 @@ static GimbalState_e get_kb_gimbal_mode(void) {
     return g_robot_ctx.input.mouse.r ? GIMBAL_AUTO_AIM : GIMBAL_MOUSE_CONTROL;
 }
 static ShootState_e get_kb_shoot_mode(void) {
-    return g_robot_ctx.input.mouse.r ? SHOOT_SERIES : SHOOT_SERIES;
+    return g_robot_ctx.output.chassis == CHASSIS_ENERGY ? SHOOT_SINGLE : SHOOT_SERIES;
 }
 
 #define KEY_W 	  (1<<0)
@@ -330,7 +330,7 @@ static void kb_double_ter_enter(void) { g_robot_ctx.output.chassis = CHASSIS_EXE
 static void kb_double_ter_execute(void) {
     g_robot_ctx.output.chassis = CHASSIS_EXECUTING_FOLLOW_ASCEND;
     g_robot_ctx.output.gimbal = get_kb_gimbal_mode();
-    g_robot_ctx.output.shoot  = get_kb_shoot_mode();
+    g_robot_ctx.output.shoot  = get_kb_shoot_mode();	
 
 	if (g_robot_ctx.sky_finish_flag && g_robot_ctx.jump_finish_flag) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
     if (check_key_trigger(KEY_V)) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }

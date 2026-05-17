@@ -6,7 +6,7 @@
 /* CAN receive ID */
 #define CAN_POWER_ID	0x010  //主控板反馈超级电容的信息
 
-#define Fdcan //操作此宏定义决定是否用fdcan发送
+//#define Fdcan //操作此宏定义决定是否用fdcan发送
 
 
 void SuperCapMsgSend(float cap_voltage,float cap_current);

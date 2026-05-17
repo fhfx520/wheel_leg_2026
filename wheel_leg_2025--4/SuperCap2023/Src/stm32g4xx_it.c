@@ -79,6 +79,7 @@ extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart2;
 /* USER CODE BEGIN EV */
 uint8_t ready;
+uint32_t buffer_cnt;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -324,6 +325,7 @@ void TIM1_UP_TIM16_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM1_UP_TIM16_IRQn 0 */
 	bufferCalc();
+		buffer_cnt++;
 	acdGetTemperature();
 //	HAL_GPIO_TogglePin(GPIOB,GPIO_PIN_11);	
   /* USER CODE END TIM1_UP_TIM16_IRQn 0 */

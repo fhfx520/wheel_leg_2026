@@ -46,7 +46,7 @@ void comm_task(void const *argument)
             dm_motor_set_control_cmd(&pit_motor, CMD_RESET_MODE);
 
 	
-        if(vision_cnt++ % 2 == 0)
+        if(vision_cnt++ % 3 == 0)
 			vision_output_data();
 					
         taskEXIT_CRITICAL();

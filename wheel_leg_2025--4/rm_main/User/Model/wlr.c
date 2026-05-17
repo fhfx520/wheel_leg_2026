@@ -664,10 +664,10 @@ static void handle_jump_state(void)
 		 pid_leg_recover[0].i_out = 0,pid_leg_recover[1].i_out = 0;
 
          jump_leg_length = (wlr.double_flag ? 0.33f : 0.33f);
-		 limit_q = (wlr.double_flag ? 0.5f : 0.5f);
+		 limit_q = (wlr.double_flag ? 0.4f : 0.4f);
 		 wlr.high_set = ramp_calc(&height_ramp, jump_leg_length);
-		 x3_balance_zero = x3_balance_zero_normal;
-         x5_balance_zero = 0.0f;
+		 x3_balance_zero = x3_balance_zero_normal - 0.04F;
+         x5_balance_zero = -0.0f;
 		 wlr.jump_run++;
 
          if(wlr.double_flag)
@@ -846,7 +846,7 @@ static void handle_stair_state(void)
     else if(wlr.stair_flag == WLR_STAIR_RECOVER_SHORT)
 	{
 		wlr.high_set = 0.12f;
-		wlr.v_ref = ramp_calc(&stair_ramp, (wlr.direction == 1) ? 1.5f : -1.5);//		data_limit(&wlr.v_ref,-1.5f,1.5f);        wlr.high_set = 0.12f;
+		wlr.v_ref = ramp_calc(&stair_ramp, (wlr.direction == 1) ? 1.3f : -1.5);//		data_limit(&wlr.v_ref,-1.5f,1.5f);        wlr.high_set = 0.12f;
         x3_balance_zero = x3_balance_zero_normal;
         if (fabsf(wlr.high_set - vmc[0].L_fdb) < 0.015f && fabsf(wlr.high_set - vmc[1].L_fdb) < 0.015f) {
 			wlr.stair_flag = WLR_STAIR_RECOVER_LONG;
@@ -856,7 +856,7 @@ static void handle_stair_state(void)
     else if(wlr.stair_flag == WLR_STAIR_RECOVER_LONG)
 	{
 //		data_limit(&wlr.v_ref,-1.5f,1.5f);
-		wlr.v_ref = ramp_calc(&stair_ramp, (wlr.direction == 1) ? 1.5f : -1.5f);
+		wlr.v_ref = ramp_calc(&stair_ramp, (wlr.direction == 1) ? 1.3f : -1.5f);
 		x3_balance_zero = ((wlr.direction == 1) ? 1.5f : -2.0f);
 		wlr.high_set = 0.12f;
 		stair_cnt++;
@@ -1117,7 +1117,7 @@ static void map_virtual_force(uint8_t index)
     } 
 	else if ((chassis.recover_flag >= 1 && chassis.rescue_inter_flag == CHASSIS_RESCUE_RECOVER) || wlr.jump_flag == WLR_JUMP_RECOVER_SHORT
 		|| wlr.stair_flag == WLR_STAIR_RECOVER_SHORT) {		//进入翻倒自起立 && 进入收腿阶段
-		Fy_temp = pid_calc(&pid_leg_recover[index], wlr.recover_length, vmc[index].L_fdb) - 100.0f;
+		Fy_temp = pid_calc(&pid_leg_recover[index], wlr.recover_length, vmc[index].L_fdb) - 75.0f;
         wlr.side[index].Fy = ramp_calc(&Fy_ramp[index], Fy_temp);
     } 
 	else if (rotate_flag || rotate_ramp_flag == 1) {//小陀螺和小陀螺斜坡停
@@ -1125,7 +1125,7 @@ static void map_virtual_force(uint8_t index)
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs) - 20.0f;
     }
 	else if(wlr.jump_flag == WLR_JUMP_ASCEND){//磕台阶站高
-		wlr.side[index].Fy = pid_calc(&pid_ascend[index], tlm.l_ref[index], vmc[index].L_fdb) - 20.0f
+		wlr.side[index].Fy = pid_calc(&pid_ascend[index], tlm.l_ref[index], vmc[index].L_fdb) - 30.0f
                             + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
 	}
 	else if (wlr.sky_flag == WLR_SKY_FOLDING) {//准备跳
@@ -1203,7 +1203,7 @@ void wlr_init(void)
 	wlr.high_set = LegLengthNormal;
 	wlr.crash_flag = 0;
 	wlr.K_adapt = -0.0f;
-    wlr.recover_length = 0.13f;
+    wlr.recover_length = 0.15f;
     
 	ramp_init(&height_ramp, 0.001f, LegLengthMin, LegLengthMax);			//日常腿长斜坡
 	ramp_init(&sky_height_ramp, 0.001f, LegLengthMin, LegLengthMax);		//空中腿长斜坡
@@ -1369,7 +1369,7 @@ void wlr_control(void)
         data_limit(&lqr.X_diff[3], 0.0f, 0.0f);
     }
 	//功率限制
-//    power_limit_current();
+    power_limit_current();
 	//LQR的K增益带入计算
     aMartix_Mul(lqr.K, lqr.X_diff, lqr.U_ref, 4, 10, 1);
 

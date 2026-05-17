@@ -1,4 +1,4 @@
-#include "shoot_task.h"
+vw#include "shoot_task.h"
 #include "mode_switch_task.h"
 #include "control_def.h"
 #include "drv_dji_motor.h"
@@ -194,7 +194,7 @@ static uint8_t series_shoot_enable(void)
 	if(rc.kb.bit.G)
 		shoot.trigger_period  = 60;
 	else if (rc_fsm_check(RC_LEFT_LD) && rc_fsm_check(RC_RIGHT_LU) )
-		shoot.trigger_period  = 100;
+		shoot.trigger_period  = 83;
 //	else
 //		shoot.trigger_period = TRIGGER_PERIOD;
     return (
@@ -213,10 +213,10 @@ static uint8_t series_shoot_enable(void)
 static uint16_t init_cnt = 0; 
 static uint8_t recover_flag = 0;
 
-uint16_t sbtrigger = 37000;
+//uint16_t sbtrigger = 37000;
 //uint16_t sbtrigger = 52937;		//2026-5-11 0:29
 //uint16_t sbtrigger = 31328;		//2026-5-13 0:38
-//uint16_t sbtrigger = 60822;			//2026-5-14 3:59
+uint16_t sbtrigger = 60822;			//2026-5-14 3:59
 //uint16_t sbtrigger = 8000;
 
 static void pre_fabricated_trigger_position(void)
@@ -320,7 +320,7 @@ static void shoot_control(void)
         case TRIGGER_MODE_SINGLE: { //拨盘单发模式，连续开枪请求，只响应一次
             
 			
-			pre_fabricated_trigger_position();
+//			pre_fabricated_trigger_position();
 
 			frequency_cnt++;
             trigger_ecd_error = shoot.trigger_ecd.ref - shoot.trigger_ecd.fdb;
@@ -337,7 +337,7 @@ static void shoot_control(void)
         }
         case TRIGGER_MODE_SERIES: { //拨盘连发模式，连续开枪请求，连续响应
 			
-			pre_fabricated_trigger_position();
+//			pre_fabricated_trigger_position();
 
 			
             frequency_cnt++;
@@ -405,7 +405,7 @@ static void shoot_init(void)
     #endif
     #ifdef MG4005
     pid_init(&shoot.trigger_ecd.pid, NONE, 0.15f, 0.0f, 0.15f, 0.0f, 30000.0f);
-    pid_init(&shoot.trigger_spd.pid, NONE, 0.1f, 0.001f, 0.0f, 1500.0f, 2048.0f);
+    pid_init(&shoot.trigger_spd.pid, NONE, 0.11f, 0.001f, 0.0f, 1500.0f, 2048.0f);
 	
 	
     #endif

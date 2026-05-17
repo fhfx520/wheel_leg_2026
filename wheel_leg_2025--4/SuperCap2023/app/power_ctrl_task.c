@@ -33,7 +33,7 @@ uint8_t jieyue_flag = 1;
 float text_current = 4.0f;
 float text_power = 80.0f;
 CCMRAM float text_voltage = 30.0f; // 电容最大电量
-float text_buffer = 45.0f;		   // 缓冲能量恒定在这个设定值
+float text_buffer = 55.0f;		   // 缓冲能量恒定在这个设定值
 
 CCMRAM void power_ctrl_task(void)
 {
@@ -73,7 +73,7 @@ CCMRAM void bufferCalc(void)
 		buffer.ref = text_buffer;
 		buffer.fdb = Power_Heat_Data.buffer_energy;
 		buffer.output = buffer.max - pid_calc(&buffer_loop,buffer.fdb,buffer.ref);
-		if(buffer.output > buffer.max)
+		if(buffer.output > buffer.max + 10.0f)
 				buffer.output = buffer.max;
 		else if(buffer.output < POWER_MIN)
 				buffer.output = POWER_MIN;
@@ -153,7 +153,7 @@ void pidInit(void)
 //		PID_struct_init(&charge_voltage_loop, DELTA_PID, 1.25, 0, 1.25, 0, 0,
 //										0.006f, 0.001f, 0.0f);//电压环  0.006f, 0.001f, 0.0f	
 	
-	PID_struct_init(&buffer_loop, DELTA_PID, 10, 0, 10, 0, 0,
+	PID_struct_init(&buffer_loop, DELTA_PID, 10, -10, 10, 0, 0,
                     0.0f, 2.25f, 0.0f);//90
 		PID_struct_init(&power_loop, DELTA_PID, 15, -15, 15, 0, 0,
                      0.0395f, 0.0055f, 0.04f);// 0.018f, 0.01f, 0.015f  0.015   0.000085  0.0 \  0.0165f, 0.002f, 0.0f

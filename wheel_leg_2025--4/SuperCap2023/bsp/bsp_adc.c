@@ -95,8 +95,8 @@ CCMRAM void adcGetValue(void)
 		cap.P = cap.V * cap.I ;
 #endif
 #ifdef ID005
-		bat.V = LPFOfilter_cal(&vbat_PA5_filter,((float)(adc1_value_buf[3])* v_reference/65535) * V_GAIN)*0.998f + 0.0254f;
-		bat.I = LPFOfilter_cal(&bat_PA6_filter,(((float)(adc4_value_buf[0])* v_reference/65535) - I_STANDARD) / (I_GAIN * R_SAMPLE))*1.0123f + 0.0812f;
+		bat.V = LPFOfilter_cal(&vbat_PA5_filter,((float)(adc1_value_buf[3])* v_reference/65535) * V_GAIN)*0.975f + 0.0234f;
+		bat.I = LPFOfilter_cal(&bat_PA6_filter,(((float)(adc4_value_buf[0])* v_reference/65535) - I_STANDARD) / (I_GAIN * R_SAMPLE))*1.0023f + 0.0812f;
 		bat.P =	bat.V *bat.I;
 		chassis.V = LPFOfilter_cal(&vint_PA0_filter,((float)(adc1_value_buf[1])* v_reference/65535) * 14.0f);
 		chassis.I = LPFOfilter_cal(&chassis_PA2_filter,(((float)(adc3_value_buf[0])* v_reference/65535) - I_STANDARD) / (I_GAIN * R_SAMPLE));

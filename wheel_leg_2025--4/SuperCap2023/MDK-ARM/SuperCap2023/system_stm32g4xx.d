@@ -2,7 +2,7 @@ supercap2023\system_stm32g4xx.o: ../Src/system_stm32g4xx.c
 supercap2023\system_stm32g4xx.o: ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h
 supercap2023\system_stm32g4xx.o: ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h
 supercap2023\system_stm32g4xx.o: ../Drivers/CMSIS/Include/core_cm4.h
-supercap2023\system_stm32g4xx.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+supercap2023\system_stm32g4xx.o: D:\KEIL5\ARM\ARMCC\Bin\..\include\stdint.h
 supercap2023\system_stm32g4xx.o: ../Drivers/CMSIS/Include/cmsis_version.h
 supercap2023\system_stm32g4xx.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
 supercap2023\system_stm32g4xx.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
@@ -14,7 +14,7 @@ supercap2023\system_stm32g4xx.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_h
 supercap2023\system_stm32g4xx.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h
 supercap2023\system_stm32g4xx.o: ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h
 supercap2023\system_stm32g4xx.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
-supercap2023\system_stm32g4xx.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+supercap2023\system_stm32g4xx.o: D:\KEIL5\ARM\ARMCC\Bin\..\include\stddef.h
 supercap2023\system_stm32g4xx.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h
 supercap2023\system_stm32g4xx.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h
 supercap2023\system_stm32g4xx.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h

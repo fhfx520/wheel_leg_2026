@@ -165,6 +165,21 @@
           <WinNumber>1</WinNumber>
           <ItemText>trigger_motor,0x0A</ItemText>
         </Ww>
+        <Ww>
+          <count>2</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>g_robot_ctx</ItemText>
+        </Ww>
+        <Ww>
+          <count>3</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>state_kb_energy</ItemText>
+        </Ww>
+        <Ww>
+          <count>4</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>fsm_keyboard_sub</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>

@@ -230,6 +230,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>fric_motor[1],0x0A</ItemText>
         </Ww>
+        <Ww>
+          <count>15</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>vision_cnt</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
@@ -266,6 +271,11 @@
           <count>6</count>
           <WinNumber>2</WinNumber>
           <ItemText>fic_motor</ItemText>
+        </Ww>
+        <Ww>
+          <count>7</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>send_cnt,0x0A</ItemText>
         </Ww>
       </WatchWindow2>
       <MemoryWindow1>

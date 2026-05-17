@@ -1,7 +1,7 @@
 supercap2023\filter.o: ..\math\filter.c
 supercap2023\filter.o: ..\math\filter.h
-supercap2023\filter.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
-supercap2023\filter.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
+supercap2023\filter.o: D:\KEIL5\ARM\ARMCC\Bin\..\include\stdint.h
+supercap2023\filter.o: D:\KEIL5\ARM\ARMCC\Bin\..\include\math.h
 supercap2023\filter.o: ../Inc/main.h
 supercap2023\filter.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h
 supercap2023\filter.o: ../Inc/stm32g4xx_hal_conf.h
@@ -17,7 +17,7 @@ supercap2023\filter.o: ../Drivers/CMSIS/Include/mpu_armv7.h
 supercap2023\filter.o: ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h
 supercap2023\filter.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h
 supercap2023\filter.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
-supercap2023\filter.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+supercap2023\filter.o: D:\KEIL5\ARM\ARMCC\Bin\..\include\stddef.h
 supercap2023\filter.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h
 supercap2023\filter.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h
 supercap2023\filter.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h

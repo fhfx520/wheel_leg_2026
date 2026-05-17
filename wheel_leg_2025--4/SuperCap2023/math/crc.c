@@ -136,7 +136,7 @@ CCMRAM void Append_CRC8_Check_Sum( uint8_t *pchMessage, uint16_t dwLength)
 */
 CCMRAM uint16_t Get_CRC16_Check_Sum(uint8_t *pchMessage,uint32_t dwLength,uint16_t wCRC)
 {
-    uint8_t chData;
+    uint16_t chData;
 	
 		if (pchMessage == NULL)
 		{

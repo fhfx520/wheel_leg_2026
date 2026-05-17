@@ -570,12 +570,15 @@ void log_scope_data_pkg(void)
 		}
 	case 9:
 	{
-		log_scope_get_data(chassis_imu.rol);
-		log_scope_get_data(tlm.l_ref[0]);
-		log_scope_get_data(tlm.l_ref[1]);
-		log_scope_get_data(tlm.l_fdb[0]);
-		log_scope_get_data(tlm.l_fdb[1]);
-		log_scope_get_data(wlr.roll_offs);
+//		log_scope_get_data(chassis_imu.rol);
+//		log_scope_get_data(tlm.l_ref[0]);
+//		log_scope_get_data(tlm.l_ref[1]);
+//		log_scope_get_data(tlm.l_fdb[0]);
+//		log_scope_get_data(tlm.l_fdb[1]);
+//		log_scope_get_data(wlr.roll_offs);
+		log_scope_get_data(shoot_data.initial_speed);
+		log_scope_get_data(shoot.trigger_ecd.fdb);
+		log_scope_get_data(shoot.trigger_ecd.ref);
 		break;
 	}
 	}
