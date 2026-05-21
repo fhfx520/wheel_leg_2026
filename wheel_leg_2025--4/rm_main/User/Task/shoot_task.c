@@ -1,4 +1,4 @@
-vw#include "shoot_task.h"
+#include "shoot_task.h"
 #include "mode_switch_task.h"
 #include "control_def.h"
 #include "drv_dji_motor.h"

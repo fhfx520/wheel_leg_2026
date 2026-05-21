@@ -214,7 +214,7 @@ void SystemClock_Config(void)
 
   /** Enables the Clock Security System
   */
-  HAL_RCC_EnableCSS();
+//  HAL_RCC_EnableCSS();
 }
 
 /**
