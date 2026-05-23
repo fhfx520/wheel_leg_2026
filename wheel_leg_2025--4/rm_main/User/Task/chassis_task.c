@@ -1336,7 +1336,7 @@ void chassis_task(void const *argu)
         chassis_data_input();
         
         // 4. 恢复你本来的执行逻辑结构
-        if(g_robot_ctx.output.chassis != CHASSIS_STOP)
+        if(g_robot_ctx.output.chassis != CHASSIS_STOP || 1)
             wlr_control();
         else
             chassis_init(); // 恢复你的原有保护调用

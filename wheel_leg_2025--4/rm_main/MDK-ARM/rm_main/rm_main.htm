@@ -3,7 +3,7 @@
 <title>Static Call Graph - [rm_main\rm_main.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image rm_main\rm_main.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Sun May 17 13:47:21 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Sat May 23 18:10:26 2026
 <BR><P>
 <H3>Maximum Stack Usage =        856 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -3472,6 +3472,7 @@ Global Symbols
 <LI><a href="#[366]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_inverse_solution_five (via Veneer)
 <LI><a href="#[398]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_forward_solution_five (via Veneer)
 <LI><a href="#[358]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;get_real_vel (via Veneer)
+<LI><a href="#[364]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;map_virtual_force (via Veneer)
 <LI><a href="#[357]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gas_spring_F_Calc (via Veneer)
 </UL>
 
@@ -5337,7 +5338,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_task
 </UL>
 
-<P><STRONG><a name="[b9]"></a>chassis_task</STRONG> (Thumb, 100 bytes, Stack size 16 bytes, chassis_task.o(.text.chassis_task))
+<P><STRONG><a name="[b9]"></a>chassis_task</STRONG> (Thumb, 106 bytes, Stack size 16 bytes, chassis_task.o(.text.chassis_task))
 <BR><BR>[Stack]<UL><LI>Max Depth = 856<LI>Call Chain = chassis_task &rArr; wlr_control &rArr; vmc_forward_solution_five &rArr; aMartix_Mul
 </UL>
 <BR>[Calls]<UL><LI><a href="#[29b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelayUntil (via Veneer)
@@ -6484,7 +6485,7 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[33a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[393]"></a>update_leg_height_and_balance</STRONG> (Thumb, 768 bytes, Stack size 16 bytes, wlr.o(.text.update_leg_height_and_balance))
+<P><STRONG><a name="[393]"></a>update_leg_height_and_balance</STRONG> (Thumb, 776 bytes, Stack size 16 bytes, wlr.o(.text.update_leg_height_and_balance))
 <BR><BR>[Stack]<UL><LI>Max Depth = 44<LI>Call Chain = update_leg_height_and_balance &rArr; ramp_calc &rArr; data_limit
 </UL>
 <BR>[Calls]<UL><LI><a href="#[2da]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;data_limit (via Veneer)
@@ -6584,11 +6585,12 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[33a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[364]"></a>map_virtual_force</STRONG> (Thumb, 2160 bytes, Stack size 24 bytes, wlr.o(.text.map_virtual_force))
-<BR><BR>[Stack]<UL><LI>Max Depth = 264<LI>Call Chain = map_virtual_force &rArr; vmc_inverse_solution_five &rArr; aMartix_Mul
+<P><STRONG><a name="[364]"></a>map_virtual_force</STRONG> (Thumb, 2256 bytes, Stack size 48 bytes, wlr.o(.text.map_virtual_force))
+<BR><BR>[Stack]<UL><LI>Max Depth = 288<LI>Call Chain = map_virtual_force &rArr; vmc_inverse_solution_five &rArr; aMartix_Mul
 </UL>
 <BR>[Calls]<UL><LI><a href="#[2a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_calc (via Veneer)
 <LI><a href="#[2d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_calc (via Veneer)
+<LI><a href="#[329]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_cos_f32 (via Veneer)
 <LI><a href="#[366]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_inverse_solution_five
 <LI><a href="#[365]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;handle_quadrant_protection
 <LI><a href="#[363]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_both_legs_flying

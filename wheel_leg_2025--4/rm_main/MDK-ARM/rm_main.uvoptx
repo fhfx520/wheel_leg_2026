@@ -180,6 +180,16 @@
           <WinNumber>1</WinNumber>
           <ItemText>fsm_keyboard_sub</ItemText>
         </Ww>
+        <Ww>
+          <count>5</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>tlm</ItemText>
+        </Ww>
+        <Ww>
+          <count>6</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>vmc</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
