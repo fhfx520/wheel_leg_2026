@@ -330,6 +330,7 @@ static void shoot_control(void)
 					shoot.trigger_ecd.ref += TRIGGER_MOTOR_ECD_SERIES;//拨一颗子弹4005和2006
 	
 				shoot.barrel.heat += 10;
+				shoot_Cnt++;
             }
             break;
         }
@@ -355,6 +356,7 @@ static void shoot_control(void)
 					shoot.trigger_ecd.ref += TRIGGER_MOTOR_ECD_SERIES;//拨一颗子弹4005和2006
 				
 				shoot.barrel.heat += 10;
+				shoot_Cnt++;
             }
 			
 //卡弹反转	

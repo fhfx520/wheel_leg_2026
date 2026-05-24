@@ -6,6 +6,8 @@
 
 
 #define VISION_DATA_LEN 44
+#define VISION_SP_RX_DATA_LEN 29
+#define VISION_SP_TX_DATA_LEN 43
 
 #define NAN_PROCESS(now, last)      \
     do {                            \
@@ -134,12 +136,58 @@ typedef struct
     
 } vision_tx_msg_t;
 
+typedef enum
+{
+    VISION_SP_MODE_IDLE = 0,
+    VISION_SP_MODE_AUTO_AIM = 1,
+    VISION_SP_MODE_SMALL_BUFF = 2,
+    VISION_SP_MODE_BIG_BUFF = 3
+} vision_sp_mode_e;
+
+typedef enum
+{
+    VISION_SP_RX_MODE_NO_CONTROL = 0,
+    VISION_SP_RX_MODE_CONTROL = 1,
+    VISION_SP_RX_MODE_FIRE = 2
+} vision_sp_rx_mode_e;
+
+typedef struct
+{
+    uint8_t head[2];
+    uint8_t mode;
+    uint8_t yaw[4];        // rad
+    uint8_t yaw_vel[4];    // rad/s
+    uint8_t yaw_acc[4];    // rad/s^2
+    uint8_t pitch[4];      // rad
+    uint8_t pitch_vel[4];  // rad/s
+    uint8_t pitch_acc[4];  // rad/s^2
+    uint8_t crc16[2];
+} vision_rx_msg_sp_t;
+
+typedef struct
+{
+    uint8_t head[2];
+    uint8_t mode;
+    uint8_t q[4][4];        // w, x, y, z
+    uint8_t yaw[4];         // rad
+    uint8_t yaw_vel[4];     // rad/s
+    uint8_t pitch[4];       // rad
+    uint8_t pitch_vel[4];   // rad/s
+    uint8_t bullet_speed[4];// m/s
+    uint8_t bullet_count[2];
+    uint8_t crc16[2];
+} vision_tx_msg_sp_t;
+
 #pragma pack()
 
 extern vision_t vision;
 extern vision_tx_msg_t vision_tx_msg;
-void vision_get_data(uint8_t *data);
+extern vision_rx_msg_sp_t vision_rx_msg_sp;
+extern vision_tx_msg_sp_t vision_tx_msg_sp;
+extern uint32_t shoot_Cnt;
+void vision_get_data(uint8_t *data, uint32_t len);
 void vision_output_data(void);
+void vision_output_data_sp(void);
 uint8_t vision_check_offline(void);
 void vision_gimbal_get_data(vision_t * vision, uint32_t id, uint8_t *data);
 
