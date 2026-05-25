@@ -59,7 +59,7 @@ static void gimbal_init(void)
 }
 float yaw_err;
 float slope_feed,last_yaw_ref,slope_feed_pit,last_pit_ref;
-float kkkkk = 500;
+float kkkkk = 0.1;
 static void gimbal_pid_calc(void)
 {
     float  pit_max, pit_min;
@@ -123,18 +123,21 @@ static void gimbal_pid_calc(void)
 		gimbal.yaw_spd.pid.ki = 50.0f;
 		gimbal.yaw_spd.pid.i_max = 1000.0f;
 	}
+	
+	
 	if(gimbal.feedback_alpha_speed_input == 0)
 		vision_mpc_k = 1.0f;
 	else
-		vision_mpc_k = 2.0f;
+		vision_mpc_k = 0.5f;
+	
 	gimbal.yaw_spd.ref = pid_calc(&gimbal.yaw_angle.pid, gimbal.yaw_angle.fdb + yaw_err, gimbal.yaw_angle.fdb) \
-                                + vision_mpc_k * vision.rx[0].data.yaw_vel ;
+                                + vision_mpc_k * vision.rx[0].data.yaw_vel  + gimbal.feedback_alpha_speed_input * kkkkk ;
 	//起身先转pitch yaw阻尼
 	if((!(fabsf(gimbal.pit_angle.ref - gimbal.pit_angle.fdb) < 0.08f) && !gimbal.start_up) && gimbal.start_cnt < 200)
 		 gimbal.yaw_spd.ref = 0.0f;
 	
     gimbal.yaw_spd.fdb = gimbal_imu.wz;
-    gimbal.yaw_output = pid_calc(&gimbal.yaw_spd.pid, gimbal.yaw_spd.ref, gimbal.yaw_spd.fdb) + gimbal.feedback_alpha_speed_input * kkkkk;//SMC
+    gimbal.yaw_output = pid_calc(&gimbal.yaw_spd.pid, gimbal.yaw_spd.ref, gimbal.yaw_spd.fdb);//SMC
 //	//起身先转pitch
 //	if((!(fabsf(gimbal.pit_angle.ref - gimbal.pit_angle.fdb) < 0.03f) && !gimbal.start_up) && gimbal.start_cnt < 200)
 //		gimbal.yaw_output = 0.0f;

@@ -392,7 +392,9 @@ void vision_output_data_sp(void)
     memcpy(vision_sp_send_buf, &vision_tx_msg_sp, sizeof(vision_tx_msg_sp));
     CDC_Transmit_HS(vision_sp_send_buf, sizeof(vision_tx_msg_sp));
     send_cnt++;
-}uint8_t vision_check_offline(void)
+}
+
+uint8_t vision_check_offline(void)
 {
     if (vision.online == 0) {
         return 1;
