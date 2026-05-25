@@ -382,6 +382,11 @@ void vision_output_data_sp(void)
     vision_sp_write_float(vision_tx_msg_sp.pitch_vel, -gimbal_imu.wy);
     vision_sp_write_float(vision_tx_msg_sp.bullet_speed, fdcan_board_comm.rx_msg.e.vision_data.shoot_speed);
     vision_sp_write_u16(vision_tx_msg_sp.bullet_count, (uint16_t)shoot_Cnt);
+    if (robot_status.robot_id > 100) {
+        vision_tx_msg_sp.camp = 1;
+    } else {
+        vision_tx_msg_sp.camp = 0;
+    }
     crc16_set_checksum((uint8_t *)&vision_tx_msg_sp, sizeof(vision_tx_msg_sp));
 
     memcpy(vision_sp_send_buf, &vision_tx_msg_sp, sizeof(vision_tx_msg_sp));

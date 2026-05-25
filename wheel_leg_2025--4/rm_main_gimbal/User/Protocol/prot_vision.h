@@ -7,7 +7,7 @@
 
 #define VISION_DATA_LEN 44
 #define VISION_SP_RX_DATA_LEN 29
-#define VISION_SP_TX_DATA_LEN 43
+#define VISION_SP_TX_DATA_LEN 44
 
 #define NAN_PROCESS(now, last)      \
     do {                            \
@@ -175,6 +175,7 @@ typedef struct
     uint8_t pitch_vel[4];   // rad/s
     uint8_t bullet_speed[4];// m/s
     uint8_t bullet_count[2];
+    uint8_t camp;
     uint8_t crc16[2];
 } vision_tx_msg_sp_t;
 
