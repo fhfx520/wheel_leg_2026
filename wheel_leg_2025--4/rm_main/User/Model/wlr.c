@@ -62,7 +62,7 @@ const float LegLengthParam_five[5] = {0.215f, 0.258f, 0.258f, 0.215f, 0.0f};
 const float mb = 22.75f , ml = 2.09f, mw = 0.715f;//机体质量 腿部质量 轮子质量 
 const float BodyWidth = 0.48f;//两轮间距
 const float WheelRadius = 0.055f;//0.075f//轮子半径 气胎
-const float LegLengthMax = 0.37f, LegLengthMin = 0.11f;
+const float LegLengthMax = 0.34f, LegLengthMin = 0.11f;
 
 const float LegLengthHighFly = 0.28f; //长腿腿长腾空 0.28
 const float LegLengthFly 	 = 0.20f; //正常腿长腾空
@@ -394,7 +394,7 @@ static void update_leg_height_and_balance(float yaw_error)
 				data_limit(&wlr.v_ref,-1.0f,1.0f);
 			}
 			else{
-				x3_balance_zero = x3_balance_zero_normal + 0.1f;	
+				x3_balance_zero = x3_balance_zero_normal;	
 				data_limit(&wlr.v_ref,-1.0f,1.0f);
 			}
 		}
@@ -788,9 +788,9 @@ static void update_leg_references(void)
     if (!rotate_flag) {
         for (int i = 0; i < WLR_SIDE_COUNT; i++) {
             if (wlr.side[i].fly_flag) {
-                tlm.l_ref[i] += 0.01f;
-                if (tlm.l_ref[i] > 0.30f) {
-                    tlm.l_ref[i] = 0.30f;
+                tlm.l_ref[i] += 0.04f;
+                if (tlm.l_ref[i] > LegLengthMax) {
+                    tlm.l_ref[i] = LegLengthMax;
                 }
             }
         }
@@ -935,9 +935,9 @@ static void update_fly_state(uint8_t index, float yaw_err)
 
 static void handle_quadrant_protection(uint8_t index)
 {
-    if ((vmc[index].quadrant == 4 || vmc[index].quadrant == 3 || fabs(chassis_imu.pit) > 1.2f
-         || fabs(lqr.X_fdb[4] - lqr.X_fdb[6]) > 0.8f || fabs(lqr.X_diff[4]) > 1.2f
-         || fabs(lqr.X_diff[6]) > 1.2f)
+    if ((vmc[index].quadrant == 4 || vmc[index].quadrant == 3 || fabs(chassis_imu.pit) > PI / 3.0f
+         || fabs(lqr.X_fdb[4] - lqr.X_fdb[6]) > 0.8f || fabs(lqr.X_diff[4]) > 0.8f
+         || fabs(lqr.X_diff[6]) > 0.8f)
         && (wlr.sky_flag == WLR_SKY_IDLE) && (wlr.jump_flag == WLR_JUMP_IDLE) && (wlr.stair_flag == WLR_STAIR_IDLE)
         && chassis.recover_flag == 0) {
         quadrant_cnt++;
@@ -1008,7 +1008,7 @@ static void map_virtual_force(uint8_t index)
 		wlr.side[index].Fy = pid_calc(&pid_energy_leg[index], tlm.l_ref[index], vmc[index].L_fdb) - 60.0f;
 	}
 	else if (wlr.high_flag == 1){//中腿长
-        wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - (100.0f * fabsf(arm_cos_f32(vmc[index].q_fdb[0])) + ff_Fy_1)
+        wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 10.0f
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
     }
 	else {//低腿长
@@ -1073,8 +1073,8 @@ void wlr_init(void)
         pid_init(&pid_leg_sky_cover[i], NONE, 1800, 1.5f, 0.0f,150,500);		    //空中收腿专用pid
 		pid_init(&pid_leg_sky_jump[i],  NONE, 2500, 3.0, 0.0f, 150.0, 500);			//跳跃专用pid
 		pid_init(&pid_leg_recover[i], NONE, 1800, 1.5f, 20000.0f, 300, 500);		//起身专用pid
-        pid_init(&pid_leg_length_fly[i], NONE, 500, 0.0, 0, 0, 200);			//离地腿长/缓冲腿长pid
-        pid_init(&pid_L_test[i], CHANG_I_RATE,1000, 2.0, 20000, 70, 300);			//日常腿长pid
+        pid_init(&pid_leg_length_fly[i], NONE, 1000, 0.0, 0, 0, 300);			//离地腿长/缓冲腿长pid
+        pid_init(&pid_L_test[i], CHANG_I_RATE,900, 2.0, 40000, 70, 300);			//日常腿长pid
 		pid_L_test[i].threshold_a = 0.01f;
 		pid_L_test[i].threshold_b = 0.03f;
 		pid_init(&pid_rescue[i], NONE, 2.0f, 0.5f, 0, 45, 50);						//翻倒起身腿转速pid
@@ -1083,7 +1083,7 @@ void wlr_init(void)
 		pid_init(&pid_ascend[i], NONE, 700, 0.0f, 80000, 70, 300);			//磕台阶腿长pid
 		pid_init(&pid_rotate_balance_zero, NONE, 0.015f, 0.0f, 0, 0.0f, 0.1f);			//磕台阶腿长pid
 	}
-	pid_init(&pid_roll, NONE, 800, 0,0, 0, 100);								//roll偏移支持力补偿
+	pid_init(&pid_roll, NONE, 300, 0,0, 0, 40);								//roll偏移支持力补偿
 	//卡尔曼滤波器初始化
 	DO_ONCE({
 		twm_init(&twm, BodyWidth, WheelRadius);

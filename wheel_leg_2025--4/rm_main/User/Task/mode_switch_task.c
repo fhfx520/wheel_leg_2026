@@ -122,7 +122,7 @@ void modesw_set_container(void)
 	modesw_set_rc_data_container.ctrl_mode = ctrl_mode;
 	//整车翻倒保护头
 //	if (chassis.recover_flag == 1 || fabsf(chassis_imu.pit) > PI / 3.0f)
-	if ((chassis.recover_flag == 1 && fabsf(chassis_imu.pit) > 0.3) || (last_chassis_recover_flag == 0 && chassis.recover_flag == 1 && wlr.jump_flag == WLR_JUMP_IDLE))
+	if ((chassis.recover_flag == 1 && fabsf(chassis_imu.pit) > PI / 3.0f) || (last_chassis_recover_flag == 0 && chassis.recover_flag == 1 && wlr.jump_flag == WLR_JUMP_IDLE))
 		modesw_set_rc_data_container.ctrl_mode = PROTECT_MODE;
 	if(lock_flag == 0 && rc.sw1 == RC_SW_UP)
 		modesw_set_rc_data_container.ctrl_mode = PROTECT_MODE;

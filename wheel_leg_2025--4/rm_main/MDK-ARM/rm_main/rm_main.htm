@@ -3,7 +3,7 @@
 <title>Static Call Graph - [rm_main\rm_main.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image rm_main\rm_main.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Sat May 23 18:10:26 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Tue May 26 16:05:16 2026
 <BR><P>
 <H3>Maximum Stack Usage =        856 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -2875,10 +2875,10 @@ Global Symbols
 <P><STRONG><a name="[151]"></a>USBD_LL_DataOutStage</STRONG> (Thumb, 434 bytes, Stack size 48 bytes, usbd_core.o(.text.USBD_LL_DataOutStage))
 <BR><BR>[Stack]<UL><LI>Max Depth = 216<LI>Call Chain = USBD_LL_DataOutStage &rArr; USBD_CtlContinueRx &rArr; USBD_LL_PrepareReceive &rArr; HAL_PCD_EP_Receive &rArr; USB_EPStartXfer &rArr; USB_WritePacket
 </UL>
-<BR>[Calls]<UL><LI><a href="#[210]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlContinueRx
+<BR>[Calls]<UL><LI><a href="#[21f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CoreFindIF
+<LI><a href="#[210]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlContinueRx
 <LI><a href="#[20f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlSendStatus
 <LI><a href="#[21e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CoreFindEP
-<LI><a href="#[21f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CoreFindIF
 </UL>
 <BR>[Called By]<UL><LI><a href="#[150]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_PCD_DataOutStageCallback
 </UL>
@@ -3108,9 +3108,9 @@ Global Symbols
 <P><STRONG><a name="[226]"></a>USBD_StdItfReq</STRONG> (Thumb, 244 bytes, Stack size 24 bytes, usbd_ctlreq.o(.text.USBD_StdItfReq))
 <BR><BR>[Stack]<UL><LI>Max Depth = 184<LI>Call Chain = USBD_StdItfReq &rArr; USBD_CtlSendStatus &rArr; USBD_LL_Transmit &rArr; HAL_PCD_EP_Transmit &rArr; USB_EPStartXfer &rArr; USB_WritePacket
 </UL>
-<BR>[Calls]<UL><LI><a href="#[20d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlError
+<BR>[Calls]<UL><LI><a href="#[21f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CoreFindIF
+<LI><a href="#[20d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlError
 <LI><a href="#[20f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlSendStatus
-<LI><a href="#[21f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CoreFindIF
 </UL>
 <BR>[Called By]<UL><LI><a href="#[18e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_LL_SetupStage
 </UL>
@@ -5338,7 +5338,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_task
 </UL>
 
-<P><STRONG><a name="[b9]"></a>chassis_task</STRONG> (Thumb, 106 bytes, Stack size 16 bytes, chassis_task.o(.text.chassis_task))
+<P><STRONG><a name="[b9]"></a>chassis_task</STRONG> (Thumb, 100 bytes, Stack size 16 bytes, chassis_task.o(.text.chassis_task))
 <BR><BR>[Stack]<UL><LI>Max Depth = 856<LI>Call Chain = chassis_task &rArr; wlr_control &rArr; vmc_forward_solution_five &rArr; aMartix_Mul
 </UL>
 <BR>[Calls]<UL><LI><a href="#[29b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelayUntil (via Veneer)
@@ -5453,7 +5453,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(.rodata..L__const.MX_FREERTOS_Init.os_thread_def_ModeSwitchTask)
 </UL>
-<P><STRONG><a name="[36c]"></a>modesw_set_container</STRONG> (Thumb, 336 bytes, Stack size 16 bytes, mode_switch_task.o(.text.modesw_set_container))
+<P><STRONG><a name="[36c]"></a>modesw_set_container</STRONG> (Thumb, 328 bytes, Stack size 16 bytes, mode_switch_task.o(.text.modesw_set_container))
 <BR><BR>[Stack]<UL><LI>Max Depth = 300<LI>Call Chain = modesw_set_container &rArr; container_set &rArr; check_init &rArr; container_sys_init &rArr; xQueueCreateMutex &rArr; prvInitialiseMutex &rArr; xQueueGenericSend &rArr; prvCopyDataToQueue &rArr; xTaskPriorityDisinherit &rArr; vListInsertEnd
 </UL>
 <BR>[Calls]<UL><LI><a href="#[247]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;container_set (via Veneer)
@@ -5645,8 +5645,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_task
 </UL>
 
-<P><STRONG><a name="[333]"></a>wlr_init</STRONG> (Thumb, 1292 bytes, Stack size 152 bytes, wlr.o(.text.wlr_init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 312<LI>Call Chain = wlr_init &rArr; twm_init &rArr; kalman_filter_init &rArr; malloc &rArr; internal_alloc
+<P><STRONG><a name="[333]"></a>wlr_init</STRONG> (Thumb, 1288 bytes, Stack size 144 bytes, wlr.o(.text.wlr_init))
+<BR><BR>[Stack]<UL><LI>Max Depth = 304<LI>Call Chain = wlr_init &rArr; twm_init &rArr; kalman_filter_init &rArr; malloc &rArr; internal_alloc
 </UL>
 <BR>[Calls]<UL><LI><a href="#[27a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kalman_filter_init (via Veneer)
 <LI><a href="#[334]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_init (via Veneer)
@@ -6084,7 +6084,7 @@ Local Symbols
 <BR>[Address Reference Count : 1]<UL><LI> gimbal_task.o(.rodata.mb_callback)
 </UL>
 <P><STRONG><a name="[332]"></a>chassis_init</STRONG> (Thumb, 436 bytes, Stack size 48 bytes, chassis_task.o(.text.chassis_init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 360<LI>Call Chain = chassis_init &rArr; wlr_init &rArr; twm_init &rArr; kalman_filter_init &rArr; malloc &rArr; internal_alloc
+<BR><BR>[Stack]<UL><LI>Max Depth = 352<LI>Call Chain = chassis_init &rArr; wlr_init &rArr; twm_init &rArr; kalman_filter_init &rArr; malloc &rArr; internal_alloc
 </UL>
 <BR>[Calls]<UL><LI><a href="#[336]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;FGT_sin_init (via Veneer)
 <LI><a href="#[27a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kalman_filter_init (via Veneer)
@@ -6154,7 +6154,7 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[325]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_data_input
 </UL>
 
-<P><STRONG><a name="[32e]"></a>chassis_rescue_test</STRONG> (Thumb, 5000 bytes, Stack size 440 bytes, chassis_task.o(.text.chassis_rescue_test))
+<P><STRONG><a name="[32e]"></a>chassis_rescue_test</STRONG> (Thumb, 4992 bytes, Stack size 440 bytes, chassis_task.o(.text.chassis_rescue_test))
 <BR><BR>[Stack]<UL><LI>Max Depth = 496<LI>Call Chain = chassis_rescue_test &rArr; dm_motor_set_control_para
 </UL>
 <BR>[Calls]<UL><LI><a href="#[26b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dm_motor_set_control_para (via Veneer)
@@ -6485,7 +6485,7 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[33a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[393]"></a>update_leg_height_and_balance</STRONG> (Thumb, 776 bytes, Stack size 16 bytes, wlr.o(.text.update_leg_height_and_balance))
+<P><STRONG><a name="[393]"></a>update_leg_height_and_balance</STRONG> (Thumb, 768 bytes, Stack size 16 bytes, wlr.o(.text.update_leg_height_and_balance))
 <BR><BR>[Stack]<UL><LI>Max Depth = 44<LI>Call Chain = update_leg_height_and_balance &rArr; ramp_calc &rArr; data_limit
 </UL>
 <BR>[Calls]<UL><LI><a href="#[2da]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;data_limit (via Veneer)
@@ -6585,8 +6585,8 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[33a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[364]"></a>map_virtual_force</STRONG> (Thumb, 2256 bytes, Stack size 48 bytes, wlr.o(.text.map_virtual_force))
-<BR><BR>[Stack]<UL><LI>Max Depth = 288<LI>Call Chain = map_virtual_force &rArr; vmc_inverse_solution_five &rArr; aMartix_Mul
+<P><STRONG><a name="[364]"></a>map_virtual_force</STRONG> (Thumb, 2200 bytes, Stack size 32 bytes, wlr.o(.text.map_virtual_force))
+<BR><BR>[Stack]<UL><LI>Max Depth = 272<LI>Call Chain = map_virtual_force &rArr; vmc_inverse_solution_five &rArr; aMartix_Mul
 </UL>
 <BR>[Calls]<UL><LI><a href="#[2a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_calc (via Veneer)
 <LI><a href="#[2d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_calc (via Veneer)

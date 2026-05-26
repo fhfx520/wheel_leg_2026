@@ -232,8 +232,8 @@ static void chassis_init(void)
     memset(&chassis_y_ramp, 0, sizeof(ramp_t));
     wlr_init();
 
-    ramp_init(&chassis_x_ramp, 0.015f, -3.0f, 3.0f);
-    ramp_init(&chassis_y_ramp, 0.015f, -3.0f, 3.0f);
+    ramp_init(&chassis_x_ramp, 0.05f, -3.0f, 3.0f);
+    ramp_init(&chassis_y_ramp, 0.05f, -3.0f, 3.0f);
     ramp_init(&chassis_rotate_ramp, 0.06f, -2.0f * CHASSIS_ROTATE_SPEED, 2.0f * CHASSIS_ROTATE_SPEED);
 
     wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
@@ -961,7 +961,7 @@ static void chassis_rescue_test(void)
         //双腿都到达第一象限之后 等待200ms缓冲后开始收腿
 		if(vmc[0].quadrant == 1 && vmc[1].quadrant == 1){
 			up_ready++;
-			if(up_ready > 100)
+			if(up_ready > 1)
 				chassis.rescue_inter_flag = CHASSIS_RESCUE_RECOVER;//收腿阶段
 		}
 		//归位计数超过设定值，直接进收腿
@@ -1336,7 +1336,7 @@ void chassis_task(void const *argu)
         chassis_data_input();
         
         // 4. 恢复你本来的执行逻辑结构
-        if(g_robot_ctx.output.chassis != CHASSIS_STOP || 1)
+        if(g_robot_ctx.output.chassis != CHASSIS_STOP)
             wlr_control();
         else
             chassis_init(); // 恢复你的原有保护调用
