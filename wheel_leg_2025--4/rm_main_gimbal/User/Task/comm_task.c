@@ -17,6 +17,7 @@ void comm_task(void const *argument)
 {
     uint32_t thread_wake_time = osKernelSysTick();
     static uint32_t vision_cnt;
+    static uint8_t vision_send_flag;
 
 //∆Ù”√–¬≤¶≈Ã4005
 //	start_MG4005_motor(&hfdcan3,SHOOT_CAN_ID_MG4005);//0x142
@@ -26,6 +27,7 @@ void comm_task(void const *argument)
     for (;;)
     {
         thread_wake_time = osKernelSysTick();
+        vision_send_flag = 0;
 
         taskENTER_CRITICAL();
         status.task.comm = 1;
@@ -47,9 +49,11 @@ void comm_task(void const *argument)
 
 	
         if(vision_cnt++ % 3 == 0)
-			vision_output_data();
+			vision_send_flag = 1;
 					
         taskEXIT_CRITICAL();
+        if (vision_send_flag)
+            vision_output_data_sp();
         osDelayUntil(&thread_wake_time, 1);
     }
 }
