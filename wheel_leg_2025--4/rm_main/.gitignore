@@ -1,0 +1,47 @@
+# 编译生成的文件
+*.o
+*.obj
+*.a
+*.lib
+*.d
+*.elf
+*.axf
+*.hex
+*.bin
+*.asm
+*.map
+
+# MDK-ARM 编译输出
+MDK-ARM/rm_main/*.d
+MDK-ARM/rm_main/*.o
+
+# 构建目录
+build/
+Debug/
+Release/
+Output/
+
+# IDE 和编辑器配置
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# 系统文件
+Thumbs.db
+.DS_Store
+
+# 临时文件
+*.bak
+*.tmp
+*.log
+
+# 保留所有源代码文件
+!Drivers/**/*.c
+!Drivers/**/*.h
+!User/Drivers/**/*.c
+!User/Drivers/**/*.h
+!User/**/*.c
+!User/**/*.h
