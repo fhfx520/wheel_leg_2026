@@ -961,7 +961,7 @@ static void chassis_rescue_test(void)
         //双腿都到达第一象限之后 等待200ms缓冲后开始收腿
 		if(vmc[0].quadrant == 1 && vmc[1].quadrant == 1){
 			up_ready++;
-			if(up_ready > 1)
+			if(up_ready > 100)
 				chassis.rescue_inter_flag = CHASSIS_RESCUE_RECOVER;//收腿阶段
 		}
 		//归位计数超过设定值，直接进收腿
