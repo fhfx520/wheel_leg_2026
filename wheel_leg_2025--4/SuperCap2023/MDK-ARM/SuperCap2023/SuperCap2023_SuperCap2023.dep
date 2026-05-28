@@ -46,9 +46,9 @@ I (../Inc/hrtim.h)(0x69CFC127)
 I (../Inc/tim.h)(0x69CFC127)
 I (../Inc/usart.h)(0x69CFC127)
 I (../Inc/gpio.h)(0x69CFC127)
-I (../bsp/bsp_adc.h)(0x6A0699EA)
+I (../bsp/bsp_adc.h)(0x6A076DD9)
 I (../bsp/bsp_uart.h)(0x69CFC12A)
-I (../bsp/bsp_fdcan.h)(0x6A07174B)
+I (../bsp/bsp_fdcan.h)(0x6A185B61)
 I (../math/data_scope.h)(0x69B46344)
 I (../math/filter.h)(0x69CFC12A)
 I (D:\KEIL5\ARM\ARMCC\include\math.h)(0x599ECD2E)
@@ -369,7 +369,7 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x69B46343)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x69B46344)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x69B46344)
 I (../Inc/stm32g4xx_it.h)(0x69CFC127)
-I (../bsp/bsp_adc.h)(0x6A0699EA)
+I (../bsp/bsp_adc.h)(0x6A076DD9)
 I (../Inc/adc.h)(0x69CFC127)
 I (../bsp/bsp_uart.h)(0x69CFC12A)
 I (../Inc/usart.h)(0x69CFC127)
@@ -457,7 +457,7 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x69B46343)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x69B46344)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x69B46344)
 F (..\bsp\bsp_adc.c)(0x6A06947C)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 -Otime --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../bsp -I ../math -I ../math/Include -I ../app-I.\RTE\_SuperCap2023-ID:\KEIL5\keli_pkg\ARM\CMSIS\6.2.0\CMSIS\Core\Include-ID:\KEIL5\keli_pkg\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="543" -DSTM32G474xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G474xx -DUSE_HAL_DRIVER -DSTM32G474xx -DARM_MATH_CM4 -D__FPU_PRESENT="1U" -D__CC_ARM-o supercap2023\bsp_adc.o --omf_browse supercap2023\bsp_adc.crf --depend supercap2023\bsp_adc.d)
-I (..\bsp\bsp_adc.h)(0x6A0699EA)
+I (..\bsp\bsp_adc.h)(0x6A076DD9)
 I (../Inc/adc.h)(0x69CFC127)
 I (../Inc/main.h)(0x69CFC127)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x69B46343)
@@ -504,7 +504,7 @@ I (../math/pid.h)(0x69CFC12A)
 I (D:\KEIL5\ARM\ARMCC\include\string.h)(0x599ECD2C)
 I (D:\KEIL5\ARM\ARMCC\include\stdlib.h)(0x599ECD2C)
 I (../math/Include/arm_math.h)(0x69CFC12A)
-F (..\bsp\bsp_adc.h)(0x6A0699EA)()
+F (..\bsp\bsp_adc.h)(0x6A076DD9)()
 F (..\bsp\bsp_judge.c)(0x69CFC12A)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 -Otime --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../bsp -I ../math -I ../math/Include -I ../app-I.\RTE\_SuperCap2023-ID:\KEIL5\keli_pkg\ARM\CMSIS\6.2.0\CMSIS\Core\Include-ID:\KEIL5\keli_pkg\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="543" -DSTM32G474xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G474xx -DUSE_HAL_DRIVER -DSTM32G474xx -DARM_MATH_CM4 -D__FPU_PRESENT="1U" -D__CC_ARM-o supercap2023\bsp_judge.o --omf_browse supercap2023\bsp_judge.crf --depend supercap2023\bsp_judge.d)
 I (..\bsp\bsp_judge.h)(0x69CFC12A)
 I (D:\KEIL5\ARM\ARMCC\include\stdint.h)(0x599ECD2E)
@@ -606,7 +606,7 @@ I (..\bsp\bsp_judge.h)(0x69CFC12A)
 I (../math/crc.h)(0x69CFC12A)
 F (..\bsp\bsp_uart.h)(0x69CFC12A)()
 F (..\bsp\bsp_fdcan.c)(0x69CFC12A)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 -Otime --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../bsp -I ../math -I ../math/Include -I ../app-I.\RTE\_SuperCap2023-ID:\KEIL5\keli_pkg\ARM\CMSIS\6.2.0\CMSIS\Core\Include-ID:\KEIL5\keli_pkg\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="543" -DSTM32G474xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G474xx -DUSE_HAL_DRIVER -DSTM32G474xx -DARM_MATH_CM4 -D__FPU_PRESENT="1U" -D__CC_ARM-o supercap2023\bsp_fdcan.o --omf_browse supercap2023\bsp_fdcan.crf --depend supercap2023\bsp_fdcan.d)
-I (..\bsp\bsp_fdcan.h)(0x6A07174B)
+I (..\bsp\bsp_fdcan.h)(0x6A185B61)
 I (../Inc/fdcan.h)(0x69CFC127)
 I (../Inc/main.h)(0x69CFC127)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x69B46343)
@@ -652,7 +652,7 @@ I (D:\KEIL5\ARM\ARMCC\include\string.h)(0x599ECD2C)
 I (D:\KEIL5\ARM\ARMCC\include\stdlib.h)(0x599ECD2C)
 I (D:\KEIL5\ARM\ARMCC\include\math.h)(0x599ECD2E)
 I (../math/Include/arm_math.h)(0x69CFC12A)
-F (..\bsp\bsp_fdcan.h)(0x6A07174B)()
+F (..\bsp\bsp_fdcan.h)(0x6A185B61)()
 F (..\math\filter.c)(0x69CFC12A)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 -Otime --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../bsp -I ../math -I ../math/Include -I ../app-I.\RTE\_SuperCap2023-ID:\KEIL5\keli_pkg\ARM\CMSIS\6.2.0\CMSIS\Core\Include-ID:\KEIL5\keli_pkg\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="543" -DSTM32G474xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G474xx -DUSE_HAL_DRIVER -DSTM32G474xx -DARM_MATH_CM4 -D__FPU_PRESENT="1U" -D__CC_ARM-o supercap2023\filter.o --omf_browse supercap2023\filter.crf --depend supercap2023\filter.d)
 I (..\math\filter.h)(0x69CFC12A)
 I (D:\KEIL5\ARM\ARMCC\include\stdint.h)(0x599ECD2E)
@@ -869,7 +869,7 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x69B46344)
 I (../Inc/usart.h)(0x69CFC127)
 I (../Inc/main.h)(0x69CFC127)
 I (../math/data_scope.h)(0x69B46344)
-I (../bsp/bsp_adc.h)(0x6A0699EA)
+I (../bsp/bsp_adc.h)(0x6A076DD9)
 I (../Inc/adc.h)(0x69CFC127)
 I (..\app\power_ctrl_task.h)(0x6A00E2DB)
 I (../Inc/hrtim.h)(0x69CFC127)
@@ -881,7 +881,7 @@ I (../math/Include/arm_math.h)(0x69CFC12A)
 I (../bsp/bsp_judge.h)(0x69CFC12A)
 I (../math/crc.h)(0x69CFC12A)
 F (..\app\debug.h)(0x69B46344)()
-F (..\app\power_ctrl_task.c)(0x6A076CC5)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 -Otime --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../bsp -I ../math -I ../math/Include -I ../app-I.\RTE\_SuperCap2023-ID:\KEIL5\keli_pkg\ARM\CMSIS\6.2.0\CMSIS\Core\Include-ID:\KEIL5\keli_pkg\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="543" -DSTM32G474xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G474xx -DUSE_HAL_DRIVER -DSTM32G474xx -DARM_MATH_CM4 -D__FPU_PRESENT="1U" -D__CC_ARM-o supercap2023\power_ctrl_task.o --omf_browse supercap2023\power_ctrl_task.crf --depend supercap2023\power_ctrl_task.d)
+F (..\app\power_ctrl_task.c)(0x6A185007)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 -Otime --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../bsp -I ../math -I ../math/Include -I ../app-I.\RTE\_SuperCap2023-ID:\KEIL5\keli_pkg\ARM\CMSIS\6.2.0\CMSIS\Core\Include-ID:\KEIL5\keli_pkg\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="543" -DSTM32G474xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G474xx -DUSE_HAL_DRIVER -DSTM32G474xx -DARM_MATH_CM4 -D__FPU_PRESENT="1U" -D__CC_ARM-o supercap2023\power_ctrl_task.o --omf_browse supercap2023\power_ctrl_task.crf --depend supercap2023\power_ctrl_task.d)
 I (..\app\power_ctrl_task.h)(0x6A00E2DB)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x69B46343)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h)(0x69B46343)
@@ -926,9 +926,9 @@ I (D:\KEIL5\ARM\ARMCC\include\string.h)(0x599ECD2C)
 I (D:\KEIL5\ARM\ARMCC\include\stdlib.h)(0x599ECD2C)
 I (D:\KEIL5\ARM\ARMCC\include\math.h)(0x599ECD2E)
 I (../math/Include/arm_math.h)(0x69CFC12A)
-I (../bsp/bsp_adc.h)(0x6A0699EA)
+I (../bsp/bsp_adc.h)(0x6A076DD9)
 I (../Inc/adc.h)(0x69CFC127)
-I (../bsp/bsp_fdcan.h)(0x6A07174B)
+I (../bsp/bsp_fdcan.h)(0x6A185B61)
 I (../Inc/fdcan.h)(0x69CFC127)
 I (../bsp/bsp_judge.h)(0x69CFC12A)
 I (../math/crc.h)(0x69CFC12A)

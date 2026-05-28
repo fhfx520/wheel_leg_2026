@@ -124,9 +124,10 @@ void judge_init(UART_HandleTypeDef *huart)
  */
 void judge_send_data(uint8_t* message, int length)
 {
-    while (judge_huart->gState != HAL_UART_STATE_READY) {
-        osDelay(1);
-    }
+//    while (judge_huart->gState != HAL_UART_STATE_READY) {
+//        osDelay(1);
+//    }
+	osDelay(33);
     HAL_UART_Transmit_DMA(judge_huart, message, length);
 }
 uint8_t judge_check_offline(void)

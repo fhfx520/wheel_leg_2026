@@ -32,7 +32,7 @@ uint8_t jieyue_flag = 1;
 
 float text_current = 4.0f;
 float text_power = 80.0f;
-CCMRAM float text_voltage = 30.0f; // 电容最大电量
+CCMRAM float text_voltage = 28.0f; // 电容最大电量
 float text_buffer = 55.0f;		   // 缓冲能量恒定在这个设定值
 
 CCMRAM void power_ctrl_task(void)

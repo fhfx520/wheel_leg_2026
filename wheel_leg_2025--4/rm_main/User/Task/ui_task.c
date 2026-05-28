@@ -67,7 +67,7 @@ void ui_update(void)
 	static uint8_t one_second = 0;
 	
 	one_second++;
-	if(one_second > 50)
+	if(one_second > 10)
 		one_second = 0;
 	//ui_group1 update begin
 	ui_g_1_left_big_leg->end_x = ui_g_1_left_big_leg->start_x - ui_sign_function() * (vmc[((!wlr.direction) ? 1 : 0)].mp_fdb.xd * 300);
@@ -104,7 +104,7 @@ void ui_update(void)
 	else if(wlr.high_flag == 0)
 		ui_g_1_current_high_flag->start_y = 785;
 
-	if(one_second <= 25)
+	if(one_second <= 5)
 		ui_g_1_current_high_flag->width = 10;
 	else		
 		ui_g_1_current_high_flag->width = 0;
@@ -138,7 +138,7 @@ void ui_update(void)
 	ui_g_2_vision_trice_id->number = ui_get_vision_data_container.vision_trace_id;
 	
 	ui_g_2_current_shoot_mode->start_y = (wlr.energy_flag ? 638 : 673);
-	if(one_second <= 25)
+	if(one_second <= 5)
 		ui_g_2_current_shoot_mode->width = 10;
 	else		
 		ui_g_2_current_shoot_mode->width = 0;
@@ -174,12 +174,12 @@ uint32_t ui_update_cnt = 0;
 void ui_task(void const* argument)
 {
     uint32_t thread_wake_time = osKernelSysTick();
-    ui_init();
+//    ui_init();
 	container_bus_init(mb_callback, sizeof(mb_callback)/sizeof(ContainerBusCfg));
-    for(int i = 0; i < 30; i++) {
+    for(int i = 0; i < 15; i++) {
         thread_wake_time = osKernelSysTick();
         ui_init();
-        osDelayUntil(&thread_wake_time, 1);
+//        osDelayUntil(&thread_wake_time, 1);
     }	
     for(;;)
     {
@@ -188,7 +188,7 @@ void ui_task(void const* argument)
 		ui_update_cnt++;
         if (game_status.game_progress == 0 || game_status.game_progress == 1 || game_status.game_progress == 5) 
 		{
-			if(ui_update_cnt % 20 == 0)	
+			if(ui_update_cnt % 5 == 0)	
 				ui_update();
 			else
 				ui_init();
@@ -202,6 +202,6 @@ void ui_task(void const* argument)
 			ui_update();
 		}
         us_timer_interval_test_end(&ui_time);
-        osDelayUntil(&thread_wake_time, 10);
+//        osDelayUntil(&thread_wake_time, 10);
     }
 }
