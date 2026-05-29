@@ -352,15 +352,19 @@ static void state_predict(void)
 //限速函数
 static void stable_velocity_control(void)
 {
-    if(fabsf(lqr.X_fdb[8]) > 0.3f)  
-        data_limit(&lqr.X_ref[1],0.0f,0.0f);
-    else if(fabsf(lqr.X_fdb[8]) > 0.2f)
-        data_limit(&lqr.X_ref[1],-1.0f,1.0f);
-    else if(fabsf(lqr.X_fdb[8]) > 0.1f)
-        data_limit(&lqr.X_ref[1],-2.0f,2.0f);
+//    if(fabsf(lqr.X_fdb[8]) > 0.3f)  
+//        data_limit(&lqr.X_ref[1],0.0f,0.0f);
+//    else if(fabsf(lqr.X_fdb[8]) > 0.2f)
+//        data_limit(&lqr.X_ref[1],-1.0f,1.0f);
+//    else if(fabsf(lqr.X_fdb[8]) > 0.1f)
+//        data_limit(&lqr.X_ref[1],-2.0f,2.0f);
+	static float power_limit_velocity = 0;
+	static float power_limit_rotate = 0;
+	power_limit_velocity = power_control_target_velocity();
+	power_limit_rotate = power_control_target_Vrotate();
     if(wlr.sky_flag == WLR_SKY_IDLE && wlr.jump_flag == WLR_JUMP_IDLE && wlr.high_flag == 0 && !g_robot_ctx.output.chassis_speed)//磕台阶，跳跃，飞坡时不限制速度输入
     {
-        data_limit(&lqr.X_ref[1],-power_control_target_velocity(),power_control_target_velocity());
+        data_limit(&lqr.X_ref[1],-power_limit_velocity,power_limit_velocity);
         limit_velocity(&lqr.X_ref[1],&lqr.X_fdb[3]);//摩擦圆
     }
 	if(rotate_flag)
@@ -368,7 +372,7 @@ static void stable_velocity_control(void)
 		if(g_robot_ctx.output.chassis_speed)
 			data_limit(&lqr.X_ref[3],-12.0f,12.0f);
 		else
-			data_limit(&lqr.X_ref[3],-power_control_target_Vrotate(),power_control_target_Vrotate());
+			data_limit(&lqr.X_ref[3],-power_limit_rotate,power_limit_rotate);
 	}
     if(wlr.sky_flag == WLR_SKY_FOLDING)
 		data_limit(&lqr.X_ref[1],-3.0f,3.0f);

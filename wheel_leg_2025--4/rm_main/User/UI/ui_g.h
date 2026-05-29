@@ -38,6 +38,7 @@ extern ui_interface_string_t *ui_g_3_shoot_mode_aim;
 extern ui_interface_string_t *ui_g_3_shoot_mode_energy;
 extern ui_interface_string_t *ui_g_3_mid_leg_length;
 extern ui_interface_string_t *ui_g_3_high_leg_length;
+extern ui_interface_string_t *ui_g_3_trigger;
 
 void ui_init_g_3();
 void ui_update_g_3();
@@ -48,6 +49,14 @@ extern ui_interface_string_t *ui_g_4_fly_flag;
 void ui_init_g_4();
 void ui_update_g_4();
 void ui_remove_g_4();
+
+extern ui_interface_number_t *ui_g_5_left_lazer;
+extern ui_interface_number_t *ui_g_5_right_lazer;
+extern ui_interface_string_t *ui_g_5_distance;
+
+void ui_init_g_5();
+void ui_update_g_5();
+void ui_remove_g_5();
 
 
 #endif // UI_g_H

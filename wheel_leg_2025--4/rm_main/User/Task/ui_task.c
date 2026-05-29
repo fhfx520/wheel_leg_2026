@@ -60,6 +60,7 @@ void ui_init(void)
 	ui_init_g_2();
 	ui_init_g_3();
 	ui_init_g_4();
+	ui_init_g_5();
 }
 
 void ui_update(void)
@@ -166,6 +167,12 @@ void ui_update(void)
 		ui_update_g_4();
 	}
 	//ui_group4 update end
+	
+	//ui_group5 update begin
+	ui_g_5_left_lazer->number = wlr.side[0].Front_dis_kal * 1000.0f;
+	ui_g_5_right_lazer->number = wlr.side[1].Front_dis_kal * 1000.0f;
+	ui_update_g_5();
+	//ui_group5 update end
 	
 	
 }

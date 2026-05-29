@@ -199,30 +199,30 @@ void power_get_status(uint8_t *data)
 
 
 static float power_velocity_table[11][2] = {
-    {35.0f ,1.1f},//节能状态
-    {45.0f ,1.3f},//1
-    {50.0f ,1.3f},//2
-    {55.0f ,1.4f},//3
-    {60.0f ,1.4f},//4
-    {65.0f ,1.5f},//5
-    {70.0f ,1.6f},//6
-    {75.0f ,1.6f},//7
-    {80.0f ,1.7f},//8
-    {90.0f ,1.8f},//9
-    {100.0f,1.9f},//10
+    {35.0f ,1.5f},//节能状态
+    {45.0f ,1.5f},//1
+    {50.0f ,1.5f},//2
+    {55.0f ,1.6f},//3
+    {60.0f ,1.7f},//4
+    {65.0f ,1.8f},//5
+    {70.0f ,1.8f},//6
+    {75.0f ,1.8f},//7
+    {80.0f ,2.0f},//8
+    {90.0f ,2.0f},//9
+    {100.0f,2.1f},//10
 };
 
 static float power_rotate_table[11][2] = {
-    {35.0f ,5.0f},//节能状态
-    {45.0f ,7.0f},//1
-    {50.0f ,7.0f},//2
-    {55.0f ,8.0f},//3
-    {60.0f ,8.0f},//4
-    {65.0f ,9.0f},//5
-    {70.0f ,9.0f},//6
-    {75.0f ,10.0f},//7
-    {80.0f ,10.0f},//8
-    {90.0f ,11.0f},//9
+    {35.0f ,8.0f},//节能状态
+    {45.0f ,8.0f},//1
+    {50.0f ,9.0f},//2
+    {55.0f ,10.0f},//3
+    {60.0f ,11.0f},//4
+    {65.0f ,12.0f},//5
+    {70.0f ,12.0f},//6
+    {75.0f ,12.0f},//7
+    {80.0f ,12.0f},//8
+    {90.0f ,12.0f},//9
     {100.0f,12.0f},//10
 };
 static float supercap_velocity_addmap(void)
@@ -237,7 +237,16 @@ float power_control_target_velocity(void)
 {
     power_judge_update();
 	static float base_velocity = 0.0f;
-    base_velocity = power_velocity_table[0][1];
+    if(power_control.judge_max_power <= power_velocity_table[0][0])
+	{
+		base_velocity = power_velocity_table[0][1];
+		return (base_velocity + supercap_velocity_addmap());
+	}
+	else if(power_control.judge_max_power >= power_velocity_table[10][0])
+	{
+		base_velocity = power_velocity_table[10][1];
+		return (base_velocity + supercap_velocity_addmap());
+	}
     //更新基础速度
     for(uint8_t i = 0; i < 11; i++) {
         if (power_control.judge_max_power == power_velocity_table[i][0]){
@@ -253,7 +262,16 @@ float power_control_target_Vrotate(void)
 {
     power_judge_update();
 	static float base_rotate = 0.0f;
-    base_rotate = power_rotate_table[0][1];
+	if(power_control.judge_max_power <= power_rotate_table[0][0])
+	{
+		base_rotate = power_rotate_table[0][1];
+		return base_rotate;
+	}
+	else if(power_control.judge_max_power >= power_rotate_table[10][0])
+	{
+		base_rotate = power_rotate_table[10][1];
+		return base_rotate;
+	}
     //更新基础速度
     for(uint8_t i = 0; i < 11; i++) {
         if (power_control.judge_max_power == power_rotate_table[i][0]){
@@ -262,7 +280,7 @@ float power_control_target_Vrotate(void)
 		}
     }
     //根据电容电压进行微调
-    return (base_rotate + supercap_velocity_addmap());
+    return (base_rotate);
 }
 
 uint8_t power_check_offline(void)
