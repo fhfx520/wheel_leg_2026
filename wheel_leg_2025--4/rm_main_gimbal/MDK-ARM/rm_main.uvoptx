@@ -292,6 +292,16 @@
           <WinNumber>2</WinNumber>
           <ItemText>send_cnt,0x0A</ItemText>
         </Ww>
+        <Ww>
+          <count>8</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>gimbal.yaw_angle.ref</ItemText>
+        </Ww>
+        <Ww>
+          <count>9</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>gimbal.yaw_angle.fdb</ItemText>
+        </Ww>
       </WatchWindow2>
       <MemoryWindow1>
         <Mm>

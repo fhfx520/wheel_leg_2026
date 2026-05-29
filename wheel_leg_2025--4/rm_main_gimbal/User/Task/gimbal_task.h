@@ -27,6 +27,7 @@ typedef struct
     float yaw_output, pit_output;
     float start_up;//起身标志位
 	uint16_t start_cnt;//起身cnt
+	float vision_velocity;
 } gimbal_t;
 
 extern gimbal_t gimbal;

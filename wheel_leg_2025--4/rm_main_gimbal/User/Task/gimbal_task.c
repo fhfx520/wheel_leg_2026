@@ -131,7 +131,7 @@ static void gimbal_pid_calc(void)
 		vision_mpc_k = 0.5f;
 	
 	gimbal.yaw_spd.ref = pid_calc(&gimbal.yaw_angle.pid, gimbal.yaw_angle.fdb + yaw_err, gimbal.yaw_angle.fdb) \
-                                + vision_mpc_k * vision.rx[0].data.yaw_vel  + gimbal.feedback_alpha_speed_input * kkkkk ;
+                                + vision_mpc_k * gimbal.vision_velocity  + gimbal.feedback_alpha_speed_input * kkkkk ;
 	//起身先转pitch yaw阻尼
 	if((!(fabsf(gimbal.pit_angle.ref - gimbal.pit_angle.fdb) < 0.08f) && !gimbal.start_up) && gimbal.start_cnt < 200)
 		 gimbal.yaw_spd.ref = 0.0f;
@@ -184,6 +184,7 @@ static void gimbal_get_vision_data(void)
                 vision.new_frame_flag = 0;
                 gimbal.pit_angle.ref = vision.target_pit_angle;
                 gimbal.yaw_angle.ref = vision.target_yaw_angle;
+				gimbal.vision_velocity = vision.rx[0].data.yaw_vel;
             }
             break;
         }
@@ -191,9 +192,11 @@ static void gimbal_get_vision_data(void)
             vision.aim_status = UNAIMING;
             gimbal.pit_angle.ref = gimbal.pit_angle.fdb;
             gimbal.yaw_angle.ref = gimbal.yaw_angle.fdb;
+			gimbal.vision_velocity = 0.0f;
             break;
         }
         case UNAIMING: {//未识别到目标
+			gimbal.vision_velocity = 0.0f;
             if (ctrl_mode == REMOTER_MODE) {
                 gimbal.pit_angle.ref += rc.ch2 * gimbal_scale.angle_remote;
                 gimbal.yaw_angle.ref -= rc.ch1 * gimbal_scale.angle_remote;
@@ -236,8 +239,10 @@ void gimbal_task(void const *argu)
             case REMOTER_MODE: {
                 if ( rc_fsm_check(RC_LEFT_LD) && rc_fsm_check(RC_RIGHT_RD) ){ //遥控器开启视觉
                     gimbal_get_vision_data();
+					gimbal.yaw_angle.pid.out_max = 5.0f;
                 } 
                 else {
+					gimbal.yaw_angle.pid.out_max = 100.0f;
                    gimbal.yaw_ecd.ref   -= rc.ch1 * gimbal_scale.ecd_remote;
                    gimbal.pit_angle.ref -= -rc.ch2 * gimbal_scale.angle_remote;
                    gimbal.yaw_angle.ref -= rc.ch1 * gimbal_scale.angle_remote;
@@ -252,7 +257,9 @@ void gimbal_task(void const *argu)
             case KEYBOARD_MODE: {
                 if (rc.mouse.r == 1) {
                     gimbal_get_vision_data();
+					gimbal.yaw_angle.pid.out_max = 5.0f;
                 } else {
+					gimbal.yaw_angle.pid.out_max = 100.0f;
                     //一键调头
                     if(key_scan_clear(KEY_GIMBAL_TURN_R)) {
                         gimbal.yaw_angle.ref -= PI / 2;
