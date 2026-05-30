@@ -696,12 +696,14 @@ static void handle_stair_state(void)
 	static uint16_t stair_cnt = 0;
     if(wlr.stair_flag == WLR_STAIR_ASCEND)
 	{
-		stair_cnt = 0;
+		wlr.v_ref = ramp_calc(&stair_ramp,2.0f);
+		stair_cnt++;
 		 Fy_ramp[0].out = Fy_ramp[1].out= 0;
 		 wlr.high_set = ramp_calc(&height_ramp, LegLengthStair);
 		 x3_balance_zero = x3_balance_zero_normal;
          x5_balance_zero = 0.0f;
-		 if(fabsf(lqr.X_fdb[4]) > 0.2f || fabsf(lqr.X_fdb[6]) > 0.2f) {
+		 if((fabsf(lqr.X_fdb[4]) > 0.2f || fabsf(lqr.X_fdb[6]) > 0.2f) && stair_cnt > 600) {
+			 stair_cnt = 0;
 			wlr.v_ref = 0;
 			wlr.high_set = 0.12f;
 			wlr.stair_flag = WLR_STAIR_RECOVER_SHORT;
@@ -709,11 +711,15 @@ static void handle_stair_state(void)
 	}
     else if(wlr.stair_flag == WLR_STAIR_RECOVER_SHORT)
 	{
-		stair_cnt = 0;
+		stair_ramp.out = 0.0F;
 		data_limit(&wlr.v_ref,-1.0f,1.0f);
         wlr.high_set = 0.12f;
-        x3_balance_zero = 1.5f;
-        if (fabsf(wlr.high_set - vmc[0].L_fdb) < 0.03f && fabsf(wlr.high_set - vmc[1].L_fdb) < 0.03f) {
+        x3_balance_zero = 0.8f;
+//        if (fabsf(wlr.high_set - vmc[0].L_fdb) < 0.03f && fabsf(wlr.high_set - vmc[1].L_fdb) < 0.03f) 
+		stair_cnt++;
+		if (stair_cnt > 50)
+		{
+			stair_cnt = 0;
 			wlr.stair_flag = WLR_STAIR_RECOVER_LONG;
 			height_ramp.out = 0.12f;
         }
@@ -723,9 +729,9 @@ static void handle_stair_state(void)
 		stair_cnt++;
 		data_limit(&wlr.v_ref,-1.0f,1.0f);
 		x3_balance_zero = 0.8f;
-		wlr.high_set = 0.25f;
-//		if(wlr.side[0].Fn_kal > 150.0f || wlr.side[1].Fn_kal > 150.0f)
-		if(stair_cnt > 100)
+		wlr.high_set = 0.21f;
+//		if(wlr.side[0].Fn_kal > 160.0f || wlr.side[1].Fn_kal > 160.0f)
+		if(stair_cnt > 50)
 		{
 			stair_cnt = 0;
 			wlr.stair_flag = WLR_STAIR_LANDING;
@@ -733,10 +739,16 @@ static void handle_stair_state(void)
 	}
     else if(wlr.stair_flag == WLR_STAIR_LANDING)
 	{
+		wlr.v_ref = ramp_calc(&stair_ramp,1.5f);
 		stair_cnt = 0;
 		data_limit(&wlr.v_ref,-1.0f,1.0f);
 		x3_balance_zero = x3_balance_zero_normal;
-		wlr.high_set = 0.16f;
+		wlr.high_set = 0.21f;
+	}
+	else if(wlr.stair_flag == WLR_STAIR_IDLE)
+	{
+		stair_ramp.out = 0.0f;
+		stair_cnt = 0;
 	}
 }
 
@@ -996,7 +1008,7 @@ static void map_virtual_force(uint8_t index)
         Fy_temp = pid_calc(&pid_leg_sky_cover[index], tlm.l_ref[index], vmc[index].L_fdb) - 100.0f ;
         wlr.side[index].Fy = ramp_calc(&Fy_ramp[index], Fy_temp);
     } 
-	else if (wlr.sky_flag == WLR_SKY_LANDING || wlr.stair_flag == WLR_STAIR_RECOVER_LONG) {//跳跃落地缓冲
+	else if (wlr.sky_flag == WLR_SKY_LANDING) {//跳跃落地缓冲
          wlr.side[index].Fy = pid_calc(&pid_leg_length_fly[index], tlm.l_ref[index], vmc[index].L_fdb);
     } 
 	else if (wlr.sky_flag == WLR_SKY_STAND) {//跳跃结束
@@ -1010,7 +1022,7 @@ static void map_virtual_force(uint8_t index)
 	else if (wlr.energy_flag){//击打能量机关
 		wlr.side[index].Fy = pid_calc(&pid_energy_leg[index], tlm.l_ref[index], vmc[index].L_fdb) - 60.0f;
 	}
-	else if (wlr.high_flag == 1){//中腿长
+	else if (wlr.high_flag == 1 || wlr.stair_flag == WLR_STAIR_RECOVER_LONG){//中腿长
         wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 10.0f
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
     }
@@ -1059,7 +1071,7 @@ void wlr_init(void)
 	ramp_init(&height_ramp, 0.001f, LegLengthMin, LegLengthMax);			//日常腿长斜坡
 	ramp_init(&sky_height_ramp, 0.001f, LegLengthMin, LegLengthMax);		//空中腿长斜坡
 	ramp_init(&jump_ramp, 0.008f, -3.0f, 3.0f);
-	ramp_init(&stair_ramp, 0.004f, -1.5f, 1.5f);
+	ramp_init(&stair_ramp, 0.05f, -2.0f, 2.0f);
 	ramp_init(&wz_ramp, 0.05f,  0,  3.0f);									//小陀螺加速K矩阵wz项斜坡
 	ramp_init(&sky_ramp[0], 10.0f, -450.0f,  450.0f);						//伸腿支持力斜坡
 	ramp_init(&sky_ramp[1], 10.0f, -450.0f,  450.0f);						//伸腿支持力斜坡
