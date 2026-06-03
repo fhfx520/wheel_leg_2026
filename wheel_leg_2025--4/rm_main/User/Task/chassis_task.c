@@ -466,7 +466,7 @@ static void chassis_execute_fsm(void)
 	}
 
     if (g_robot_ctx.output.chassis == CHASSIS_HIGH) 
-		chassis_scale.remote = 1.0f / 660 * 2.2f;
+		chassis_scale.remote = 1.0f / 660 * 2.4f;
     else 
 		chassis_scale.remote = 1.0f /660 * 2.3f; 
 	

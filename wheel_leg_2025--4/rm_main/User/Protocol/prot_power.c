@@ -247,6 +247,8 @@ float power_control_target_velocity(void)
 		base_velocity = power_velocity_table[10][1];
 		return (base_velocity + supercap_velocity_addmap());
 	}
+	if(supercap.volage < 13.0f)
+		return 1.3f;
     //更新基础速度
     for(uint8_t i = 0; i < 11; i++) {
         if (power_control.judge_max_power == power_velocity_table[i][0]){
@@ -272,7 +274,9 @@ float power_control_target_Vrotate(void)
 		base_rotate = power_rotate_table[10][1];
 		return base_rotate;
 	}
-    //更新基础速度
+	if(supercap.volage < 15.0f)
+			return 7.0f;
+		//更新基础速度
     for(uint8_t i = 0; i < 11; i++) {
         if (power_control.judge_max_power == power_rotate_table[i][0]){
             base_rotate = power_rotate_table[i][1];
