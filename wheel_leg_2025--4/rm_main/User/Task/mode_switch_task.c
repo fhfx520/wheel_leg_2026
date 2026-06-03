@@ -216,17 +216,22 @@ void mode_switch_task(void const *argu)
             remote_reset();
 			sw1_mode_handler();
         }
-		if(status.dji_motor)
-		{
-			lock_flag = 0;
-			g_robot_ctx.output.chassis = CHASSIS_STOP;
-		}
+//		if(status.dji_motor)
+//		{
+//			lock_flag = 0;
+//			g_robot_ctx.output.chassis = CHASSIS_STOP;
+//		}
 		//决定键鼠数据来源
 		decide_to_use_Witch_KbData();
 		//运行 FSM 大脑 解锁后激活 否则一直保护
-		if(lock_flag)
+		if(lock_flag && !status.dji_motor)//解锁了且轮电机在线
 			robot_logic_update((const RC_Ctrl_t*)&rc);
-		else
+		else if(lock_flag && status.dji_motor)//解锁了但轮电机离线
+		{
+			robot_logic_update((const RC_Ctrl_t*)&rc);
+			g_robot_ctx.output.chassis = CHASSIS_STOP;
+		}
+		else//没解锁
 			robot_logic_update(NULL);
 		
 		//遥控数据打包发送
