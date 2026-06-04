@@ -158,5 +158,7 @@ void vmc_forward_solution(vmc_t* v, float q1, float q2, float w1, float w2, floa
 void vmc_inverse_solution(vmc_t* v, float L_ref, float q0_ref, float T0, float Fy);
 void vmc_forward_solution_five(vmc_t* v, float q1, float q4, float w1, float w4, float t1, float t4);
 void vmc_inverse_solution_five(vmc_t* v, float L_ref, float q0_ref, float T0, float Fy);
+void leg_vmc_generate_joint_zero_point(void);
+
 
 #endif

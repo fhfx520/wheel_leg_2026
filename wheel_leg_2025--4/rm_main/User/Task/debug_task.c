@@ -591,12 +591,13 @@ void debug_task(void const* argument)
     for(;;)
     {
         thread_wake_time = osKernelSysTick();
+//		leg_vmc_generate_joint_zero_point();
         log_scope_data_output();
         debug_log_shoot_delay_update();
         if (++text_log_div >= DEBUG_TEXT_LOG_DIV) {
             text_log_div = 0;
             debug_log_text_output();
         }
-        osDelayUntil(&thread_wake_time, 2);
+        osDelayUntil(&thread_wake_time, 100);
     }
 }

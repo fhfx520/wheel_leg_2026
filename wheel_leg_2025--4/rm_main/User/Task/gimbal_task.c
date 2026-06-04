@@ -262,18 +262,18 @@ static void gimbal_execute_fsm(void)
 	gimbal.start_up = gimbal_get_gimbal_data_container.gimbal_start_up;
 	switch(g_robot_ctx.output.gimbal)
 	{
-		case GIMBAL_STOP:
-		{
-			gimbal.yaw_output = gimbal_data_rec.yaw_output;
-		}break;
 		//听云台算完发下来的电流
+		case GIMBAL_STOP:
 		case GIMBAL_GYRO_STABILIZE:
 		case GIMBAL_MOUSE_CONTROL:
 		case GIMBAL_AUTO_AIM:
 		{
 			gimbal.yaw_output = gimbal_data_rec.yaw_output;
 		}break;
-		default : break;
+		default : 
+		{
+			gimbal.yaw_output = 0.0f;
+		}break;
 	}
 }
 

@@ -1,6 +1,14 @@
 #include "leg_vmc.h"
 #include "math_matrix.h"
 #include "arm_math.h"
+#include "drv_dm_motor.h"
+#include "data_log.h"
+//#define LEG_VMC_TARGET_Q1_DEG 331.69216f//330.9931f
+//#define LEG_VMC_TARGET_Q2_DEG 61.7882f //57.9222f
+
+
+float LEG_VMC_TARGET_Q1_DEG = 331.69216f;
+float LEG_VMC_TARGET_Q2_DEG	= 69.5f;
 
 vmc_t vmc[2];
 
@@ -367,4 +375,44 @@ void vmc_inverse_solution_five(vmc_t* v, float L_ref, float q0_ref, float T0, fl
     aMartix_Mul(v->Jft.array, v->F_ref.array, v->T_ref.array, 2, 2, 1); 		//T_ref = Jft^T * F_ref，得到关节电机1和4需要的力矩
 }
 
+static float leg_vmc_wrap_0_2pi(float angle)
+{
+    while (angle >= 2.0f * PI) {
+        angle -= 2.0f * PI;
+    }
+    while (angle < 0.0f) {
+        angle += 2.0f * PI;
+    }
+    return angle;
+}
+
+void leg_vmc_generate_joint_zero_point(void)
+{
+    const float target_q1 = LEG_VMC_TARGET_Q1_DEG * PI / 180.0f;
+    const float target_q2 = LEG_VMC_TARGET_Q2_DEG * PI / 180.0f;
+
+    const float zero_lb = leg_vmc_wrap_0_2pi(joint_motor[0].position - target_q1);
+    const float zero_ls = leg_vmc_wrap_0_2pi(joint_motor[1].position - target_q2);
+    const float zero_rb = leg_vmc_wrap_0_2pi(joint_motor[2].position + target_q1);
+    const float zero_rs = leg_vmc_wrap_0_2pi(joint_motor[3].position + target_q2);
+
+    const float q1_left = leg_vmc_wrap_0_2pi(joint_motor[0].position - zero_lb);
+    const float q2_left = leg_vmc_wrap_0_2pi(joint_motor[1].position - zero_ls);
+    const float q1_right = leg_vmc_wrap_0_2pi(-(joint_motor[2].position - zero_rb));
+    const float q2_right = leg_vmc_wrap_0_2pi(-(joint_motor[3].position - zero_rs));
+
+    joint_motor[0].zero_point = zero_lb;
+    joint_motor[1].zero_point = zero_ls;
+    joint_motor[2].zero_point = zero_rb;
+    joint_motor[3].zero_point = zero_rs;
+
+    log_printf("\r\n[leg_vmc] target q1 = %.9ff rad, target q2 = %.9ff rad\r\n", target_q1, target_q2);
+    log_printf("[leg_vmc] verify left : q1 = %.9ff rad, q2 = %.9ff rad\r\n", q1_left, q2_left);
+    log_printf("[leg_vmc] verify right: q1 = %.9ff rad, q2 = %.9ff rad\r\n", q1_right, q2_right);
+    log_printf("[leg_vmc] copy to can_comm.c:\r\n");
+    log_printf("dm_motor_init(&joint_motor[0], CAN_CHANNEL_1, JOINT_LB_CMD_ID, %.9ff, JOINT_LB_REC_ID);\r\n", zero_lb);
+    log_printf("dm_motor_init(&joint_motor[1], CAN_CHANNEL_1, JOINT_LS_CMD_ID, %.9ff, JOINT_LS_REC_ID);\r\n", zero_ls);
+    log_printf("dm_motor_init(&joint_motor[2], CAN_CHANNEL_1, JOINT_RB_CMD_ID, %.9ff, JOINT_RB_REC_ID);\r\n", zero_rb);
+    log_printf("dm_motor_init(&joint_motor[3], CAN_CHANNEL_1, JOINT_RS_CMD_ID, %.9ff, JOINT_RS_REC_ID);\r\n", zero_rs);
+}
 
