@@ -115,7 +115,12 @@ static void rem_spin_enter(void) { g_robot_ctx.output.chassis = CHASSIS_LOW_SPIN
 static void rem_spin_execute(void) {
     g_robot_ctx.output.chassis = CHASSIS_LOW_SPIN;
     g_robot_ctx.output.gimbal  = GIMBAL_GYRO_STABILIZE;
-    g_robot_ctx.output.shoot   = SHOOT_STOP;
+	if(g_robot_ctx.input.sw2 == RC_SW_UP)
+		g_robot_ctx.output.shoot   = SHOOT_STOP;
+	else if(g_robot_ctx.input.sw2 == RC_SW_MID)
+		g_robot_ctx.output.shoot   = SHOOT_SINGLE;
+	else
+		g_robot_ctx.output.shoot   = SHOOT_SERIES;
     
     if (check_ch3_trigger()) fsm_change(&fsm_remote_sub, &state_rem_low);
 }
