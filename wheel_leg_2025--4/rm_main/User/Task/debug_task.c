@@ -40,6 +40,7 @@ extern float yw_ddot;
 extern float Fwy;
 extern float F_test[2];
 extern float F_wy[2];
+extern float global_F;
 extern int32_t Last_cnt;
 extern chassis_scale_t chassis_scale;
 extern uint8_t global_back_flag;
@@ -47,6 +48,7 @@ extern osThreadId CommTaskHandle;
 extern osThreadId ChassisTaskHandle;
 extern osThreadId UITaskHandle;
 extern osThreadId DebugTaskHandle;
+
 
 /*
  * Text log quick map:
@@ -524,11 +526,16 @@ void log_scope_data_pkg(void)
 			break;
 		}
         case 5: { /* 腿长 */
-            log_scope_get_data(vmc[0].L_fdb);
+            log_scope_get_data(tlm.l_ref[1]);
             log_scope_get_data(vmc[1].L_fdb);
             log_scope_get_data(wlr.v_fdb);
             log_scope_get_data(wlr.side[0].fly_flag);
             log_scope_get_data(wlr.side[1].fly_flag);
+			log_scope_get_data(wlr.side[0].Fn_kal);
+            log_scope_get_data(wlr.side[1].Fn_kal);
+			log_scope_get_data(chassis_imu.az);
+			log_scope_get_data(vmc[1].F_fdb.e.Fy_fdb);
+			log_scope_get_data(vmc[1].F_fdb.e.T0_fdb);
             break;
 		}
         case 6: { /* 小陀螺 */
@@ -598,6 +605,6 @@ void debug_task(void const* argument)
             text_log_div = 0;
             debug_log_text_output();
         }
-        osDelayUntil(&thread_wake_time, 100);
+        osDelayUntil(&thread_wake_time, 10);
     }
 }
