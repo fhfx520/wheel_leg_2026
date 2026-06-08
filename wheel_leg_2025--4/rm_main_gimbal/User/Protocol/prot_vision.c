@@ -11,6 +11,9 @@
 #include "mode_switch_task.h"
 #include "board_comm.h"
 #include "crc.h"
+#include "drv_dji_motor.h"
+
+#define VISION_HAND_EYE_CALIBRATION
 
 #define VISION_SP_FIRE_YAW_ERR (2.0f * PI / 180.0f)
 #define VISION_SP_FIRE_PIT_ERR (2.0f * PI / 180.0f)
@@ -365,18 +368,23 @@ void vision_output_data(void)
 void vision_output_data_sp(void)
 {
     float q[4];
+#ifdef VISION_HAND_EYE_CALIBRATION
+    float yaw_tx = (float)yaw_motor.ecd / 8192.0f * 2.0f * PI;
+#else
+    float yaw_tx = gimbal_imu.yaw;
+#endif
 
     vision_tx_msg_sp.head[0] = 'S';
     vision_tx_msg_sp.head[1] = 'P';
 //    vision_tx_msg_sp.mode = vision_get_sp_mode();
 	  vision_tx_msg_sp.mode = VISION_SP_MODE_AUTO_AIM;
 
-    vision_euler_to_quat_wxyz(gimbal_imu.yaw, -gimbal_imu.pit, gimbal_imu.rol, q);
+    vision_euler_to_quat_wxyz(yaw_tx, -gimbal_imu.pit, gimbal_imu.rol, q);
     for (uint8_t i = 0; i < 4; i++) {
         vision_sp_write_float(vision_tx_msg_sp.q[i], q[i]);
     }
 
-    vision_sp_write_float(vision_tx_msg_sp.yaw, gimbal_imu.yaw);
+    vision_sp_write_float(vision_tx_msg_sp.yaw, yaw_tx);
     vision_sp_write_float(vision_tx_msg_sp.yaw_vel, gimbal_imu.wz);
     vision_sp_write_float(vision_tx_msg_sp.pitch, -gimbal_imu.pit);
     vision_sp_write_float(vision_tx_msg_sp.pitch_vel, -gimbal_imu.wy);
