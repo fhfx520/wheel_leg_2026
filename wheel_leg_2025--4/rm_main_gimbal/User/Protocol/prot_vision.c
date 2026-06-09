@@ -364,14 +364,14 @@ void vision_output_data(void)
     CDC_Transmit_HS(vision_send_buf, 29);
 	send_cnt++;
 }
-
+float yaw_tx;
 void vision_output_data_sp(void)
 {
     float q[4];
 #ifdef VISION_HAND_EYE_CALIBRATION
-    float yaw_tx = (float)yaw_motor.ecd / 8192.0f * 2.0f * PI;
+    yaw_tx = (float)(8192 - yaw_motor.ecd) / 8192.0f * 2.0f * PI;
 #else
-    float yaw_tx = gimbal_imu.yaw;
+    yaw_tx = gimbal_imu.yaw;
 #endif
 
     vision_tx_msg_sp.head[0] = 'S';

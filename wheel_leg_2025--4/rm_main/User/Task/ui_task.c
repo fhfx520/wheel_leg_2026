@@ -181,12 +181,10 @@ uint32_t ui_update_cnt = 0;
 void ui_task(void const* argument)
 {
     uint32_t thread_wake_time = osKernelSysTick();
-//    ui_init();
 	container_bus_init(mb_callback, sizeof(mb_callback)/sizeof(ContainerBusCfg));
     for(int i = 0; i < 15; i++) {
         thread_wake_time = osKernelSysTick();
         ui_init();
-//        osDelayUntil(&thread_wake_time, 1);
     }	
     for(;;)
     {
@@ -209,6 +207,5 @@ void ui_task(void const* argument)
 			ui_update();
 		}
         us_timer_interval_test_end(&ui_time);
-//        osDelayUntil(&thread_wake_time, 10);
     }
 }

@@ -19,68 +19,9 @@
 
 status_t status;
 
-void normal_status(void)
-{
-    if (((rc_fsm_check(RC_LEFT_LD) || rc_fsm_check(RC_RIGHT_LD)) && ctrl_mode == REMOTER_MODE) ||
-        (rc.mouse.r == 1 && ctrl_mode == KEYBOARD_MODE)) {
-        rgb_change(1,2);
-    } else if (ctrl_mode == PROTECT_MODE) {
-        rgb_change(1,0);
-    } else {
-        rgb_change(1,7);
-    }
-
-	if (g_robot_ctx.output.chassis == CHASSIS_LOW || \
-        g_robot_ctx.output.chassis == CHASSIS_HIGH) {
-        rgb_change(2,7);
-    } else if (g_robot_ctx.output.chassis == CHASSIS_FIGHT) {
-        rgb_change(2,2);
-    } else if (g_robot_ctx.output.chassis == CHASSIS_LOW_SPIN || \
-                g_robot_ctx.output.chassis == CHASSIS_LOW_SPIN || \
-               g_robot_ctx.output.chassis == CHASSIS_LOW_SPIN) {
-        rgb_change(2,1);
-    }
-    //  else if (g_robot_ctx.output.chassis == CHASSIS_MODE_KEYBOARD_UNFOLLOW) {
-    //     rgb_change(2,3);
-    // } 
-    else {
-        rgb_change(2,0);
-    }
-    
-    if (KEY_PRESS_POWER && kb_status[KEY_CHASSIS_POWER] == KEY_END) {
-        rgb_change(3,1);
-    } else if (KEY_PRESS_POWER && kb_status[KEY_CHASSIS_POWER] == KEY_RUN) {
-        rgb_change(3,2);
-    } else {
-        rgb_change(3,0);
-    }
-    
-    if (wlr.high_flag == 2) {
-        rgb_change(4,1);
-    } else if (wlr.high_flag == 1) {
-        rgb_change(4,7);
-    }else if (wlr.prone_flag) {
-        rgb_change(4,2);
-    } else {
-        rgb_change(4,0);
-    }
-
-    if (vision.tx.data.aiming_mode == 0) {
-        rgb_change(5,2);
-    } else if (vision.tx.data.aiming_mode == 1) {
-        rgb_change(5,1);
-    } else {
-        rgb_change(5,3);
-    }
-    
-    rgb_change(6,8);
-    rgb_set_bright(6, supercap.volume_percent/20);
-}
-
-int iwdg_test = 1;
 void status_task(void const* argument)
 {
-	  MX_IWDG1_Init();
+	MX_IWDG1_Init();
     for(;;)
     {
         if (status.task.comm == 1 &&

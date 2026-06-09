@@ -242,57 +242,6 @@ static void pre_fabricated_trigger_position(void)
 	}
 }
 
-//记录电机的圈数
-//void update_position(void)
-//{
-//	#ifdef MG4005
-//		uint16_t current_encoder = trigger_motor_MG4005.raw_encoder;
-//	    // 计算差值，考虑溢出
-//		int16_t delta = (int16_t)(current_encoder - prev_encoder);  
-//		// 如果差值过大，说明发生了溢出
-//		// 例如从65530走到10，正常差值是10-65530 = -65520，这是一个巨大的负变化
-//		if(delta > ENCODER_MAX / 2) {
-//			delta -= ENCODER_MAX; // 正溢出，应减去一圈
-//		} else if(delta < -ENCODER_MAX / 2) {
-//			delta += ENCODER_MAX; // 负溢出，应加上一圈
-//		}
-//		// 更新电机总圈数 (delta / ENCODER_MAX 是电机转动的圈数)
-//		total_motor_revolutions += (float)delta / ENCODER_MAX;
-//		// 更新输出轴圈数
-//		real_motor_revolutions = total_motor_revolutions / REDUCTION_RATIO;
-//		prev_encoder = current_encoder;
-//	#endif
-//		
-//	#ifdef DM2325
-//		float current_encoder = trigger_motor_2325.position;
-//		float delta = (float)(current_encoder - prev_encoder_2325);  
-//		static uint8_t rec_cnt = 0;
-//		static float p_offset = 0.0f;
-////		static float total_p = 0.0f;
-////		static float caccaa = 0.0f;
-////		fuck = delta;
-////		if(ABS(delta)>0.5)
-////		{
-//		if(rec_cnt < 50)
-//		{
-//			rec_cnt++;
-//			p_offset = current_encoder;
-//		}
-//		else{
-//				if(delta > ENCODER_MAX / 2) {
-//						delta -= ENCODER_MAX; // 正溢出，应减去一圈
-//				} else if(delta < -ENCODER_MAX / 2) {
-//						delta += ENCODER_MAX; // 负溢出，应加上一圈
-//				}
-////				caccaa = delta / (ENCODER_MAX);
-////    total_motor_revolutions += caccaa;
-//			total_motor_revolutions	+= delta / (ENCODER_MAX);
-//			real_motor_revolutions = total_motor_revolutions / 25.0f;
-//		}
-//		prev_encoder_2325 = current_encoder;
-//	#endif
-//}
-
 uint8_t last_enable;
 static void shoot_control(void)
 {
@@ -317,10 +266,7 @@ static void shoot_control(void)
             break;
         }
         case TRIGGER_MODE_SINGLE: { //拨盘单发模式，连续开枪请求，只响应一次
-            
-			
 			pre_fabricated_trigger_position();
-
 			frequency_cnt++;
             trigger_ecd_error = shoot.trigger_ecd.ref - shoot.trigger_ecd.fdb;
             if (single_shoot_reset()) {
@@ -335,10 +281,7 @@ static void shoot_control(void)
             break;
         }
         case TRIGGER_MODE_SERIES: { //拨盘连发模式，连续开枪请求，连续响应
-			
 			pre_fabricated_trigger_position();
-
-			
             frequency_cnt++;
             trigger_ecd_error = shoot.trigger_ecd.ref - shoot.trigger_ecd.fdb;
            if (series_shoot_enable() && !back_flag) { //一个周期打一颗
