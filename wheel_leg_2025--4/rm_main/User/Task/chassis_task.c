@@ -793,7 +793,7 @@ static void chassis_self_rescue(void)
 				up_ready=0;
 			}
         }
-		if(rescue_cnt >= 500) {//收腿时长超过600ms则认为收腿第一象限卡死
+		if(rescue_cnt >= 500) {//收腿时长超过1000ms则认为收腿第一象限卡死
 			chassis.rescue_inter_flag = CHASSIS_RESCUE_RECOVER_STUCK;
 			rescue_cnt = 0;
 		}

@@ -13,7 +13,7 @@
 #include "crc.h"
 #include "drv_dji_motor.h"
 
-#define VISION_HAND_EYE_CALIBRATION
+//#define VISION_HAND_EYE_CALIBRATION
 
 #define VISION_SP_FIRE_YAW_ERR (2.0f * PI / 180.0f)
 #define VISION_SP_FIRE_PIT_ERR (2.0f * PI / 180.0f)

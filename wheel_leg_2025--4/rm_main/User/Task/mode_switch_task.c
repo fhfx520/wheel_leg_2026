@@ -14,6 +14,7 @@ uint8_t lock_flag = 0;
 uint8_t reset_flag = 0;
 ctrl_mode_e ctrl_mode;
 uint8_t last_chassis_recover_flag = 0;
+chassis_rescue_e last_chassis_rescue_flag = 0;
 static data_keyboard_t modesw_get_keyboard_data_container;
 static data_remote_t modesw_get_remote_data_container;
 
@@ -122,11 +123,14 @@ void modesw_set_container(void)
 	modesw_set_rc_data_container.ctrl_mode = ctrl_mode;
 	//整车翻倒保护头
 //	if (chassis.recover_flag == 1 || fabsf(chassis_imu.pit) > PI / 3.0f)
-	if ((chassis.recover_flag == 1 && fabsf(chassis_imu.pit) > PI / 3.0f) || (last_chassis_recover_flag == 0 && chassis.recover_flag == 1 && wlr.jump_flag == WLR_JUMP_IDLE))
+	if ((chassis.recover_flag == 1 && fabsf(chassis_imu.pit) > PI / 3.0f) 
+	|| (last_chassis_recover_flag == 0 && chassis.recover_flag == 1 && wlr.jump_flag == WLR_JUMP_IDLE)
+	|| (last_chassis_rescue_flag == CHASSIS_RESCUE_OVERTURN && chassis.rescue_inter_flag == CHASSIS_RESCUE_NORMAL))
 		modesw_set_rc_data_container.ctrl_mode = PROTECT_MODE;
 	if(lock_flag == 0 && rc.sw1 == RC_SW_UP)
 		modesw_set_rc_data_container.ctrl_mode = PROTECT_MODE;
 	last_chassis_recover_flag = chassis.recover_flag;
+	last_chassis_rescue_flag = chassis.rescue_inter_flag;
 	
 	container_set(TAG_DR16_RC_DATA,&modesw_set_rc_data_container,sizeof(modesw_set_rc_data_container),CONTAINER_TYPE_STRUCT);
 	
