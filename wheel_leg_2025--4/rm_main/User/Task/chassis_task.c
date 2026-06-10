@@ -241,8 +241,8 @@ static void chassis_init(void)
     ramp_init(&chassis_rotate_ramp, 0.06f, -2.0f * CHASSIS_ROTATE_SPEED, 2.0f * CHASSIS_ROTATE_SPEED);
 
 	//基于虚拟杆角度控制
-	pid_init(&crash_pid_L, NONE, 30.0f, 0.0f, 20.0f, 0.0f, 6.0f);//max_err大约为0.6f
-	pid_init(&crash_pid_R, NONE, 30.0f, 0.0f, 20.0f, 0.0f, 6.0f);
+	pid_init(&crash_pid_L, NONE, 30.0f, 0.0f, 100.0f, 0.0f, 6.0f);//max_err大约为0.6f
+	pid_init(&crash_pid_R, NONE, 30.0f, 0.0f, 100.0f, 0.0f, 6.0f);
 
     wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
     wlr.yaw_offset = 1.7f;
@@ -439,7 +439,7 @@ static void chassis_execute_fsm(void)
 			wlr.high_flag = 0;
 			wlr.sky_flag = WLR_SKY_IDLE;
 			wlr.jump_flag = WLR_JUMP_IDLE;
-			if(wlr.stair_flag == WLR_STAIR_IDLE)
+			if(wlr.stair_flag == WLR_STAIR_IDLE && wlr.direction == 1)
 				wlr.stair_flag = WLR_STAIR_ASCEND;
 			break;
 		}
@@ -462,16 +462,13 @@ static void chassis_execute_fsm(void)
 		}
     }
 
-    if (g_robot_ctx.output.chassis == CHASSIS_HIGH) { 
-        if (g_robot_ctx.output.chassis_speed) chassis_scale.keyboard = 2.2f;
-        else chassis_scale.keyboard = 2.2f;
-    } else { 
-        if (g_robot_ctx.output.chassis_speed) chassis_scale.keyboard = 2.3f;
-        else chassis_scale.keyboard = 2.3f;
-    }
-	if(g_robot_ctx.output.chassis == CHASSIS_ASCEND){
+    if (g_robot_ctx.output.chassis == CHASSIS_HIGH) 
+       	chassis_scale.keyboard = 2.2f;
+    else
+        chassis_scale.keyboard = 2.3f;
+
+	if(g_robot_ctx.output.chassis == CHASSIS_ASCEND)
 		chassis_scale.keyboard = 1.7f;
-	}
 
     if (g_robot_ctx.output.chassis == CHASSIS_HIGH) 
 		chassis_scale.remote = 1.0f / 660 * 2.2f;
@@ -479,7 +476,6 @@ static void chassis_execute_fsm(void)
 		chassis_scale.remote = 1.0f /660 * 2.3f; 
 	
 	last_chassis_output = g_robot_ctx.output.chassis;
-    
 }
 
 uint8_t rotate_ramp_flag; 
@@ -1101,6 +1097,8 @@ static void chassis_data_output(void)
 		wlr.joint_all_online = 1;
 	else
 		wlr.joint_all_online = 0;	
+	//功率限制
+    power_limit_current();
 }
 
 void chassis_set_container(void)

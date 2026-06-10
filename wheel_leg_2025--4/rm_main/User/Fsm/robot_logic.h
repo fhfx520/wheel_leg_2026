@@ -85,9 +85,7 @@ typedef struct {
         TopMode_e      top_mode;   
         ChassisState_e chassis;    
         GimbalState_e  gimbal;     
-        ShootState_e   shoot;      
-        
-        uint8_t chassis_speed;     
+        ShootState_e   shoot;       
     } output;
     
     uint8_t is_online;    

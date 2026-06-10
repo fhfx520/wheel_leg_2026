@@ -349,22 +349,22 @@ static void stable_velocity_control(void)
 	static float power_limit_rotate = 0;
 	power_limit_velocity = power_control_target_velocity();
 	power_limit_rotate = power_control_target_Vrotate();
-    if(wlr.sky_flag == WLR_SKY_IDLE && wlr.jump_flag == WLR_JUMP_IDLE && wlr.high_flag == 0 && !g_robot_ctx.output.chassis_speed)//磕台阶，跳跃，飞坡时不限制速度输入
+    if(wlr.sky_flag == WLR_SKY_IDLE && wlr.jump_flag == WLR_JUMP_IDLE && wlr.high_flag == 0)//磕台阶，跳跃，飞坡时不限制速度输入
     {
         data_limit(&lqr.X_ref[1],-power_limit_velocity,power_limit_velocity);
         limit_velocity(&lqr.X_ref[1],&lqr.X_fdb[3]);//摩擦圆
     }
 	if(rotate_flag)
 	{
-		if(g_robot_ctx.output.chassis_speed)
-			data_limit(&lqr.X_ref[3],-12.0f,12.0f);
-		else
-			data_limit(&lqr.X_ref[3],-power_limit_rotate,power_limit_rotate);
+		data_limit(&lqr.X_ref[1],-1.5f,1.5f);
+		data_limit(&lqr.X_ref[3],-power_limit_rotate,power_limit_rotate);
 	}
     if(wlr.sky_flag == WLR_SKY_FOLDING)
 		data_limit(&lqr.X_ref[1],-3.0f,3.0f);
 	else
 		data_limit(&lqr.X_ref[1],-2.3f,2.3f);
+	if (wlr_either_leg_flying()) 
+        lqr.X_ref[1] = 0;
 }
 int32_t Last_cnt;
 
@@ -727,7 +727,7 @@ static void handle_stair_state(void)
 	{
 		wlr.v_ref = ramp_calc(&stair_ramp,2.0f);
 		stair_cnt = 0;
-		data_limit(&wlr.v_ref,-1.0f,1.0f);
+		data_limit(&wlr.v_ref,-1.5f,1.5f);
 		x3_balance_zero = x3_balance_zero_normal;
 		wlr.high_set = 0.21f;
 	}
@@ -741,8 +741,7 @@ static void handle_stair_state(void)
 static void update_rotate_state(void)
 {
     if (rotate_flag) {
-        wlr.high_set = LegLengthRotate;
-		if(g_robot_ctx.input.kb.bit.C)
+		if(g_robot_ctx.input.kb.bit.SHIFT)
 			wlr.high_set = LegLengthRotateHigh;
 		else
 			wlr.high_set = LegLengthRotate;
@@ -754,8 +753,6 @@ static void update_rotate_state(void)
             Rotate_balance_zero = 0.063f;
 			x5_balance_zero = 0.06f;
         }
-//        K_Array_Leg_rotate[0][3] = -ramp_calc(&wz_ramp, 0.254976f);		//K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
-//        K_Array_Leg_rotate[1][3] = ramp_calc(&wz_ramp, 0.254976f);		//K_Array_Leg_rotate[1][3] 越大 小陀螺越不稳定
 		if(fabsf(wlr.v_ref) > 0.5f)
 		{
 			K_Array_Leg_rotate[0][3] = -ramp_calc(&wz_ramp, 0.23574f);		//K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
@@ -773,7 +770,6 @@ static void update_rotate_state(void)
 		
     } else {
         Rotate_balance_zero = 0.0f;
-//        wz_ramp.out = 2.0f;
     }
 }
 
@@ -851,13 +847,6 @@ static void update_motion_reference(void)
     wlr.roll_offs = pid_calc(&pid_roll, 0, wlr.roll_fdb + IMU_Roll_balance_zero);
 
     if (fabs(wlr.v_ref) < 1e-3f && wlr.jump_flag == WLR_JUMP_IDLE && wlr.sky_flag == WLR_SKY_IDLE && rotate_flag == 0) {
-//		if(wlr.high_flag == 0)
-//		{
-//			K_Array_Leg_018[0][0] = -3.5025;
-//			K_Array_Leg_018[1][0] = -3.5025;
-//			K_Array_Leg_018[2][0] = 2.50324;
-//			K_Array_Leg_018[3][0] = 2.50324;
-//		}
         wlr.s_wait++;
         if (wlr.s_wait > swait_time) {
 			wlr.s_wait = swait_time + 1;
@@ -866,10 +855,6 @@ static void update_motion_reference(void)
             lqr.X_ref[0] = wlr.s_ref = wlr.s_adapt = wlr.s_fdb;
         }
     } else {
-		K_Array_Leg_018[0][0] = -1.18614;
-		K_Array_Leg_018[1][0] = -1.18614;
-		K_Array_Leg_018[2][0] = 1.9169;
-		K_Array_Leg_018[3][0] = 1.9169;
         wlr.s_wait = 0;
         lqr.X_ref[0] = wlr.s_ref = wlr.s_fdb;
         wlr.s_adapt = wlr.s_fdb;
@@ -879,13 +864,7 @@ static void update_motion_reference(void)
         lqr.X_ref[0] = wlr.s_ref = wlr.s_adapt = wlr.s_fdb;
     }
 
-    if (wlr_either_leg_flying()) {
-        wlr.v_ref = 0;
-//		lqr.X_diff[1] = 0;
-    }
-
     if (rotate_flag == 1) {
-        data_limit(&wlr.v_ref,-1.5f,1.5f);
 		if(fabsf(wlr.v_ref) > 0.5f)
 		{
 			K_Array_Leg_rotate[0][1] = -3.24553f; K_Array_Leg_rotate[1][1] = -3.24553f;
@@ -896,7 +875,6 @@ static void update_motion_reference(void)
 			K_Array_Leg_rotate[0][1] = 0.0f; K_Array_Leg_rotate[1][1] = 0.0f;
 			K_Array_Leg_rotate[2][1] = 0.0f; K_Array_Leg_rotate[3][1] = 0.0f;
 		}
-			
     }
 
     lqr.X_ref[1] = wlr.v_ref;
@@ -1210,20 +1188,17 @@ void wlr_control(void)
         data_limit(&lqr.X_diff[2], -0.25f, 0.25f);
         data_limit(&lqr.X_diff[3], 0.0f, 0.0f);
     }
-	//功率限制
-    power_limit_current();
 	//LQR的K增益带入计算
     aMartix_Mul(lqr.K, lqr.X_diff, lqr.U_ref, 4, 10, 1);
 
 //    p_array_fit(P_Array, vmc[0].L_fdb, vmc[1].L_fdb);
 	//上交2023管易恒开源速度预测
-    state_predict();
-	wlr.side[0].T_adapt = wlr.K_adapt * (wlr.side[0].predict_wy - wlr.side[0].wy);
-	wlr.side[1].T_adapt = wlr.K_adapt * (wlr.side[1].predict_wy - wlr.side[1].wy);
+    // state_predict();
+	// wlr.side[0].T_adapt = wlr.K_adapt * (wlr.side[0].predict_wy - wlr.side[0].wy);
+	// wlr.side[1].T_adapt = wlr.K_adapt * (wlr.side[1].predict_wy - wlr.side[1].wy);
 	
     for (int i = 0; i < WLR_SIDE_COUNT; i++) {
         map_virtual_force(i);		//虚拟力映射（计算Fy和T0 + 五连杆逆解算）
     }
     apply_output_limits();
 }
-

@@ -236,15 +236,13 @@ static const FsmState_t state_rem_stair = { .name = "REM_STAIR", .enter = rem_st
 static void kb_low_enter(void) { g_robot_ctx.output.chassis = CHASSIS_LOW; }
 static void kb_low_execute(void) {
     g_robot_ctx.output.chassis = CHASSIS_LOW;
-    g_robot_ctx.output.chassis_speed = (g_robot_ctx.input.kb.bit.SHIFT) ? 1 : 0;
     g_robot_ctx.output.gimbal = get_kb_gimbal_mode();
     g_robot_ctx.output.shoot  = get_kb_shoot_mode();
 
     if (check_key_trigger(KEY_A) || check_key_trigger(KEY_D)) { fsm_change(&fsm_keyboard_sub, &state_kb_fight); return; }
     if (check_key_trigger(KEY_R)) { fsm_change(&fsm_keyboard_sub, &state_kb_spin); return; }
-    if (check_key_trigger(KEY_C)) { fsm_change(&fsm_keyboard_sub, &state_kb_high); return; }
-	if (check_key_trigger(KEY_F)) { fsm_change(&fsm_keyboard_sub, &state_kb_ter_ready); return; }
-    if (check_key_trigger(KEY_V)) { fsm_change(&fsm_keyboard_sub, &state_kb_double_ter_run); return; }
+    if (g_robot_ctx.input.kb.bit.SHIFT) { fsm_change(&fsm_keyboard_sub, &state_kb_high); return; }
+	if (check_key_trigger(KEY_C)) { fsm_change(&fsm_keyboard_sub, &state_kb_ter_ready); return; }
 	if (check_key_trigger(KEY_Z)) { fsm_change(&fsm_keyboard_sub, &state_kb_ascend); return; }
 	if (check_key_trigger(KEY_B)) { fsm_change(&fsm_keyboard_sub, &state_kb_energy); return; }
     if (g_robot_ctx.input.kb.bit.X) { fsm_change(&fsm_keyboard_sub, &state_kb_stair); return; }
@@ -254,7 +252,6 @@ static const FsmState_t state_kb_low = { .name = "KB_LOW", .enter = kb_low_enter
 static void kb_fight_enter(void) { g_robot_ctx.output.chassis = CHASSIS_FIGHT; }
 static void kb_fight_execute(void) {
     g_robot_ctx.output.chassis = CHASSIS_FIGHT;
-    g_robot_ctx.output.chassis_speed = (g_robot_ctx.input.kb.bit.SHIFT) ? 1 : 0;
     g_robot_ctx.output.gimbal = get_kb_gimbal_mode();
     g_robot_ctx.output.shoot  = get_kb_shoot_mode();
 
@@ -267,25 +264,21 @@ static const FsmState_t state_kb_fight = { .name = "KB_FIGHT", .enter = kb_fight
 static void kb_spin_enter(void) { g_robot_ctx.output.chassis = CHASSIS_LOW_SPIN; }
 static void kb_spin_execute(void) {
     g_robot_ctx.output.chassis = CHASSIS_LOW_SPIN;
-    g_robot_ctx.output.chassis_speed = (g_robot_ctx.input.kb.bit.SHIFT) ? 1 : 0;
     g_robot_ctx.output.gimbal = get_kb_gimbal_mode();
     g_robot_ctx.output.shoot  = get_kb_shoot_mode();
 
     if (check_key_trigger(KEY_R)) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
-//    if (check_key_trigger(KEY_A) || check_key_trigger(KEY_D)) { fsm_change(&fsm_keyboard_sub, &state_kb_fight); return; }
 }
 static const FsmState_t state_kb_spin = { .name = "KB_SPIN", .enter = kb_spin_enter, .execute = kb_spin_execute };
 
 static void kb_high_enter(void) { g_robot_ctx.output.chassis = CHASSIS_HIGH; }
 static void kb_high_execute(void) {
     g_robot_ctx.output.chassis = CHASSIS_HIGH;
-    g_robot_ctx.output.chassis_speed = (g_robot_ctx.input.kb.bit.SHIFT) ? 1 : 0; 
     g_robot_ctx.output.gimbal = get_kb_gimbal_mode();
     g_robot_ctx.output.shoot  = get_kb_shoot_mode(); 
 
-    if (check_key_trigger(KEY_C)) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
+    if (!g_robot_ctx.input.kb.bit.SHIFT) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
     if (check_key_trigger(KEY_R)) { fsm_change(&fsm_keyboard_sub, &state_kb_spin); return; } 
-    if (check_key_trigger(KEY_F)) { fsm_change(&fsm_keyboard_sub, &state_kb_ter_ready); return; }
 	if (check_key_trigger(KEY_A) || check_key_trigger(KEY_D)) { fsm_change(&fsm_keyboard_sub, &state_kb_fight); return; }
 	if (check_key_trigger(KEY_Z)) { fsm_change(&fsm_keyboard_sub, &state_kb_ascend); return; }
 }
@@ -300,8 +293,7 @@ static void kb_ter_ready_execute(void) {
     g_robot_ctx.output.gimbal = get_kb_gimbal_mode();
     g_robot_ctx.output.shoot  = SHOOT_STOP; 
     
-	if (check_key_trigger(KEY_F)) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
-	if (check_key_trigger(KEY_C)) { fsm_change(&fsm_keyboard_sub, &state_kb_high); return; }
+	if (check_key_trigger(KEY_C)) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
 	if (g_robot_ctx.sky_start_flag) { fsm_change(&fsm_keyboard_sub, &state_kb_ter_run); return; }
 	if (check_key_trigger(KEY_Z)) { fsm_change(&fsm_keyboard_sub, &state_kb_ascend); return; }
 }
@@ -314,7 +306,7 @@ static void kb_ter_run_execute(void) {
     g_robot_ctx.output.shoot  = SHOOT_STOP;
 
 	if (g_robot_ctx.sky_finish_flag) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
-	if (check_key_trigger(KEY_F)) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
+	if (check_key_trigger(KEY_C)) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
 }
 static const FsmState_t state_kb_ter_run = { .name = "KB_TER_RUN", .enter = kb_ter_run_enter, .execute = kb_ter_run_execute };
 
@@ -326,8 +318,7 @@ static void kb_ascend_execute(void) {
 
 	if (g_robot_ctx.jump_finish_flag) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
 	if (check_key_trigger(KEY_Z)) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
-	if (check_key_trigger(KEY_C)) { fsm_change(&fsm_keyboard_sub, &state_kb_high); return;}
-	if (check_key_trigger(KEY_F)) { fsm_change(&fsm_keyboard_sub, &state_kb_ter_ready); return;}
+	if (check_key_trigger(KEY_C)) { fsm_change(&fsm_keyboard_sub, &state_kb_ter_ready); return;}
 }
 static const FsmState_t state_kb_ascend = { .name = "KB_ASCEND", .enter = kb_ascend_enter, .execute = kb_ascend_execute };
 
