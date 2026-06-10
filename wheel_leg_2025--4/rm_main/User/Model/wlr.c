@@ -388,7 +388,7 @@ static void update_leg_height_and_balance(float yaw_error)
 				x3_balance_zero = x3_balance_zero_normal;
         }
 		x5_balance_zero = 0.0f;
-		(wlr.direction == 0) ? (Last_cnt = 300) : (Last_cnt = 400);
+		(wlr.direction == 0) ? (Last_cnt = 300) : (Last_cnt = 300);
 		
 		DO_LAST(wlr_both_legs_flying(),Last_cnt){
 			if(wlr.direction == 0){
@@ -399,7 +399,7 @@ static void update_leg_height_and_balance(float yaw_error)
 			else{
 				x3_balance_zero = x3_balance_zero_normal - 0.05f;
 				data_limit(&wlr.v_ref,-1.0f,1.0f);
-				x5_balance_zero = -0.1f;
+				x5_balance_zero = -0.05f;
 			}
 		}
 		
