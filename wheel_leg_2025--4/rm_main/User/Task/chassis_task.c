@@ -51,6 +51,10 @@ kalman_filter_t kal_wy;
 kalman_filter_t kal_fusion_vel;
 FGT_sin_t FGT_sin_chassis;
 chassis_t chassis;
+//磕到台阶后进行位置闭环力矩控制，舍弃之前的开环逻辑
+float crash_left_T, crash_right_T;
+pid_t crash_pid_L, crash_pid_R;
+
 
 float imu_pitch_offset = 0.0f;
 float up_ready;
@@ -235,6 +239,10 @@ static void chassis_init(void)
     ramp_init(&chassis_x_ramp, 0.05f, -3.0f, 3.0f);
     ramp_init(&chassis_y_ramp, 0.05f, -3.0f, 3.0f);
     ramp_init(&chassis_rotate_ramp, 0.06f, -2.0f * CHASSIS_ROTATE_SPEED, 2.0f * CHASSIS_ROTATE_SPEED);
+
+	//基于虚拟杆角度控制
+	pid_init(&crash_pid_L, NONE, 30.0f, 0.0f, 20.0f, 0.0f, 6.0f);//max_err大约为0.6f
+	pid_init(&crash_pid_R, NONE, 30.0f, 0.0f, 20.0f, 0.0f, 6.0f);
 
     wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
     wlr.yaw_offset = 1.7f;
@@ -1016,6 +1024,7 @@ static void chassis_hardest_rescue(void)
 	//总之如果在盲道上开始lqr控制的话是不可能出来的
 }
 
+
 static void chassis_data_output(void)
 {
     if (wlr.ctrl_mode == 0) {//保护模式
@@ -1035,12 +1044,18 @@ static void chassis_data_output(void)
 		if(chassis.recover_flag != 1) {
 			if(wlr.joint_all_online){
 				if(wlr.crash_flag) {
-					dm_motor_set_control_para(&joint_motor[0], 0, -3, 0, 5, 0);
+					// dm_motor_set_control_para(&joint_motor[0], 0, -3, 0, 5, 0);
+					// dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);	
+					// dm_motor_set_control_para(&joint_motor[2], 0, 3, 0, 5, 0);
+					// dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
+					crash_left_T = pid_calc(&crash_pid_L, 1.0f, lqr.X_fdb[4]);
+					crash_right_T = pid_calc(&crash_pid_R, 1.0f, lqr.X_fdb[6]);
+					dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, -crash_left_T);
 					dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);	
-					dm_motor_set_control_para(&joint_motor[2], 0, 3, 0, 5, 0);
+					dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, crash_right_T);
 					dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
 				} 
-			else {
+				else {
 					dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, wlr.side[0].T1);
 					dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, wlr.side[0].T2);
 					dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0,-wlr.side[1].T1);

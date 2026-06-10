@@ -3,7 +3,7 @@
 <title>Static Call Graph - [rm_main\rm_main.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image rm_main\rm_main.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Tue Jun  9 22:08:36 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Wed Jun 10 18:48:42 2026
 <BR><P>
 <H3>Maximum Stack Usage =        856 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -695,7 +695,7 @@ Global Symbols
 <LI><a href="#[380]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;shoot_init (via Veneer)
 <LI><a href="#[2b1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;power_init
 <LI><a href="#[33a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_init (via Veneer)
-<LI><a href="#[362]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gimbal_init (via Veneer)
+<LI><a href="#[363]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gimbal_init (via Veneer)
 <LI><a href="#[7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CDC_Init
 </UL>
 
@@ -946,7 +946,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32h723xx.o(RESET)
 </UL>
-<P><STRONG><a name="[33d]"></a>DWT_Init</STRONG> (Thumb, 136 bytes, Stack size 4 bytes, dwt.o(.text.DWT_Init))
+<P><STRONG><a name="[33e]"></a>DWT_Init</STRONG> (Thumb, 136 bytes, Stack size 4 bytes, dwt.o(.text.DWT_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 4<LI>Call Chain = DWT_Init
 </UL>
 <BR>[Called By]<UL><LI><a href="#[33a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_init (via Veneer)
@@ -1005,7 +1005,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32h723xx.o(RESET)
 </UL>
-<P><STRONG><a name="[33e]"></a>FGT_sin_init</STRONG> (Thumb, 88 bytes, Stack size 32 bytes, func_generator.o(.text.FGT_sin_init))
+<P><STRONG><a name="[33f]"></a>FGT_sin_init</STRONG> (Thumb, 88 bytes, Stack size 32 bytes, func_generator.o(.text.FGT_sin_init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = FGT_sin_init
 </UL>
 <BR>[Called By]<UL><LI><a href="#[33a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_init (via Veneer)
@@ -1823,12 +1823,12 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = HAL_SPI_IRQHandler &rArr; HAL_DMA_Abort_IT
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DMA_Abort_IT
-<LI><a href="#[1a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_SPI_TxRxCpltCallback
 <LI><a href="#[1a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_SPI_RxCpltCallback
 <LI><a href="#[1a1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_SPI_ErrorCallback
 <LI><a href="#[1a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_SPI_TxCpltCallback
 <LI><a href="#[1a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SPI_CloseTransfer
 <LI><a href="#[19f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_SPI_SuspendCallback
+<LI><a href="#[1a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_SPI_TxRxCpltCallback
 </UL>
 <BR>[Called By]<UL><LI><a href="#[43]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SPI1_IRQHandler
 </UL>
@@ -2771,10 +2771,10 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[219]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_GetLen
 </UL>
-<BR>[Called By]<UL><LI><a href="#[3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_HS_ProductStrDescriptor
-<LI><a href="#[2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_HS_ManufacturerStrDescriptor
+<BR>[Called By]<UL><LI><a href="#[2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_HS_ManufacturerStrDescriptor
 <LI><a href="#[6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_HS_InterfaceStrDescriptor
 <LI><a href="#[5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_HS_ConfigStrDescriptor
+<LI><a href="#[3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_HS_ProductStrDescriptor
 </UL>
 
 <P><STRONG><a name="[21c]"></a>USBD_Get_USB_Status</STRONG> (Thumb, 82 bytes, Stack size 8 bytes, usbd_conf.o(.text.USBD_Get_USB_Status))
@@ -3498,7 +3498,7 @@ Global Symbols
 <P><STRONG><a name="[3a5]"></a>aMartix_Add</STRONG> (Thumb, 104 bytes, Stack size 28 bytes, math_matrix.o(.text.aMartix_Add))
 <BR><BR>[Stack]<UL><LI>Max Depth = 28<LI>Call Chain = aMartix_Add
 </UL>
-<BR>[Called By]<UL><LI><a href="#[342]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control (via Veneer)
+<BR>[Called By]<UL><LI><a href="#[343]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control (via Veneer)
 </UL>
 
 <P><STRONG><a name="[376]"></a>aMartix_Cover</STRONG> (Thumb, 98 bytes, Stack size 28 bytes, math_matrix.o(.text.aMartix_Cover))
@@ -3512,15 +3512,15 @@ Global Symbols
 </UL>
 <BR>[Called By]<UL><LI><a href="#[36d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_inverse_solution_five (via Veneer)
 <LI><a href="#[3a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_forward_solution_five (via Veneer)
-<LI><a href="#[342]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control (via Veneer)
+<LI><a href="#[343]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control (via Veneer)
 </UL>
 
 <P><STRONG><a name="[331]"></a>arm_cos_f32</STRONG> (Thumb, 144 bytes, Stack size 0 bytes, arm_cos_f32.o(.text.arm_cos_f32))
 <BR><BR>[Called By]<UL><LI><a href="#[36d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_inverse_solution_five (via Veneer)
 <LI><a href="#[3a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_forward_solution_five (via Veneer)
-<LI><a href="#[360]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;get_real_vel (via Veneer)
+<LI><a href="#[361]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;get_real_vel (via Veneer)
 <LI><a href="#[36a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;map_virtual_force (via Veneer)
-<LI><a href="#[35f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gas_spring_F_Calc (via Veneer)
+<LI><a href="#[360]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gas_spring_F_Calc (via Veneer)
 <LI><a href="#[32d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_data_input (via Veneer)
 <LI><a href="#[365]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gimbal_stable_calc (via Veneer)
 </UL>
@@ -3573,8 +3573,8 @@ Global Symbols
 <P><STRONG><a name="[332]"></a>arm_sin_f32</STRONG> (Thumb, 140 bytes, Stack size 0 bytes, arm_sin_f32.o(.text.arm_sin_f32))
 <BR><BR>[Called By]<UL><LI><a href="#[36d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_inverse_solution_five (via Veneer)
 <LI><a href="#[3a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_forward_solution_five (via Veneer)
-<LI><a href="#[360]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;get_real_vel (via Veneer)
-<LI><a href="#[35f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gas_spring_F_Calc (via Veneer)
+<LI><a href="#[361]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;get_real_vel (via Veneer)
+<LI><a href="#[360]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gas_spring_F_Calc (via Veneer)
 <LI><a href="#[32d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_data_input (via Veneer)
 <LI><a href="#[365]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gimbal_stable_calc (via Veneer)
 </UL>
@@ -3641,7 +3641,7 @@ Global Symbols
 <P><STRONG><a name="[32e]"></a>circle_error</STRONG> (Thumb, 234 bytes, Stack size 16 bytes, math_lib.o(.text.circle_error))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = circle_error
 </UL>
-<BR>[Called By]<UL><LI><a href="#[342]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control (via Veneer)
+<BR>[Called By]<UL><LI><a href="#[343]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control (via Veneer)
 <LI><a href="#[399]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_update (via Veneer)
 <LI><a href="#[32d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_data_input (via Veneer)
 <LI><a href="#[365]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gimbal_stable_calc (via Veneer)
@@ -3659,7 +3659,7 @@ Global Symbols
 <LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_task (via Veneer)
 <LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mode_switch_task (via Veneer)
 <LI><a href="#[380]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;shoot_init (via Veneer)
-<LI><a href="#[362]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gimbal_init (via Veneer)
+<LI><a href="#[363]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gimbal_init (via Veneer)
 </UL>
 
 <P><STRONG><a name="[25d]"></a>container_bus_poll</STRONG> (Thumb, 174 bytes, Stack size 40 bytes, container_bus.o(.text.container_bus_poll))
@@ -3707,7 +3707,7 @@ Global Symbols
 </UL>
 <BR>[Called By]<UL><LI><a href="#[24c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;board_comm_container_set
 <LI><a href="#[386]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;shoot_set_container (via Veneer)
-<LI><a href="#[341]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_set_container (via Veneer)
+<LI><a href="#[342]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_set_container (via Veneer)
 <LI><a href="#[364]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gimbal_set_container (via Veneer)
 <LI><a href="#[373]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;modesw_set_container (via Veneer)
 </UL>
@@ -3754,7 +3754,7 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = data_limit
 </UL>
 <BR>[Called By]<UL><LI><a href="#[2df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_calc
-<LI><a href="#[342]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control (via Veneer)
+<LI><a href="#[343]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control (via Veneer)
 <LI><a href="#[32c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;apply_output_limits (via Veneer)
 <LI><a href="#[388]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;stable_velocity_control (via Veneer)
 <LI><a href="#[39e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_motion_reference (via Veneer)
@@ -3801,7 +3801,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[37d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;shoot_data_output (via Veneer)
 <LI><a href="#[336]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_self_rescue (via Veneer)
 <LI><a href="#[333]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_data_output (via Veneer)
-<LI><a href="#[361]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gimbal_data_output (via Veneer)
+<LI><a href="#[362]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gimbal_data_output (via Veneer)
 </UL>
 
 <P><STRONG><a name="[393]"></a>dm_motor_check_offline</STRONG> (Thumb, 112 bytes, Stack size 12 bytes, drv_dm_motor.o(.text.dm_motor_check_offline))
@@ -4046,7 +4046,7 @@ Global Symbols
 </UL>
 <BR>[Called By]<UL><LI><a href="#[394]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tlm_gnd_roll_calc (via Veneer)
 <LI><a href="#[32b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Fusion_Vel_Acc_Test (via Veneer)
-<LI><a href="#[342]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control (via Veneer)
+<LI><a href="#[343]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control (via Veneer)
 <LI><a href="#[32d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_data_input (via Veneer)
 </UL>
 
@@ -4137,27 +4137,27 @@ Global Symbols
 <LI><a href="#[1d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_Transmit_DMA
 <LI><a href="#[296]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vsnprintf
 </UL>
-<BR>[Called By]<UL><LI><a href="#[349]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_fly_right_status (via Veneer)
-<LI><a href="#[347]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_fly_left_status (via Veneer)
-<LI><a href="#[348]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_fly_len_status (via Veneer)
-<LI><a href="#[34a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_fly_status (via Veneer)
-<LI><a href="#[35b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_power_status (via Veneer)
-<LI><a href="#[353]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_leg_right_status (via Veneer)
-<LI><a href="#[354]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_leg_status (via Veneer)
-<LI><a href="#[350]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_joint_cmd_status (via Veneer)
-<LI><a href="#[35a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_motor_cmd_status (via Veneer)
-<LI><a href="#[357]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_lqr_output_status (via Veneer)
-<LI><a href="#[359]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_lqr_wheel_right_status (via Veneer)
-<LI><a href="#[358]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_lqr_wheel_left_status (via Veneer)
-<LI><a href="#[355]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_lqr_diff_leg_status (via Veneer)
-<LI><a href="#[356]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_lqr_diff_status (via Veneer)
-<LI><a href="#[351]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_joint_motor_right_status (via Veneer)
-<LI><a href="#[352]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_joint_motor_status (via Veneer)
-<LI><a href="#[35e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_wheel_motor_status (via Veneer)
-<LI><a href="#[343]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_chassis_ref_status (via Veneer)
-<LI><a href="#[344]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_chassis_status (via Veneer)
-<LI><a href="#[34b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_fsm_status (via Veneer)
-<LI><a href="#[35c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_shoot_delay_update (via Veneer)
+<BR>[Called By]<UL><LI><a href="#[34a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_fly_right_status (via Veneer)
+<LI><a href="#[348]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_fly_left_status (via Veneer)
+<LI><a href="#[349]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_fly_len_status (via Veneer)
+<LI><a href="#[34b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_fly_status (via Veneer)
+<LI><a href="#[35c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_power_status (via Veneer)
+<LI><a href="#[354]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_leg_right_status (via Veneer)
+<LI><a href="#[355]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_leg_status (via Veneer)
+<LI><a href="#[351]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_joint_cmd_status (via Veneer)
+<LI><a href="#[35b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_motor_cmd_status (via Veneer)
+<LI><a href="#[358]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_lqr_output_status (via Veneer)
+<LI><a href="#[35a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_lqr_wheel_right_status (via Veneer)
+<LI><a href="#[359]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_lqr_wheel_left_status (via Veneer)
+<LI><a href="#[356]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_lqr_diff_leg_status (via Veneer)
+<LI><a href="#[357]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_lqr_diff_status (via Veneer)
+<LI><a href="#[352]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_joint_motor_right_status (via Veneer)
+<LI><a href="#[353]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_joint_motor_status (via Veneer)
+<LI><a href="#[35f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_wheel_motor_status (via Veneer)
+<LI><a href="#[344]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_chassis_ref_status (via Veneer)
+<LI><a href="#[345]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_chassis_status (via Veneer)
+<LI><a href="#[34c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_fsm_status (via Veneer)
+<LI><a href="#[35d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_shoot_delay_update (via Veneer)
 </UL>
 
 <P><STRONG><a name="[297]"></a>log_scope_data_output</STRONG> (Thumb, 92 bytes, Stack size 16 bytes, data_log.o(.text.log_scope_data_output))
@@ -4303,14 +4303,16 @@ Global Symbols
 <LI><a href="#[39e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_motion_reference (via Veneer)
 <LI><a href="#[39f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_rotate_state (via Veneer)
 <LI><a href="#[385]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;shoot_pid_calc (via Veneer)
+<LI><a href="#[333]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_data_output (via Veneer)
 </UL>
 
-<P><STRONG><a name="[363]"></a>pid_init</STRONG> (Thumb, 78 bytes, Stack size 28 bytes, pid.o(.text.pid_init))
+<P><STRONG><a name="[33d]"></a>pid_init</STRONG> (Thumb, 78 bytes, Stack size 28 bytes, pid.o(.text.pid_init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 28<LI>Call Chain = pid_init
 </UL>
 <BR>[Called By]<UL><LI><a href="#[33b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_init (via Veneer)
 <LI><a href="#[380]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;shoot_init (via Veneer)
-<LI><a href="#[362]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gimbal_init (via Veneer)
+<LI><a href="#[33a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_init (via Veneer)
+<LI><a href="#[363]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gimbal_init (via Veneer)
 </UL>
 
 <P><STRONG><a name="[38f]"></a>power_check_offline</STRONG> (Thumb, 54 bytes, Stack size 4 bytes, prot_power.o(.text.power_check_offline))
@@ -4363,7 +4365,7 @@ Global Symbols
 <LI><a href="#[2ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;power_judge_update
 <LI><a href="#[2b4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_sqrtf
 </UL>
-<BR>[Called By]<UL><LI><a href="#[342]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control (via Veneer)
+<BR>[Called By]<UL><LI><a href="#[343]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control (via Veneer)
 </UL>
 
 <P><STRONG><a name="[2dc]"></a>pvPortMalloc</STRONG> (Thumb, 492 bytes, Stack size 48 bytes, heap_4.o(.text.pvPortMalloc))
@@ -5224,7 +5226,7 @@ Global Symbols
 <LI><a href="#[317]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__ARM_fpclassifyf
 </UL>
 <BR>[Called By]<UL><LI><a href="#[3a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_forward_solution_five (via Veneer)
-<LI><a href="#[35f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gas_spring_F_Calc (via Veneer)
+<LI><a href="#[360]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gas_spring_F_Calc (via Veneer)
 </UL>
 
 <P><STRONG><a name="[31a]"></a>__hardfp_atanf</STRONG> (Thumb, 296 bytes, Stack size 16 bytes, atanf.o(i.__hardfp_atanf))
@@ -5262,7 +5264,7 @@ Global Symbols
 </UL>
 <BR>[Called By]<UL><LI><a href="#[36d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_inverse_solution_five (via Veneer)
 <LI><a href="#[3a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_forward_solution_five (via Veneer)
-<LI><a href="#[35f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gas_spring_F_Calc (via Veneer)
+<LI><a href="#[360]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gas_spring_F_Calc (via Veneer)
 <LI><a href="#[3a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_fn_calc (via Veneer)
 </UL>
 
@@ -5289,7 +5291,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[36d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_inverse_solution_five (via Veneer)
 <LI><a href="#[2b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;power_limit_current
 <LI><a href="#[3a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_forward_solution_five (via Veneer)
-<LI><a href="#[35f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gas_spring_F_Calc (via Veneer)
+<LI><a href="#[360]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gas_spring_F_Calc (via Veneer)
 </UL>
 
 <P><STRONG><a name="[322]"></a>__hardfp_tanf</STRONG> (Thumb, 322 bytes, Stack size 16 bytes, tanf.o(i.__hardfp_tanf))
@@ -5403,7 +5405,7 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[283]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kalman_filter_update (via Veneer)
 </UL>
-<BR>[Called By]<UL><LI><a href="#[342]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
+<BR>[Called By]<UL><LI><a href="#[343]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
 <P><STRONG><a name="[b8]"></a>board_comm_task</STRONG> (Thumb, 48 bytes, Stack size 16 bytes, board_comm_task.o(.text.board_comm_task))
@@ -5416,7 +5418,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(.rodata..L__const.MX_FREERTOS_Init.os_thread_def_BoardCommTask)
 </UL>
-<P><STRONG><a name="[341]"></a>chassis_set_container</STRONG> (Thumb, 38 bytes, Stack size 8 bytes, chassis_task.o(.text.chassis_set_container))
+<P><STRONG><a name="[342]"></a>chassis_set_container</STRONG> (Thumb, 38 bytes, Stack size 8 bytes, chassis_task.o(.text.chassis_set_container))
 <BR><BR>[Stack]<UL><LI>Max Depth = 292<LI>Call Chain = chassis_set_container &rArr; container_set &rArr; check_init &rArr; container_sys_init &rArr; xQueueCreateMutex &rArr; prvInitialiseMutex &rArr; xQueueGenericSend &rArr; prvCopyDataToQueue &rArr; xTaskPriorityDisinherit &rArr; vListInsertEnd
 </UL>
 <BR>[Calls]<UL><LI><a href="#[24d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;container_set (via Veneer)
@@ -5429,9 +5431,9 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[2a1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelayUntil (via Veneer)
 <LI><a href="#[2a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osKernelSysTick (via Veneer)
-<LI><a href="#[342]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
+<LI><a href="#[343]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 <LI><a href="#[2b1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;power_init (via Veneer)
-<LI><a href="#[341]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_set_container
+<LI><a href="#[342]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_set_container
 <LI><a href="#[333]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_data_output
 <LI><a href="#[32d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_data_input
 <LI><a href="#[338]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_execute_fsm
@@ -5474,8 +5476,8 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 308<LI>Call Chain = debug_task &rArr; debug_log_text_output &rArr; debug_log_fly_status &rArr; log_printf &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vListInsertEnd
 </UL>
 <BR>[Calls]<UL><LI><a href="#[297]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;log_scope_data_output (via Veneer)
-<LI><a href="#[35d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
-<LI><a href="#[35c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_shoot_delay_update
+<LI><a href="#[35e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
+<LI><a href="#[35d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_shoot_delay_update
 <LI><a href="#[2a1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelayUntil (via Veneer)
 <LI><a href="#[2a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osKernelSysTick (via Veneer)
 </UL>
@@ -5485,13 +5487,13 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mode_switch_task
 </UL>
 
-<P><STRONG><a name="[360]"></a>get_real_vel</STRONG> (Thumb, 312 bytes, Stack size 64 bytes, wlr.o(.text.get_real_vel))
+<P><STRONG><a name="[361]"></a>get_real_vel</STRONG> (Thumb, 312 bytes, Stack size 64 bytes, wlr.o(.text.get_real_vel))
 <BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = get_real_vel
 </UL>
 <BR>[Calls]<UL><LI><a href="#[331]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_cos_f32 (via Veneer)
 <LI><a href="#[332]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_sin_f32 (via Veneer)
 </UL>
-<BR>[Called By]<UL><LI><a href="#[342]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
+<BR>[Called By]<UL><LI><a href="#[343]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
 <P><STRONG><a name="[364]"></a>gimbal_set_container</STRONG> (Thumb, 82 bytes, Stack size 8 bytes, gimbal_task.o(.text.gimbal_set_container))
@@ -5508,10 +5510,10 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[2a1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelayUntil (via Veneer)
 <LI><a href="#[2a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osKernelSysTick (via Veneer)
 <LI><a href="#[364]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gimbal_set_container
-<LI><a href="#[361]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gimbal_data_output
+<LI><a href="#[362]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gimbal_data_output
 <LI><a href="#[365]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gimbal_stable_calc
 <LI><a href="#[366]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gimbal_execute_fsm
-<LI><a href="#[362]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gimbal_init
+<LI><a href="#[363]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gimbal_init
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(.rodata..L__const.MX_FREERTOS_Init.os_thread_def_GimbalTask)
 </UL>
@@ -5670,7 +5672,7 @@ Global Symbols
 <LI><a href="#[31d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_powf (via Veneer)
 <LI><a href="#[316]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan2f (via Veneer)
 </UL>
-<BR>[Called By]<UL><LI><a href="#[342]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
+<BR>[Called By]<UL><LI><a href="#[343]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
 <P><STRONG><a name="[3a7]"></a>vmc_init_five</STRONG> (Thumb, 98 bytes, Stack size 12 bytes, leg_vmc.o(.text.vmc_init_five))
@@ -5700,7 +5702,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mode_switch_task
 </UL>
 
-<P><STRONG><a name="[342]"></a>wlr_control</STRONG> (Thumb, 1616 bytes, Stack size 520 bytes, wlr.o(.text.wlr_control))
+<P><STRONG><a name="[343]"></a>wlr_control</STRONG> (Thumb, 1616 bytes, Stack size 520 bytes, wlr.o(.text.wlr_control))
 <BR><BR>[Stack]<UL><LI>Max Depth = 840<LI>Call Chain = wlr_control &rArr; vmc_forward_solution_five &rArr; aMartix_Mul
 </UL>
 <BR>[Calls]<UL><LI><a href="#[3a1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;aMartix_Mul (via Veneer)
@@ -5711,7 +5713,7 @@ Global Symbols
 <LI><a href="#[283]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kalman_filter_update (via Veneer)
 <LI><a href="#[3a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_forward_solution_five
 <LI><a href="#[32b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Fusion_Vel_Acc_Test
-<LI><a href="#[360]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;get_real_vel
+<LI><a href="#[361]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;get_real_vel
 <LI><a href="#[32c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;apply_output_limits
 <LI><a href="#[36a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;map_virtual_force
 <LI><a href="#[3a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;state_predict
@@ -5726,7 +5728,7 @@ Global Symbols
 <LI><a href="#[3a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;reset_jump_state
 <LI><a href="#[39b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_leg_height_and_balance
 <LI><a href="#[3a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_fly_state
-<LI><a href="#[35f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gas_spring_F_Calc
+<LI><a href="#[360]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gas_spring_F_Calc
 <LI><a href="#[3a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_fn_calc
 </UL>
 <BR>[Called By]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_task
@@ -5738,7 +5740,7 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[280]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kalman_filter_init (via Veneer)
 <LI><a href="#[395]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tlm_init
 <LI><a href="#[397]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;twm_init
-<LI><a href="#[363]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_init (via Veneer)
+<LI><a href="#[33d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_init (via Veneer)
 <LI><a href="#[3a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_init_five
 <LI><a href="#[33c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_init (via Veneer)
 </UL>
@@ -5759,10 +5761,10 @@ Local Symbols
 <LI><a href="#[31d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_powf (via Veneer)
 <LI><a href="#[31b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_cosf (via Veneer)
 </UL>
-<BR>[Called By]<UL><LI><a href="#[342]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
+<BR>[Called By]<UL><LI><a href="#[343]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[35f]"></a>gas_spring_F_Calc</STRONG> (Thumb, 392 bytes, Stack size 72 bytes, wlr.o(.text.gas_spring_F_Calc))
+<P><STRONG><a name="[360]"></a>gas_spring_F_Calc</STRONG> (Thumb, 392 bytes, Stack size 72 bytes, wlr.o(.text.gas_spring_F_Calc))
 <BR><BR>[Stack]<UL><LI>Max Depth = 104<LI>Call Chain = gas_spring_F_Calc &rArr; __hardfp_powf
 </UL>
 <BR>[Calls]<UL><LI><a href="#[331]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_cos_f32 (via Veneer)
@@ -5771,13 +5773,13 @@ Local Symbols
 <LI><a href="#[31d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_powf (via Veneer)
 <LI><a href="#[316]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan2f (via Veneer)
 </UL>
-<BR>[Called By]<UL><LI><a href="#[342]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
+<BR>[Called By]<UL><LI><a href="#[343]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
 <P><STRONG><a name="[3a3]"></a>update_fly_state</STRONG> (Thumb, 460 bytes, Stack size 8 bytes, wlr.o(.text.update_fly_state))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = update_fly_state
 </UL>
-<BR>[Called By]<UL><LI><a href="#[342]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
+<BR>[Called By]<UL><LI><a href="#[343]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
 <P><STRONG><a name="[39b]"></a>update_leg_height_and_balance</STRONG> (Thumb, 848 bytes, Stack size 16 bytes, wlr.o(.text.update_leg_height_and_balance))
@@ -5788,11 +5790,11 @@ Local Symbols
 <LI><a href="#[39c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_either_leg_flying
 <LI><a href="#[36b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_both_legs_flying
 </UL>
-<BR>[Called By]<UL><LI><a href="#[342]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
+<BR>[Called By]<UL><LI><a href="#[343]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
 <P><STRONG><a name="[3a4]"></a>reset_jump_state</STRONG> (Thumb, 96 bytes, Stack size 0 bytes, wlr.o(.text.reset_jump_state))
-<BR><BR>[Called By]<UL><LI><a href="#[342]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
+<BR><BR>[Called By]<UL><LI><a href="#[343]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
 <P><STRONG><a name="[369]"></a>handle_stair_state</STRONG> (Thumb, 680 bytes, Stack size 40 bytes, wlr.o(.text.handle_stair_state))
@@ -5801,7 +5803,7 @@ Local Symbols
 <BR>[Calls]<UL><LI><a href="#[2df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_calc (via Veneer)
 <LI><a href="#[2e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;data_limit (via Veneer)
 </UL>
-<BR>[Called By]<UL><LI><a href="#[342]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
+<BR>[Called By]<UL><LI><a href="#[343]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
 <P><STRONG><a name="[367]"></a>handle_jump_state</STRONG> (Thumb, 712 bytes, Stack size 16 bytes, wlr.o(.text.handle_jump_state))
@@ -5809,7 +5811,7 @@ Local Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[2df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_calc (via Veneer)
 </UL>
-<BR>[Called By]<UL><LI><a href="#[342]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
+<BR>[Called By]<UL><LI><a href="#[343]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
 <P><STRONG><a name="[368]"></a>handle_sky_state</STRONG> (Thumb, 1652 bytes, Stack size 32 bytes, wlr.o(.text.handle_sky_state))
@@ -5819,7 +5821,7 @@ Local Symbols
 <LI><a href="#[2df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_calc (via Veneer)
 <LI><a href="#[2e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;data_limit (via Veneer)
 </UL>
-<BR>[Called By]<UL><LI><a href="#[342]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
+<BR>[Called By]<UL><LI><a href="#[343]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
 <P><STRONG><a name="[39f]"></a>update_rotate_state</STRONG> (Thumb, 464 bytes, Stack size 32 bytes, wlr.o(.text.update_rotate_state))
@@ -5828,7 +5830,7 @@ Local Symbols
 <BR>[Calls]<UL><LI><a href="#[2ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_calc (via Veneer)
 <LI><a href="#[2df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_calc (via Veneer)
 </UL>
-<BR>[Called By]<UL><LI><a href="#[342]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
+<BR>[Called By]<UL><LI><a href="#[343]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
 <P><STRONG><a name="[39d]"></a>update_leg_references</STRONG> (Thumb, 348 bytes, Stack size 16 bytes, wlr.o(.text.update_leg_references))
@@ -5838,7 +5840,7 @@ Local Symbols
 <LI><a href="#[394]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tlm_gnd_roll_calc
 <LI><a href="#[36b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_both_legs_flying
 </UL>
-<BR>[Called By]<UL><LI><a href="#[342]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
+<BR>[Called By]<UL><LI><a href="#[343]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
 <P><STRONG><a name="[375]"></a>select_control_matrix</STRONG> (Thumb, 708 bytes, Stack size 8 bytes, wlr.o(.text.select_control_matrix))
@@ -5847,7 +5849,7 @@ Local Symbols
 <BR>[Calls]<UL><LI><a href="#[376]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;aMartix_Cover (via Veneer)
 <LI><a href="#[36b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_both_legs_flying
 </UL>
-<BR>[Called By]<UL><LI><a href="#[342]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
+<BR>[Called By]<UL><LI><a href="#[343]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
 <P><STRONG><a name="[39e]"></a>update_motion_reference</STRONG> (Thumb, 600 bytes, Stack size 16 bytes, wlr.o(.text.update_motion_reference))
@@ -5858,7 +5860,7 @@ Local Symbols
 <LI><a href="#[39c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_either_leg_flying
 <LI><a href="#[36b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_both_legs_flying
 </UL>
-<BR>[Called By]<UL><LI><a href="#[342]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
+<BR>[Called By]<UL><LI><a href="#[343]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
 <P><STRONG><a name="[388]"></a>stable_velocity_control</STRONG> (Thumb, 300 bytes, Stack size 16 bytes, wlr.o(.text.stable_velocity_control))
@@ -5869,13 +5871,13 @@ Local Symbols
 <LI><a href="#[2af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;power_control_target_velocity (via Veneer)
 <LI><a href="#[2e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;data_limit (via Veneer)
 </UL>
-<BR>[Called By]<UL><LI><a href="#[342]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
+<BR>[Called By]<UL><LI><a href="#[343]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
 <P><STRONG><a name="[3a6]"></a>state_predict</STRONG> (Thumb, 214 bytes, Stack size 12 bytes, wlr.o(.text.state_predict))
 <BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = state_predict
 </UL>
-<BR>[Called By]<UL><LI><a href="#[342]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
+<BR>[Called By]<UL><LI><a href="#[343]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
 <P><STRONG><a name="[36a]"></a>map_virtual_force</STRONG> (Thumb, 2200 bytes, Stack size 32 bytes, wlr.o(.text.map_virtual_force))
@@ -5888,7 +5890,7 @@ Local Symbols
 <LI><a href="#[36c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;handle_quadrant_protection
 <LI><a href="#[36b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_both_legs_flying
 </UL>
-<BR>[Called By]<UL><LI><a href="#[342]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
+<BR>[Called By]<UL><LI><a href="#[343]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
 <P><STRONG><a name="[32c]"></a>apply_output_limits</STRONG> (Thumb, 334 bytes, Stack size 16 bytes, wlr.o(.text.apply_output_limits))
@@ -5896,7 +5898,7 @@ Local Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[2e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;data_limit (via Veneer)
 </UL>
-<BR>[Called By]<UL><LI><a href="#[342]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
+<BR>[Called By]<UL><LI><a href="#[343]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
 <P><STRONG><a name="[36b]"></a>wlr_both_legs_flying</STRONG> (Thumb, 54 bytes, Stack size 4 bytes, wlr.o(.text.wlr_both_legs_flying))
@@ -6250,7 +6252,7 @@ Local Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> board_comm_task.o(.rodata.mb_callback)
 </UL>
-<P><STRONG><a name="[35c]"></a>debug_log_shoot_delay_update</STRONG> (Thumb, 164 bytes, Stack size 40 bytes, debug_task.o(.text.debug_log_shoot_delay_update))
+<P><STRONG><a name="[35d]"></a>debug_log_shoot_delay_update</STRONG> (Thumb, 164 bytes, Stack size 40 bytes, debug_task.o(.text.debug_log_shoot_delay_update))
 <BR><BR>[Stack]<UL><LI>Max Depth = 188<LI>Call Chain = debug_log_shoot_delay_update &rArr; log_printf &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vListInsertEnd
 </UL>
 <BR>[Calls]<UL><LI><a href="#[295]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;log_printf (via Veneer)
@@ -6258,237 +6260,237 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_task
 </UL>
 
-<P><STRONG><a name="[35d]"></a>debug_log_text_output</STRONG> (Thumb, 238 bytes, Stack size 16 bytes, debug_task.o(.text.debug_log_text_output))
+<P><STRONG><a name="[35e]"></a>debug_log_text_output</STRONG> (Thumb, 238 bytes, Stack size 16 bytes, debug_task.o(.text.debug_log_text_output))
 <BR><BR>[Stack]<UL><LI>Max Depth = 284<LI>Call Chain = debug_log_text_output &rArr; debug_log_fly_status &rArr; log_printf &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vListInsertEnd
 </UL>
-<BR>[Calls]<UL><LI><a href="#[349]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_fly_right_status
-<LI><a href="#[347]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_fly_left_status
-<LI><a href="#[348]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_fly_len_status
-<LI><a href="#[34a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_fly_status
-<LI><a href="#[35b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_power_status
-<LI><a href="#[353]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_leg_right_status
-<LI><a href="#[354]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_leg_status
-<LI><a href="#[350]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_joint_cmd_status
-<LI><a href="#[35a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_motor_cmd_status
-<LI><a href="#[357]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_lqr_output_status
-<LI><a href="#[359]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_lqr_wheel_right_status
-<LI><a href="#[358]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_lqr_wheel_left_status
-<LI><a href="#[355]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_lqr_diff_leg_status
-<LI><a href="#[356]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_lqr_diff_status
-<LI><a href="#[351]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_joint_motor_right_status
-<LI><a href="#[352]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_joint_motor_status
-<LI><a href="#[35e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_wheel_motor_status
-<LI><a href="#[343]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_chassis_ref_status
-<LI><a href="#[344]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_chassis_status
-<LI><a href="#[34b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_fsm_status
+<BR>[Calls]<UL><LI><a href="#[34a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_fly_right_status
+<LI><a href="#[348]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_fly_left_status
+<LI><a href="#[349]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_fly_len_status
+<LI><a href="#[34b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_fly_status
+<LI><a href="#[35c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_power_status
+<LI><a href="#[354]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_leg_right_status
+<LI><a href="#[355]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_leg_status
+<LI><a href="#[351]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_joint_cmd_status
+<LI><a href="#[35b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_motor_cmd_status
+<LI><a href="#[358]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_lqr_output_status
+<LI><a href="#[35a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_lqr_wheel_right_status
+<LI><a href="#[359]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_lqr_wheel_left_status
+<LI><a href="#[356]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_lqr_diff_leg_status
+<LI><a href="#[357]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_lqr_diff_status
+<LI><a href="#[352]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_joint_motor_right_status
+<LI><a href="#[353]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_joint_motor_status
+<LI><a href="#[35f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_wheel_motor_status
+<LI><a href="#[344]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_chassis_ref_status
+<LI><a href="#[345]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_chassis_status
+<LI><a href="#[34c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_fsm_status
 </UL>
 <BR>[Called By]<UL><LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_task
 </UL>
 
-<P><STRONG><a name="[34b]"></a>debug_log_fsm_status</STRONG> (Thumb, 128 bytes, Stack size 48 bytes, debug_task.o(.text.debug_log_fsm_status))
+<P><STRONG><a name="[34c]"></a>debug_log_fsm_status</STRONG> (Thumb, 128 bytes, Stack size 48 bytes, debug_task.o(.text.debug_log_fsm_status))
 <BR><BR>[Stack]<UL><LI>Max Depth = 196<LI>Call Chain = debug_log_fsm_status &rArr; log_printf &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vListInsertEnd
 </UL>
-<BR>[Calls]<UL><LI><a href="#[34f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_shoot_name
-<LI><a href="#[34e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_gimbal_name
-<LI><a href="#[34d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_chassis_name
-<LI><a href="#[34c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_top_mode_name
+<BR>[Calls]<UL><LI><a href="#[350]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_shoot_name
+<LI><a href="#[34f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_gimbal_name
+<LI><a href="#[34e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_chassis_name
+<LI><a href="#[34d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_top_mode_name
 <LI><a href="#[295]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;log_printf (via Veneer)
 </UL>
-<BR>[Called By]<UL><LI><a href="#[35d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
+<BR>[Called By]<UL><LI><a href="#[35e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
 </UL>
 
-<P><STRONG><a name="[344]"></a>debug_log_chassis_status</STRONG> (Thumb, 122 bytes, Stack size 56 bytes, debug_task.o(.text.debug_log_chassis_status))
+<P><STRONG><a name="[345]"></a>debug_log_chassis_status</STRONG> (Thumb, 122 bytes, Stack size 56 bytes, debug_task.o(.text.debug_log_chassis_status))
 <BR><BR>[Stack]<UL><LI>Max Depth = 204<LI>Call Chain = debug_log_chassis_status &rArr; log_printf &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vListInsertEnd
 </UL>
-<BR>[Calls]<UL><LI><a href="#[346]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_sky_name
-<LI><a href="#[345]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_jump_name
+<BR>[Calls]<UL><LI><a href="#[347]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_sky_name
+<LI><a href="#[346]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_jump_name
 <LI><a href="#[295]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;log_printf (via Veneer)
 </UL>
-<BR>[Called By]<UL><LI><a href="#[35d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
+<BR>[Called By]<UL><LI><a href="#[35e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
 </UL>
 
-<P><STRONG><a name="[343]"></a>debug_log_chassis_ref_status</STRONG> (Thumb, 126 bytes, Stack size 64 bytes, debug_task.o(.text.debug_log_chassis_ref_status))
+<P><STRONG><a name="[344]"></a>debug_log_chassis_ref_status</STRONG> (Thumb, 126 bytes, Stack size 64 bytes, debug_task.o(.text.debug_log_chassis_ref_status))
 <BR><BR>[Stack]<UL><LI>Max Depth = 212<LI>Call Chain = debug_log_chassis_ref_status &rArr; log_printf &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vListInsertEnd
 </UL>
 <BR>[Calls]<UL><LI><a href="#[295]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;log_printf (via Veneer)
 </UL>
-<BR>[Called By]<UL><LI><a href="#[35d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
+<BR>[Called By]<UL><LI><a href="#[35e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
 </UL>
 
-<P><STRONG><a name="[35e]"></a>debug_log_wheel_motor_status</STRONG> (Thumb, 88 bytes, Stack size 40 bytes, debug_task.o(.text.debug_log_wheel_motor_status))
+<P><STRONG><a name="[35f]"></a>debug_log_wheel_motor_status</STRONG> (Thumb, 88 bytes, Stack size 40 bytes, debug_task.o(.text.debug_log_wheel_motor_status))
 <BR><BR>[Stack]<UL><LI>Max Depth = 188<LI>Call Chain = debug_log_wheel_motor_status &rArr; log_printf &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vListInsertEnd
 </UL>
 <BR>[Calls]<UL><LI><a href="#[295]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;log_printf (via Veneer)
 </UL>
-<BR>[Called By]<UL><LI><a href="#[35d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
+<BR>[Called By]<UL><LI><a href="#[35e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
 </UL>
 
-<P><STRONG><a name="[352]"></a>debug_log_joint_motor_status</STRONG> (Thumb, 124 bytes, Stack size 64 bytes, debug_task.o(.text.debug_log_joint_motor_status))
+<P><STRONG><a name="[353]"></a>debug_log_joint_motor_status</STRONG> (Thumb, 124 bytes, Stack size 64 bytes, debug_task.o(.text.debug_log_joint_motor_status))
 <BR><BR>[Stack]<UL><LI>Max Depth = 212<LI>Call Chain = debug_log_joint_motor_status &rArr; log_printf &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vListInsertEnd
 </UL>
 <BR>[Calls]<UL><LI><a href="#[295]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;log_printf (via Veneer)
 </UL>
-<BR>[Called By]<UL><LI><a href="#[35d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
+<BR>[Called By]<UL><LI><a href="#[35e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
 </UL>
 
-<P><STRONG><a name="[351]"></a>debug_log_joint_motor_right_status</STRONG> (Thumb, 124 bytes, Stack size 64 bytes, debug_task.o(.text.debug_log_joint_motor_right_status))
+<P><STRONG><a name="[352]"></a>debug_log_joint_motor_right_status</STRONG> (Thumb, 124 bytes, Stack size 64 bytes, debug_task.o(.text.debug_log_joint_motor_right_status))
 <BR><BR>[Stack]<UL><LI>Max Depth = 212<LI>Call Chain = debug_log_joint_motor_right_status &rArr; log_printf &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vListInsertEnd
 </UL>
 <BR>[Calls]<UL><LI><a href="#[295]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;log_printf (via Veneer)
 </UL>
-<BR>[Called By]<UL><LI><a href="#[35d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
+<BR>[Called By]<UL><LI><a href="#[35e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
 </UL>
 
-<P><STRONG><a name="[356]"></a>debug_log_lqr_diff_status</STRONG> (Thumb, 102 bytes, Stack size 48 bytes, debug_task.o(.text.debug_log_lqr_diff_status))
+<P><STRONG><a name="[357]"></a>debug_log_lqr_diff_status</STRONG> (Thumb, 102 bytes, Stack size 48 bytes, debug_task.o(.text.debug_log_lqr_diff_status))
 <BR><BR>[Stack]<UL><LI>Max Depth = 196<LI>Call Chain = debug_log_lqr_diff_status &rArr; log_printf &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vListInsertEnd
 </UL>
 <BR>[Calls]<UL><LI><a href="#[295]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;log_printf (via Veneer)
 </UL>
-<BR>[Called By]<UL><LI><a href="#[35d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
+<BR>[Called By]<UL><LI><a href="#[35e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
 </UL>
 
-<P><STRONG><a name="[355]"></a>debug_log_lqr_diff_leg_status</STRONG> (Thumb, 78 bytes, Stack size 32 bytes, debug_task.o(.text.debug_log_lqr_diff_leg_status))
+<P><STRONG><a name="[356]"></a>debug_log_lqr_diff_leg_status</STRONG> (Thumb, 78 bytes, Stack size 32 bytes, debug_task.o(.text.debug_log_lqr_diff_leg_status))
 <BR><BR>[Stack]<UL><LI>Max Depth = 180<LI>Call Chain = debug_log_lqr_diff_leg_status &rArr; log_printf &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vListInsertEnd
 </UL>
 <BR>[Calls]<UL><LI><a href="#[295]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;log_printf (via Veneer)
 </UL>
-<BR>[Called By]<UL><LI><a href="#[35d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
+<BR>[Called By]<UL><LI><a href="#[35e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
 </UL>
 
-<P><STRONG><a name="[358]"></a>debug_log_lqr_wheel_left_status</STRONG> (Thumb, 250 bytes, Stack size 112 bytes, debug_task.o(.text.debug_log_lqr_wheel_left_status))
+<P><STRONG><a name="[359]"></a>debug_log_lqr_wheel_left_status</STRONG> (Thumb, 250 bytes, Stack size 112 bytes, debug_task.o(.text.debug_log_lqr_wheel_left_status))
 <BR><BR>[Stack]<UL><LI>Max Depth = 260<LI>Call Chain = debug_log_lqr_wheel_left_status &rArr; log_printf &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vListInsertEnd
 </UL>
 <BR>[Calls]<UL><LI><a href="#[295]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;log_printf (via Veneer)
 </UL>
-<BR>[Called By]<UL><LI><a href="#[35d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
+<BR>[Called By]<UL><LI><a href="#[35e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
 </UL>
 
-<P><STRONG><a name="[359]"></a>debug_log_lqr_wheel_right_status</STRONG> (Thumb, 250 bytes, Stack size 112 bytes, debug_task.o(.text.debug_log_lqr_wheel_right_status))
+<P><STRONG><a name="[35a]"></a>debug_log_lqr_wheel_right_status</STRONG> (Thumb, 250 bytes, Stack size 112 bytes, debug_task.o(.text.debug_log_lqr_wheel_right_status))
 <BR><BR>[Stack]<UL><LI>Max Depth = 260<LI>Call Chain = debug_log_lqr_wheel_right_status &rArr; log_printf &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vListInsertEnd
 </UL>
 <BR>[Calls]<UL><LI><a href="#[295]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;log_printf (via Veneer)
 </UL>
-<BR>[Called By]<UL><LI><a href="#[35d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
+<BR>[Called By]<UL><LI><a href="#[35e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
 </UL>
 
-<P><STRONG><a name="[357]"></a>debug_log_lqr_output_status</STRONG> (Thumb, 126 bytes, Stack size 64 bytes, debug_task.o(.text.debug_log_lqr_output_status))
+<P><STRONG><a name="[358]"></a>debug_log_lqr_output_status</STRONG> (Thumb, 126 bytes, Stack size 64 bytes, debug_task.o(.text.debug_log_lqr_output_status))
 <BR><BR>[Stack]<UL><LI>Max Depth = 212<LI>Call Chain = debug_log_lqr_output_status &rArr; log_printf &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vListInsertEnd
 </UL>
 <BR>[Calls]<UL><LI><a href="#[295]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;log_printf (via Veneer)
 </UL>
-<BR>[Called By]<UL><LI><a href="#[35d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
+<BR>[Called By]<UL><LI><a href="#[35e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
 </UL>
 
-<P><STRONG><a name="[35a]"></a>debug_log_motor_cmd_status</STRONG> (Thumb, 118 bytes, Stack size 48 bytes, debug_task.o(.text.debug_log_motor_cmd_status))
+<P><STRONG><a name="[35b]"></a>debug_log_motor_cmd_status</STRONG> (Thumb, 118 bytes, Stack size 48 bytes, debug_task.o(.text.debug_log_motor_cmd_status))
 <BR><BR>[Stack]<UL><LI>Max Depth = 196<LI>Call Chain = debug_log_motor_cmd_status &rArr; log_printf &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vListInsertEnd
 </UL>
 <BR>[Calls]<UL><LI><a href="#[295]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;log_printf (via Veneer)
 </UL>
-<BR>[Called By]<UL><LI><a href="#[35d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
+<BR>[Called By]<UL><LI><a href="#[35e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
 </UL>
 
-<P><STRONG><a name="[350]"></a>debug_log_joint_cmd_status</STRONG> (Thumb, 134 bytes, Stack size 64 bytes, debug_task.o(.text.debug_log_joint_cmd_status))
+<P><STRONG><a name="[351]"></a>debug_log_joint_cmd_status</STRONG> (Thumb, 134 bytes, Stack size 64 bytes, debug_task.o(.text.debug_log_joint_cmd_status))
 <BR><BR>[Stack]<UL><LI>Max Depth = 212<LI>Call Chain = debug_log_joint_cmd_status &rArr; log_printf &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vListInsertEnd
 </UL>
 <BR>[Calls]<UL><LI><a href="#[295]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;log_printf (via Veneer)
 </UL>
-<BR>[Called By]<UL><LI><a href="#[35d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
+<BR>[Called By]<UL><LI><a href="#[35e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
 </UL>
 
-<P><STRONG><a name="[354]"></a>debug_log_leg_status</STRONG> (Thumb, 114 bytes, Stack size 56 bytes, debug_task.o(.text.debug_log_leg_status))
+<P><STRONG><a name="[355]"></a>debug_log_leg_status</STRONG> (Thumb, 114 bytes, Stack size 56 bytes, debug_task.o(.text.debug_log_leg_status))
 <BR><BR>[Stack]<UL><LI>Max Depth = 204<LI>Call Chain = debug_log_leg_status &rArr; log_printf &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vListInsertEnd
 </UL>
 <BR>[Calls]<UL><LI><a href="#[295]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;log_printf (via Veneer)
 </UL>
-<BR>[Called By]<UL><LI><a href="#[35d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
+<BR>[Called By]<UL><LI><a href="#[35e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
 </UL>
 
-<P><STRONG><a name="[353]"></a>debug_log_leg_right_status</STRONG> (Thumb, 114 bytes, Stack size 56 bytes, debug_task.o(.text.debug_log_leg_right_status))
+<P><STRONG><a name="[354]"></a>debug_log_leg_right_status</STRONG> (Thumb, 114 bytes, Stack size 56 bytes, debug_task.o(.text.debug_log_leg_right_status))
 <BR><BR>[Stack]<UL><LI>Max Depth = 204<LI>Call Chain = debug_log_leg_right_status &rArr; log_printf &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vListInsertEnd
 </UL>
 <BR>[Calls]<UL><LI><a href="#[295]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;log_printf (via Veneer)
 </UL>
-<BR>[Called By]<UL><LI><a href="#[35d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
+<BR>[Called By]<UL><LI><a href="#[35e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
 </UL>
 
-<P><STRONG><a name="[35b]"></a>debug_log_power_status</STRONG> (Thumb, 128 bytes, Stack size 64 bytes, debug_task.o(.text.debug_log_power_status))
+<P><STRONG><a name="[35c]"></a>debug_log_power_status</STRONG> (Thumb, 128 bytes, Stack size 64 bytes, debug_task.o(.text.debug_log_power_status))
 <BR><BR>[Stack]<UL><LI>Max Depth = 212<LI>Call Chain = debug_log_power_status &rArr; log_printf &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vListInsertEnd
 </UL>
 <BR>[Calls]<UL><LI><a href="#[295]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;log_printf (via Veneer)
 </UL>
-<BR>[Called By]<UL><LI><a href="#[35d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
+<BR>[Called By]<UL><LI><a href="#[35e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
 </UL>
 
-<P><STRONG><a name="[34a]"></a>debug_log_fly_status</STRONG> (Thumb, 226 bytes, Stack size 120 bytes, debug_task.o(.text.debug_log_fly_status))
+<P><STRONG><a name="[34b]"></a>debug_log_fly_status</STRONG> (Thumb, 226 bytes, Stack size 120 bytes, debug_task.o(.text.debug_log_fly_status))
 <BR><BR>[Stack]<UL><LI>Max Depth = 268<LI>Call Chain = debug_log_fly_status &rArr; log_printf &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vListInsertEnd
 </UL>
-<BR>[Calls]<UL><LI><a href="#[346]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_sky_name
-<LI><a href="#[345]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_jump_name
+<BR>[Calls]<UL><LI><a href="#[347]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_sky_name
+<LI><a href="#[346]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_jump_name
 <LI><a href="#[295]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;log_printf (via Veneer)
 </UL>
-<BR>[Called By]<UL><LI><a href="#[35d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
+<BR>[Called By]<UL><LI><a href="#[35e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
 </UL>
 
-<P><STRONG><a name="[348]"></a>debug_log_fly_len_status</STRONG> (Thumb, 110 bytes, Stack size 48 bytes, debug_task.o(.text.debug_log_fly_len_status))
+<P><STRONG><a name="[349]"></a>debug_log_fly_len_status</STRONG> (Thumb, 110 bytes, Stack size 48 bytes, debug_task.o(.text.debug_log_fly_len_status))
 <BR><BR>[Stack]<UL><LI>Max Depth = 196<LI>Call Chain = debug_log_fly_len_status &rArr; log_printf &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vListInsertEnd
 </UL>
 <BR>[Calls]<UL><LI><a href="#[295]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;log_printf (via Veneer)
 </UL>
-<BR>[Called By]<UL><LI><a href="#[35d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
+<BR>[Called By]<UL><LI><a href="#[35e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
 </UL>
 
-<P><STRONG><a name="[347]"></a>debug_log_fly_left_status</STRONG> (Thumb, 122 bytes, Stack size 64 bytes, debug_task.o(.text.debug_log_fly_left_status))
+<P><STRONG><a name="[348]"></a>debug_log_fly_left_status</STRONG> (Thumb, 122 bytes, Stack size 64 bytes, debug_task.o(.text.debug_log_fly_left_status))
 <BR><BR>[Stack]<UL><LI>Max Depth = 212<LI>Call Chain = debug_log_fly_left_status &rArr; log_printf &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vListInsertEnd
 </UL>
 <BR>[Calls]<UL><LI><a href="#[295]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;log_printf (via Veneer)
 </UL>
-<BR>[Called By]<UL><LI><a href="#[35d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
+<BR>[Called By]<UL><LI><a href="#[35e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
 </UL>
 
-<P><STRONG><a name="[349]"></a>debug_log_fly_right_status</STRONG> (Thumb, 122 bytes, Stack size 64 bytes, debug_task.o(.text.debug_log_fly_right_status))
+<P><STRONG><a name="[34a]"></a>debug_log_fly_right_status</STRONG> (Thumb, 122 bytes, Stack size 64 bytes, debug_task.o(.text.debug_log_fly_right_status))
 <BR><BR>[Stack]<UL><LI>Max Depth = 212<LI>Call Chain = debug_log_fly_right_status &rArr; log_printf &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vListInsertEnd
 </UL>
 <BR>[Calls]<UL><LI><a href="#[295]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;log_printf (via Veneer)
 </UL>
-<BR>[Called By]<UL><LI><a href="#[35d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
+<BR>[Called By]<UL><LI><a href="#[35e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_text_output
 </UL>
 
-<P><STRONG><a name="[34c]"></a>debug_top_mode_name</STRONG> (Thumb, 88 bytes, Stack size 12 bytes, debug_task.o(.text.debug_top_mode_name))
+<P><STRONG><a name="[34d]"></a>debug_top_mode_name</STRONG> (Thumb, 88 bytes, Stack size 12 bytes, debug_task.o(.text.debug_top_mode_name))
 <BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = debug_top_mode_name
 </UL>
-<BR>[Called By]<UL><LI><a href="#[34b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_fsm_status
+<BR>[Called By]<UL><LI><a href="#[34c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_fsm_status
 </UL>
 
-<P><STRONG><a name="[34d]"></a>debug_chassis_name</STRONG> (Thumb, 186 bytes, Stack size 12 bytes, debug_task.o(.text.debug_chassis_name))
+<P><STRONG><a name="[34e]"></a>debug_chassis_name</STRONG> (Thumb, 186 bytes, Stack size 12 bytes, debug_task.o(.text.debug_chassis_name))
 <BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = debug_chassis_name
 </UL>
-<BR>[Called By]<UL><LI><a href="#[34b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_fsm_status
+<BR>[Called By]<UL><LI><a href="#[34c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_fsm_status
 </UL>
 
-<P><STRONG><a name="[34e]"></a>debug_gimbal_name</STRONG> (Thumb, 94 bytes, Stack size 12 bytes, debug_task.o(.text.debug_gimbal_name))
+<P><STRONG><a name="[34f]"></a>debug_gimbal_name</STRONG> (Thumb, 94 bytes, Stack size 12 bytes, debug_task.o(.text.debug_gimbal_name))
 <BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = debug_gimbal_name
 </UL>
-<BR>[Called By]<UL><LI><a href="#[34b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_fsm_status
+<BR>[Called By]<UL><LI><a href="#[34c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_fsm_status
 </UL>
 
-<P><STRONG><a name="[34f]"></a>debug_shoot_name</STRONG> (Thumb, 108 bytes, Stack size 12 bytes, debug_task.o(.text.debug_shoot_name))
+<P><STRONG><a name="[350]"></a>debug_shoot_name</STRONG> (Thumb, 108 bytes, Stack size 12 bytes, debug_task.o(.text.debug_shoot_name))
 <BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = debug_shoot_name
 </UL>
-<BR>[Called By]<UL><LI><a href="#[34b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_fsm_status
+<BR>[Called By]<UL><LI><a href="#[34c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_fsm_status
 </UL>
 
-<P><STRONG><a name="[345]"></a>debug_jump_name</STRONG> (Thumb, 94 bytes, Stack size 12 bytes, debug_task.o(.text.debug_jump_name))
+<P><STRONG><a name="[346]"></a>debug_jump_name</STRONG> (Thumb, 94 bytes, Stack size 12 bytes, debug_task.o(.text.debug_jump_name))
 <BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = debug_jump_name
 </UL>
-<BR>[Called By]<UL><LI><a href="#[34a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_fly_status
-<LI><a href="#[344]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_chassis_status
+<BR>[Called By]<UL><LI><a href="#[34b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_fly_status
+<LI><a href="#[345]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_chassis_status
 </UL>
 
-<P><STRONG><a name="[346]"></a>debug_sky_name</STRONG> (Thumb, 120 bytes, Stack size 12 bytes, debug_task.o(.text.debug_sky_name))
+<P><STRONG><a name="[347]"></a>debug_sky_name</STRONG> (Thumb, 120 bytes, Stack size 12 bytes, debug_task.o(.text.debug_sky_name))
 <BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = debug_sky_name
 </UL>
-<BR>[Called By]<UL><LI><a href="#[34a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_fly_status
-<LI><a href="#[344]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_chassis_status
+<BR>[Called By]<UL><LI><a href="#[34b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_fly_status
+<LI><a href="#[345]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_log_chassis_status
 </UL>
 
 <P><STRONG><a name="[36f]"></a>remote_reset</STRONG> (Thumb, 92 bytes, Stack size 8 bytes, mode_switch_task.o(.text.remote_reset))
@@ -6527,11 +6529,11 @@ Local Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> mode_switch_task.o(.rodata.mb_callback)
 </UL>
-<P><STRONG><a name="[362]"></a>gimbal_init</STRONG> (Thumb, 204 bytes, Stack size 32 bytes, gimbal_task.o(.text.gimbal_init))
+<P><STRONG><a name="[363]"></a>gimbal_init</STRONG> (Thumb, 204 bytes, Stack size 32 bytes, gimbal_task.o(.text.gimbal_init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 332<LI>Call Chain = gimbal_init &rArr; container_bus_init &rArr; container_get_stat &rArr; check_init &rArr; container_sys_init &rArr; xQueueCreateMutex &rArr; prvInitialiseMutex &rArr; xQueueGenericSend &rArr; prvCopyDataToQueue &rArr; xTaskPriorityDisinherit &rArr; vListInsertEnd
 </UL>
 <BR>[Calls]<UL><LI><a href="#[258]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;container_bus_init (via Veneer)
-<LI><a href="#[363]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_init (via Veneer)
+<LI><a href="#[33d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_init (via Veneer)
 <LI><a href="#[1f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr4 (via Veneer)
 </UL>
 <BR>[Called By]<UL><LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gimbal_task
@@ -6551,7 +6553,7 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gimbal_task
 </UL>
 
-<P><STRONG><a name="[361]"></a>gimbal_data_output</STRONG> (Thumb, 28 bytes, Stack size 8 bytes, gimbal_task.o(.text.gimbal_data_output))
+<P><STRONG><a name="[362]"></a>gimbal_data_output</STRONG> (Thumb, 28 bytes, Stack size 8 bytes, gimbal_task.o(.text.gimbal_data_output))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = gimbal_data_output &rArr; dji_motor_set_torque
 </UL>
 <BR>[Calls]<UL><LI><a href="#[335]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dji_motor_set_torque (via Veneer)
@@ -6573,14 +6575,15 @@ Local Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> gimbal_task.o(.rodata.mb_callback)
 </UL>
-<P><STRONG><a name="[33a]"></a>chassis_init</STRONG> (Thumb, 436 bytes, Stack size 48 bytes, chassis_task.o(.text.chassis_init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 360<LI>Call Chain = chassis_init &rArr; wlr_init &rArr; twm_init &rArr; kalman_filter_init &rArr; malloc &rArr; internal_alloc
+<P><STRONG><a name="[33a]"></a>chassis_init</STRONG> (Thumb, 520 bytes, Stack size 64 bytes, chassis_task.o(.text.chassis_init))
+<BR><BR>[Stack]<UL><LI>Max Depth = 376<LI>Call Chain = chassis_init &rArr; wlr_init &rArr; twm_init &rArr; kalman_filter_init &rArr; malloc &rArr; internal_alloc
 </UL>
 <BR>[Calls]<UL><LI><a href="#[280]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kalman_filter_init (via Veneer)
+<LI><a href="#[33d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_init (via Veneer)
 <LI><a href="#[33c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_init (via Veneer)
 <LI><a href="#[33b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_init
-<LI><a href="#[33e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;FGT_sin_init (via Veneer)
-<LI><a href="#[33d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DWT_Init (via Veneer)
+<LI><a href="#[33f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;FGT_sin_init (via Veneer)
+<LI><a href="#[33e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DWT_Init (via Veneer)
 <LI><a href="#[1f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr4 (via Veneer)
 </UL>
 <BR>[Called By]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_task
@@ -6617,10 +6620,11 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_task
 </UL>
 
-<P><STRONG><a name="[333]"></a>chassis_data_output</STRONG> (Thumb, 1284 bytes, Stack size 96 bytes, chassis_task.o(.text.chassis_data_output))
-<BR><BR>[Stack]<UL><LI>Max Depth = 592<LI>Call Chain = chassis_data_output &rArr; chassis_self_rescue &rArr; dm_motor_set_control_para
+<P><STRONG><a name="[333]"></a>chassis_data_output</STRONG> (Thumb, 1376 bytes, Stack size 112 bytes, chassis_task.o(.text.chassis_data_output))
+<BR><BR>[Stack]<UL><LI>Max Depth = 608<LI>Call Chain = chassis_data_output &rArr; chassis_self_rescue &rArr; dm_motor_set_control_para
 </UL>
 <BR>[Calls]<UL><LI><a href="#[2e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rc_fsm_check (via Veneer)
+<LI><a href="#[2ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_calc (via Veneer)
 <LI><a href="#[334]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_protest
 <LI><a href="#[271]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dm_motor_set_control_para (via Veneer)
 <LI><a href="#[337]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_hardest_rescue
@@ -6648,8 +6652,8 @@ Local Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 496<LI>Call Chain = chassis_self_rescue &rArr; dm_motor_set_control_para
 </UL>
 <BR>[Calls]<UL><LI><a href="#[271]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dm_motor_set_control_para (via Veneer)
-<LI><a href="#[340]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;check_joint_offstall
-<LI><a href="#[33f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;check_joint_stall
+<LI><a href="#[341]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;check_joint_offstall
+<LI><a href="#[340]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;check_joint_stall
 <LI><a href="#[335]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dji_motor_set_torque (via Veneer)
 </UL>
 <BR>[Called By]<UL><LI><a href="#[333]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_data_output
@@ -6659,13 +6663,13 @@ Local Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[333]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_data_output
 </UL>
 
-<P><STRONG><a name="[33f]"></a>check_joint_stall</STRONG> (Thumb, 356 bytes, Stack size 28 bytes, chassis_task.o(.text.check_joint_stall))
+<P><STRONG><a name="[340]"></a>check_joint_stall</STRONG> (Thumb, 356 bytes, Stack size 28 bytes, chassis_task.o(.text.check_joint_stall))
 <BR><BR>[Stack]<UL><LI>Max Depth = 28<LI>Call Chain = check_joint_stall
 </UL>
 <BR>[Called By]<UL><LI><a href="#[336]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_self_rescue
 </UL>
 
-<P><STRONG><a name="[340]"></a>check_joint_offstall</STRONG> (Thumb, 332 bytes, Stack size 8 bytes, chassis_task.o(.text.check_joint_offstall))
+<P><STRONG><a name="[341]"></a>check_joint_offstall</STRONG> (Thumb, 332 bytes, Stack size 8 bytes, chassis_task.o(.text.check_joint_offstall))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = check_joint_offstall
 </UL>
 <BR>[Called By]<UL><LI><a href="#[336]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_self_rescue
@@ -6675,7 +6679,7 @@ Local Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 332<LI>Call Chain = shoot_init &rArr; container_bus_init &rArr; container_get_stat &rArr; check_init &rArr; container_sys_init &rArr; xQueueCreateMutex &rArr; prvInitialiseMutex &rArr; xQueueGenericSend &rArr; prvCopyDataToQueue &rArr; xTaskPriorityDisinherit &rArr; vListInsertEnd
 </UL>
 <BR>[Calls]<UL><LI><a href="#[258]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;container_bus_init (via Veneer)
-<LI><a href="#[363]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_init (via Veneer)
+<LI><a href="#[33d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_init (via Veneer)
 <LI><a href="#[381]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;shoot_delay_reset
 <LI><a href="#[1f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr4 (via Veneer)
 </UL>
