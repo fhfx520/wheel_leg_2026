@@ -415,6 +415,8 @@ static void keyboard_execute(void) {
 		fsm_change(&g_top_fsm, &state_remote); 
 		return; 
 	}
+	if(g_robot_ctx.output.chassis == CHASSIS_STOP)
+		fsm_change(&fsm_keyboard_sub, &state_kb_low); 
 	//kb全局状态检测
     fsm_run(&fsm_keyboard_sub);
 }
@@ -443,4 +445,6 @@ void robot_logic_update(const RC_Ctrl_t* rc_data) {
         g_robot_ctx.last_ch3 = rc_data->ch3;
         g_robot_ctx.last_key_code = rc_data->kb.key_code;
     }
+	
+	
 }
