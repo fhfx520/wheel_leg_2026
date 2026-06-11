@@ -4,6 +4,8 @@
 #include "stdint.h"
 #define VTM_DATA_LEN 21
 
+#define VTM_OFFLINE_TIMEOUT_MS 300
+
 #pragma pack(1)
 typedef __PACKED_STRUCT
 {
@@ -60,6 +62,7 @@ typedef struct
 {
 	vtm_data_t vtm_data;
 	uint8_t online;
+	uint32_t last_rx_tick;
 } vtm_t;
 #pragma pack()
 

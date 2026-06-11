@@ -80,6 +80,7 @@ float BranchlessNormalizeAngle(float angle) {
 void dm_motor_get_single_data(dm_motor_t *motor, uint8_t *data)
 {
     uint16_t tmp_value;
+    motor->last_rx_tick = HAL_GetTick();
     motor->receive_cnt++;
     motor->online = 1;
     motor->err_percent = ((float)motor->send_cnt - (float)motor->receive_cnt) / (float)motor->send_cnt;
@@ -210,18 +211,19 @@ void dm_motor_output_data(void)
 
 uint8_t dm_motor_check_offline(void)
 {
-    uint8_t index = 0;
+    uint8_t all_online = 1;
     list_t *node = NULL;
     dm_motor_t *object;
+    uint32_t current_tick = HAL_GetTick();
     for (node = object_list.next; node != &(object_list); node = node->next) {
         object = list_entry(node, dm_motor_t, list);
-        index++;
-        if (object->online == 1) {
-            object->online = 0;
+        if (object->last_rx_tick != 0 && (uint32_t)(current_tick - object->last_rx_tick) <= DM_MOTOR_OFFLINE_TIMEOUT_MS) {
+            object->online = 1;
         } else {
-            return index;
+            object->online = 0;
+            all_online = 0;
         }
     }
-    return 0;
+    return all_online;
 }
 

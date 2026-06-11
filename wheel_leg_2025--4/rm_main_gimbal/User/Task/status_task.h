@@ -6,7 +6,7 @@
 typedef struct {
     uint16_t remote     :1;
     uint16_t vision     :1;
-    uint16_t judge      :1;
+    uint16_t board      :1;
     uint16_t vtm      	:1;
     uint16_t imu        :3;// 0-2 3
     uint16_t dji_motor  :4;// 0-7 8
@@ -22,7 +22,6 @@ typedef struct {
         uint16_t ui:1;
         uint16_t status:1;
 		uint16_t board:1;
-			
         uint16_t all:8;
     } task;
 } status_t;

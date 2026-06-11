@@ -9,6 +9,8 @@
 #define VISION_SP_RX_DATA_LEN 29
 #define VISION_SP_TX_DATA_LEN 44
 
+#define VISION_OFFLINE_TIMEOUT_MS 300
+
 #define NAN_PROCESS(now, last)      \
     do {                            \
         if (isnan(now)) {           \
@@ -45,6 +47,7 @@ typedef struct
     uint32_t shoot_enable;
 	uint8_t trace_id;
     uint8_t online;
+    uint32_t last_rx_tick;
     union
     {
         uint8_t buff[VISION_DATA_LEN];

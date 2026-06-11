@@ -30,119 +30,7 @@
 
 #define TAG_TRANSMIT_DATA		0x100
 
-typedef struct
-{
-    __packed union
-    {
-        uint8_t buff[BOARD_DATA_LEN];
-         __packed struct
-        {
-			int16_t chl;
-			int16_t ch2;
-			uint8_t sw1;
-			uint8_t sw2;
-			uint8_t empty1;
-			uint8_t empty2;
-		} data_remote;
-		__packed struct
-        {
-			int16_t x;
-			int16_t y;
-			uint8_t l;
-			uint8_t r;
-			uint16_t key_code;
-		} data_keyboard;
-    } rx_rc_msg;
-		
-	
-	__packed union
-    {
-        uint8_t buff[BOARD_DATA_LEN];
-         __packed struct
-        {
-			float  cha_pit;
-			uint8_t ctrl_mode;
-			uint8_t camp;
-			uint8_t rc_init_status;
-			uint8_t empty2;
-        } data;
-    } rx_cha_msg;
-	
-	
-	__packed union
-    {
-        uint8_t buff[BOARD_DATA_LEN];
-        __packed struct
-        {
-            uint8_t vision_ID;
-            uint8_t empty1;
-			uint8_t empty2;
-			uint8_t empty3;
-			uint8_t empty4;
-			uint8_t empty5;
-			uint8_t empty6;
-			uint8_t empty7;
-        } data;
-    } rx_judge_msg;
-	
-	
-	__packed union
-    {
-        uint8_t buff[BOARD_DATA_LEN];
-        __packed struct
-        {
-			float vision_bias_time;
-			float shoot_speed;
-        } data;
-    } rx_shoot_msg;
-	
-	
-	__packed union
-    {
-        uint8_t buff[BOARD_DATA_LEN];
-        __packed struct
-        {
-			float feedback_alpha_speed_input;
-			float feedback_beta_speed_input;
-        } data;
-    } rx_stable_msg;
-	
-	
-	/*            TX              */
-		
-	__packed union
-    {
-        uint8_t buff[BOARD_DATA_LEN];
-         __packed struct
-        {
-			uint8_t  vision_enanle;
-			uint8_t gimbal_start_up;
-			uint8_t empty2;
-			uint8_t empty3;
-			uint8_t empty4;
-			uint8_t empty5;
-			uint8_t empty6;
-			uint8_t empty7;
-        } data;
-    } tx_cha_msg;
-				
-	
-	__packed union
-    {
-        uint8_t buff[BOARD_DATA_LEN];
-         __packed struct
-        {
-			uint8_t vision_trace_id;
-			uint8_t vision_online;
-			uint8_t empty3;
-			uint8_t empty4;
-			uint8_t empty5;
-			uint8_t empty6;
-			uint8_t empty7;
-        } data;
-    } tx_vis_msg;
-		
-} board_comm_t;
+#define BOARD_COMM_OFFLINE_TIMEOUT_MS 300
 
 #pragma pack(1)
 
@@ -216,7 +104,7 @@ typedef struct
 				uint8_t trigger	   :  1;
 				uint8_t empty	   :  3;
 			} data_remote;
-			struct //10bytes
+			struct //9bytes
 			{
 				struct
 				{
@@ -231,21 +119,28 @@ typedef struct
 					} __attribute__((packed));
 				} mouse_data;
 				uint16_t key_code;
-				uint8_t online;
 			} data_keyboard;//图传链路键鼠数据
 			struct //3bytes
 			{
 				int16_t yaw_output;
 				uint8_t gimbal_start_up;
 			} gimbal_data;//云台下发数据
-			struct //3bytes
+			struct //2bytes
 			{
 				uint8_t vision_enanle;
 				uint8_t vision_trace_id;
-				uint8_t vision_online;
 			}vision_data;//视觉数据
+			struct//1bytes
+			{
+				uint8_t vision_online : 1;
+				uint8_t pit_online : 1;
+				uint8_t imu_online : 1;
+				uint8_t vtm_online : 1;
+				uint8_t fric_online : 2;//0表示全部在线 12表示离线
+				uint8_t reserved : 2;
+			}online_data;//在线状态数据
 			//保留
-			uint8_t reserved[FDCAN_BOARD_DATA_LEN - 24];
+			uint8_t reserved[FDCAN_BOARD_DATA_LEN - 23];
 		} e;
     } tx_msg;
 	union
@@ -265,10 +160,11 @@ typedef struct
 							+ sizeof(imu_data_t) + sizeof(judge_data_t) + sizeof(vision_data_t) + sizeof(gimbal_data_t))];
 		} e;
 	} rx_msg;
+	uint32_t last_rx_tick;
+	uint8_t online;
 }fdcan_board_comm_t;
 #pragma pack()
 
-extern board_comm_t board_comm;
 extern fdcan_board_comm_t fdcan_board_comm;
 
 extern rc_data_t rc_data_rec;
@@ -277,9 +173,6 @@ extern imu_data_t imu_data_rec;
 extern judge_data_t judge_data_rec;
 extern vision_data_t vision_data_rec;
 extern gimbal_data_t gimbal_data_rec;
-
-void board_comm_get_data(uint32_t id, uint8_t *data);
-void board_comm_send_data(void);
 
 void fdcan_board_comm_send(void);
 void fdcan_board_comm_get(uint32_t id, uint8_t *data);

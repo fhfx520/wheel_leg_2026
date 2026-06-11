@@ -17,6 +17,7 @@ uint8_t last_chassis_recover_flag = 0;
 chassis_rescue_e last_chassis_rescue_flag = 0;
 static data_keyboard_t modesw_get_keyboard_data_container;
 static data_remote_t modesw_get_remote_data_container;
+static online_data_t modesw_get_online_data_container;
 
 static rc_data_t modesw_set_rc_data_container;
 static kb_data_t modesw_set_kb_data_container;
@@ -33,6 +34,13 @@ static void remote_data_cb(uint32_t tag_id, void* data, size_t len) {
 	if(data == NULL || len != sizeof(data_remote_t))
 		return;
 	memcpy(&modesw_get_remote_data_container,(data_remote_t*)data,len);
+}
+
+// 收到online数据：
+static void online_data_cb(uint32_t tag_id, void* data, size_t len) {
+	if(data == NULL || len != sizeof(online_data_t))
+		return;
+	memcpy(&modesw_get_online_data_container,(online_data_t*)data,len);
 }
 
 // --- 回调配置表  ---
@@ -159,7 +167,7 @@ void vtm_remote_data_hanler(void)
 	//0 -> 1 1 -> 3 2 -> 2
 	vtm.sw1 = ((modesw_get_remote_data_container.sw == 0) ? 1 : ((modesw_get_remote_data_container.sw == 1) ? 3 : 2));
 
-	if(status.remote == 0 && modesw_get_keyboard_data_container.online && status.board_comm == 1)
+	if(status.remote == 0 && modesw_get_online_data_container.vtm_online && status.board_comm == 1)
 	{
 		memcpy(&rc,&vtm,sizeof(dr16_t));
 		rc.sw2 = 1;
@@ -171,7 +179,7 @@ void decide_to_use_Witch_KbData(void)
 {
 	static uint16_t off_line_cnt = 0;
 	//如果遥控器离线，图传链路在线，使用图传链路键鼠数据
-	if(status.remote == 0 && modesw_get_keyboard_data_container.online && status.board_comm == 1)
+	if(status.remote == 0 && modesw_get_online_data_container.vtm_online && status.board_comm == 1)
 	{
 		rc.mouse.l = modesw_get_keyboard_data_container.mouse_data.mouse_l;
 		rc.mouse.r = modesw_get_keyboard_data_container.mouse_data.mouse_r;
@@ -181,7 +189,7 @@ void decide_to_use_Witch_KbData(void)
 		rc.kb.key_code = modesw_get_keyboard_data_container.key_code;
 		off_line_cnt = 0;
 	}
-	else if(status.remote == 0 && modesw_get_keyboard_data_container.online == 0) //都不在线 
+	else if(status.remote == 0 && modesw_get_online_data_container.vtm_online == 0) //都不在线 
 	{
 		off_line_cnt++;
 		if(off_line_cnt > 30)

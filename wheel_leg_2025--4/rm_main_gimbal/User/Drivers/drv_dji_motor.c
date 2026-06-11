@@ -57,6 +57,7 @@ void dji_motor_init(dji_motor_t *motor, uint8_t motor_type, can_channel_e can_ch
 static void dji_motor_get_single_data(dji_motor_t * motor, uint8_t *data)
 {
     motor->receive_cnt++;
+    motor->last_rx_tick = HAL_GetTick();
     motor->online = 1;
     motor->err_percent  = ((float)motor->send_cnt - (float)motor->receive_cnt) / (float)motor->send_cnt;
     motor->last_ecd     = motor->ecd;
@@ -198,12 +199,14 @@ uint8_t dji_motor_check_offline(void)
     uint8_t index = 0;
     list_t *node = NULL;
     dji_motor_t *object;
+    uint32_t current_tick = HAL_GetTick();
     for (node = object_list.next; node != &(object_list); node = node->next) {
         object = list_entry(node, dji_motor_t, list);
         index++;
-        if (object->online == 1) {
-            object->online = 0;
-        } else {
+        if(object->last_rx_tick != 0 && (uint32_t)(current_tick - object->last_rx_tick) <= DJI_MOTOR_OFFLINE_TIMEOUT_MS)
+            object->online = 1;
+        else {
+            object->online = 0; 
             return index;
         }
     }

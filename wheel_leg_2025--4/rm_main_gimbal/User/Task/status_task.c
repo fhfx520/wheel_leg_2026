@@ -21,13 +21,12 @@ void status_task(void const* argument)
 //	MX_IWDG1_Init();
     for(;;)
     {
-		status.dm_motor = dm_motor_check_offline();
+		
         if (status.task.comm == 1 &&
             status.task.gimbal == 1 &&
 			status.task.board == 1 &&
             status.task.shoot == 1 &&
-            status.task.mode_switch == 1 &&
-			status.dm_motor == 0) {
+            status.task.mode_switch == 1) {
             status.task.comm = 0;
             status.task.gimbal = 0;
             status.task.chassis = 0;
@@ -36,30 +35,20 @@ void status_task(void const* argument)
 			status.task.board = 0;
             HAL_IWDG_Refresh(&hiwdg1);
         }
-
-//        rc_fsm_init(rc.online);
 				
-				
-//        status.remote = rc_check_offline();
         status.vision = vision_check_offline();
-//        status.judge = judge_check_offline();
-        status.vtm = vtm_check_offline();
-				
-				
+        status.vtm = vtm_check_offline();	
         status.imu = imu_check_offline();
         status.dji_motor = dji_motor_check_offline();
-        
-        
-        if (status.remote == 0 && status.vision == 0 && status.judge == 0 && \
-            status.vtm == 0 && status.imu == 0 && status.dji_motor == 0 && \
-            status.dm_motor == 0) {
-            status.all = 0;
-        } else {
+        status.dm_motor = dm_motor_check_offline();
+        status.board = board_comm_check_offline();
+
+        if (status.vision == 1 && status.vtm == 1 && status.imu == 1 
+            && status.dji_motor == 0 && status.dm_motor == 1 && status.board == 1) {
             status.all = 1;
+        } else {
+            status.all = 0;
         }
-//         HAL_IWDG_Refresh(&hiwdg1);
-		board_comm.tx_vis_msg.data.vision_online = 0;
-		fdcan_board_comm.tx_msg.e.vision_data.vision_online = 0;
-        osDelay(100);
+        osDelay(33);
     }
 }

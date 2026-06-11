@@ -41,6 +41,9 @@
 #define YAW_MOTOR_ID		  0x205
 #define FRIC_MOTOR_LEFT_ID	  0x201
 #define FRIC_MOTOR_RIGHT_ID	  0x203
+
+#define DJI_MOTOR_OFFLINE_TIMEOUT_MS 100
+
 typedef struct
 {
     uint32_t id;
@@ -62,6 +65,7 @@ typedef enum
 typedef struct
 {
     list_t list;
+    uint32_t last_rx_tick;
     //电机参数
     uint8_t motor_type;
     can_channel_e can_channel;

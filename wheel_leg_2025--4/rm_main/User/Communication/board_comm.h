@@ -8,6 +8,7 @@
 #define FDCAN_CHA_TO_GIMBAL_ID		 0x001
 #define FDCAN_GIMBAL_TO_CHA_ID		 0x011
 
+#define TAG_ONLINE_DATA			0x01
 #define TAG_VTM_REMOTE_DATA     0x05
 #define TAG_VTM_KEYBOARD_DATA 	0x10
 #define TAG_GIMBAL_OUTPUT_DATA 	0x20
@@ -82,7 +83,7 @@ typedef struct
         uint8_t buff[FDCAN_BOARD_DATA_LEN];
 		struct
 		{
-			struct //8bytes
+			struct 
 			{
 				uint16_t channel_0 : 11;
 				uint16_t channel_1 : 11;
@@ -96,7 +97,7 @@ typedef struct
 				uint8_t trigger	   :  1;
 				uint8_t empty	   :  3;
 			} data_remote;
-			struct //10bytes
+			struct //9bytes
 			{
 				struct
 				{
@@ -111,21 +112,28 @@ typedef struct
 					} __attribute__((packed));
 				} mouse_data;
 				uint16_t key_code;
-				uint8_t online;
 			} data_keyboard;//图传链路键鼠数据
 			struct //3bytes
 			{
 				int16_t yaw_output;
 				uint8_t gimbal_start_up;
 			} gimbal_data;//云台下发数据
-			struct //3bytes
+			struct //2bytes
 			{
 				uint8_t vision_enanle;
 				uint8_t vision_trace_id;
-				uint8_t vision_online;
 			}vision_data;//视觉数据
+			struct//1bytes
+			{
+				uint8_t vision_online : 1;
+				uint8_t pit_online : 1;
+				uint8_t imu_online : 1;
+				uint8_t vtm_online : 1;
+				uint8_t fric_online : 2;//0表示全部在线 12表示离线
+				uint8_t reserved : 2;
+			}online_data;//在线状态数据
 			//保留
-			uint8_t reserved[FDCAN_BOARD_DATA_LEN - 24];
+			uint8_t reserved[FDCAN_BOARD_DATA_LEN - 23];
 		} e;
     } rx_msg;
 	
@@ -180,7 +188,6 @@ typedef struct
 		} __attribute__((packed));
 	} mouse_data;
 	uint16_t key_code;
-	uint8_t online;
 } data_keyboard_t;//图传链路键鼠数据
 
 typedef struct 
@@ -193,10 +200,17 @@ typedef struct
 {
 	uint8_t vision_enanle;
 	uint8_t vision_trace_id;
-	uint8_t vision_online;
 }vision_data_t;//视觉数据
 
-
+typedef struct 
+{
+	uint8_t vision_online : 1;
+	uint8_t pit_online : 1;
+	uint8_t imu_online : 1;
+	uint8_t vtm_online : 1;
+	uint8_t fric_online : 2;//0表示全部在线 1表示右离线 2表示左离线
+	uint8_t reserved : 2;
+}online_data_t;//在线数据
 
 
 

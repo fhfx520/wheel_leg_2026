@@ -9,6 +9,7 @@ data_remote_t data_remote_rec;
 data_keyboard_t data_keyboard_rec;
 gimbal_data_t gimbal_data_rec;
 vision_data_t vision_data_rec;
+online_data_t online_data_rec;
 
 rc_data_t rc_data_tran;
 kb_data_t kb_data_tran;
@@ -33,6 +34,8 @@ void fdcan_board_comm_get(uint32_t id,uint8_t *pdata)
 
 		memcpy(&vision_data_rec,&fdcan_board_comm.rx_msg.e.vision_data,sizeof(vision_data_rec));
 		
+		memcpy(&online_data_rec,&fdcan_board_comm.rx_msg.e.online_data,sizeof(online_data_rec));
+		
 		fdcan_board_comm.last_rx_tick = HAL_GetTick();
 		fdcan_board_comm.online = 1;
 	}
@@ -45,6 +48,7 @@ void board_comm_container_set(void)
 	container_set(TAG_VTM_KEYBOARD_DATA, 	&data_keyboard_rec, sizeof(data_keyboard_rec), CONTAINER_TYPE_STRUCT);
 	container_set(TAG_GIMBAL_OUTPUT_DATA,   &gimbal_data_rec,   sizeof(gimbal_data_rec),   CONTAINER_TYPE_STRUCT);
 	container_set(TAG_TRACE_VISION_DATA,   	&vision_data_rec,   sizeof(vision_data_rec),   CONTAINER_TYPE_STRUCT);
+	container_set(TAG_ONLINE_DATA,   		&online_data_rec,   sizeof(online_data_rec),   CONTAINER_TYPE_STRUCT);
 	//所有待发送信息打包
 	container_set(TAG_TRANSMIT_DATA, 		fdcan_board_comm.tx_msg.buff, FDCAN_BOARD_DATA_LEN,CONTAINER_TYPE_INT);
 }

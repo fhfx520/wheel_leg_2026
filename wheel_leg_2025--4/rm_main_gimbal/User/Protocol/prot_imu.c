@@ -15,6 +15,7 @@ imu_t chassis_imu, gimbal_imu;
  */
 void imu_get_data(imu_t *imu, uint32_t id, uint8_t *data)
 {
+	imu->last_rx_tick = HAL_GetTick();
     float buffer[2],array[16];
 	if(id != IMU_ALL_ID)
 		memcpy(buffer, data, 8);
@@ -61,9 +62,10 @@ void imu_get_data(imu_t *imu, uint32_t id, uint8_t *data)
 
 uint8_t imu_check_offline(void)
 {
-    if (gimbal_imu.online == 1) {
+    uint32_t current_tick = HAL_GetTick();
+    if (gimbal_imu.last_rx_tick != 0 && (uint32_t)(current_tick - gimbal_imu.last_rx_tick) <= IMU_OFFLINE_TIMEOUT_MS)
+        gimbal_imu.online = 1;
+    else 
         gimbal_imu.online = 0;
-        return 0;}
-    else
-       return 1; 
+    return gimbal_imu.online;
 }

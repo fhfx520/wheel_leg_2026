@@ -98,6 +98,7 @@ static void vision_sp_write_u16(uint8_t data[2], uint16_t value)
 }
 static void vision_get_data_sp(uint8_t *data, uint32_t len)
 {
+    vision.last_rx_tick = HAL_GetTick();
     static vision_aim_status_e last_aim_status;
 
     if (len < sizeof(vision_rx_msg_sp_t)) {
@@ -192,8 +193,7 @@ static void vision_get_data_sp(uint8_t *data, uint32_t len)
         vision.aim_status = FIRST_LOST;
     }
     last_aim_status = vision.aim_status;
-    board_comm.tx_vis_msg.data.vision_online = 1;
-    fdcan_board_comm.tx_msg.e.vision_data.vision_online = 1;
+    vision.last_rx_tick = HAL_GetTick();
 }
 void vision_get_data(uint8_t *data, uint32_t len)
 {
@@ -277,8 +277,6 @@ void vision_get_data(uint8_t *data, uint32_t len)
     if (last_aim_status == AIMING && vision.aim_status == UNAIMING)
         vision.aim_status = FIRST_LOST;
     last_aim_status = vision.aim_status;
-	board_comm.tx_vis_msg.data.vision_online = 1;
-	fdcan_board_comm.tx_msg.e.vision_data.vision_online = 1;
 }
 
 uint8_t vision_send_buf[29];
@@ -404,11 +402,11 @@ void vision_output_data_sp(void)
 
 uint8_t vision_check_offline(void)
 {
-    if (vision.online == 0) {
-        return 1;
-    } else {
+    uint32_t current_tick = HAL_GetTick();
+    if (vision.last_rx_tick != 0 && (uint32_t)(current_tick - vision.last_rx_tick) <= VISION_OFFLINE_TIMEOUT_MS)
+        vision.online = 1;
+    else
         vision.online = 0;
-        return 0;
-    }
+    return vision.online;
 }
 

@@ -9,6 +9,8 @@
 #define IMU_ACC_ID 0x014
 #define IMU_ALL_ID 0x016
 
+#define IMU_OFFLINE_TIMEOUT_MS 100
+
 typedef struct
 {
     //反馈数据
@@ -16,6 +18,7 @@ typedef struct
     float wy, wz, wx;       //rad/s
     float ay, az, ax;       //m/(s^2)
     uint8_t online;
+    uint32_t last_rx_tick;
 } imu_t;
 
 extern imu_t chassis_imu, gimbal_imu;

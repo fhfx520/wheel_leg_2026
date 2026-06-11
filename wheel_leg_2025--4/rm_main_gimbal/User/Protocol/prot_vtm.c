@@ -9,6 +9,7 @@ vtm_t vtm;
  */
 void vtm_get_data(uint8_t *data)
 {
+	vtm.last_rx_tick = HAL_GetTick();
 	//Ö¡Í·Ğ£Ñé
 	if(data[0] != 0xA9 || data[1] != 0x53)
 		return;
@@ -23,10 +24,11 @@ void vtm_get_data(uint8_t *data)
 
 uint8_t vtm_check_offline(void)
 {
-    if (vtm.online == 0) {
-        return 1;
+    uint32_t current_tick = HAL_GetTick();
+    if (vtm.last_rx_tick != 0 && (uint32_t)(current_tick - vtm.last_rx_tick) <= VTM_OFFLINE_TIMEOUT_MS) {
+        vtm.online = 1;
     } else {
         vtm.online = 0;
-        return 0;
     }
+	return vtm.online;
 }
