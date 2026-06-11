@@ -136,7 +136,7 @@ float power_limit_speed(void)
 
 void power_get_data(uint8_t *data)
 {
-	
+	power_control.last_rx_tick = HAL_GetTick();
     //0x100
     float cap_voltage_buf;
     float chassis_current_buf;
@@ -289,11 +289,12 @@ float power_control_target_Vrotate(void)
 
 uint8_t power_check_offline(void)
 {
-    if (power_control.online == 0) {
-        return 1;
+    uint32_t current_tick = HAL_GetTick();
+    if (power_control.last_rx_tick != 0 && (uint32_t)(current_tick - power_control.last_rx_tick) <= SUPERCAP_OFFLINE_TIMEOUT_MS) {
+        power_control.online = 1;
     } else {
         power_control.online = 0;
-        return 0;
     }
+    return power_control.online;
 }
 

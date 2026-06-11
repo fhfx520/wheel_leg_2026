@@ -392,9 +392,8 @@ static void update_leg_height_and_balance(float yaw_error)
 		
 		DO_LAST(wlr_both_legs_flying(),Last_cnt){
 			if(wlr.direction == 0){
-				x3_balance_zero = x3_balance_zero_normal;
+				x3_balance_zero = x3_balance_zero_normal - 0.1f;
 				data_limit(&wlr.v_ref,-1.4f,1.4f);
-				x5_balance_zero = -0.1f;
 			}
 			else{
 				x3_balance_zero = x3_balance_zero_normal - 0.05f;
@@ -783,7 +782,7 @@ static void update_leg_references(void)
         tlm_leg_length_calc(&tlm, wlr.high_set, 0);							//根据地形倾角不断更新两腿腿长，调整到机身与地面平行
     }
 
-    if (!rotate_flag) {
+    if (!rotate_flag && wlr_either_leg_flying()) {
         for (int i = 0; i < WLR_SIDE_COUNT; i++) {
             if (wlr.side[i].fly_flag) {
                 tlm.l_ref[i] += 0.04f;
@@ -980,7 +979,7 @@ static void map_virtual_force(uint8_t index)
 		wlr.side[index].Fy = pid_calc(&pid_energy_leg[index], tlm.l_ref[index], vmc[index].L_fdb) - 60.0f;
 	}
 	else if (wlr.high_flag == 1 || wlr.stair_flag == WLR_STAIR_RECOVER_LONG){//中腿长
-        wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 10.0f
+        wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 15.0f
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
     }
 	else {//低腿长

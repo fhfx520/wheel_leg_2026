@@ -17,8 +17,6 @@ judge_data_t judge_data_tran;
 vision_tx_data_t vision_data_tran;
 gimbal_tx_data_t gimbal_data_tran;
 
-uint8_t board_comm_online;
-
 //fdcan板间通信收数据
 void fdcan_board_comm_get(uint32_t id,uint8_t *pdata)
 {
@@ -35,7 +33,8 @@ void fdcan_board_comm_get(uint32_t id,uint8_t *pdata)
 
 		memcpy(&vision_data_rec,&fdcan_board_comm.rx_msg.e.vision_data,sizeof(vision_data_rec));
 		
-		board_comm_online = 1;
+		fdcan_board_comm.last_rx_tick = HAL_GetTick();
+		fdcan_board_comm.online = 1;
 	}
 }
 
@@ -52,10 +51,11 @@ void board_comm_container_set(void)
 
 uint8_t board_comm_check_offline(void)
 {
-    if (board_comm_online == 0) {
-        return 1;
+	uint32_t current_tick = HAL_GetTick();
+    if (fdcan_board_comm.last_rx_tick != 0 && (uint32_t)(current_tick - fdcan_board_comm.last_rx_tick) <= BOARD_COMM_OFFLINE_TIMEOUT_MS) {
+        fdcan_board_comm.online = 1;
     } else {
-        board_comm_online = 0;
-        return 0;
+        fdcan_board_comm.online = 0;
     }
+	return fdcan_board_comm.online;
 }

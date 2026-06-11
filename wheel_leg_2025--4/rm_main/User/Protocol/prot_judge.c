@@ -13,7 +13,7 @@ typedef enum
 
 UART_HandleTypeDef *judge_huart;
 uint8_t online = 0;
-
+uint32_t last_rx_tick;
 //机器人接收的数据
 game_status_t                       game_status;                    //比赛状态数据，固定以1Hz频率发送
 game_result_t                       game_result;                    //比赛结果数据，比赛结束触发发送
@@ -58,6 +58,7 @@ map_robot_data_t                    map_robot_data;                 //选手端�
 frame_header_t frame_header;
 uint8_t judge_get_data(uint8_t *data)
 {
+    last_rx_tick = HAL_GetTick();
     uint8_t result = 1;
     uint16_t data_length;
     int cmd_id;
@@ -132,10 +133,11 @@ void judge_send_data(uint8_t* message, int length)
 }
 uint8_t judge_check_offline(void)
 {
-    if (online == 0) {
-        return 1;
+    uint32_t current_tick = HAL_GetTick();
+    if (last_rx_tick != 0 && (uint32_t)(current_tick - last_rx_tick) <= JUDGE_OFFLINE_TIMEOUT_MS) {
+        online = 1;
     } else {
         online = 0;
-        return 0;
     }
+    return online;
 }

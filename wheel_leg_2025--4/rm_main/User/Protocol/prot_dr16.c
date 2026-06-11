@@ -57,63 +57,9 @@ uint8_t dr16_get_data(dr16_t *rc, uint8_t *data)
     rc->mouse.l = data[12];
     rc->mouse.r = data[13];
     rc->kb.key_code = data[14] | data[15] << 8;
-    
+    rc->last_rx_tick = HAL_GetTick();
     rc->online = 1;
     return 0;
-}
-
-void dr16_output_data(void)
-{
-    rc.tx1.data.ch1 = rc.ch1;
-    rc.tx1.data.ch2 = rc.ch2;
-    rc.tx1.data.sw1 = rc.sw1;
-    rc.tx1.data.sw2 = rc.sw2;
-
-    can_std_transmit(CAN_CHANNEL_3, 0x001, rc.tx1.buff);
-}
-
-void kb_output_data(void)
-{
-    rc.tx2.data.x = rc.mouse.x;
-    rc.tx2.data.y = rc.mouse.y;
-    rc.tx2.data.l = rc.mouse.l;
-    rc.tx2.data.r = rc.mouse.r;
-    rc.tx2.data.kb.key_code = rc.kb.key_code;
-    
-    can_std_transmit(CAN_CHANNEL_3, 0x001, rc.tx2.buff);
-}
-    
-void imu_output_data(void)
-{
-    rc.tx3.data.chassis_pit 	= chassis_imu.pit;
-    rc.tx3.data.ctrl_mode 		= ctrl_mode;
-	
-	if (chassis.recover_flag == 1 && fabs(chassis_imu.pit) > 0.3f)
-		rc.tx3.data.ctrl_mode = PROTECT_MODE;
-	
-    rc.tx3.data.camp 			= robot_status.robot_id; 
-    rc.tx3.data.rc_init_status  = rc.init_status;
-    can_std_transmit(CAN_CHANNEL_3, 0x002, rc.tx3.buff);
-}
-  
-void judge_output_data(void)
-{
-    rc.tx4.data.vision_ID = ID_judge;
-    can_std_transmit(CAN_CHANNEL_3, 0x005, rc.tx4.buff);
-}
-
-void shoot_output_data(void)
-{
-	rc.tx5.data.vision_bias_time = vision_send_time;
-	rc.tx5.data.shoot_speed 	 = shoot_data.initial_speed;
-    can_std_transmit(CAN_CHANNEL_3, 0x007, rc.tx5.buff);
-}
-
-void gimbal_stable_output_data(void)
-{
-	rc.tx6.data.feedback_alpha_speed_output = gimbal_stable.feedback_alpha_speed;
-	rc.tx6.data.feedback_beta_speed_output 	= gimbal_stable.feedback_beta_speed;
-    can_std_transmit(CAN_CHANNEL_3, 0x008, rc.tx6.buff);
 }
 
 static uint16_t key_map(key_index_e key_index)
@@ -209,10 +155,11 @@ uint8_t rc_fsm_check(uint8_t target_status)
 
 uint8_t rc_check_offline(void)
 {
-    if (rc.online == 0) {
-        return 1;
+    uint32_t current_tick = HAL_GetTick();
+    if (rc.last_rx_tick != 0 && (uint32_t)(current_tick - rc.last_rx_tick) <= DR16_OFFLINE_TIMEOUT_MS) {
+        rc.online = 1;
     } else {
         rc.online = 0;
-        return 0;
     }
+    return rc.online;
 }

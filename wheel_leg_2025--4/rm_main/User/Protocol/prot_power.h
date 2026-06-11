@@ -6,6 +6,8 @@
 #define SUPERCAP_DATA_ID  0x020
 #define SUPERCAP_STATE_ID 0x101
 
+#define SUPERCAP_OFFLINE_TIMEOUT_MS 500
+
 typedef enum
 {
     POWER_NORMAL,
@@ -50,6 +52,7 @@ typedef struct
     float total_power_wheel;
     float power_scale;
     uint8_t online;
+    uint32_t last_rx_tick;
 } power_control_t;
 
 extern supercap_t supercap;

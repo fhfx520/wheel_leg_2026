@@ -4,6 +4,7 @@
 #include "usart.h"
 #include "stdint.h"
 
+#define JUDGE_OFFLINE_TIMEOUT_MS 500
 
 //帧头
 typedef __PACKED_STRUCT

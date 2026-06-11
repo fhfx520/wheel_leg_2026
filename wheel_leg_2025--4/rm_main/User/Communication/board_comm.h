@@ -22,6 +22,8 @@
 
 #define TAG_TRANSMIT_DATA		0x100
 
+#define BOARD_COMM_OFFLINE_TIMEOUT_MS 100
+
 #pragma pack(1)
 
 typedef struct //8bytes
@@ -144,6 +146,8 @@ typedef struct
 							+ sizeof(imu_data_t) + sizeof(judge_data_t) + sizeof(vision_tx_data_t) + sizeof(gimbal_tx_data_t))];
 		} e;
 	} tx_msg;
+	uint32_t last_rx_tick;
+	uint8_t online;
 }fdcan_board_comm_t;
 
 typedef struct //8bytes

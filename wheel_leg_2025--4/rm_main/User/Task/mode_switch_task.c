@@ -158,8 +158,8 @@ void vtm_remote_data_hanler(void)
 	vtm.ch5 = modesw_get_remote_data_container.dial - 1024;
 	//0 -> 1 1 -> 3 2 -> 2
 	vtm.sw1 = ((modesw_get_remote_data_container.sw == 0) ? 1 : ((modesw_get_remote_data_container.sw == 1) ? 3 : 2));
-	//键鼠模式下才生效
-	if(status.remote && modesw_get_keyboard_data_container.online && !status.board_comm)
+
+	if(status.remote == 0 && modesw_get_keyboard_data_container.online && status.board_comm == 1)
 	{
 		memcpy(&rc,&vtm,sizeof(dr16_t));
 		rc.sw2 = 1;
@@ -171,7 +171,7 @@ void decide_to_use_Witch_KbData(void)
 {
 	static uint16_t off_line_cnt = 0;
 	//如果遥控器离线，图传链路在线，使用图传链路键鼠数据
-	if(status.remote && modesw_get_keyboard_data_container.online && !status.board_comm)
+	if(status.remote == 0 && modesw_get_keyboard_data_container.online && status.board_comm == 1)
 	{
 		rc.mouse.l = modesw_get_keyboard_data_container.mouse_data.mouse_l;
 		rc.mouse.r = modesw_get_keyboard_data_container.mouse_data.mouse_r;
@@ -181,7 +181,7 @@ void decide_to_use_Witch_KbData(void)
 		rc.kb.key_code = modesw_get_keyboard_data_container.key_code;
 		off_line_cnt = 0;
 	}
-	else if(status.remote && !modesw_get_keyboard_data_container.online) //都不在线 
+	else if(status.remote == 0 && modesw_get_keyboard_data_container.online == 0) //都不在线 
 	{
 		off_line_cnt++;
 		if(off_line_cnt > 30)
@@ -228,9 +228,9 @@ void mode_switch_task(void const *argu)
 		//决定键鼠数据来源
 		decide_to_use_Witch_KbData();
 		//运行 FSM 大脑 解锁后激活 否则一直保护
-		if(lock_flag && !status.dji_motor)//解锁了且轮电机在线
+		if(lock_flag && status.dji_motor == 0)//解锁了且轮电机在线
 			robot_logic_update((const RC_Ctrl_t*)&rc);
-		else if(lock_flag && status.dji_motor)//解锁了但轮电机离线
+		else if(lock_flag && status.dji_motor == 1)//解锁了但轮电机离线
 		{
 			robot_logic_update((const RC_Ctrl_t*)&rc);
 			g_robot_ctx.output.chassis = CHASSIS_STOP;

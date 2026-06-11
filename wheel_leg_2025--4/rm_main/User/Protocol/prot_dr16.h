@@ -23,6 +23,8 @@
 #define RC_RIGHT_RD_CH_VALUE ( rc.ch2 < -500 && rc.ch1 >  500 )   //居右下
 #define RC_RIGHT_LD_CH_VALUE ( rc.ch2 < -500 && rc.ch1 < -500 )   //居左下
 
+#define DR16_OFFLINE_TIMEOUT_MS 300
+
 typedef __PACKED_STRUCT
 {
 	int16_t ch1;
@@ -65,108 +67,7 @@ typedef __PACKED_STRUCT
 	} kb;
     uint8_t init_status;//遥控器上电拨杆状态机
     uint8_t online;
-    
-    //发送rc数据给云台
-    __packed union
-    {
-        uint8_t buff[8];
-        __packed struct
-        {
-            int16_t ch1;
-            int16_t ch2;
-            uint8_t sw1;
-            uint8_t sw2; 
-            uint8_t empty1;
-            uint8_t empty2;
-        } data;        
-    } tx1;
-    
-    __packed union
-    {
-        uint8_t buff[8];
-        __packed struct
-        {
-            int16_t x;
-            int16_t y;
-            uint8_t l;
-            uint8_t r;
-            __packed union
-            {
-                uint16_t key_code;
-                __PACKED_STRUCT
-                {
-                    uint16_t W:1;
-                    uint16_t S:1;
-                    uint16_t A:1;
-                    uint16_t D:1;
-                    uint16_t SHIFT:1;
-                    uint16_t CTRL:1;
-                    uint16_t Q:1;
-                    uint16_t E:1;
-                    uint16_t R:1;
-                    uint16_t F:1;
-                    uint16_t G:1;
-                    uint16_t Z:1;
-                    uint16_t X:1;
-                    uint16_t C:1;
-                    uint16_t V:1;
-                    uint16_t B:1;//16个键位
-                } bit;
-            } kb;
-        } data;
-    } tx2;
-    
-    __packed union
-    {        
-        uint8_t buff[8];
-        __packed struct
-        {
-            float chassis_pit;
-            uint8_t ctrl_mode;
-            uint8_t camp;
-            uint8_t rc_init_status;
-            uint8_t empty2;
-        } data;
-    } tx3;
-		
-    __packed union
-    {        
-        uint8_t buff[8];
-        __packed struct
-        {
-            uint8_t vision_ID;
-            uint8_t empty1;
-			uint8_t empty2;
-			uint8_t empty3;
-			uint8_t empty4;
-		    uint8_t empty5;
-			uint8_t empty6;
-			uint8_t empty7;
-        } data;
-    } tx4;
-	
-	 __packed union
-    {        
-        uint8_t buff[8];
-        __packed struct
-        {
-			float vision_bias_time;
-			float shoot_speed;
-        } data;
-		
-    } tx5;
-	
-	 __packed union
-    {        
-        uint8_t buff[8];
-        __packed struct
-        {
-			float feedback_alpha_speed_output;
-			float feedback_beta_speed_output;
-        } data;
-		
-    } tx6;	
-		
+    uint32_t last_rx_tick;
 } dr16_t;
 
 typedef enum
