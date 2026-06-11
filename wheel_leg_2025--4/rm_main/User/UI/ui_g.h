@@ -44,7 +44,12 @@ void ui_init_g_3();
 void ui_update_g_3();
 void ui_remove_g_3();
 
-extern ui_interface_string_t *ui_g_4_fly_flag;
+extern ui_interface_string_t *ui_g_4_spin_warning;
+extern ui_interface_string_t *ui_g_4_leg_right_big_warning;
+extern ui_interface_string_t *ui_g_4_leg_right_small_warning;
+extern ui_interface_string_t *ui_g_4_yaw_warning;
+extern ui_interface_string_t *ui_g_4_pit_warning;
+extern ui_interface_string_t *ui_g_4_gimbal_imu_warning;
 
 void ui_init_g_4();
 void ui_update_g_4();
@@ -52,11 +57,26 @@ void ui_remove_g_4();
 
 extern ui_interface_number_t *ui_g_5_left_lazer;
 extern ui_interface_number_t *ui_g_5_right_lazer;
+extern ui_interface_number_t *ui_g_5_left_leg_length;
+extern ui_interface_number_t *ui_g_5_right_leg_length;
 extern ui_interface_string_t *ui_g_5_distance;
+extern ui_interface_string_t *ui_g_5_leg_length;
 
 void ui_init_g_5();
 void ui_update_g_5();
 void ui_remove_g_5();
+
+extern ui_interface_string_t *ui_g_6_fric_left_warning;
+extern ui_interface_string_t *ui_g_6_fric_right_warning;
+extern ui_interface_string_t *ui_g_6_trigger_warning;
+extern ui_interface_string_t *ui_g_6_wheel_left_warning;
+extern ui_interface_string_t *ui_g_6_wheel_right_warning;
+extern ui_interface_string_t *ui_g_6_leg_left_big_warning;
+extern ui_interface_string_t *ui_g_6_leg_left_small_warning;
+
+void ui_init_g_6();
+void ui_update_g_6();
+void ui_remove_g_6();
 
 
 #endif // UI_g_H

@@ -158,21 +158,21 @@ void _ui_init_g_2_0() {
     ui_g_2_current_trigger->operate_type = 1;
     ui_g_2_current_trigger->layer = 0;
     ui_g_2_current_trigger->color = 1;
-    ui_g_2_current_trigger->start_x = 384;
-    ui_g_2_current_trigger->start_y = 774;
+    ui_g_2_current_trigger->start_x = 344;
+    ui_g_2_current_trigger->start_y = 777;
     ui_g_2_current_trigger->width = 3;
     ui_g_2_current_trigger->font_size = 25;
-    ui_g_2_current_trigger->number = 0;
+    ui_g_2_current_trigger->number = 65535000;
 
     ui_g_2_target_trigger->figure_type = 5;
     ui_g_2_target_trigger->operate_type = 1;
     ui_g_2_target_trigger->layer = 0;
     ui_g_2_target_trigger->color = 5;
-    ui_g_2_target_trigger->start_x = 385;
-    ui_g_2_target_trigger->start_y = 712;
+    ui_g_2_target_trigger->start_x = 344;
+    ui_g_2_target_trigger->start_y = 711;
     ui_g_2_target_trigger->width = 3;
     ui_g_2_target_trigger->font_size = 25;
-    ui_g_2_target_trigger->number = 0;
+    ui_g_2_target_trigger->number = 65535000;
 
     ui_g_2_head_position->figure_type = 4;
     ui_g_2_head_position->operate_type = 1;
@@ -570,7 +570,7 @@ void ui_remove_g_3() {
 
 
 ui_string_frame_t ui_g_4_0;
-ui_interface_string_t* ui_g_4_fly_flag = &(ui_g_4_0.option);
+ui_interface_string_t* ui_g_4_spin_warning = &(ui_g_4_0.option);
 
 void _ui_init_g_4_0() {
     ui_g_4_0.option.figure_name[0] = 0;
@@ -578,16 +578,16 @@ void _ui_init_g_4_0() {
     ui_g_4_0.option.figure_name[2] = 0;
     ui_g_4_0.option.operate_type = 1;
 
-    ui_g_4_fly_flag->figure_type = 7;
-    ui_g_4_fly_flag->operate_type = 1;
-    ui_g_4_fly_flag->layer = 0;
-    ui_g_4_fly_flag->color = 6;
-    ui_g_4_fly_flag->start_x = 888;
-    ui_g_4_fly_flag->start_y = 357;
-    ui_g_4_fly_flag->width = 2;
-    ui_g_4_fly_flag->font_size = 20;
-    ui_g_4_fly_flag->str_length = 8;
-    strcpy(ui_g_4_fly_flag->string, "off_land");
+    ui_g_4_spin_warning->figure_type = 7;
+    ui_g_4_spin_warning->operate_type = 1;
+    ui_g_4_spin_warning->layer = 0;
+    ui_g_4_spin_warning->color = 6;
+    ui_g_4_spin_warning->start_x = 790;
+    ui_g_4_spin_warning->start_y = 763;
+    ui_g_4_spin_warning->width = 3;
+    ui_g_4_spin_warning->font_size = 30;
+    ui_g_4_spin_warning->str_length = 12;
+    strcpy(ui_g_4_spin_warning->string, "PLEASE SPIN!");
 
 
     ui_proc_string_frame(&ui_g_4_0);
@@ -607,32 +607,239 @@ void _ui_remove_g_4_0() {
     ui_proc_string_frame(&ui_g_4_0);
     SEND_MESSAGE((uint8_t *) &ui_g_4_0, sizeof(ui_g_4_0));
 }
+ui_string_frame_t ui_g_4_1;
+ui_interface_string_t* ui_g_4_leg_right_big_warning = &(ui_g_4_1.option);
+
+void _ui_init_g_4_1() {
+    ui_g_4_1.option.figure_name[0] = 0;
+    ui_g_4_1.option.figure_name[1] = 3;
+    ui_g_4_1.option.figure_name[2] = 1;
+    ui_g_4_1.option.operate_type = 1;
+
+    ui_g_4_leg_right_big_warning->figure_type = 7;
+    ui_g_4_leg_right_big_warning->operate_type = 1;
+    ui_g_4_leg_right_big_warning->layer = 0;
+    ui_g_4_leg_right_big_warning->color = 8;
+    ui_g_4_leg_right_big_warning->start_x = 1574;
+    ui_g_4_leg_right_big_warning->start_y = 599;
+    ui_g_4_leg_right_big_warning->width = 2;
+    ui_g_4_leg_right_big_warning->font_size = 20;
+    ui_g_4_leg_right_big_warning->str_length = 10;
+    strcpy(ui_g_4_leg_right_big_warning->string, "leg_rb_off");
+
+
+    ui_proc_string_frame(&ui_g_4_1);
+    SEND_MESSAGE((uint8_t *) &ui_g_4_1, sizeof(ui_g_4_1));
+}
+
+void _ui_update_g_4_1() {
+    ui_g_4_1.option.operate_type = 2;
+
+    ui_proc_string_frame(&ui_g_4_1);
+    SEND_MESSAGE((uint8_t *) &ui_g_4_1, sizeof(ui_g_4_1));
+}
+
+void _ui_remove_g_4_1() {
+    ui_g_4_1.option.operate_type = 3;
+
+    ui_proc_string_frame(&ui_g_4_1);
+    SEND_MESSAGE((uint8_t *) &ui_g_4_1, sizeof(ui_g_4_1));
+}
+ui_string_frame_t ui_g_4_2;
+ui_interface_string_t* ui_g_4_leg_right_small_warning = &(ui_g_4_2.option);
+
+void _ui_init_g_4_2() {
+    ui_g_4_2.option.figure_name[0] = 0;
+    ui_g_4_2.option.figure_name[1] = 3;
+    ui_g_4_2.option.figure_name[2] = 2;
+    ui_g_4_2.option.operate_type = 1;
+
+    ui_g_4_leg_right_small_warning->figure_type = 7;
+    ui_g_4_leg_right_small_warning->operate_type = 1;
+    ui_g_4_leg_right_small_warning->layer = 0;
+    ui_g_4_leg_right_small_warning->color = 8;
+    ui_g_4_leg_right_small_warning->start_x = 1574;
+    ui_g_4_leg_right_small_warning->start_y = 565;
+    ui_g_4_leg_right_small_warning->width = 2;
+    ui_g_4_leg_right_small_warning->font_size = 20;
+    ui_g_4_leg_right_small_warning->str_length = 10;
+    strcpy(ui_g_4_leg_right_small_warning->string, "leg_rs_off");
+
+
+    ui_proc_string_frame(&ui_g_4_2);
+    SEND_MESSAGE((uint8_t *) &ui_g_4_2, sizeof(ui_g_4_2));
+}
+
+void _ui_update_g_4_2() {
+    ui_g_4_2.option.operate_type = 2;
+
+    ui_proc_string_frame(&ui_g_4_2);
+    SEND_MESSAGE((uint8_t *) &ui_g_4_2, sizeof(ui_g_4_2));
+}
+
+void _ui_remove_g_4_2() {
+    ui_g_4_2.option.operate_type = 3;
+
+    ui_proc_string_frame(&ui_g_4_2);
+    SEND_MESSAGE((uint8_t *) &ui_g_4_2, sizeof(ui_g_4_2));
+}
+ui_string_frame_t ui_g_4_3;
+ui_interface_string_t* ui_g_4_yaw_warning = &(ui_g_4_3.option);
+
+void _ui_init_g_4_3() {
+    ui_g_4_3.option.figure_name[0] = 0;
+    ui_g_4_3.option.figure_name[1] = 3;
+    ui_g_4_3.option.figure_name[2] = 3;
+    ui_g_4_3.option.operate_type = 1;
+
+    ui_g_4_yaw_warning->figure_type = 7;
+    ui_g_4_yaw_warning->operate_type = 1;
+    ui_g_4_yaw_warning->layer = 0;
+    ui_g_4_yaw_warning->color = 8;
+    ui_g_4_yaw_warning->start_x = 1567;
+    ui_g_4_yaw_warning->start_y = 530;
+    ui_g_4_yaw_warning->width = 2;
+    ui_g_4_yaw_warning->font_size = 20;
+    ui_g_4_yaw_warning->str_length = 7;
+    strcpy(ui_g_4_yaw_warning->string, "yaw_off");
+
+
+    ui_proc_string_frame(&ui_g_4_3);
+    SEND_MESSAGE((uint8_t *) &ui_g_4_3, sizeof(ui_g_4_3));
+}
+
+void _ui_update_g_4_3() {
+    ui_g_4_3.option.operate_type = 2;
+
+    ui_proc_string_frame(&ui_g_4_3);
+    SEND_MESSAGE((uint8_t *) &ui_g_4_3, sizeof(ui_g_4_3));
+}
+
+void _ui_remove_g_4_3() {
+    ui_g_4_3.option.operate_type = 3;
+
+    ui_proc_string_frame(&ui_g_4_3);
+    SEND_MESSAGE((uint8_t *) &ui_g_4_3, sizeof(ui_g_4_3));
+}
+ui_string_frame_t ui_g_4_4;
+ui_interface_string_t* ui_g_4_pit_warning = &(ui_g_4_4.option);
+
+void _ui_init_g_4_4() {
+    ui_g_4_4.option.figure_name[0] = 0;
+    ui_g_4_4.option.figure_name[1] = 3;
+    ui_g_4_4.option.figure_name[2] = 4;
+    ui_g_4_4.option.operate_type = 1;
+
+    ui_g_4_pit_warning->figure_type = 7;
+    ui_g_4_pit_warning->operate_type = 1;
+    ui_g_4_pit_warning->layer = 0;
+    ui_g_4_pit_warning->color = 8;
+    ui_g_4_pit_warning->start_x = 1569;
+    ui_g_4_pit_warning->start_y = 496;
+    ui_g_4_pit_warning->width = 2;
+    ui_g_4_pit_warning->font_size = 20;
+    ui_g_4_pit_warning->str_length = 7;
+    strcpy(ui_g_4_pit_warning->string, "pit_off");
+
+
+    ui_proc_string_frame(&ui_g_4_4);
+    SEND_MESSAGE((uint8_t *) &ui_g_4_4, sizeof(ui_g_4_4));
+}
+
+void _ui_update_g_4_4() {
+    ui_g_4_4.option.operate_type = 2;
+
+    ui_proc_string_frame(&ui_g_4_4);
+    SEND_MESSAGE((uint8_t *) &ui_g_4_4, sizeof(ui_g_4_4));
+}
+
+void _ui_remove_g_4_4() {
+    ui_g_4_4.option.operate_type = 3;
+
+    ui_proc_string_frame(&ui_g_4_4);
+    SEND_MESSAGE((uint8_t *) &ui_g_4_4, sizeof(ui_g_4_4));
+}
+ui_string_frame_t ui_g_4_5;
+ui_interface_string_t* ui_g_4_gimbal_imu_warning = &(ui_g_4_5.option);
+
+void _ui_init_g_4_5() {
+    ui_g_4_5.option.figure_name[0] = 0;
+    ui_g_4_5.option.figure_name[1] = 3;
+    ui_g_4_5.option.figure_name[2] = 5;
+    ui_g_4_5.option.operate_type = 1;
+
+    ui_g_4_gimbal_imu_warning->figure_type = 7;
+    ui_g_4_gimbal_imu_warning->operate_type = 1;
+    ui_g_4_gimbal_imu_warning->layer = 0;
+    ui_g_4_gimbal_imu_warning->color = 8;
+    ui_g_4_gimbal_imu_warning->start_x = 1569;
+    ui_g_4_gimbal_imu_warning->start_y = 461;
+    ui_g_4_gimbal_imu_warning->width = 2;
+    ui_g_4_gimbal_imu_warning->font_size = 20;
+    ui_g_4_gimbal_imu_warning->str_length = 9;
+    strcpy(ui_g_4_gimbal_imu_warning->string, "g_imu_off");
+
+
+    ui_proc_string_frame(&ui_g_4_5);
+    SEND_MESSAGE((uint8_t *) &ui_g_4_5, sizeof(ui_g_4_5));
+}
+
+void _ui_update_g_4_5() {
+    ui_g_4_5.option.operate_type = 2;
+
+    ui_proc_string_frame(&ui_g_4_5);
+    SEND_MESSAGE((uint8_t *) &ui_g_4_5, sizeof(ui_g_4_5));
+}
+
+void _ui_remove_g_4_5() {
+    ui_g_4_5.option.operate_type = 3;
+
+    ui_proc_string_frame(&ui_g_4_5);
+    SEND_MESSAGE((uint8_t *) &ui_g_4_5, sizeof(ui_g_4_5));
+}
 
 void ui_init_g_4() {
     _ui_init_g_4_0();
+    _ui_init_g_4_1();
+    _ui_init_g_4_2();
+    _ui_init_g_4_3();
+    _ui_init_g_4_4();
+    _ui_init_g_4_5();
 }
 
 void ui_update_g_4() {
     _ui_update_g_4_0();
+    _ui_update_g_4_1();
+    _ui_update_g_4_2();
+    _ui_update_g_4_3();
+    _ui_update_g_4_4();
+    _ui_update_g_4_5();
 }
 
 void ui_remove_g_4() {
     _ui_remove_g_4_0();
+    _ui_remove_g_4_1();
+    _ui_remove_g_4_2();
+    _ui_remove_g_4_3();
+    _ui_remove_g_4_4();
+    _ui_remove_g_4_5();
 }
 
-ui_2_frame_t ui_g_5_0;
+ui_5_frame_t ui_g_5_0;
 
 ui_interface_number_t *ui_g_5_left_lazer = (ui_interface_number_t*)&(ui_g_5_0.data[0]);
 ui_interface_number_t *ui_g_5_right_lazer = (ui_interface_number_t*)&(ui_g_5_0.data[1]);
+ui_interface_number_t *ui_g_5_left_leg_length = (ui_interface_number_t*)&(ui_g_5_0.data[2]);
+ui_interface_number_t *ui_g_5_right_leg_length = (ui_interface_number_t*)&(ui_g_5_0.data[3]);
 
 void _ui_init_g_5_0() {
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 4; i++) {
         ui_g_5_0.data[i].figure_name[0] = 0;
         ui_g_5_0.data[i].figure_name[1] = 4;
         ui_g_5_0.data[i].figure_name[2] = i + 0;
         ui_g_5_0.data[i].operate_type = 1;
     }
-    for (int i = 2; i < 2; i++) {
+    for (int i = 4; i < 5; i++) {
         ui_g_5_0.data[i].operate_type = 0;
     }
 
@@ -656,26 +863,46 @@ void _ui_init_g_5_0() {
     ui_g_5_right_lazer->font_size = 25;
     ui_g_5_right_lazer->number = 65535000;
 
+    ui_g_5_left_leg_length->figure_type = 5;
+    ui_g_5_left_leg_length->operate_type = 1;
+    ui_g_5_left_leg_length->layer = 0;
+    ui_g_5_left_leg_length->color = 5;
+    ui_g_5_left_leg_length->start_x = 131;
+    ui_g_5_left_leg_length->start_y = 556;
+    ui_g_5_left_leg_length->width = 2;
+    ui_g_5_left_leg_length->font_size = 20;
+    ui_g_5_left_leg_length->number = 160;
 
-    ui_proc_2_frame(&ui_g_5_0);
+    ui_g_5_right_leg_length->figure_type = 5;
+    ui_g_5_right_leg_length->operate_type = 1;
+    ui_g_5_right_leg_length->layer = 0;
+    ui_g_5_right_leg_length->color = 1;
+    ui_g_5_right_leg_length->start_x = 130;
+    ui_g_5_right_leg_length->start_y = 596;
+    ui_g_5_right_leg_length->width = 2;
+    ui_g_5_right_leg_length->font_size = 20;
+    ui_g_5_right_leg_length->number = 160;
+
+
+    ui_proc_5_frame(&ui_g_5_0);
     SEND_MESSAGE((uint8_t *) &ui_g_5_0, sizeof(ui_g_5_0));
 }
 
 void _ui_update_g_5_0() {
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 4; i++) {
         ui_g_5_0.data[i].operate_type = 2;
     }
 
-    ui_proc_2_frame(&ui_g_5_0);
+    ui_proc_5_frame(&ui_g_5_0);
     SEND_MESSAGE((uint8_t *) &ui_g_5_0, sizeof(ui_g_5_0));
 }
 
 void _ui_remove_g_5_0() {
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 4; i++) {
         ui_g_5_0.data[i].operate_type = 3;
     }
 
-    ui_proc_2_frame(&ui_g_5_0);
+    ui_proc_5_frame(&ui_g_5_0);
     SEND_MESSAGE((uint8_t *) &ui_g_5_0, sizeof(ui_g_5_0));
 }
 
@@ -685,7 +912,7 @@ ui_interface_string_t* ui_g_5_distance = &(ui_g_5_1.option);
 void _ui_init_g_5_1() {
     ui_g_5_1.option.figure_name[0] = 0;
     ui_g_5_1.option.figure_name[1] = 4;
-    ui_g_5_1.option.figure_name[2] = 2;
+    ui_g_5_1.option.figure_name[2] = 4;
     ui_g_5_1.option.operate_type = 1;
 
     ui_g_5_distance->figure_type = 7;
@@ -717,19 +944,358 @@ void _ui_remove_g_5_1() {
     ui_proc_string_frame(&ui_g_5_1);
     SEND_MESSAGE((uint8_t *) &ui_g_5_1, sizeof(ui_g_5_1));
 }
+ui_string_frame_t ui_g_5_2;
+ui_interface_string_t* ui_g_5_leg_length = &(ui_g_5_2.option);
+
+void _ui_init_g_5_2() {
+    ui_g_5_2.option.figure_name[0] = 0;
+    ui_g_5_2.option.figure_name[1] = 4;
+    ui_g_5_2.option.figure_name[2] = 5;
+    ui_g_5_2.option.operate_type = 1;
+
+    ui_g_5_leg_length->figure_type = 7;
+    ui_g_5_leg_length->operate_type = 1;
+    ui_g_5_leg_length->layer = 0;
+    ui_g_5_leg_length->color = 2;
+    ui_g_5_leg_length->start_x = 116;
+    ui_g_5_leg_length->start_y = 638;
+    ui_g_5_leg_length->width = 2;
+    ui_g_5_leg_length->font_size = 20;
+    ui_g_5_leg_length->str_length = 6;
+    strcpy(ui_g_5_leg_length->string, "length");
+
+
+    ui_proc_string_frame(&ui_g_5_2);
+    SEND_MESSAGE((uint8_t *) &ui_g_5_2, sizeof(ui_g_5_2));
+}
+
+void _ui_update_g_5_2() {
+    ui_g_5_2.option.operate_type = 2;
+
+    ui_proc_string_frame(&ui_g_5_2);
+    SEND_MESSAGE((uint8_t *) &ui_g_5_2, sizeof(ui_g_5_2));
+}
+
+void _ui_remove_g_5_2() {
+    ui_g_5_2.option.operate_type = 3;
+
+    ui_proc_string_frame(&ui_g_5_2);
+    SEND_MESSAGE((uint8_t *) &ui_g_5_2, sizeof(ui_g_5_2));
+}
 
 void ui_init_g_5() {
     _ui_init_g_5_0();
     _ui_init_g_5_1();
+    _ui_init_g_5_2();
 }
 
 void ui_update_g_5() {
     _ui_update_g_5_0();
-    _ui_update_g_5_1();
+    // _ui_update_g_5_1();
+    // _ui_update_g_5_2();
 }
 
 void ui_remove_g_5() {
     _ui_remove_g_5_0();
     _ui_remove_g_5_1();
+    _ui_remove_g_5_2();
+}
+
+
+ui_string_frame_t ui_g_6_0;
+ui_interface_string_t* ui_g_6_fric_left_warning = &(ui_g_6_0.option);
+
+void _ui_init_g_6_0() {
+    ui_g_6_0.option.figure_name[0] = 0;
+    ui_g_6_0.option.figure_name[1] = 5;
+    ui_g_6_0.option.figure_name[2] = 0;
+    ui_g_6_0.option.operate_type = 1;
+
+    ui_g_6_fric_left_warning->figure_type = 7;
+    ui_g_6_fric_left_warning->operate_type = 1;
+    ui_g_6_fric_left_warning->layer = 0;
+    ui_g_6_fric_left_warning->color = 8;
+    ui_g_6_fric_left_warning->start_x = 1583;
+    ui_g_6_fric_left_warning->start_y = 846;
+    ui_g_6_fric_left_warning->width = 2;
+    ui_g_6_fric_left_warning->font_size = 20;
+    ui_g_6_fric_left_warning->str_length = 10;
+    strcpy(ui_g_6_fric_left_warning->string, "fric_l_off");
+
+
+    ui_proc_string_frame(&ui_g_6_0);
+    SEND_MESSAGE((uint8_t *) &ui_g_6_0, sizeof(ui_g_6_0));
+}
+
+void _ui_update_g_6_0() {
+    ui_g_6_0.option.operate_type = 2;
+
+    ui_proc_string_frame(&ui_g_6_0);
+    SEND_MESSAGE((uint8_t *) &ui_g_6_0, sizeof(ui_g_6_0));
+}
+
+void _ui_remove_g_6_0() {
+    ui_g_6_0.option.operate_type = 3;
+
+    ui_proc_string_frame(&ui_g_6_0);
+    SEND_MESSAGE((uint8_t *) &ui_g_6_0, sizeof(ui_g_6_0));
+}
+ui_string_frame_t ui_g_6_1;
+ui_interface_string_t* ui_g_6_fric_right_warning = &(ui_g_6_1.option);
+
+void _ui_init_g_6_1() {
+    ui_g_6_1.option.figure_name[0] = 0;
+    ui_g_6_1.option.figure_name[1] = 5;
+    ui_g_6_1.option.figure_name[2] = 1;
+    ui_g_6_1.option.operate_type = 1;
+
+    ui_g_6_fric_right_warning->figure_type = 7;
+    ui_g_6_fric_right_warning->operate_type = 1;
+    ui_g_6_fric_right_warning->layer = 0;
+    ui_g_6_fric_right_warning->color = 8;
+    ui_g_6_fric_right_warning->start_x = 1583;
+    ui_g_6_fric_right_warning->start_y = 808;
+    ui_g_6_fric_right_warning->width = 2;
+    ui_g_6_fric_right_warning->font_size = 20;
+    ui_g_6_fric_right_warning->str_length = 10;
+    strcpy(ui_g_6_fric_right_warning->string, "fric_r_off");
+
+
+    ui_proc_string_frame(&ui_g_6_1);
+    SEND_MESSAGE((uint8_t *) &ui_g_6_1, sizeof(ui_g_6_1));
+}
+
+void _ui_update_g_6_1() {
+    ui_g_6_1.option.operate_type = 2;
+
+    ui_proc_string_frame(&ui_g_6_1);
+    SEND_MESSAGE((uint8_t *) &ui_g_6_1, sizeof(ui_g_6_1));
+}
+
+void _ui_remove_g_6_1() {
+    ui_g_6_1.option.operate_type = 3;
+
+    ui_proc_string_frame(&ui_g_6_1);
+    SEND_MESSAGE((uint8_t *) &ui_g_6_1, sizeof(ui_g_6_1));
+}
+ui_string_frame_t ui_g_6_2;
+ui_interface_string_t* ui_g_6_trigger_warning = &(ui_g_6_2.option);
+
+void _ui_init_g_6_2() {
+    ui_g_6_2.option.figure_name[0] = 0;
+    ui_g_6_2.option.figure_name[1] = 5;
+    ui_g_6_2.option.figure_name[2] = 2;
+    ui_g_6_2.option.operate_type = 1;
+
+    ui_g_6_trigger_warning->figure_type = 7;
+    ui_g_6_trigger_warning->operate_type = 1;
+    ui_g_6_trigger_warning->layer = 0;
+    ui_g_6_trigger_warning->color = 8;
+    ui_g_6_trigger_warning->start_x = 1577;
+    ui_g_6_trigger_warning->start_y = 769;
+    ui_g_6_trigger_warning->width = 2;
+    ui_g_6_trigger_warning->font_size = 20;
+    ui_g_6_trigger_warning->str_length = 11;
+    strcpy(ui_g_6_trigger_warning->string, "trigger_off");
+
+
+    ui_proc_string_frame(&ui_g_6_2);
+    SEND_MESSAGE((uint8_t *) &ui_g_6_2, sizeof(ui_g_6_2));
+}
+
+void _ui_update_g_6_2() {
+    ui_g_6_2.option.operate_type = 2;
+
+    ui_proc_string_frame(&ui_g_6_2);
+    SEND_MESSAGE((uint8_t *) &ui_g_6_2, sizeof(ui_g_6_2));
+}
+
+void _ui_remove_g_6_2() {
+    ui_g_6_2.option.operate_type = 3;
+
+    ui_proc_string_frame(&ui_g_6_2);
+    SEND_MESSAGE((uint8_t *) &ui_g_6_2, sizeof(ui_g_6_2));
+}
+ui_string_frame_t ui_g_6_3;
+ui_interface_string_t* ui_g_6_wheel_left_warning = &(ui_g_6_3.option);
+
+void _ui_init_g_6_3() {
+    ui_g_6_3.option.figure_name[0] = 0;
+    ui_g_6_3.option.figure_name[1] = 5;
+    ui_g_6_3.option.figure_name[2] = 3;
+    ui_g_6_3.option.operate_type = 1;
+
+    ui_g_6_wheel_left_warning->figure_type = 7;
+    ui_g_6_wheel_left_warning->operate_type = 1;
+    ui_g_6_wheel_left_warning->layer = 0;
+    ui_g_6_wheel_left_warning->color = 8;
+    ui_g_6_wheel_left_warning->start_x = 1578;
+    ui_g_6_wheel_left_warning->start_y = 736;
+    ui_g_6_wheel_left_warning->width = 2;
+    ui_g_6_wheel_left_warning->font_size = 20;
+    ui_g_6_wheel_left_warning->str_length = 11;
+    strcpy(ui_g_6_wheel_left_warning->string, "wheel_l_off");
+
+
+    ui_proc_string_frame(&ui_g_6_3);
+    SEND_MESSAGE((uint8_t *) &ui_g_6_3, sizeof(ui_g_6_3));
+}
+
+void _ui_update_g_6_3() {
+    ui_g_6_3.option.operate_type = 2;
+
+    ui_proc_string_frame(&ui_g_6_3);
+    SEND_MESSAGE((uint8_t *) &ui_g_6_3, sizeof(ui_g_6_3));
+}
+
+void _ui_remove_g_6_3() {
+    ui_g_6_3.option.operate_type = 3;
+
+    ui_proc_string_frame(&ui_g_6_3);
+    SEND_MESSAGE((uint8_t *) &ui_g_6_3, sizeof(ui_g_6_3));
+}
+ui_string_frame_t ui_g_6_4;
+ui_interface_string_t* ui_g_6_wheel_right_warning = &(ui_g_6_4.option);
+
+void _ui_init_g_6_4() {
+    ui_g_6_4.option.figure_name[0] = 0;
+    ui_g_6_4.option.figure_name[1] = 5;
+    ui_g_6_4.option.figure_name[2] = 4;
+    ui_g_6_4.option.operate_type = 1;
+
+    ui_g_6_wheel_right_warning->figure_type = 7;
+    ui_g_6_wheel_right_warning->operate_type = 1;
+    ui_g_6_wheel_right_warning->layer = 0;
+    ui_g_6_wheel_right_warning->color = 8;
+    ui_g_6_wheel_right_warning->start_x = 1575;
+    ui_g_6_wheel_right_warning->start_y = 702;
+    ui_g_6_wheel_right_warning->width = 2;
+    ui_g_6_wheel_right_warning->font_size = 20;
+    ui_g_6_wheel_right_warning->str_length = 11;
+    strcpy(ui_g_6_wheel_right_warning->string, "wheel_r_off");
+
+
+    ui_proc_string_frame(&ui_g_6_4);
+    SEND_MESSAGE((uint8_t *) &ui_g_6_4, sizeof(ui_g_6_4));
+}
+
+void _ui_update_g_6_4() {
+    ui_g_6_4.option.operate_type = 2;
+
+    ui_proc_string_frame(&ui_g_6_4);
+    SEND_MESSAGE((uint8_t *) &ui_g_6_4, sizeof(ui_g_6_4));
+}
+
+void _ui_remove_g_6_4() {
+    ui_g_6_4.option.operate_type = 3;
+
+    ui_proc_string_frame(&ui_g_6_4);
+    SEND_MESSAGE((uint8_t *) &ui_g_6_4, sizeof(ui_g_6_4));
+}
+ui_string_frame_t ui_g_6_5;
+ui_interface_string_t* ui_g_6_leg_left_big_warning = &(ui_g_6_5.option);
+
+void _ui_init_g_6_5() {
+    ui_g_6_5.option.figure_name[0] = 0;
+    ui_g_6_5.option.figure_name[1] = 5;
+    ui_g_6_5.option.figure_name[2] = 5;
+    ui_g_6_5.option.operate_type = 1;
+
+    ui_g_6_leg_left_big_warning->figure_type = 7;
+    ui_g_6_leg_left_big_warning->operate_type = 1;
+    ui_g_6_leg_left_big_warning->layer = 0;
+    ui_g_6_leg_left_big_warning->color = 8;
+    ui_g_6_leg_left_big_warning->start_x = 1575;
+    ui_g_6_leg_left_big_warning->start_y = 665;
+    ui_g_6_leg_left_big_warning->width = 2;
+    ui_g_6_leg_left_big_warning->font_size = 20;
+    ui_g_6_leg_left_big_warning->str_length = 10;
+    strcpy(ui_g_6_leg_left_big_warning->string, "leg_lb_off");
+
+
+    ui_proc_string_frame(&ui_g_6_5);
+    SEND_MESSAGE((uint8_t *) &ui_g_6_5, sizeof(ui_g_6_5));
+}
+
+void _ui_update_g_6_5() {
+    ui_g_6_5.option.operate_type = 2;
+
+    ui_proc_string_frame(&ui_g_6_5);
+    SEND_MESSAGE((uint8_t *) &ui_g_6_5, sizeof(ui_g_6_5));
+}
+
+void _ui_remove_g_6_5() {
+    ui_g_6_5.option.operate_type = 3;
+
+    ui_proc_string_frame(&ui_g_6_5);
+    SEND_MESSAGE((uint8_t *) &ui_g_6_5, sizeof(ui_g_6_5));
+}
+ui_string_frame_t ui_g_6_6;
+ui_interface_string_t* ui_g_6_leg_left_small_warning = &(ui_g_6_6.option);
+
+void _ui_init_g_6_6() {
+    ui_g_6_6.option.figure_name[0] = 0;
+    ui_g_6_6.option.figure_name[1] = 5;
+    ui_g_6_6.option.figure_name[2] = 6;
+    ui_g_6_6.option.operate_type = 1;
+
+    ui_g_6_leg_left_small_warning->figure_type = 7;
+    ui_g_6_leg_left_small_warning->operate_type = 1;
+    ui_g_6_leg_left_small_warning->layer = 0;
+    ui_g_6_leg_left_small_warning->color = 8;
+    ui_g_6_leg_left_small_warning->start_x = 1575;
+    ui_g_6_leg_left_small_warning->start_y = 633;
+    ui_g_6_leg_left_small_warning->width = 2;
+    ui_g_6_leg_left_small_warning->font_size = 20;
+    ui_g_6_leg_left_small_warning->str_length = 10;
+    strcpy(ui_g_6_leg_left_small_warning->string, "leg_ls_off");
+
+
+    ui_proc_string_frame(&ui_g_6_6);
+    SEND_MESSAGE((uint8_t *) &ui_g_6_6, sizeof(ui_g_6_6));
+}
+
+void _ui_update_g_6_6() {
+    ui_g_6_6.option.operate_type = 2;
+
+    ui_proc_string_frame(&ui_g_6_6);
+    SEND_MESSAGE((uint8_t *) &ui_g_6_6, sizeof(ui_g_6_6));
+}
+
+void _ui_remove_g_6_6() {
+    ui_g_6_6.option.operate_type = 3;
+
+    ui_proc_string_frame(&ui_g_6_6);
+    SEND_MESSAGE((uint8_t *) &ui_g_6_6, sizeof(ui_g_6_6));
+}
+
+void ui_init_g_6() {
+    _ui_init_g_6_0();
+    _ui_init_g_6_1();
+    _ui_init_g_6_2();
+    _ui_init_g_6_3();
+    _ui_init_g_6_4();
+    _ui_init_g_6_5();
+    _ui_init_g_6_6();
+}
+
+void ui_update_g_6() {
+    _ui_update_g_6_0();
+    _ui_update_g_6_1();
+    _ui_update_g_6_2();
+    _ui_update_g_6_3();
+    _ui_update_g_6_4();
+    _ui_update_g_6_5();
+    _ui_update_g_6_6();
+}
+
+void ui_remove_g_6() {
+    _ui_remove_g_6_0();
+    _ui_remove_g_6_1();
+    _ui_remove_g_6_2();
+    _ui_remove_g_6_3();
+    _ui_remove_g_6_4();
+    _ui_remove_g_6_5();
+    _ui_remove_g_6_6();
 }
 

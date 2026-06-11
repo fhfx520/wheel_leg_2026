@@ -208,7 +208,7 @@ typedef struct
 	uint8_t pit_online : 1;
 	uint8_t imu_online : 1;
 	uint8_t vtm_online : 1;
-	uint8_t fric_online : 2;//0表示全部在线 1表示右离线 2表示左离线
+	uint8_t fric_online : 2;//0都在线 1右离线 2左离线 3都离线
 	uint8_t reserved : 2;
 }online_data_t;//在线数据
 

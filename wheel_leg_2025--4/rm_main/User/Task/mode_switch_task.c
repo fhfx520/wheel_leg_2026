@@ -46,7 +46,8 @@ static void online_data_cb(uint32_t tag_id, void* data, size_t len) {
 // --- 回调配置表  ---
 static const ContainerBusCfg mb_callback[] = {
 	{ TAG_VTM_REMOTE_DATA, remote_data_cb, NULL },
-    { TAG_VTM_KEYBOARD_DATA, keyboard_data_cb, NULL }
+    { TAG_VTM_KEYBOARD_DATA, keyboard_data_cb, NULL },
+	{ TAG_ONLINE_DATA, online_data_cb, NULL },
 };
 
 

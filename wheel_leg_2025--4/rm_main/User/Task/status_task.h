@@ -10,7 +10,8 @@ typedef struct {
     uint16_t power      :1;
     uint16_t imu        :2;// 0-2 3
 	uint16_t board_comm :1;
-    uint16_t dji_motor  :4;// 0-7 8
+    uint16_t dji_motor  :2;// 0-7 8
+    uint16_t lk_motor   :2;
     uint16_t dm_motor   :4;// 0-4 5
     uint16_t all        :1;
     struct

@@ -6,6 +6,7 @@
 #include "wlr.h"
 #include "drv_dji_motor.h"
 #include "drv_dm_motor.h"
+#include "drv_lk_motor.h"
 #include "prot_dr16.h"
 #include "prot_imu.h"
 #include "prot_judge.h"
@@ -44,10 +45,11 @@ void status_task(void const* argument)
 		status.board_comm = board_comm_check_offline();
         status.dji_motor = dji_motor_check_offline();
         status.dm_motor = dm_motor_check_offline();
+        status.lk_motor = lk_check_offline();
         
         if (status.remote == 1 && status.vision == 1 && status.judge == 1 && \
             status.power == 1 && status.imu == 1 && status.dji_motor == 0 && \
-            status.dm_motor == 1) {
+            status.dm_motor == 1 && status.board_comm == 1 && status.lk_motor == 1) {
             status.all = 1;
         } else {
             status.all = 0;

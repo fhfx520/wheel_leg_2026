@@ -47,8 +47,14 @@ void fdcan_board_comm_send(void)
 	fdcan_board_comm.tx_msg.e.online_data.pit_online = status.dm_motor;
 	fdcan_board_comm.tx_msg.e.online_data.imu_online = status.imu;
 	fdcan_board_comm.tx_msg.e.online_data.vtm_online = status.vtm;
-	fdcan_board_comm.tx_msg.e.online_data.fric_online = 
-	((fric_motor[0].online && fric_motor[1].online) ? 0 : ((fric_motor[0].online) ? 1 : 2));
+	if(fric_motor[0].online && fric_motor[1].online)
+		fdcan_board_comm.tx_msg.e.online_data.fric_online = 0;
+	else if(!fric_motor[0].online && fric_motor[1].online)
+		fdcan_board_comm.tx_msg.e.online_data.fric_online = 1;
+	else if(fric_motor[0].online && !fric_motor[1].online)
+		fdcan_board_comm.tx_msg.e.online_data.fric_online = 2;
+	else
+		fdcan_board_comm.tx_msg.e.online_data.fric_online = 3;
 	//联合体数组发送
 	can_std_transmit(CAN_CHANNEL_1,FDCAN_GIMBAL_TO_CHA_ID,fdcan_board_comm.tx_msg.buff);
 	

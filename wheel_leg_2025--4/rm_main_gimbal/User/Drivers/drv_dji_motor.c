@@ -197,6 +197,7 @@ void dji_motor_output_data(void)
 uint8_t dji_motor_check_offline(void)
 {
     uint8_t index = 0;
+	uint8_t offline_id = 0;
     list_t *node = NULL;
     dji_motor_t *object;
     uint32_t current_tick = HAL_GetTick();
@@ -207,8 +208,8 @@ uint8_t dji_motor_check_offline(void)
             object->online = 1;
         else {
             object->online = 0; 
-            return index;
+            offline_id = index;
         }
     }
-    return 0;
+    return offline_id;
 }
