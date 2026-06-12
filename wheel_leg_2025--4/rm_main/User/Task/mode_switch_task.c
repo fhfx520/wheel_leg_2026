@@ -239,7 +239,7 @@ void mode_switch_task(void const *argu)
 		//运行 FSM 大脑 解锁后激活 否则一直保护
 		if(lock_flag && status.dji_motor == 0)//解锁了且轮电机在线
 			robot_logic_update((const RC_Ctrl_t*)&rc);
-		else if(lock_flag && status.dji_motor == 1)//解锁了但轮电机离线
+		else if(lock_flag && (status.dji_motor == 2 || status.dji_motor == 3))//解锁了但轮电机离线
 		{
 			robot_logic_update((const RC_Ctrl_t*)&rc);
 			g_robot_ctx.output.chassis = CHASSIS_STOP;

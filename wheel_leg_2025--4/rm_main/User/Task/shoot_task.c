@@ -437,9 +437,9 @@ static void shoot_mode_switch(void)
         shoot.trigger_period = (Heat_ShootPeriod_calc(shoot_get_vision_data_container.vision_trace_id) > 200.0f ? 200.0f : Heat_ShootPeriod_calc(shoot_get_vision_data_container.vision_trace_id));
 	}
 	else if(ctrl_mode == REMOTER_MODE && rc_fsm_check(RC_LEFT_LD) && rc_fsm_check(RC_RIGHT_RD))
-		shoot.trigger_period = 100;
+		shoot.trigger_period = 200;
     else
-        shoot.trigger_period = 100;
+        shoot.trigger_period = 200;
 
     /* 3. 解析 FSM 大脑的组合状态 */
     switch (g_robot_ctx.output.shoot) {

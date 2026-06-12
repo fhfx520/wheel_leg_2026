@@ -43,8 +43,6 @@ static online_data_t ui_get_online_data_container;
 
 float armour_center,start_angle,end_angle;
 
-uint8_t last_group4_online_status[5];
-uint8_t last_group6_online_status[6];
 uint8_t last_rotate_flag;
 
 // 收到vision数据：
@@ -73,9 +71,10 @@ static int8_t ui_sign_function(void)
 }
 
 void replace_letters_with_spaces(char *str) {
-    if (str == NULL) return; // 防止传入空指针
+    if (str == NULL) 
+		return; // 防止传入空指针
 
-    for (int i = 0; str[i] != '\0'; ++i) {
+    for (uint8_t i = 0; str[i] != '\0'; i++) {
         // 如果当前字符是字母，则替换成空格
         if (isalpha(str[i]) || str[i] == '_' || str[i] == '!') {
             str[i] = ' ';
@@ -271,79 +270,107 @@ void ui_update(void)
 	//ui_group2 update end
 	
 	//ui_group4 update begin
-	if(last_rotate_flag < rotate_flag)//上升沿 0-1
+	if(rotate_flag == 0)//上升沿 0-1
 	{
-		replace_letters_with_spaces(ui_g_4_spin_warning->string);
-		_ui_update_spin_warning();
+		if(ui_g_4_spin_warning->string[0] != 'P')
+		{
+			strcpy(ui_g_4_spin_warning->string, "PLEASE SPIN!");
+			_ui_update_spin_warning();
+		}
 	}
-	else if(last_rotate_flag > rotate_flag)//下降沿1-0
+	else if(rotate_flag == 1)//下降沿1-0
 	{
-		strcpy(ui_g_4_spin_warning->string, "PLEASE SPIN!");
-		_ui_update_spin_warning();
-	}
-
-	if(last_group4_online_status[0] < joint_motor[2].online)
-	{
-		replace_letters_with_spaces(ui_g_4_leg_right_big_warning->string);
-		_ui_update_leg_rb_offline();
-	}
-	else if(last_group4_online_status[0] > joint_motor[2].online)
-	{
-		strcpy(ui_g_4_leg_right_big_warning->string, "leg_rb_off");
-		_ui_update_leg_rb_offline();
+		if(ui_g_4_spin_warning->string[0] != ' ')
+		{
+			replace_letters_with_spaces(ui_g_4_spin_warning->string);
+			_ui_update_spin_warning();
+		}
 	}
 
-	if(last_group4_online_status[1] < joint_motor[3].online)
+	if(joint_motor[2].online == 0)
 	{
-		replace_letters_with_spaces(ui_g_4_leg_right_small_warning->string);
-		_ui_update_leg_rs_offline();
+		if(ui_g_4_leg_right_big_warning->string[0] != 'l')
+		{
+			strcpy(ui_g_4_leg_right_big_warning->string, "leg_rb_off");
+			_ui_update_leg_rb_offline();
+		}
 	}
-	else if(last_group4_online_status[1] > joint_motor[3].online)
+	else if(joint_motor[2].online == 1)
 	{
-		strcpy(ui_g_4_leg_right_small_warning->string, "leg_rs_off");
-		_ui_update_leg_rs_offline();
-	}
-
-	if(last_group4_online_status[2] < yaw_motor.online)
-	{
-		replace_letters_with_spaces(ui_g_4_yaw_warning->string);
-		_ui_update_yaw_offline();
-	}
-	else if(last_group4_online_status[2] > yaw_motor.online)
-	{
-		strcpy(ui_g_4_yaw_warning->string, "yaw_off");
-		_ui_update_yaw_offline();
+		if(ui_g_4_leg_right_big_warning->string[0] != ' ')
+		{
+			replace_letters_with_spaces(ui_g_4_leg_right_big_warning->string);
+			_ui_update_leg_rb_offline();
+		}
 	}
 
-	if(last_group4_online_status[3] < ui_get_online_data_container.pit_online)
+	if(joint_motor[3].online == 0)
 	{
-		replace_letters_with_spaces(ui_g_4_pit_warning->string);
-		_ui_update_pit_offline();
+		if(ui_g_4_leg_right_small_warning->string[0] != 'l')
+		{
+			strcpy(ui_g_4_leg_right_small_warning->string, "leg_rs_off");
+			_ui_update_leg_rs_offline();
+		}
 	}
-	else if(last_group4_online_status[3] > ui_get_online_data_container.pit_online)
+	else if(joint_motor[3].online == 1)
 	{
-		strcpy(ui_g_4_pit_warning->string, "pit_off");
-		_ui_update_pit_offline();
-	}
-
-	if(last_group4_online_status[4] < ui_get_online_data_container.imu_online)
-	{
-		replace_letters_with_spaces(ui_g_4_gimbal_imu_warning->string);
-		_ui_update_gimbal_imu_offline();
-	}
-	else if(last_group4_online_status[4] > ui_get_online_data_container.imu_online)
-	{
-		strcpy(ui_g_4_gimbal_imu_warning->string, "g_imu_off");
-		_ui_update_gimbal_imu_offline();
+		if(ui_g_4_leg_right_small_warning->string[0] != ' ')
+		{
+			replace_letters_with_spaces(ui_g_4_leg_right_small_warning->string);
+			_ui_update_leg_rs_offline();
+		}
 	}
 
+	if(yaw_motor.online == 0)
+	{
+		if(ui_g_4_yaw_warning->string[0] != 'y')
+		{
+			strcpy(ui_g_4_yaw_warning->string, "yaw_off");
+			_ui_update_yaw_offline();
+		}
+	}
+	else if(yaw_motor.online == 1)
+	{
+		if(ui_g_4_yaw_warning->string[0] != ' ')
+		{
+			replace_letters_with_spaces(ui_g_4_yaw_warning->string);
+			_ui_update_yaw_offline();
+		}
+	}
 
-	last_rotate_flag = rotate_flag;
-	last_group4_online_status[0] = joint_motor[2].online;
-	last_group4_online_status[1] = joint_motor[3].online;
-	last_group4_online_status[2] = yaw_motor.online;
-	last_group4_online_status[3] = ui_get_online_data_container.pit_online;
-	last_group4_online_status[4] = ui_get_online_data_container.imu_online;
+	if(ui_get_online_data_container.pit_online == 0)
+	{
+		if(ui_g_4_pit_warning->string[0] != 'p')
+		{
+			strcpy(ui_g_4_pit_warning->string, "pit_off");
+			_ui_update_pit_offline();
+		}
+	}
+	else if(ui_get_online_data_container.pit_online == 1)
+	{
+		if(ui_g_4_pit_warning->string[0] != ' ')
+		{
+			replace_letters_with_spaces(ui_g_4_pit_warning->string);
+			_ui_update_pit_offline();
+		}
+	}
+
+	if(ui_get_online_data_container.imu_online == 0)
+	{
+		if(ui_g_4_gimbal_imu_warning->string[0] != 'g')
+		{
+			strcpy(ui_g_4_gimbal_imu_warning->string, "g_imu_off");
+			_ui_update_gimbal_imu_offline();
+		}
+	}
+	else if(ui_get_online_data_container.imu_online == 1)
+	{
+		if(ui_g_4_gimbal_imu_warning->string[0] != ' ')
+		{
+			replace_letters_with_spaces(ui_g_4_gimbal_imu_warning->string);
+			_ui_update_gimbal_imu_offline();
+		}
+	}
 	//ui_group4 update end
 	
 	//ui_group5 update begin
@@ -355,104 +382,145 @@ void ui_update(void)
 	//ui_group5 update end
 	
 	//ui_group6 update begin
-	switch(ui_get_online_data_container.fric_online)
-	{
-		case 0:
-		{
-			replace_letters_with_spaces(ui_g_6_fric_left_warning->string);
-			replace_letters_with_spaces(ui_g_6_fric_right_warning->string);
-			break;
-		}
-		case 1:
-		{
-			replace_letters_with_spaces(ui_g_6_fric_left_warning->string);
-			strcpy(ui_g_6_fric_right_warning->string, "fric_r_off");
-			break;
-		}
-		case 2:
-		{
-			strcpy(ui_g_6_fric_left_warning->string, "fric_l_off");
-			replace_letters_with_spaces(ui_g_6_fric_right_warning->string);
-			break;
-		}
-		case 3:
-		{
-			strcpy(ui_g_6_fric_left_warning->string, "fric_l_off");
-			strcpy(ui_g_6_fric_right_warning->string, "fric_r_off");
-			break;
-		}
-		default:break;
-	}
 				
-	if(last_group6_online_status[0] != ui_get_online_data_container.fric_online) 
+	if(ui_get_online_data_container.fric_online == 3)
 	{
-		_ui_update_fric_l_offline();
-		_ui_update_fric_r_offline();
+		if(ui_g_6_fric_left_warning->string[0] != 'f')
+		{
+			strcpy(ui_g_6_fric_left_warning->string,"fric_l_off");
+			_ui_update_fric_l_offline();
+		}
+		if(ui_g_6_fric_right_warning->string[0] != 'f')
+		{
+			strcpy(ui_g_6_fric_right_warning->string,"fric_r_off");
+			_ui_update_fric_r_offline();
+		}
+	}
+	else if(ui_get_online_data_container.fric_online == 2)
+	{
+		if(ui_g_6_fric_left_warning->string[0] != 'f')
+		{
+			strcpy(ui_g_6_fric_left_warning->string,"fric_l_off");
+			_ui_update_fric_l_offline();
+		}
+		if(ui_g_6_fric_right_warning->string[0] != ' ')
+		{
+			replace_letters_with_spaces(ui_g_6_fric_right_warning->string);
+			_ui_update_fric_r_offline();
+		}
+	}
+	else if(ui_get_online_data_container.fric_online == 1)
+	{
+		if(ui_g_6_fric_left_warning->string[0] != ' ')
+		{
+			replace_letters_with_spaces(ui_g_6_fric_left_warning->string);
+			_ui_update_fric_l_offline();
+		}
+		if(ui_g_6_fric_right_warning->string[0] != 'f')
+		{
+			strcpy(ui_g_6_fric_right_warning->string,"fric_r_off");
+			_ui_update_fric_r_offline();
+		}
+	}
+	else if(ui_get_online_data_container.fric_online == 0)
+	{
+		if(ui_g_6_fric_left_warning->string[0] != ' ')
+		{
+			replace_letters_with_spaces(ui_g_6_fric_left_warning->string);
+			_ui_update_fric_l_offline();
+		}
+		if(ui_g_6_fric_right_warning->string[0] != ' ')
+		{
+			replace_letters_with_spaces(ui_g_6_fric_right_warning->string);
+			_ui_update_fric_r_offline();
+		}
 	}
 
-	if(last_group6_online_status[1] < trigger_motor.online)
+	if(trigger_motor.online == 0)
 	{
-		replace_letters_with_spaces(ui_g_6_trigger_warning->string);
-		_ui_update_trigger_offline();
+		if(ui_g_6_trigger_warning->string[0] != 't')
+		{
+			strcpy(ui_g_6_trigger_warning->string, "trigger_off");
+			_ui_update_trigger_offline();
+		}
 	}
-	else if(last_group6_online_status[1] > trigger_motor.online)
+	else if(trigger_motor.online == 1)
 	{
-		strcpy(ui_g_6_trigger_warning->string, "trigger_off");
-		_ui_update_trigger_offline();
-	}
-
-	if(last_group6_online_status[2] < driver_motor[0].online)
-	{
-		replace_letters_with_spaces(ui_g_6_wheel_left_warning->string);
-		_ui_update_wheel_l_offline();
-	}
-	else if(last_group6_online_status[2] > driver_motor[0].online)
-	{
-		strcpy(ui_g_6_wheel_left_warning->string, "wheel_l_off");
-		_ui_update_wheel_l_offline();
+		if(ui_g_6_trigger_warning->string[0] != ' ')
+		{
+			replace_letters_with_spaces(ui_g_6_trigger_warning->string);
+			_ui_update_trigger_offline();
+		}
 	}
 
-	if(last_group6_online_status[3] < driver_motor[1].online)
+	if(driver_motor[0].online == 0)
 	{
-		replace_letters_with_spaces(ui_g_6_wheel_right_warning->string);
-		_ui_update_wheel_r_offline();
+		if(ui_g_6_wheel_left_warning->string[0] != 'w')
+		{
+			strcpy(ui_g_6_wheel_left_warning->string, "wheel_l_off");
+			_ui_update_wheel_l_offline();
+		}
 	}
-	else if(last_group6_online_status[3] > driver_motor[1].online)
+	else if(driver_motor[0].online == 1)
 	{
-		strcpy(ui_g_6_wheel_right_warning->string, "wheel_r_off");
-		_ui_update_wheel_r_offline();
-	}
-
-	if(last_group6_online_status[4] < joint_motor[0].online)
-	{
-		replace_letters_with_spaces(ui_g_6_leg_left_big_warning->string);
-		_ui_update_leg_lb_offline();
-	}
-	else if(last_group6_online_status[4] > joint_motor[0].online)
-	{
-		strcpy(ui_g_6_leg_left_big_warning->string, "leg_lb_off");
-		_ui_update_leg_lb_offline();
+		if(ui_g_6_wheel_left_warning->string[0] != ' ')
+		{
+			replace_letters_with_spaces(ui_g_6_wheel_left_warning->string);
+			_ui_update_wheel_l_offline();
+		}
 	}
 
-	if(last_group6_online_status[5] < joint_motor[1].online)
+	if(driver_motor[1].online == 0)
 	{
-		replace_letters_with_spaces(ui_g_6_leg_left_small_warning->string);
-		_ui_update_leg_ls_offline();
+		if(ui_g_6_wheel_right_warning->string[0] != 'w')
+		{
+			strcpy(ui_g_6_wheel_right_warning->string, "wheel_r_off");
+			_ui_update_wheel_r_offline();
+		}
 	}
-	else if(last_group6_online_status[5] > joint_motor[1].online)
+	else if(driver_motor[1].online == 1)
 	{
-		strcpy(ui_g_6_leg_left_small_warning->string, "leg_ls_off");
-		_ui_update_leg_ls_offline();
+		if(ui_g_6_wheel_right_warning->string[0] != ' ')
+		{
+			replace_letters_with_spaces(ui_g_6_wheel_right_warning->string);
+			_ui_update_wheel_r_offline();
+		}
 	}
 
-	last_group6_online_status[0] = ui_get_online_data_container.fric_online;
-	last_group6_online_status[1] = trigger_motor.online;
-	last_group6_online_status[2] = driver_motor[0].online;
-	last_group6_online_status[3] = driver_motor[1].online;
-	last_group6_online_status[4] = joint_motor[0].online;
-	last_group6_online_status[5] = joint_motor[1].online;
+	if(joint_motor[0].online == 0)
+	{
+		if(ui_g_6_leg_left_big_warning->string[0] != 'l')
+		{
+			strcpy(ui_g_6_leg_left_big_warning->string, "leg_lb_off");
+			_ui_update_leg_lb_offline();
+		}
+	}
+	else if(joint_motor[0].online == 1)
+	{
+		if(ui_g_6_leg_left_big_warning->string[0] != ' ')
+		{
+			replace_letters_with_spaces(ui_g_6_leg_left_big_warning->string);
+			_ui_update_leg_lb_offline();
+		}
+	}
+
+	if(joint_motor[1].online == 0)
+	{
+		if(ui_g_6_leg_left_small_warning->string[0] != 'l')
+		{
+			strcpy(ui_g_6_leg_left_small_warning->string, "leg_ls_off");
+			_ui_update_leg_ls_offline();
+		}
+	}
+	else if(joint_motor[1].online == 1)
+	{
+		if(ui_g_6_leg_left_small_warning->string[0] != ' ')
+		{
+			replace_letters_with_spaces(ui_g_6_leg_left_small_warning->string);
+			_ui_update_leg_ls_offline();
+		}
+	}
 	//ui_group6 update end
-	
 }
 
 uint32_t ui_update_cnt = 0;
@@ -460,7 +528,7 @@ void ui_task(void const* argument)
 {
     uint32_t thread_wake_time = osKernelSysTick();
 	container_bus_init(mb_callback, sizeof(mb_callback)/sizeof(ContainerBusCfg));
-    for(int i = 0; i < 5; i++) {
+    for(int i = 0; i < 3; i++) {
         thread_wake_time = osKernelSysTick();
         ui_init();
     }	
@@ -469,14 +537,7 @@ void ui_task(void const* argument)
         thread_wake_time = osKernelSysTick();
         us_timer_interval_test_start(&ui_time);
 		ui_update_cnt++;
-        if (game_status.game_progress == 0 || game_status.game_progress == 1 || game_status.game_progress == 5) 
-		{
-			if(ui_update_cnt % 5 == 0)	
-				ui_update();
-			else
-				ui_init();
-        } 
-		else if(rc.kb.bit.X)
+        if(rc.kb.bit.X)
 		{
 			ui_init();
         }
