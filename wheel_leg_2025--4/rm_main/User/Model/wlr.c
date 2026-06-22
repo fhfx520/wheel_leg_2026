@@ -513,7 +513,7 @@ static void handle_sky_state(void)
 
         sky_leg_length = (wlr.double_flag ? 0.16f : 0.11f);
         x3_balance_zero = x3_balance_zero_normal - 0.03f;
-        x5_balance_zero = (wlr.double_flag ? 0.0f : -0.08f);
+        x5_balance_zero = (wlr.double_flag ? 0.0f : -0.0f);
         wlr.high_set = ramp_calc(&sky_height_ramp, sky_leg_length);
         
        if(g_robot_ctx.output.top_mode == TOP_MODE_REMOTE) {
@@ -526,25 +526,25 @@ static void handle_sky_state(void)
 				wlr.sky_flag = WLR_SKY_EXTENDING;
 			} 
 		}
-		if(wlr.double_flag)
-            wlr.v_ref = ramp_calc(&jump_ramp, -2.0f);
-        else
-            wlr.v_ref = ramp_calc(&jump_ramp, -3.0f);
+//		if(wlr.double_flag)
+//            wlr.v_ref = ramp_calc(&jump_ramp, -2.0f);
+//        else
+//            wlr.v_ref = ramp_calc(&jump_ramp, -3.0f);
     } else if (wlr.sky_flag == WLR_SKY_EXTENDING) {
 		sky_ccc = 0;
         wlr.high_set = 0.35f;
         jump_ramp.out = 0.0f;
         wlr.v_ref = -2.5f;
-        x3_balance_zero = x3_balance_zero_normal + 0.05F;
-        x5_balance_zero = (wlr.double_flag ? -0.0f : -0.05f);
+        x3_balance_zero = x3_balance_zero_normal + 0.1F;
+        x5_balance_zero = (wlr.double_flag ? -0.0f : -0.0f);
 
-        if (fabsf(0.30f - vmc[0].L_fdb) < 0.03f && fabsf(0.30f - vmc[1].L_fdb) < 0.03f && !wlr.double_flag) {
+        if (vmc[0].L_fdb > 0.32f && vmc[1].L_fdb > 0.32f && !wlr.double_flag) {
             wlr.sky_cnt++;
         }
         else if (vmc[0].L_fdb - 0.25f > 0.0f && vmc[1].L_fdb - 0.25f > 0.0f && wlr.double_flag) {
             wlr.sky_cnt++;
         }
-        if (wlr.sky_cnt > 5) {
+        if (wlr.sky_cnt > 1) {
             wlr.sky_cnt = 0;
             wlr.sky_flag = WLR_SKY_AIR_FOLDING;
         }	
@@ -554,11 +554,11 @@ static void handle_sky_state(void)
         if(wlr.double_flag)
             x3_balance_zero = x3_balance_zero_normal;
         else
-            x3_balance_zero = -0.1f;
+            x3_balance_zero = 0.0f;
         
         x5_balance_zero = 0.0f;
         wlr.sky_cnt++;
-        target_cnt = (wlr.double_flag ? 175 : 175);
+        target_cnt = (wlr.double_flag ? 175 : 220);
         if (wlr.sky_cnt > target_cnt) {
             wlr.sky_cnt = 0;
             wlr.sky_flag = WLR_SKY_LANDING;
@@ -1005,7 +1005,7 @@ static void apply_output_limits(void)
         
         if (wlr.crash_flag || wlr.energy_flag || (wlr.jump_flag == WLR_JUMP_RECOVER_SHORT)) {
             lqr.U_ref[i] *= 0.0f;
-        } else if (chassis.recover_flag >= 1 || wlr.sky_flag == WLR_SKY_AIR_FOLDING || wlr.sky_flag == WLR_SKY_LANDING) {
+        } else if (chassis.recover_flag >= 1 || wlr.sky_flag == WLR_SKY_EXTENDING || wlr.sky_flag == WLR_SKY_AIR_FOLDING || wlr.sky_flag == WLR_SKY_LANDING) {
             lqr.U_ref[i] *= 0.0f;
         }
 
