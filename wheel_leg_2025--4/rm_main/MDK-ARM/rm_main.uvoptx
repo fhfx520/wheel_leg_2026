@@ -265,6 +265,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>ui_g_6_fric_left_warning</ItemText>
         </Ww>
+        <Ww>
+          <count>22</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>gimbal_imu</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>

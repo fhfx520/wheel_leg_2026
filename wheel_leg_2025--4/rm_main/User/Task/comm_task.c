@@ -26,8 +26,7 @@ void comm_task(void const* argument)
                 dm_motor_set_control_cmd(&joint_motor[i], CMD_ENABLE_MODE);	  					
             }else {
 				dm_motor_output_single_data(&joint_motor[i]);   
-            }        
-//			dm_motor_output_single_data(&joint_motor[i]);   
+            }         
         }        
         
         taskEXIT_CRITICAL();		
@@ -35,15 +34,14 @@ void comm_task(void const* argument)
         
         taskENTER_CRITICAL();
         lk_set_current(&trigger_motor);
-         for (int i = 1; i < 4; i+=2){
+
+         for (int i = 1; i < 4; i += 2){
             if( joint_motor[i].state == 0){
                 dm_motor_set_control_cmd(&joint_motor[i], CMD_ENABLE_MODE);		
             }else{
 				dm_motor_output_single_data(&joint_motor[i]);   
-            } 
-//			dm_motor_output_single_data(&joint_motor[i]);   
+            }  
         }
-        
         taskEXIT_CRITICAL();
         osDelayUntil(&thread_wake_time, 1);
     }

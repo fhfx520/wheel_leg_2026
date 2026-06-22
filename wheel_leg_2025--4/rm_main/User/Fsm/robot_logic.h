@@ -53,7 +53,6 @@ typedef enum {
     CHASSIS_LOW_SPIN,           
     CHASSIS_HIGH,               
     CHASSIS_TERRAIN_READY,              // 加速靠近障碍物（平地收腿）
-    CHASSIS_TERRAIN_EXECUTING,          // 地形执行中（平地伸腿，空中收腿，空中伸腿，落地）
 	CHASSIS_ASCEND,                     // 站高高，装备上台阶
 	CHASSIS_EXECUTING_FOLLOW_ASCEND,    // 上二级台阶（先跳，再磕）
 	CHASSIS_ENERGY,                     // 能量机关
@@ -94,8 +93,6 @@ typedef struct {
     uint16_t last_key_code; 
     uint32_t ctrl_tick;     
     
-	//允许跳跃标志位
-	uint8_t sky_start_flag;
 	//跳跃完成标志位
 	uint8_t sky_finish_flag;
 	uint8_t jump_finish_flag;

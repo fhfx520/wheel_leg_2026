@@ -126,8 +126,8 @@ void can_comm_init(void)
 //	dm_motor_init(&joint_motor[2], CAN_CHANNEL_1, JOINT_RB_CMD_ID, 6.04196119f, JOINT_RB_REC_ID);//RB 4.47119999 4.52866888			1.68932343 1.63639832
 //	dm_motor_init(&joint_motor[3], CAN_CHANNEL_1, JOINT_RS_CMD_ID, 2.43732119f, JOINT_RS_REC_ID);//RS 2.62299991 2.3627491			2.42180824 2.44345903
 	
-	dm_motor_init(&joint_motor[0], CAN_CHANNEL_1, JOINT_LB_CMD_ID, 2.935049534f, JOINT_LB_REC_ID);
-	dm_motor_init(&joint_motor[1], CAN_CHANNEL_1, JOINT_LS_CMD_ID, 4.034346581f, JOINT_LS_REC_ID);
+	dm_motor_init(&joint_motor[0], CAN_CHANNEL_1, JOINT_LB_CMD_ID, 2.81146622f, JOINT_LB_REC_ID);
+	dm_motor_init(&joint_motor[1], CAN_CHANNEL_1, JOINT_LS_CMD_ID, 4.55590677f, JOINT_LS_REC_ID);
 	dm_motor_init(&joint_motor[2], CAN_CHANNEL_1, JOINT_RB_CMD_ID, 6.056420326f, JOINT_RB_REC_ID);
 	dm_motor_init(&joint_motor[3], CAN_CHANNEL_1, JOINT_RS_CMD_ID, 1.384428740f, JOINT_RS_REC_ID);
 	

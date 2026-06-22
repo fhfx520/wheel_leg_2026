@@ -375,7 +375,7 @@ static void update_leg_height_and_balance(float yaw_error)
         x3_balance_zero = x3_balance_zero_normal;
     } else if (wlr.high_flag == 1) {
         if (wlr_both_legs_flying()) {
-            wlr.high_set = 0.33f;
+            wlr.high_set = 0.25f;
             height_ramp.out = LegLengthHigh;	
         } else if (wlr_either_leg_flying()) {
 			x3_balance_zero = x3_balance_zero_normal;
@@ -886,7 +886,7 @@ static void update_motion_reference(void)
 static void update_fly_state(uint8_t index, float yaw_err)
 {
     if ( fabs(chassis_imu.pit) < 0.50f &&  wlr.side[index].Fn_kal < 150.0f  && wlr.high_flag == 1 && rotate_flag == 0 && chassis.recover_flag == 0
-		&& (wlr.sky_flag == WLR_SKY_IDLE) && (wlr.sky_flag == WLR_JUMP_IDLE))  {
+		&& (wlr.sky_flag == WLR_SKY_IDLE) && (wlr.jump_flag == WLR_JUMP_IDLE))  {
         wlr.side[index].fly_cnt += 10;
     } else if (wlr.side[index].fly_cnt > 0) {
         wlr.side[index].fly_cnt -= 5;

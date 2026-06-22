@@ -5,6 +5,7 @@
 #include "pid.h"
 #include "kalman_filter.h"
 
+#define AUTO_JUMP_ENABLE//是否使用自动跳
 
 
 typedef enum {
@@ -79,7 +80,8 @@ typedef struct
 	uint16_t jump_cnt, jump_run;
 		//jump_cnt 用于软件延时变化腿长		jump_run 用于软件延时判断两条腿是否撞击台阶
 	
-	uint16_t sky_flag, sky_cnt, sky_over;
+    wlr_sky_state_e sky_flag;
+	uint16_t sky_cnt, sky_over;
 	/*	sky_flag 	参考 wlr_sky_state_e
 		sky_cnt		跳跃计数变量
 		sky_over 	=1完成跳跃
@@ -122,6 +124,7 @@ extern lqr_t lqr;
 extern pid_t pid_roll;
 extern pid_t pid_rescue[2];
 extern pid_t pid_L_test[2];
+extern pid_t pid_leg_length_fly[2];
 extern int32_t double_cnt;
 extern float global_v;
 extern float x3_balance_zero,x5_balance_zero;

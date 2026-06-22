@@ -195,6 +195,8 @@ static void vision_get_data_sp(uint8_t *data, uint32_t len)
     last_aim_status = vision.aim_status;
     vision.last_rx_tick = HAL_GetTick();
 }
+
+
 void vision_get_data(uint8_t *data, uint32_t len)
 {
     static vision_aim_status_e last_aim_status;

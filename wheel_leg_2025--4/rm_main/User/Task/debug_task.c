@@ -92,7 +92,6 @@ static const char* debug_chassis_name(ChassisState_e state)
         case CHASSIS_LOW_SPIN:                 return "LOW_SPIN";
         case CHASSIS_HIGH:                     return "HIGH";
         case CHASSIS_TERRAIN_READY:            return "TERRAIN_RDY";
-        case CHASSIS_TERRAIN_EXECUTING:        return "TERRAIN_RUN";
         case CHASSIS_ASCEND:                   return "ASCEND";
         case CHASSIS_EXECUTING_FOLLOW_ASCEND:  return "DOUBLE";
         case CHASSIS_ENERGY:                   return "ENERGY";
@@ -526,7 +525,7 @@ void log_scope_data_pkg(void)
 			break;
 		}
         case 5: { /* 腿长 */
-            log_scope_get_data(tlm.l_ref[1]);
+            log_scope_get_data(vmc[1].L_ref);
             log_scope_get_data(vmc[1].L_fdb);
             log_scope_get_data(wlr.v_fdb);
             log_scope_get_data(wlr.side[0].fly_flag);
@@ -535,7 +534,10 @@ void log_scope_data_pkg(void)
             log_scope_get_data(wlr.side[1].Fn_kal);
 			log_scope_get_data(chassis_imu.az);
 			log_scope_get_data(vmc[1].F_fdb.e.Fy_fdb);
-			log_scope_get_data(vmc[1].F_fdb.e.T0_fdb);
+			log_scope_get_data(vmc[1].F_ref.e.Fy_ref);
+			log_scope_get_data(vmc[1].T_fdb.e.T1_fdb);
+			log_scope_get_data(vmc[1].T_fdb.e.T4_fdb);
+			log_scope_get_data(pid_leg_length_fly[1].output);
             break;
 		}
         case 6: { /* 小陀螺 */

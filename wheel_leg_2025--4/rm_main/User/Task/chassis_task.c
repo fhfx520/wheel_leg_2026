@@ -27,8 +27,6 @@
 #include "container.h"
 #include "prot_ms53l0m.h"
 
-ChassisState_e last_chassis_output;
-
 #ifndef DO_ONCE
 	#define DO_ONCE(code_block) { static int _flag = 0; if (!_flag) { _flag = 1; code_block; } }
 #endif
@@ -179,6 +177,28 @@ uint8_t check_tof_jump(float dis_up, float dis_down)
 		return 0;
 }
 
+void chassis_reset_special_flag(void)
+{
+	wlr.jump_flag = WLR_JUMP_IDLE;
+	wlr.sky_flag = WLR_SKY_IDLE;
+	wlr.stair_flag = WLR_STAIR_IDLE;
+}
+
+void chassis_reset_recovery(void)
+{
+	chassis.rescue_cnt_L = 0;
+	chassis.rescue_cnt_R = 0;
+	chassis.recover_flag = 0;
+	chassis.rescue_inter_flag = CHASSIS_RESCUE_IDLE;
+	up_ready = 0;
+}
+
+void chassis_reset_finish_flag(void)
+{
+	g_robot_ctx.sky_finish_flag = 0;
+	g_robot_ctx.jump_finish_flag = 0;
+}
+
 // 恢复你本来的代码
 static void chassis_ramp(void)
 {
@@ -266,44 +286,30 @@ static void chassis_init(void)
 // ==============================================================================
 // 纯粹地把 FSM 的状态映射到底层的配置，不保留旧的 mode
 // ==============================================================================
+ChassisState_e last_chassis_mode = CHASSIS_STOP;   // [修改] 替换为 FSM 类型
 static void chassis_execute_fsm(void)
 {
     rotate_flag = 0;
 	wlr.energy_flag = 0;
 	wlr.double_flag = 0;
-	static uint16_t sky_ccc = 0;
     switch (g_robot_ctx.output.chassis) {
         case CHASSIS_STOP:
 		{
-			sky_ccc = 0;
             wlr.ctrl_mode = 0; 
             wlr.high_flag = 0;
-            wlr.jump_flag = WLR_JUMP_IDLE;
-            wlr.sky_flag = WLR_SKY_IDLE;
-			wlr.stair_flag = WLR_STAIR_IDLE;
-            chassis.rescue_cnt_L = 0;
-            chassis.rescue_cnt_R = 0;
-			chassis.recover_flag = 0;
-			chassis.rescue_inter_flag = CHASSIS_RESCUE_IDLE;
-			up_ready=0;
-			g_robot_ctx.sky_start_flag = 0;
-			g_robot_ctx.sky_finish_flag = 0;
-			g_robot_ctx.jump_finish_flag = 0;
+            chassis_reset_special_flag();
+			chassis_reset_recovery();
+			chassis_reset_finish_flag();
             break;
 		}
 
         case CHASSIS_LOW:
 		{
-			sky_ccc = 0;
             wlr.ctrl_mode = 2; 
             wlr.high_flag = 0; 
-            wlr.jump_flag = WLR_JUMP_IDLE;
-            wlr.sky_flag = WLR_SKY_IDLE;
-			wlr.stair_flag = WLR_STAIR_IDLE;
-			g_robot_ctx.sky_start_flag = 0;
-			g_robot_ctx.sky_finish_flag = 0;
-			g_robot_ctx.jump_finish_flag = 0;
-			if(last_chassis_output == CHASSIS_STOP)
+            chassis_reset_special_flag();
+			chassis_reset_finish_flag();
+			if(last_chassis_mode == CHASSIS_STOP)
 				chassis.recover_flag = 1;
             break;
 		}
@@ -312,12 +318,8 @@ static void chassis_execute_fsm(void)
 		{
             wlr.ctrl_mode = 2;
             wlr.high_flag = 1; 
-            wlr.jump_flag = WLR_JUMP_IDLE;
-            wlr.sky_flag = WLR_SKY_IDLE;
-			wlr.stair_flag = WLR_STAIR_IDLE;
-			g_robot_ctx.sky_start_flag = 0;
-			g_robot_ctx.sky_finish_flag = 0;
-			g_robot_ctx.jump_finish_flag = 0;
+            chassis_reset_special_flag();
+			chassis_reset_finish_flag();
             break;
 		}
 
@@ -326,12 +328,8 @@ static void chassis_execute_fsm(void)
             wlr.ctrl_mode = 2;
             wlr.high_flag = 0; 
             rotate_flag = 1;   
-			wlr.jump_flag = WLR_JUMP_IDLE;
-			wlr.sky_flag = WLR_SKY_IDLE;
-			wlr.stair_flag = WLR_STAIR_IDLE;
-			g_robot_ctx.sky_start_flag = 0;
-			g_robot_ctx.sky_finish_flag = 0;
-			g_robot_ctx.jump_finish_flag = 0;
+			chassis_reset_special_flag();
+			chassis_reset_finish_flag();
             break;
 		}
 
@@ -339,12 +337,8 @@ static void chassis_execute_fsm(void)
 		{
             wlr.ctrl_mode = 2;
             wlr.high_flag = 0;
-            wlr.jump_flag = WLR_JUMP_IDLE;
-			wlr.sky_flag = WLR_SKY_IDLE;
-			wlr.stair_flag = WLR_STAIR_IDLE;
-			g_robot_ctx.sky_start_flag = 0;
-			g_robot_ctx.sky_finish_flag = 0;
-			g_robot_ctx.jump_finish_flag = 0;
+            chassis_reset_special_flag();
+			chassis_reset_finish_flag();
             break;
 		}
 
@@ -354,33 +348,9 @@ static void chassis_execute_fsm(void)
             wlr.high_flag = 0;
             wlr.jump_flag = WLR_JUMP_IDLE;
 			wlr.stair_flag = WLR_STAIR_IDLE;
-			g_robot_ctx.sky_finish_flag = 0;
-			g_robot_ctx.jump_finish_flag = 0;
+			chassis_reset_finish_flag();
 			if(wlr.sky_flag == WLR_SKY_IDLE)
 				wlr.sky_flag = WLR_SKY_FOLDING; 
-			if(wlr.sky_flag == WLR_SKY_FOLDING) 
-				sky_ccc++; 
-			// if(wlr.sky_flag == WLR_SKY_FOLDING && ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f > 0.65f) \
-			// 	&& ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f < 1.3f) && g_robot_ctx.input.mouse.l && check_tof_jump(0,0))
-			// 	g_robot_ctx.sky_start_flag = 1;
-			if(wlr.sky_flag == WLR_SKY_FOLDING && check_tof_jump(1.75f,0.65f) && sky_ccc > 700 && (ms53l0m_data_valid[0] == 0 || ms53l0m_data_valid[0] == 7)  && (ms53l0m_data_valid[1] == 0 || ms53l0m_data_valid[1] == 7))
-				g_robot_ctx.sky_start_flag = 1;
-            break;
-		}
-
-        case CHASSIS_TERRAIN_EXECUTING:
-		{
-			sky_ccc = 0;
-            wlr.ctrl_mode = 2;
-            wlr.high_flag = 0;
-			wlr.jump_flag = WLR_JUMP_IDLE;
-			wlr.stair_flag = WLR_STAIR_IDLE;
-			g_robot_ctx.sky_start_flag = 0;
-            if(wlr.sky_flag == WLR_SKY_FOLDING) 
-				wlr.sky_flag = WLR_SKY_EXTENDING; 
-			//set跳跃完成标志位 用于fsm自动变回低腿长模式
-			if(wlr.sky_flag == WLR_SKY_STAND && wlr.sky_over && !g_robot_ctx.sky_finish_flag)
-				g_robot_ctx.sky_finish_flag = 1;
             break;
 		}
 		
@@ -390,7 +360,6 @@ static void chassis_execute_fsm(void)
 			wlr.high_flag = 0;
 			wlr.sky_flag = WLR_SKY_IDLE;
 			wlr.stair_flag = WLR_STAIR_IDLE;
-			g_robot_ctx.sky_start_flag = 0;
 			if(wlr.jump_flag == WLR_JUMP_IDLE && wlr.direction == 0) 
 				wlr.jump_flag = WLR_JUMP_ASCEND; 
 			if(wlr.jump_flag == WLR_JUMP_RECOVER_LONG && !g_robot_ctx.jump_finish_flag)
@@ -405,11 +374,11 @@ static void chassis_execute_fsm(void)
 			wlr.double_flag = 1;
 			if(wlr.sky_flag == WLR_SKY_IDLE && wlr.jump_flag == WLR_JUMP_IDLE)
 				wlr.sky_flag = WLR_SKY_FOLDING; 
-			else if(wlr.sky_flag == WLR_SKY_FOLDING)
-				sky_ccc++;
-			if(wlr.sky_flag == WLR_SKY_FOLDING && ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f > 0.25f) \
-				&& ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f < 0.9f) && sky_ccc > 250)
-				wlr.sky_flag = WLR_SKY_EXTENDING; 
+			// else if(wlr.sky_flag == WLR_SKY_FOLDING)
+			// 	sky_ccc++;
+			// if(wlr.sky_flag == WLR_SKY_FOLDING && ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f > 0.25f) \
+			// 	&& ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f < 0.9f) && sky_ccc > 250)
+			// 	wlr.sky_flag = WLR_SKY_EXTENDING; 
 			else if(wlr.sky_flag == WLR_SKY_STAND && !g_robot_ctx.sky_finish_flag)
 				g_robot_ctx.sky_finish_flag = 1;
 			if(g_robot_ctx.sky_finish_flag && wlr.jump_flag == WLR_JUMP_IDLE && wlr.sky_over == 1)
@@ -426,9 +395,8 @@ static void chassis_execute_fsm(void)
 		{
 			wlr.ctrl_mode = 2;
 			wlr.high_flag = 0;
-			wlr.sky_flag = WLR_SKY_IDLE;
-			wlr.jump_flag = WLR_JUMP_IDLE;
-			wlr.stair_flag = WLR_STAIR_IDLE;
+			chassis_reset_special_flag();
+			chassis_reset_finish_flag();
 			wlr.energy_flag = 1;
 			break;
 		}
@@ -446,18 +414,11 @@ static void chassis_execute_fsm(void)
 		
         default:
 		{
-			sky_ccc = 0;
             wlr.ctrl_mode = 0; 
             wlr.high_flag = 0;
-            wlr.jump_flag = WLR_JUMP_IDLE;
-            wlr.sky_flag = WLR_SKY_IDLE;
-			wlr.stair_flag = WLR_STAIR_IDLE;
-            chassis.rescue_cnt_L = 0;
-            chassis.rescue_cnt_R = 0;
-            chassis.recover_flag = 0;
-			g_robot_ctx.sky_finish_flag = 0;
-			g_robot_ctx.sky_start_flag = 0;
-			chassis.rescue_inter_flag = CHASSIS_RESCUE_IDLE;
+            chassis_reset_special_flag();
+			chassis_reset_recovery();
+			chassis_reset_finish_flag();
             break;
 		}
     }
@@ -474,14 +435,11 @@ static void chassis_execute_fsm(void)
 		chassis_scale.remote = 1.0f / 660 * 2.2f;
     else 
 		chassis_scale.remote = 1.0f /660 * 2.3f; 
-	
-	last_chassis_output = g_robot_ctx.output.chassis;
 }
 
 uint8_t rotate_ramp_flag; 
 ChassisState_e rotate_chassis_mode = CHASSIS_STOP; // [修改] 替换为 FSM 类型
 uint16_t rotate_state_cnt;
-ChassisState_e last_chassis_mode = CHASSIS_STOP;   // [修改] 替换为 FSM 类型
 
 // ==============================================================================
 // 完全基于 FSM ChassisState_e 进行解算
@@ -518,7 +476,6 @@ static void chassis_data_input(void)
         case CHASSIS_LOW:
         case CHASSIS_HIGH:
         case CHASSIS_TERRAIN_READY:
-        case CHASSIS_TERRAIN_EXECUTING:
 		case CHASSIS_EXECUTING_FOLLOW_ASCEND:			{ // 整合了原版的所有 FOLLOW 和 PRONE
 			if((key_scan_clear(KB_CTRL) || check_ch3_trigger()) && gimbal.start_up)
 				chassis.turn_back_flag = 1;
@@ -636,10 +593,9 @@ static void chassis_data_input(void)
     else if(rotate_ramp_flag == 0) rotate_flag = 0;   
     
     if (last_chassis_mode == CHASSIS_LOW_SPIN && (
-         g_robot_ctx.output.chassis == CHASSIS_LOW || 
-         g_robot_ctx.output.chassis == CHASSIS_HIGH ||
-         g_robot_ctx.output.chassis == CHASSIS_TERRAIN_READY ||
-         g_robot_ctx.output.chassis == CHASSIS_TERRAIN_EXECUTING)) {
+        g_robot_ctx.output.chassis == CHASSIS_LOW || 
+        g_robot_ctx.output.chassis == CHASSIS_HIGH ||
+        g_robot_ctx.output.chassis == CHASSIS_TERRAIN_READY)) {
             rotate_ramp_flag = 1;        
             rotate_stop_flag = 1;
     }
