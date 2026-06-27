@@ -264,6 +264,10 @@ static void gimbal_execute_fsm(void)
 	{
 		//听云台算完发下来的电流
 		case GIMBAL_STOP:
+		{
+			gimbal.yaw_output = 0.0f;
+			break;
+		}
 		case GIMBAL_GYRO_STABILIZE:
 		case GIMBAL_MOUSE_CONTROL:
 		case GIMBAL_AUTO_AIM:

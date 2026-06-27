@@ -104,8 +104,8 @@ float ff_Fy_1 = 20.0f;
 const float K_Array_Fly[4][10] = 
 {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
-{0, 0, 0, 0, 48.0545, 4.74396, -18.1774, -0.821362, -28.0134, -3.84413}, 
-{0, 0, 0, 0,-18.1774, -0.821362, 48.0545, 4.74396, -28.0134, -3.84413}
+{0, 0, 0, 0, 74.2454, 4.80496, -24.7738, -0.907168, -19.8567, -3.34861}, 
+{0, 0, 0, 0,-24.7738, -0.907168, 74.2454, 4.80496, -19.8567, -3.34861}
 };
 
 const float K_Array_FOLDING[4][10] = 
@@ -134,10 +134,20 @@ float K_Array_Leg_030[4][10] =
 //{0.648849, 2.59934, -6.86643, -2.00251, 30.3815, 3.07933, -13.9648, -0.967449, -20.8131, -3.14478},
 //{0.648849, 2.59934, 6.86643, 2.00251, -13.9648, -0.967449, 30.3815, 3.07933, -20.8131, -3.14478} //26分区赛
 
-{{-0.70469, -3.67821, -6.68732, -1.20926, -15.9364, -1.91974, -7.46304, -0.932313, -5.57762, -1.05563},
-{-0.70469, -3.67821, 6.68732, 1.20926, -7.46304, -0.932313, -15.9364, -1.91974, -5.57762, -1.05563},
-{1.11399, 5.74357, -13.2728, -2.58302, 48.0545, 4.74396, -18.1774, -0.821362, -28.0134, -3.84413},
-{1.11399, 5.74357, 13.2728, 2.58302, -18.1774, -0.821362, 48.0545, 4.74396, -28.0134, -3.84413}
+//{{-0.70469, -3.67821, -6.68732, -1.20926, -15.9364, -1.91974, -7.46304, -0.932313, -5.57762, -1.05563},
+//{-0.70469, -3.67821, 6.68732, 1.20926, -7.46304, -0.932313, -15.9364, -1.91974, -5.57762, -1.05563},
+//{1.11399, 5.74357, -13.2728, -2.58302, 48.0545, 4.74396, -18.1774, -0.821362, -28.0134, -3.84413},
+//{1.11399, 5.74357, 13.2728, 2.58302, -18.1774, -0.821362, 48.0545, 4.74396, -28.0134, -3.84413}
+
+{{-1.05895, -5.19994, -6.63055, -1.20445, -28.5398, -2.36593, -9.32631, -1.13185, -4.87525, -1.09715},
+{-1.05895, -5.19994, 6.63055, 1.20445, -9.32631, -1.13185, -28.5398, -2.36593, -4.87525, -1.09715},
+{1.18387, 5.65492, -12.8291, -2.47667, 74.2454, 4.80496, -24.7738, -0.907168, -19.8567, -3.34861},
+{1.18387, 5.65492, 12.8291, 2.47667, -24.7738, -0.907168, 74.2454, 4.80496, -19.8567, -3.34861}
+
+//{{-1.06542, -4.63222, -6.63055, -1.20445, -28.2871, -2.2707, -9.07361, -1.03662, -4.73669, -1.05277},
+//{-1.06542, -4.63222, 6.63055, 1.20445, -9.07361, -1.03662, -28.2871, -2.2707, -4.73669, -1.05277},
+//{1.13992, 4.80509, -12.8291, -2.47667, 73.5784, 4.66957, -25.4408, -1.04255, -20.0447, -3.40322},
+//{1.13992, 4.80509, 12.8291, 2.47667, -25.4408, -1.04255, 73.5784, 4.66957, -20.0447, -3.40322}
 };
 
 float K_Array_Leg_018[4][10] = 
@@ -266,6 +276,7 @@ static float wlr_fn_calc(float az, float Fy_fdb, float T0_fdb, float L0[3], floa
 
 static float gas_spring_F_Calc(vmc_t v)
 {
+	float Fn_fdb;
 	//活塞有效面积计算
 	const float A = PI * powf(gas_spring_D,2) / 4.0f;
 	//当前行程获取(类VMC思路求解)
@@ -274,14 +285,22 @@ static float gas_spring_F_Calc(vmc_t v)
 	//通过当前行程计算当前力
 	F_fdb = gas_spring_P * 1e+6 * gas_spring_V * A / (gas_spring_V - A * x_fdb);
 	//计算气弹簧摆角
-	theta = atan2f(v.mp_fdb.yd + Hinge_gas_Lengh * arm_sin_f32(v.q_fdb[3]) - v.mp_fdb.ym, 
-			v.mp_fdb.xd + Hinge_gas_Lengh * arm_cos_f32(v.q_fdb[3]) - v.mp_fdb.xm);
 	//这里让气弹簧摆角为定值，减少腿摆角对支持力的影响导致离地检测误判
-	theta = 0.508f;
-	//0.28    0.18
-	//0.51	  0.23
-	//分解到竖直方向上
-	float Fn_fdb = F_fdb * arm_sin_f32(theta);
+	if(wlr.high_flag == 1){
+//		theta = 0.508f;
+//		//分解到竖直方向上
+//		Fn_fdb = F_fdb * arm_cos_f32(theta);
+		theta = atan2f(v.mp_fdb.yd + Hinge_gas_Lengh * arm_sin_f32(v.q_fdb[3]) - v.mp_fdb.ym, 
+			v.mp_fdb.xd + Hinge_gas_Lengh * arm_cos_f32(v.q_fdb[3]) - v.mp_fdb.xm);
+		//分解到竖直方向上
+		Fn_fdb = F_fdb * arm_cos_f32(v.q_fdb[0] - theta);
+	}
+	else {
+		theta = atan2f(v.mp_fdb.yd + Hinge_gas_Lengh * arm_sin_f32(v.q_fdb[3]) - v.mp_fdb.ym, 
+			v.mp_fdb.xd + Hinge_gas_Lengh * arm_cos_f32(v.q_fdb[3]) - v.mp_fdb.xm);
+		//分解到竖直方向上
+		Fn_fdb = F_fdb * arm_cos_f32(v.q_fdb[0] - theta);
+	}
 	
 	return Fn_fdb;
 }
@@ -380,7 +399,7 @@ static void update_leg_height_and_balance(float yaw_error)
         } else if (wlr_either_leg_flying()) {
 			x3_balance_zero = x3_balance_zero_normal;
         } else if (wlr.jump_flag == WLR_JUMP_IDLE && wlr.sky_flag == WLR_SKY_IDLE) {
-			height_ramp.max = LegLengthHigh;
+//			height_ramp.max = LegLengthHigh;
             wlr.high_set = ramp_calc(&height_ramp, LegLengthHigh);
 			if(wlr.direction)
 				x3_balance_zero = -x3_balance_zero_normal - 0.01f;
@@ -392,7 +411,7 @@ static void update_leg_height_and_balance(float yaw_error)
 		
 		DO_LAST(wlr_both_legs_flying(),Last_cnt){
 			if(wlr.direction == 0){
-				x3_balance_zero = x3_balance_zero_normal - 0.1f;
+				x3_balance_zero = x3_balance_zero_normal;
 				data_limit(&wlr.v_ref,-1.4f,1.4f);
 			}
 			else{
@@ -412,7 +431,7 @@ static void update_leg_height_and_balance(float yaw_error)
 			wlr.high_set = 0.12f;
 			x3_balance_zero = x3_balance_zero_normal - 0.3f;
 		}
-		height_ramp.max = LegLengthMax;
+//		height_ramp.max = LegLengthMax;
 		x5_balance_zero = 0.00f;
     }
 
@@ -521,7 +540,7 @@ static void handle_sky_state(void)
 			if (abs(rc.ch2) > 500) { 
 				wlr.sky_cnt++;
 			}
-			if (wlr.sky_cnt > 50 || (check_tof_jump(1.7f,0.65f) && sky_ccc > 700 && (ms53l0m_data_valid[0] == 0 || ms53l0m_data_valid[0] == 7)  && (ms53l0m_data_valid[1] == 0 || ms53l0m_data_valid[1] == 7))) {
+			if (wlr.sky_cnt > 50){ //|| (check_tof_jump(1.7f,0.65f) && sky_ccc > 700 && (ms53l0m_data_valid[0] == 0 || ms53l0m_data_valid[0] == 7)  && (ms53l0m_data_valid[1] == 0 || ms53l0m_data_valid[1] == 7))) {
 				wlr.sky_cnt = 0;
 				wlr.sky_flag = WLR_SKY_EXTENDING;
 			} 
@@ -885,7 +904,7 @@ static void update_motion_reference(void)
 
 static void update_fly_state(uint8_t index, float yaw_err)
 {
-    if ( fabs(chassis_imu.pit) < 0.50f &&  wlr.side[index].Fn_kal < 150.0f  && wlr.high_flag == 1 && rotate_flag == 0 && chassis.recover_flag == 0
+    if ( fabs(chassis_imu.pit) < 0.50f &&  wlr.side[index].Fn_kal < -30.0f  && wlr.high_flag == 1 && rotate_flag == 0 && chassis.recover_flag == 0
 		&& (wlr.sky_flag == WLR_SKY_IDLE) && (wlr.jump_flag == WLR_JUMP_IDLE))  {
         wlr.side[index].fly_cnt += 10;
     } else if (wlr.side[index].fly_cnt > 0) {
@@ -929,10 +948,12 @@ static void handle_quadrant_protection(uint8_t index)
 static void map_virtual_force(uint8_t index)
 {
     float Fy_temp;
+	
+	F_test[index] = gas_spring_F_Calc(vmc[index]);
 
     if (wlr_both_legs_flying() && wlr.jump_flag == WLR_JUMP_IDLE	//两条腿都在空中 && 
         && wlr.sky_flag == WLR_SKY_IDLE && !chassis.recover_flag) {	// && 未进入翻倒自起立 && 跳跃未完成
-        wlr.side[index].Fy = pid_calc(&pid_leg_length_fly[index], tlm.l_ref[index], vmc[index].L_fdb) - 30.0f;
+        wlr.side[index].Fy = pid_calc(&pid_leg_length_fly[index], tlm.l_ref[index], vmc[index].L_fdb) + (125.0f * arm_cos_f32(PI / 2.0f -  vmc[index].q_fdb[0]) - F_test[index]);
 //		wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - ff_Fy_1;
     } 
 	else if ((chassis.recover_flag >= 1 && chassis.rescue_inter_flag == CHASSIS_RESCUE_RECOVER) || wlr.jump_flag == WLR_JUMP_RECOVER_SHORT) {		//进入翻倒自起立 && 进入收腿阶段
@@ -944,7 +965,7 @@ static void map_virtual_force(uint8_t index)
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs) - 20.0f;
     }
 	else if(wlr.jump_flag == WLR_JUMP_ASCEND){//磕台阶站高
-		wlr.side[index].Fy = pid_calc(&pid_ascend[index], tlm.l_ref[index], vmc[index].L_fdb) - 30.0f
+		wlr.side[index].Fy = pid_calc(&pid_ascend[index], tlm.l_ref[index], vmc[index].L_fdb) + (125.0f * arm_cos_f32(PI / 2.0f -  vmc[index].q_fdb[0]) - F_test[index])
                             + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
 	}
 	else if (wlr.sky_flag == WLR_SKY_FOLDING) {//准备跳
@@ -979,11 +1000,11 @@ static void map_virtual_force(uint8_t index)
 		wlr.side[index].Fy = pid_calc(&pid_energy_leg[index], tlm.l_ref[index], vmc[index].L_fdb) - 60.0f;
 	}
 	else if (wlr.high_flag == 1 || wlr.stair_flag == WLR_STAIR_RECOVER_LONG){//中腿长
-        wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 15.0f
+        wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) + (125.0f * arm_cos_f32(PI / 2.0f -  vmc[index].q_fdb[0]) - F_test[index])
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
     }
 	else {//低腿长
-        wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - (45.0f * fabsf(arm_cos_f32(vmc[index].q_fdb[0])) + ff_Fy_0)
+        wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) + (125.0f * arm_cos_f32(PI / 2.0f -  vmc[index].q_fdb[0]) - F_test[index])
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
     }
     if (chassis.recover_flag == 1) {
@@ -1044,17 +1065,17 @@ void wlr_init(void)
         pid_init(&pid_leg_sky_cover[i], NONE, 1800, 1.5f, 0.0f,150,500);		    //空中收腿专用pid
 		pid_init(&pid_leg_sky_jump[i],  NONE, 2500, 3.0, 0.0f, 150.0, 500);			//跳跃专用pid
 		pid_init(&pid_leg_recover[i], NONE, 1800, 1.5f, 20000.0f, 300, 500);		//起身专用pid
-        pid_init(&pid_leg_length_fly[i], NONE, 1000, 0.0, 0, 0, 300);			//离地腿长/缓冲腿长pid
-        pid_init(&pid_L_test[i], CHANG_I_RATE,1000, 2.0, 25000, 70, 300);			//日常腿长pid
+        pid_init(&pid_leg_length_fly[i], NONE, 500, 0.0, 0, 0, 300);			//离地腿长/缓冲腿长pid
+        pid_init(&pid_L_test[i], CHANG_I_RATE,1200, 2.0, 60000, 70, 300);			//日常腿长pid
 		pid_L_test[i].threshold_a = 0.01f;
 		pid_L_test[i].threshold_b = 0.03f;
 		pid_init(&pid_rescue[i], NONE, 2.0f, 0.5f, 0, 45, 50);						//翻倒起身腿转速pid
 		pid_init(&pid_rotate_leg[i], NONE, 1500.0f, 0.0f, 40000.0f, 0, 300);		
 		pid_init(&pid_energy_leg[i], NONE, 1000.0f, 0.0f, 40000.0f, 0, 300);
-		pid_init(&pid_ascend[i], NONE, 700, 0.0f, 80000, 70, 300);			//磕台阶腿长pid
+		pid_init(&pid_ascend[i], NONE, 3000, 0.0f, 50000, 70, 300);			//磕台阶腿长pid
 		pid_init(&pid_rotate_balance_zero, NONE, 0.015f, 0.0f, 0, 0.0f, 0.1f);			//磕台阶腿长pid
 	}
-	pid_init(&pid_roll, NONE, 300, 0,0, 0, 40);								//roll偏移支持力补偿
+	pid_init(&pid_roll, NONE, 1000, 0,0, 0, 100);								//roll偏移支持力补偿
 	//卡尔曼滤波器初始化
 	DO_ONCE({
 		twm_init(&twm, BodyWidth, WheelRadius);
@@ -1147,10 +1168,10 @@ void wlr_control(void)
 		//期望虚拟杆支持力，转矩
 		//大于0表示腿正在往外蹬，小于0表示正在往内收
 		F_wy[i] = Fwy;
-		F_test[i] = gas_spring_F_Calc(vmc[i]);//气弹簧力解算
+//		F_test[i] = gas_spring_F_Calc(vmc[i]);//气弹簧力解算
         kal_fn[i].measured_vector[0] = wlr.side[i].Fn_fdb;
         kalman_filter_update(&kal_fn[i]);		
-		wlr.side[i].Fn_kal = (kal_fn[i].filter_vector[0] + F_test[i]);
+		wlr.side[i].Fn_kal = (kal_fn[i].filter_vector[0]);
     }
 
     float yaw_err = circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, wlr.yaw_fdb, 2 * PI);

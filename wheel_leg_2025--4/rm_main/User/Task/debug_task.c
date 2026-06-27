@@ -549,6 +549,8 @@ void log_scope_data_pkg(void)
 	case 7: { /* 激光 */
             log_scope_get_data(wlr.side[1].Front_dis_kal);
 			log_scope_get_data(wlr.side[0].Front_dis_kal);
+			log_scope_get_data(ms53l0m_distance_m[0]);
+			log_scope_get_data(ms53l0m_distance_m[1]);
 			log_scope_get_data(wlr.sky_flag);
 			log_scope_get_data(wlr.pit_fdb);
 			log_scope_get_data(ms53l0m_data_valid[0]);
@@ -607,6 +609,6 @@ void debug_task(void const* argument)
             text_log_div = 0;
             debug_log_text_output();
         }
-        osDelayUntil(&thread_wake_time, 10);
+        osDelayUntil(&thread_wake_time, 5);
     }
 }
