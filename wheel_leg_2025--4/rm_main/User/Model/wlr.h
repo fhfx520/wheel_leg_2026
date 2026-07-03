@@ -20,8 +20,7 @@ typedef enum {
     WLR_SKY_FOLDING = 1,		//平地收腿
     WLR_SKY_EXTENDING = 2,		//空中伸腿
     WLR_SKY_AIR_FOLDING = 3,	//空中收腿
-    WLR_SKY_LANDING = 4,		//落地
-	WLR_SKY_STAND = 5,		
+	WLR_SKY_STAND = 4,		
 } wlr_sky_state_e;
 
 typedef enum {
@@ -128,6 +127,7 @@ extern pid_t pid_leg_length_fly[2];
 extern int32_t double_cnt;
 extern float global_v;
 extern float x3_balance_zero,x5_balance_zero;
+extern uint32_t sky_ccc;
 void wlr_init(void);
 void wlr_protest(void);
 void wlr_control(void);

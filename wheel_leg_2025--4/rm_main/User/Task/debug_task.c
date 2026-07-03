@@ -28,7 +28,7 @@
 #define row_debug 2 * 10
 #define DEBUG_TEXT_LOG_DIV       2u
 #define DEBUG_TEXT_LOG_SLOT_NUM  21u
-uint8_t debug_wave = 5;
+uint8_t debug_wave = 7;
 uint8_t debug_text_log_enable = 1;
 float test_hex = 1;
 extern FGT_sin_t FGT_sin_chassis;
@@ -141,7 +141,6 @@ static const char* debug_sky_name(uint16_t state)
         case WLR_SKY_FOLDING:     return "FOLD";
         case WLR_SKY_EXTENDING:   return "EXT";
         case WLR_SKY_AIR_FOLDING: return "AIR_FOLD";
-        case WLR_SKY_LANDING:     return "LAND";
         case WLR_SKY_STAND:       return "STAND";
         default:                  return "UNKNOWN";
     }
@@ -547,12 +546,12 @@ void log_scope_data_pkg(void)
             break;
 		}        
 	case 7: { /* 激光 */
-            log_scope_get_data(wlr.side[1].Front_dis_kal);
+            log_scope_get_data(wlr.side[0].Front_dis_fdb);
 			log_scope_get_data(wlr.side[0].Front_dis_kal);
 			log_scope_get_data(wlr.sky_flag);
 			log_scope_get_data(wlr.pit_fdb);
 			log_scope_get_data(ms53l0m_data_valid[0]);
-			log_scope_get_data(ms53l0m_data_valid[1]);
+			log_scope_get_data(sky_ccc);
             break;
 		}
 	case 8: { /* 拨盘 */

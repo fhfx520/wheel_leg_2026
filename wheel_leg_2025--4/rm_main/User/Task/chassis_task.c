@@ -159,11 +159,11 @@ uint8_t check_tof_jump(float dis_up, float dis_down)
 {
 	static float last_dis[2] = {0};
 	static uint8_t tof_cnt = 0;
-	if((wlr.side[0].Front_dis_kal + wlr.side[1].Front_dis_kal) / 2.0f <= (last_dis[0] + last_dis[1]) / 2.0f && 
-		(wlr.side[0].Front_dis_kal + wlr.side[1].Front_dis_kal) / 2.0f > dis_down && \
-		(wlr.side[0].Front_dis_kal + wlr.side[1].Front_dis_kal) / 2.0f < dis_up)
+	if((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f <= (last_dis[0] + last_dis[0]) / 2.0f && 
+		(wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f > dis_down && \
+		(wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f < dis_up)
 	{
-		tof_cnt++;
+		tof_cnt++; 
 	}
 	else
 	{
@@ -171,8 +171,11 @@ uint8_t check_tof_jump(float dis_up, float dis_down)
 	}
 	last_dis[0] = wlr.side[0].Front_dis_kal;
 	last_dis[1] = wlr.side[1].Front_dis_kal;
-	if(tof_cnt >= 50)
+	if(tof_cnt >= 1)
+	{
+		tof_cnt = 0;
 		return 1;
+	}
 	else
 		return 0;
 }
@@ -432,7 +435,7 @@ static void chassis_execute_fsm(void)
 		chassis_scale.keyboard = 1.7f;
 
     if (g_robot_ctx.output.chassis == CHASSIS_HIGH) 
-		chassis_scale.remote = 1.0f / 660 * 2.2f;
+		chassis_scale.remote = 1.0f / 660 * 2.4f;
     else 
 		chassis_scale.remote = 1.0f /660 * 2.3f; 
 }
