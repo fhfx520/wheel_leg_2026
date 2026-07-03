@@ -43,8 +43,8 @@ static void gimbal_init(void)
 {
     memset(&gimbal, 0, sizeof(gimbal_t));
 	
-	pid_init(&gimbal.pit_angle.pid, NONE, 30.0f, 0.6f, 0, 0, 20);
-    pid_init(&gimbal.pit_spd.pid, NONE, 1.5f, 0.01f, 0, 1.0f, 7.0f);
+	pid_init(&gimbal.pit_angle.pid, NONE, 20.0f, 0.6f, 0, 0, 20);
+    pid_init(&gimbal.pit_spd.pid, NONE, 1.3f, 0.01f, 0, 1.0f, 7.0f);
 	
 //	pid_init(&gimbal.yaw_angle.pid, NONE,40.0f, 0.2f, 1.0f, 0.0f, 5.0f);//尝试云台补偿算法			MPC：调yaw的pid
 //    pid_init(&gimbal.yaw_spd.pid, NONE, 10000.0f, 50.0f, 0, 2000.0f, 25000.0f);
@@ -52,7 +52,7 @@ static void gimbal_init(void)
 	
 	//视觉mpc用这个
 	pid_init(&gimbal.yaw_angle.pid, CHANG_I_RATE,20.0f, 0.0f, 0.0f, 0, 5);	
-    pid_init(&gimbal.yaw_spd.pid, NONE, 17000.0f, 50.0f, 0, 0.0f, 25000.0f);						
+    pid_init(&gimbal.yaw_spd.pid, NONE, 10000.0f, 50.0f, 0, 0.0f, 25000.0f);						
 	
     pid_init(&gimbal.yaw_ecd.pid, NONE, 10.0f, 0, 0, 0.0f, 30.0f);
 	pid_init(&gimbal.yaw_spd_ecd.pid, NONE, 6000.0f, 10.00f, 0, 1000.0f, 25000.0f);
@@ -231,7 +231,7 @@ void gimbal_task(void const *argu)
 					else
 						gimbal.yaw_angle.ref = gimbal_imu.yaw + (float)yaw_motor.ecd / 8192 * 2 * PI -  (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI;	
 				}
-                gimbal.pit_angle.ref = 0.5f;		//0.3 滑槽卡头
+                gimbal.pit_angle.ref = 0.3f;		//0.3 滑槽卡头
                 gimbal.pit_output = 0;
                 gimbal.yaw_output = 0;
                 break;
@@ -242,7 +242,7 @@ void gimbal_task(void const *argu)
 					gimbal.yaw_angle.pid.out_max = 5.0f;
                 } 
                 else {
-					gimbal.yaw_angle.pid.out_max = 100.0f;
+					gimbal.yaw_angle.pid.out_max = 5.0f;
                    gimbal.yaw_ecd.ref   -= rc.ch1 * gimbal_scale.ecd_remote;
                    gimbal.pit_angle.ref -= -rc.ch2 * gimbal_scale.angle_remote;
                    gimbal.yaw_angle.ref -= rc.ch1 * gimbal_scale.angle_remote;

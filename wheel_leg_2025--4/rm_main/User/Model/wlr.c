@@ -1054,7 +1054,7 @@ void wlr_init(void)
 		pid_init(&pid_ascend[i], NONE, 700, 0.0f, 80000, 70, 300);			//磕台阶腿长pid
 		pid_init(&pid_rotate_balance_zero, NONE, 0.015f, 0.0f, 0, 0.0f, 0.1f);			//磕台阶腿长pid
 	}
-	pid_init(&pid_roll, NONE, 300, 0,0, 0, 40);								//roll偏移支持力补偿
+	pid_init(&pid_roll, NONE, 1000, 0,0, 0, 100);								//roll偏移支持力补偿
 	//卡尔曼滤波器初始化
 	DO_ONCE({
 		twm_init(&twm, BodyWidth, WheelRadius);
