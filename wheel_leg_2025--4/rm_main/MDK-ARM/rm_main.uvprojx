@@ -884,6 +884,16 @@
               <FileType>1</FileType>
               <FilePath>..\User\Protocol\prot_ms53l0m.c</FilePath>
             </File>
+            <File>
+              <FileName>prot_tof.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Protocol\prot_tof.c</FilePath>
+            </File>
+            <File>
+              <FileName>prot_tof.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\User\Protocol\prot_tof.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

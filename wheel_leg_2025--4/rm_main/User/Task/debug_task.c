@@ -23,6 +23,7 @@
 #include "board_comm.h"
 #include "shoot_task.h"
 #include "prot_ms53l0m.h"
+#include "prot_tof.h"
 #include "drv_lk_motor.h"
 
 #define row_debug 2 * 10
@@ -550,8 +551,9 @@ void log_scope_data_pkg(void)
 			log_scope_get_data(wlr.side[0].Front_dis_kal);
 			log_scope_get_data(wlr.sky_flag);
 			log_scope_get_data(wlr.pit_fdb);
-			log_scope_get_data(ms53l0m_data_valid[0]);
-			log_scope_get_data(sky_ccc);
+			log_scope_get_data(tof[0].confidence);
+			log_scope_get_data(sky_ccc); 
+			log_scope_get_data(wlr.v_fdb);
             break;
 		}
 	case 8: { /* 拨盘 */

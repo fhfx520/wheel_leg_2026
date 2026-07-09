@@ -258,7 +258,6 @@ static void kb_high_execute(void) {
 
     if (!g_robot_ctx.input.kb.bit.SHIFT) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
     if (check_key_trigger(KEY_R)) { fsm_change(&fsm_keyboard_sub, &state_kb_spin); return; } 
-	if (check_key_trigger(KEY_A) || check_key_trigger(KEY_D)) { fsm_change(&fsm_keyboard_sub, &state_kb_fight); return; }
 	if (check_key_trigger(KEY_Z)) { fsm_change(&fsm_keyboard_sub, &state_kb_ascend); return; }
 }
 static const FsmState_t state_kb_high = { .name = "KB_HIGH", .enter = kb_high_enter, .execute = kb_high_execute };
@@ -274,6 +273,7 @@ static void kb_ter_ready_execute(void) {
     
 	if (check_key_trigger(KEY_C)) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
 	if (check_key_trigger(KEY_Z)) { fsm_change(&fsm_keyboard_sub, &state_kb_ascend); return; }
+	if (g_robot_ctx.sky_finish_flag) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
 }
 static const FsmState_t state_kb_ter_ready = { .name = "KB_TER_RDY", .enter = kb_ter_ready_enter, .execute = kb_ter_ready_execute };
 

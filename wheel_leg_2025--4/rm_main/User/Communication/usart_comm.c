@@ -7,9 +7,11 @@
 #include "prot_hipnuc.h"
 #include "prot_ms53l2m.h"
 #include "prot_ms53l0m.h"
+#include "prot_tof.h"
 #define DEBUG_DATA_LEN 10
 #define JUDGE_DATA_LEN 150
 #define TFMINIPLUS_BUFF_SIZE 50
+#define TOF_BUFF_SIZE 11
 
 uint8_t dr16_dma_rx_buf[DR16_DATA_LEN];
 uint8_t judge_data_rx_buf[JUDGE_DATA_LEN];
@@ -18,6 +20,7 @@ uint8_t debug_dma_rx_buf[DEBUG_DATA_LEN];
 //uint8_t TFminiPlusBuffArray_Front_Right[TFMINIPLUS_BUFF_SIZE];
 uint8_t MS53L2MBuffArray_LEFT[MS53L2M_NORMAL_RX_BUF_SIZE];
 uint8_t MS53L2MBuffArray_RIGHT[MS53L2M_NORMAL_RX_BUF_SIZE];
+uint8_t TOFBuffArray_LEFT[TOF_BUFF_SIZE];
 //uint8_t Hipnuc_buff[82];
 uint32_t ccnct;
 /*
@@ -40,9 +43,9 @@ void usart_comm_init(void)
 //    HAL_UART_Receive_DMA(&DEBUG_HUART, debug_dma_rx_buf, DEBUG_DATA_LEN);
     log_init(&DEBUG_HUART);
 
-    __HAL_UART_CLEAR_IDLEFLAG(&MS53L2M_LEFT_HUART);
-    __HAL_UART_ENABLE_IT(&MS53L2M_LEFT_HUART, UART_IT_IDLE);
-    HAL_UART_Receive_DMA(&MS53L2M_LEFT_HUART, MS53L2MBuffArray_LEFT, MS53L2M_NORMAL_RX_BUF_SIZE);
+    __HAL_UART_CLEAR_IDLEFLAG(&TOF_LEFT_HUART);
+    __HAL_UART_ENABLE_IT(&TOF_LEFT_HUART, UART_IT_IDLE);
+    HAL_UART_Receive_DMA(&TOF_LEFT_HUART, TOFBuffArray_LEFT, TOF_BUFF_SIZE);
 	
 	__HAL_UART_CLEAR_IDLEFLAG(&MS53L2M_RIGHT_HUART);
     __HAL_UART_ENABLE_IT(&MS53L2M_RIGHT_HUART, UART_IT_IDLE);
@@ -69,10 +72,10 @@ void usart_user_handler(UART_HandleTypeDef *huart)
 //            memset(MS53L2MBuffArray_RIGHT, 0, MS53L0M_NORMAL_RX_BUF_SIZE);
             HAL_UART_Receive_DMA(huart, MS53L2MBuffArray_RIGHT, MS53L0M_NORMAL_RX_BUF_SIZE);
 		} 
-        else if (huart == &MS53L2M_LEFT_HUART) {
-            ms53l0m_normal_get_data(MS53L2MBuffArray_LEFT, MS53L0M_NORMAL_RX_BUF_SIZE,0);
-            memset(MS53L2MBuffArray_LEFT, 0, MS53L0M_NORMAL_RX_BUF_SIZE);
-            HAL_UART_Receive_DMA(huart, MS53L2MBuffArray_LEFT, MS53L0M_NORMAL_RX_BUF_SIZE);
+        else if (huart == &TOF_LEFT_HUART) {
+            tof_get_data(TOFBuffArray_LEFT, TOF_BUFF_SIZE,0);
+//            memset(TOFBuffArray_LEFT, 0, TOF_BUFF_SIZE);
+            HAL_UART_Receive_DMA(huart, TOFBuffArray_LEFT, TOF_BUFF_SIZE);
 			ccnct++;
         }
     }

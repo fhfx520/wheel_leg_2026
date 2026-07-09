@@ -9,7 +9,8 @@
 #define JUDGE_HUART  huart2
 #define MS53L2M_RIGHT_HUART huart4
 //#define TF_RIGHT_HUART huart4
-#define MS53L2M_LEFT_HUART huart10
+//#define MS53L2M_LEFT_HUART huart10
+#define TOF_LEFT_HUART huart10
 
 #define DEBUG_HUART	 huart6
 

@@ -259,8 +259,8 @@ static void chassis_init(void)
     memset(&chassis_y_ramp, 0, sizeof(ramp_t));
     wlr_init();
 
-    ramp_init(&chassis_x_ramp, 0.05f, -3.0f, 3.0f);
-    ramp_init(&chassis_y_ramp, 0.05f, -3.0f, 3.0f);
+    ramp_init(&chassis_x_ramp, 0.03f, -3.0f, 3.0f);
+    ramp_init(&chassis_y_ramp, 0.03f, -3.0f, 3.0f);
     ramp_init(&chassis_rotate_ramp, 0.06f, -2.0f * CHASSIS_ROTATE_SPEED, 2.0f * CHASSIS_ROTATE_SPEED);
 
 	//基于虚拟杆角度控制
@@ -354,6 +354,8 @@ static void chassis_execute_fsm(void)
 			chassis_reset_finish_flag();
 			if(wlr.sky_flag == WLR_SKY_IDLE)
 				wlr.sky_flag = WLR_SKY_FOLDING; 
+			else if(wlr.sky_flag == WLR_SKY_STAND && wlr.sky_over == 1)
+				g_robot_ctx.sky_finish_flag = 1;
             break;
 		}
 		
@@ -435,7 +437,7 @@ static void chassis_execute_fsm(void)
 		chassis_scale.keyboard = 1.7f;
 
     if (g_robot_ctx.output.chassis == CHASSIS_HIGH) 
-		chassis_scale.remote = 1.0f / 660 * 2.4f;
+		chassis_scale.remote = 1.0f / 660 * 2.2f;
     else 
 		chassis_scale.remote = 1.0f /660 * 2.3f; 
 }
@@ -554,6 +556,11 @@ static void chassis_data_input(void)
         case CHASSIS_FIGHT: {
             wlr.yaw_ref = (float)CHASSIS_YAW_FIGHT / 8192 * 2 * PI;
             wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;
+			wlr.yaw_err = circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
+			if(fabsf(wlr.yaw_err) < 30.0f * PI / 180.0f)
+				chassis.turn_fight_flag = 0;
+			else 
+				chassis.turn_fight_flag = 1;
             wlr.wz_ref = 0;
             break;
         }               

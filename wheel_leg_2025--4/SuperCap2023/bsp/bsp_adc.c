@@ -116,6 +116,17 @@ CCMRAM void adcGetValue(void)
 		cap.I = LPFOfilter_cal(&cap_PA3_filter,(((float)(adc1_value_buf[0])* v_reference/65535) - I_STANDARD) / (I_GAIN * R_SAMPLE));//*1.018871f +0.01565f
 		cap.P = cap.V * cap.I ;
 #endif
+#ifdef ID010
+		bat.V = LPFOfilter_cal(&vbat_PA5_filter,((float)(adc1_value_buf[3])* v_reference/65535) * V_GAIN)*1.0123f - 0.1665f;
+		bat.I = LPFOfilter_cal(&bat_PA6_filter,(((float)(adc4_value_buf[0])* v_reference/65535) - I_STANDARD) / (I_GAIN * R_SAMPLE))*1.0066f - 0.0903f;
+		bat.P =	bat.V *bat.I;
+		chassis.V = LPFOfilter_cal(&vint_PA0_filter,((float)(adc1_value_buf[1])* v_reference/65535) * 14.0f);
+		chassis.I = LPFOfilter_cal(&chassis_PA2_filter,(((float)(adc3_value_buf[0])* v_reference/65535) - I_STANDARD) / (I_GAIN * R_SAMPLE));
+		chassis.P = chassis.V *chassis.I;
+		cap.V = LPFOfilter_cal(&vout_PA1_filter,((float)(adc1_value_buf[2])* v_reference/65535) * V_GAIN);
+		cap.I = LPFOfilter_cal(&cap_PA3_filter,(((float)(adc1_value_buf[0])* v_reference/65535) - I_STANDARD) / (I_GAIN * R_SAMPLE));//*1.018871f +0.01565f
+		cap.P = cap.V * cap.I ;
+#endif
 
 #ifdef ID011
 		bat.V = LPFOfilter_cal(&vbat_PA5_filter,((float)(adc1_value_buf[3])* v_reference/65535) * V_GAIN)*0.9833f + 0.144f;
