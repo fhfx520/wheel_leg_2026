@@ -140,9 +140,11 @@ void power_get_data(uint8_t *data)
     //0x100
     float cap_voltage_buf;
     float chassis_current_buf;
+	float power_buf;
     
     memcpy(&cap_voltage_buf, data, 4);
     memcpy(&chassis_current_buf, data + 4, 4);
+	memcpy(&power_buf, data + 8, 4);
     
     power_control.online = 1;
     supercap.volage = cap_voltage_buf;
@@ -151,9 +153,10 @@ void power_get_data(uint8_t *data)
 			 supercap.volume_percent = 0;
 		
     supercap.current = chassis_current_buf;
+	supercap.power = power_buf;
 		
 	uint8_t cap_state_buf;
-    memcpy(&cap_state_buf,data + 8,1);
+    memcpy(&cap_state_buf,data + 12,1);
     supercap.state.cap_v_over = cap_state_buf  & 1;
     supercap.state.cap_v_low = cap_state_buf >> 1 & 1;
     supercap.state.bat_v_over = cap_state_buf >> 2 & 1;
@@ -162,7 +165,7 @@ void power_get_data(uint8_t *data)
     supercap.state.chassis_i_over = cap_state_buf >> 5 & 1;
     supercap.state.chassis_msg_miss = cap_state_buf >> 6 & 1;
     supercap.state.judge_msg_miss = cap_state_buf >> 7;
-	memcpy(&supercap.power_mode,data + 9,1);
+	memcpy(&supercap.power_mode,data + 13,1);
     //0x101
 //    uint8_t cap_state_buf;
 //    memcpy(&cap_state_buf,data,1);

@@ -29,7 +29,7 @@
 #define row_debug 2 * 10
 #define DEBUG_TEXT_LOG_DIV       2u
 #define DEBUG_TEXT_LOG_SLOT_NUM  21u
-uint8_t debug_wave = 7;
+uint8_t debug_wave = 5;
 uint8_t debug_text_log_enable = 1;
 float test_hex = 1;
 extern FGT_sin_t FGT_sin_chassis;
@@ -538,6 +538,7 @@ void log_scope_data_pkg(void)
 			log_scope_get_data(vmc[1].T_fdb.e.T1_fdb);
 			log_scope_get_data(vmc[1].T_fdb.e.T4_fdb);
 			log_scope_get_data(pid_leg_length_fly[1].output);
+			log_scope_get_data(driver_motor[1].tx_current);
             break;
 		}
         case 6: { /* 小陀螺 */
@@ -554,6 +555,7 @@ void log_scope_data_pkg(void)
 			log_scope_get_data(tof[0].confidence);
 			log_scope_get_data(sky_ccc); 
 			log_scope_get_data(wlr.v_fdb);
+			log_scope_get_data(supercap.power);
             break;
 		}
 	case 8: { /* 拨盘 */

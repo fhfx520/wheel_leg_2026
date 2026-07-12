@@ -17,7 +17,7 @@ typedef enum
 
 typedef struct
 {
-    float volage, current;          //接收的信息 电容电压 底盘电流
+    float volage, current,power;          //接收的信息 电容电压 底盘电流
     float min_volage, max_volage;   //电容当前电压 最小电压 最大电压
     uint8_t volume_percent;         //电容电压百分比
     struct

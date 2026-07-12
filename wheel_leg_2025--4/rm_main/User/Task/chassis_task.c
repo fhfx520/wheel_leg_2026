@@ -429,7 +429,7 @@ static void chassis_execute_fsm(void)
     }
 
     if (g_robot_ctx.output.chassis == CHASSIS_HIGH) 
-       	chassis_scale.keyboard = 2.2f;
+       	chassis_scale.keyboard = 2.4f;
     else
         chassis_scale.keyboard = 2.3f;
 
