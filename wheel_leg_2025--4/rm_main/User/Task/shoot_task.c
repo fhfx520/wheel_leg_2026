@@ -195,7 +195,7 @@ static uint8_t series_shoot_enable(void)
 		shoot.trigger_period  = 60;
 	else if (rc_fsm_check(RC_LEFT_LD) && rc_fsm_check(RC_RIGHT_LU) )
 		shoot.trigger_period  = 83;
-//	else
+//	else	
 //		shoot.trigger_period = TRIGGER_PERIOD;
     return (
         ( (ctrl_mode == REMOTER_MODE && shoot_get_vision_data_container.vision_enanle) //&& ( rc_fsm_check(RC_LEFT_LD) && rc_fsm_check(RC_RIGHT_RD) ) ) //开启视觉连发

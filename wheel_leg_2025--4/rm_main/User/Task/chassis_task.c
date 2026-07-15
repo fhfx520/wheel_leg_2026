@@ -259,8 +259,8 @@ static void chassis_init(void)
     memset(&chassis_y_ramp, 0, sizeof(ramp_t));
     wlr_init();
 
-    ramp_init(&chassis_x_ramp, 0.03f, -3.0f, 3.0f);
-    ramp_init(&chassis_y_ramp, 0.03f, -3.0f, 3.0f);
+    ramp_init(&chassis_x_ramp, 0.01f, -3.0f, 3.0f);
+    ramp_init(&chassis_y_ramp, 0.01f, -3.0f, 3.0f);
     ramp_init(&chassis_rotate_ramp, 0.06f, -2.0f * CHASSIS_ROTATE_SPEED, 2.0f * CHASSIS_ROTATE_SPEED);
 
 	//基于虚拟杆角度控制
@@ -437,7 +437,7 @@ static void chassis_execute_fsm(void)
 		chassis_scale.keyboard = 1.7f;
 
     if (g_robot_ctx.output.chassis == CHASSIS_HIGH) 
-		chassis_scale.remote = 1.0f / 660 * 2.2f;
+		chassis_scale.remote = 1.0f / 660 * 2.4f;
     else 
 		chassis_scale.remote = 1.0f /660 * 2.3f; 
 }

@@ -39,7 +39,7 @@ void fdcan_board_comm_send(void)
 	//视觉数据
 	fdcan_board_comm.tx_msg.e.vision_data.vision_enanle = vision.shoot_enable;
 	if(vision.aim_status == AIMING)
-		fdcan_board_comm.tx_msg.e.vision_data.vision_trace_id = vision.trace_id;
+		fdcan_board_comm.tx_msg.e.vision_data.vision_trace_id = 1;
 	else
 		fdcan_board_comm.tx_msg.e.vision_data.vision_trace_id = 0;
 	//在线状态数据
