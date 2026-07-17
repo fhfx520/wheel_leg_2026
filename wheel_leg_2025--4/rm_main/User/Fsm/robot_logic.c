@@ -34,8 +34,8 @@ static const FsmState_t state_rem_low;
 static const FsmState_t state_rem_spin;
 static const FsmState_t state_rem_high;
 static const FsmState_t state_rem_ter_ready;
+static const FsmState_t state_rem_ter_ready_2;
 static const FsmState_t state_rem_ascend;
-static const FsmState_t state_rem_double_ter_run;
 static const FsmState_t state_rem_stair;
 
 static const FsmState_t state_kb_low;
@@ -43,8 +43,8 @@ static const FsmState_t state_kb_high;
 static const FsmState_t state_kb_fight; 
 static const FsmState_t state_kb_spin; 
 static const FsmState_t state_kb_ter_ready;
+static const FsmState_t state_kb_ter_ready_2;
 static const FsmState_t state_kb_ascend;
-static const FsmState_t state_kb_double_ter_run;
 static const FsmState_t state_kb_energy;
 static const FsmState_t state_kb_stair;
 
@@ -178,23 +178,6 @@ static void rem_ascend_execute(void) {
 }
 static const FsmState_t state_rem_ascend = { .name = "REM_ASCEND", .enter = rem_ascend_enter, .execute = rem_ascend_execute };
 
-static void rem_double_ter_run_enter(void) { g_robot_ctx.output.chassis = CHASSIS_EXECUTING_FOLLOW_ASCEND; }
-static void rem_double_ter_run_execute(void) {
-    g_robot_ctx.output.chassis = CHASSIS_EXECUTING_FOLLOW_ASCEND;
-    g_robot_ctx.output.gimbal  = GIMBAL_GYRO_STABILIZE;
-    g_robot_ctx.output.shoot   = SHOOT_STOP;
-    if (rc_fsm_check(RC_LEFT_LD) && !rc_fsm_check(RC_RIGHT_RD)) {
-        g_robot_ctx.output.shoot   = SHOOT_SERIES;
-        g_robot_ctx.output.chassis = CHASSIS_STOP; 
-    } else {
-        g_robot_ctx.output.shoot   = SHOOT_SINGLE;
-    }
-    
-    if (g_robot_ctx.input.sw2 == RC_SW_UP) { fsm_change(&fsm_remote_sub, &state_rem_low); return; }
-    if (g_robot_ctx.input.sw2 == RC_SW_MID) { fsm_change(&fsm_remote_sub, &state_rem_high); return; }
-}
-static const FsmState_t state_rem_double_ter_run = { .name = "REM_DOUBLE_TER_RUN", .enter = rem_double_ter_run_enter, .execute = rem_double_ter_run_execute };
-
 static void rem_stair_enter(void) { g_robot_ctx.output.chassis = CHASSIS_STAIR; }
 static void rem_stair_execute(void) {
     g_robot_ctx.output.chassis = CHASSIS_STAIR;
@@ -225,6 +208,7 @@ static void kb_low_execute(void) {
 	if (check_key_trigger(KEY_Z)) { fsm_change(&fsm_keyboard_sub, &state_kb_ascend); return; }
 	if (check_key_trigger(KEY_B)) { fsm_change(&fsm_keyboard_sub, &state_kb_energy); return; }
     if (g_robot_ctx.input.kb.bit.F) { fsm_change(&fsm_keyboard_sub, &state_kb_stair); return; }
+	if (check_key_trigger(KEY_V)) { fsm_change(&fsm_keyboard_sub, &state_kb_ter_ready_2); return; }
 }
 static const FsmState_t state_kb_low = { .name = "KB_LOW", .enter = kb_low_enter, .execute = kb_low_execute };
 
@@ -277,6 +261,22 @@ static void kb_ter_ready_execute(void) {
 }
 static const FsmState_t state_kb_ter_ready = { .name = "KB_TER_RDY", .enter = kb_ter_ready_enter, .execute = kb_ter_ready_execute };
 
+
+static void kb_ter_ready_2_enter(void) {
+    g_robot_ctx.output.chassis = CHASSIS_TERRAIN_READY;
+    g_robot_ctx.ctrl_tick = 0;
+}
+static void kb_ter_ready_2_execute(void) {
+    g_robot_ctx.output.chassis = CHASSIS_TERRAIN_READY_2;
+    g_robot_ctx.output.gimbal = get_kb_gimbal_mode();
+    g_robot_ctx.output.shoot  = SHOOT_STOP; 
+    
+	if (check_key_trigger(KEY_V)) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
+	if (check_key_trigger(KEY_Z)) { fsm_change(&fsm_keyboard_sub, &state_kb_ascend); return; }
+	if (g_robot_ctx.sky_finish_flag) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
+}
+static const FsmState_t state_kb_ter_ready_2 = { .name = "KB_TER_RDY_2", .enter = kb_ter_ready_2_enter, .execute = kb_ter_ready_2_execute };
+
 static void kb_ascend_enter(void) { g_robot_ctx.output.chassis = CHASSIS_ASCEND; }
 static void kb_ascend_execute(void) {
     g_robot_ctx.output.chassis = CHASSIS_ASCEND;
@@ -288,17 +288,6 @@ static void kb_ascend_execute(void) {
 	if (check_key_trigger(KEY_C)) { fsm_change(&fsm_keyboard_sub, &state_kb_ter_ready); return;}
 }
 static const FsmState_t state_kb_ascend = { .name = "KB_ASCEND", .enter = kb_ascend_enter, .execute = kb_ascend_execute };
-
-static void kb_double_ter_enter(void) { g_robot_ctx.output.chassis = CHASSIS_EXECUTING_FOLLOW_ASCEND; }
-static void kb_double_ter_execute(void) {
-    g_robot_ctx.output.chassis = CHASSIS_EXECUTING_FOLLOW_ASCEND;
-    g_robot_ctx.output.gimbal = get_kb_gimbal_mode();
-    g_robot_ctx.output.shoot  = get_kb_shoot_mode();	
-
-	if (g_robot_ctx.sky_finish_flag && g_robot_ctx.jump_finish_flag) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
-    if (check_key_trigger(KEY_V)) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
-}
-static const FsmState_t state_kb_double_ter_run = { .name = "KB_DOUBLE_TER_RUN", .enter = kb_double_ter_enter, .execute = kb_double_ter_execute };
 
 static void kb_energy_enter(void) { g_robot_ctx.output.chassis = CHASSIS_ENERGY; }
 static void kb_energy_execute(void) {

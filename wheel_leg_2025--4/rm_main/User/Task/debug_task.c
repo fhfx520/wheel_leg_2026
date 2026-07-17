@@ -94,7 +94,6 @@ static const char* debug_chassis_name(ChassisState_e state)
         case CHASSIS_HIGH:                     return "HIGH";
         case CHASSIS_TERRAIN_READY:            return "TERRAIN_RDY";
         case CHASSIS_ASCEND:                   return "ASCEND";
-        case CHASSIS_EXECUTING_FOLLOW_ASCEND:  return "DOUBLE";
         case CHASSIS_ENERGY:                   return "ENERGY";
 		case CHASSIS_STAIR:					   return "STAIR";
         default:                               return "UNKNOWN";

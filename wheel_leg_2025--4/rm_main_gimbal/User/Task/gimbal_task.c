@@ -43,23 +43,23 @@ static void gimbal_init(void)
 {
     memset(&gimbal, 0, sizeof(gimbal_t));
 	
-	pid_init(&gimbal.pit_angle.pid, NONE, 20.0f, 0.6f, 0, 0, 20);
-    pid_init(&gimbal.pit_spd.pid, NONE, 1.3f, 0.01f, 0, 1.0f, 7.0f);
+	pid_init(&gimbal.pit_angle.pid, NONE, 30.0f, 0.6f, 0, 0, 20);
+    pid_init(&gimbal.pit_spd.pid, NONE, 1.5f, 0.01f, 0, 1.0f, 7.0f);
 	
 //	pid_init(&gimbal.yaw_angle.pid, NONE,40.0f, 0.2f, 1.0f, 0.0f, 5.0f);//尝试云台补偿算法			MPC：调yaw的pid
 //    pid_init(&gimbal.yaw_spd.pid, NONE, 10000.0f, 50.0f, 0, 2000.0f, 25000.0f);
 	
 	
-	//视觉mpc用这个
+	//视觉mpc用这个  
 	pid_init(&gimbal.yaw_angle.pid, CHANG_I_RATE,20.0f, 0.0f, 0.0f, 0, 5);	
-    pid_init(&gimbal.yaw_spd.pid, NONE, 10000.0f, 50.0f, 0, 0.0f, 25000.0f);						
+    pid_init(&gimbal.yaw_spd.pid, NONE, 20000.0f, 50.0f, 0, 0.0f, 25000.0f) ;							
 	
     pid_init(&gimbal.yaw_ecd.pid, NONE, 10.0f, 0, 0, 0.0f, 30.0f);
 	pid_init(&gimbal.yaw_spd_ecd.pid, NONE, 6000.0f, 10.00f, 0, 1000.0f, 25000.0f);
 }
 float yaw_err;
 float slope_feed,last_yaw_ref,slope_feed_pit,last_pit_ref;
-float kkkkk = 0.1;
+float kkkkk = 0.1F;
 static void gimbal_pid_calc(void)
 {
     float  pit_max, pit_min;
@@ -113,22 +113,14 @@ static void gimbal_pid_calc(void)
 	
     // gimbal.yaw_spd.ref = pid_calc(&gimbal.yaw_angle.pid, gimbal.yaw_angle.fdb + yaw_err, gimbal.yaw_angle.fdb);    
     //MPC
-	if(vision.rx[0].data.yaw_vel == 0)//锁中心
-	{
-		gimbal.yaw_spd.pid.ki = 200.0f;
-		gimbal.yaw_spd.pid.i_max = 4000.0f;
-	}	
-	else
-	{
 		gimbal.yaw_spd.pid.ki = 50.0f;
 		gimbal.yaw_spd.pid.i_max = 1000.0f;
-	}
 	
 	
 	if(gimbal.feedback_alpha_speed_input == 0)
 		vision_mpc_k = 1.0f;
 	else
-		vision_mpc_k = 0.5f;
+		vision_mpc_k = 0.75f;
 	
 	gimbal.yaw_spd.ref = pid_calc(&gimbal.yaw_angle.pid, gimbal.yaw_angle.fdb + yaw_err, gimbal.yaw_angle.fdb) \
                                 + vision_mpc_k * gimbal.vision_velocity  + gimbal.feedback_alpha_speed_input * kkkkk ;

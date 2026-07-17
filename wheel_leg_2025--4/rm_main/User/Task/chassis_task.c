@@ -359,6 +359,21 @@ static void chassis_execute_fsm(void)
             break;
 		}
 		
+		case CHASSIS_TERRAIN_READY_2:
+		{
+			wlr.double_flag = 1;
+            wlr.ctrl_mode = 2;
+            wlr.high_flag = 0;
+            wlr.jump_flag = WLR_JUMP_IDLE;
+			wlr.stair_flag = WLR_STAIR_IDLE;
+			chassis_reset_finish_flag();
+			if(wlr.sky_flag == WLR_SKY_IDLE)
+				wlr.sky_flag = WLR_SKY_FOLDING; 
+			else if(wlr.sky_flag == WLR_SKY_STAND && wlr.sky_over == 1)
+				g_robot_ctx.sky_finish_flag = 1;
+            break;
+		}
+		
 		case CHASSIS_ASCEND:
 		{
 			wlr.ctrl_mode = 2;
@@ -368,30 +383,6 @@ static void chassis_execute_fsm(void)
 			if(wlr.jump_flag == WLR_JUMP_IDLE && wlr.direction == 0) 
 				wlr.jump_flag = WLR_JUMP_ASCEND; 
 			if(wlr.jump_flag == WLR_JUMP_RECOVER_LONG && !g_robot_ctx.jump_finish_flag)
-				g_robot_ctx.jump_finish_flag = 1;
-			break;
-		}
-		
-		case CHASSIS_EXECUTING_FOLLOW_ASCEND:
-		{
-			wlr.ctrl_mode = 2;
-			wlr.high_flag = 0;
-			wlr.double_flag = 1;
-			if(wlr.sky_flag == WLR_SKY_IDLE && wlr.jump_flag == WLR_JUMP_IDLE)
-				wlr.sky_flag = WLR_SKY_FOLDING; 
-			// else if(wlr.sky_flag == WLR_SKY_FOLDING)
-			// 	sky_ccc++;
-			// if(wlr.sky_flag == WLR_SKY_FOLDING && ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f > 0.25f) \
-			// 	&& ((wlr.side[0].Front_dis_kal + wlr.side[0].Front_dis_kal) / 2.0f < 0.9f) && sky_ccc > 250)
-			// 	wlr.sky_flag = WLR_SKY_EXTENDING; 
-			else if(wlr.sky_flag == WLR_SKY_STAND && !g_robot_ctx.sky_finish_flag)
-				g_robot_ctx.sky_finish_flag = 1;
-			if(g_robot_ctx.sky_finish_flag && wlr.jump_flag == WLR_JUMP_IDLE && wlr.sky_over == 1)
-			{
-				wlr.sky_flag = WLR_SKY_IDLE;
-				wlr.jump_flag = WLR_JUMP_ASCEND; 
-			}
-			else if(wlr.jump_flag == WLR_JUMP_RECOVER_LONG && !g_robot_ctx.jump_finish_flag)
 				g_robot_ctx.jump_finish_flag = 1;
 			break;
 		}
@@ -480,8 +471,8 @@ static void chassis_data_input(void)
         }
         case CHASSIS_LOW:
         case CHASSIS_HIGH:
-        case CHASSIS_TERRAIN_READY:
-		case CHASSIS_EXECUTING_FOLLOW_ASCEND:			{ // 整合了原版的所有 FOLLOW 和 PRONE
+        case CHASSIS_TERRAIN_READY:		{ // 整合了原版的所有 FOLLOW 和 PRONE
+		case CHASSIS_TERRAIN_READY_2 :
 			if((key_scan_clear(KB_CTRL) || check_ch3_trigger()) && gimbal.start_up)
 				chassis.turn_back_flag = 1;
 			if(chassis.turn_back_flag && chassis.turn_back_cnt <= 1000)

@@ -53,8 +53,8 @@ typedef enum {
     CHASSIS_LOW_SPIN,           
     CHASSIS_HIGH,               
     CHASSIS_TERRAIN_READY,              // 加速靠近障碍物（平地收腿）
+	CHASSIS_TERRAIN_READY_2,
 	CHASSIS_ASCEND,                     // 站高高，装备上台阶
-	CHASSIS_EXECUTING_FOLLOW_ASCEND,    // 上二级台阶（先跳，再磕）
 	CHASSIS_ENERGY,                     // 能量机关
     CHASSIS_STAIR,                      // 下二级台阶模式
 } ChassisState_e;

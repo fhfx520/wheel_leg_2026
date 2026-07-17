@@ -48,7 +48,7 @@ void fdcan_comm_init(void)
 //  can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO0; // 通过过滤后给邮箱0
 //  HAL_FDCAN_ConfigFilter(&hfdcan1, &can_filter);
 //  HAL_FDCAN_ActivateNotification(&hfdcan1, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0); // 使能邮箱0新消息中断
-	HAL_FDCAN_ConfigGlobalFilter(&hfdcan1, FDCAN_REJECT, FDCAN_REJECT, FDCAN_REJECT_REMOTE, FDCAN_REJECT_REMOTE);
+//	HAL_FDCAN_ConfigGlobalFilter(&hfdcan1, FDCAN_REJECT, FDCAN_REJECT, FDCAN_REJECT_REMOTE, FDCAN_REJECT_REMOTE);
 	// 初始化FDCAN时启用传输完成中断
 	HAL_FDCAN_Start(&hfdcan1);
     // 配置标准发送参数

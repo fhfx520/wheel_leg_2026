@@ -255,6 +255,16 @@
           <WinNumber>1</WinNumber>
           <ItemText>yaw_tx</ItemText>
         </Ww>
+        <Ww>
+          <count>20</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>kkkkk</ItemText>
+        </Ww>
+        <Ww>
+          <count>21</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>gimbal.feedback_alpha_speed_input</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
