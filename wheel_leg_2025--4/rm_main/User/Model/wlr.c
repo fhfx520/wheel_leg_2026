@@ -596,24 +596,25 @@ static void handle_sky_state(void)
         x3_balance_zero = x3_balance_zero_normal - 0.03f;
         x5_balance_zero = -0.08f;
         wlr.high_set = ramp_calc(&sky_height_ramp, sky_leg_length);
-		sky_dis = (wlr.double_flag ? 0.6f : 1.15f);
+		sky_dis = (wlr.double_flag ? 0.7f : 1.15f);
         sky_ccc++;
         if(g_robot_ctx.output.top_mode == TOP_MODE_REMOTE) {
 			if (abs(rc.ch2) > 500) { 
 				wlr.sky_cnt++;  
 			} 
 		}
+		
+		if(wlr.double_flag)
+            wlr.v_ref = ramp_calc(&jump_ramp, -2.4f);
+        else
+            wlr.v_ref = ramp_calc(&jump_ramp, -3.0f);
+		
 		if (wlr.sky_cnt > 50 || wlr.side[0].Front_dis_fdb < sky_dis && sky_ccc > 400) {
 			sky_ccc = 0;
 			wlr.sky_cnt = 0;
 			v_ref = wlr.v_fdb;
 			wlr.sky_flag = WLR_SKY_EXTENDING;
 		} 
-
-		if(wlr.double_flag)
-            wlr.v_ref = ramp_calc(&jump_ramp, -2.3f);
-        else
-            wlr.v_ref = ramp_calc(&jump_ramp, -3.0f);
     } else if (wlr.sky_flag == WLR_SKY_EXTENDING) {
 		
         wlr.high_set = 0.35f;
@@ -635,7 +636,8 @@ static void handle_sky_state(void)
         x3_balance_zero = 0.0f;
         x5_balance_zero = 0.0f;
         wlr.sky_cnt++;
-        target_cnt = (wlr.double_flag ? 150 : 150);
+        target_cnt = (wlr.double_flag ? 200 : 150);
+		
         if (wlr.sky_cnt > target_cnt) {
             wlr.sky_cnt = 0;
             wlr.sky_flag = WLR_SKY_STAND;
@@ -1074,10 +1076,10 @@ static void apply_output_limits(void)
         }
 		else if(wlr.sky_flag == WLR_SKY_EXTENDING)
 		{
-			if(i == 1)
-				lqr.U_ref[i] *= 0.2f;
+			if(wlr.double_flag)
+				lqr.U_ref[i] *= 0.05f;
 			else
-				lqr.U_ref[i] *= 0.1f;
+				lqr.U_ref[i] *= 0.3f;
 		}
 		
         wlr.side[i].T1 = vmc[i].T_ref.e.T2_ref;
@@ -1097,7 +1099,7 @@ void wlr_init(void)
     
 	ramp_init(&height_ramp, 0.001f, LegLengthMin, LegLengthMax);			//日常腿长斜坡
 	ramp_init(&sky_height_ramp, 0.001f, LegLengthMin, LegLengthMax);		//空中腿长斜坡
-	ramp_init(&jump_ramp, 0.015f, -3.0f, 3.0f);
+	ramp_init(&jump_ramp, 0.03f, -3.0f, 3.0f);z
 	ramp_init(&stair_ramp, 0.05f, -2.0f, 2.0f);
 	ramp_init(&wz_ramp, 0.05f,  0,  3.0f);									//小陀螺加速K矩阵wz项斜坡
 	ramp_init(&sky_ramp[0], 10.0f, -450.0f,  450.0f);						//伸腿支持力斜坡

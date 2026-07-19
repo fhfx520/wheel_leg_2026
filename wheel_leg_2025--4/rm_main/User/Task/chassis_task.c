@@ -351,7 +351,7 @@ static void chassis_execute_fsm(void)
             wlr.high_flag = 0;
             wlr.jump_flag = WLR_JUMP_IDLE;
 			wlr.stair_flag = WLR_STAIR_IDLE;
-			chassis_reset_finish_flag();
+//			chassis_reset_finish_flag();
 			if(wlr.sky_flag == WLR_SKY_IDLE)
 				wlr.sky_flag = WLR_SKY_FOLDING; 
 			else if(wlr.sky_flag == WLR_SKY_STAND && wlr.sky_over == 1)
@@ -366,7 +366,7 @@ static void chassis_execute_fsm(void)
             wlr.high_flag = 0;
             wlr.jump_flag = WLR_JUMP_IDLE;
 			wlr.stair_flag = WLR_STAIR_IDLE;
-			chassis_reset_finish_flag();
+//			chassis_reset_finish_flag();
 			if(wlr.sky_flag == WLR_SKY_IDLE)
 				wlr.sky_flag = WLR_SKY_FOLDING; 
 			else if(wlr.sky_flag == WLR_SKY_STAND && wlr.sky_over == 1)

@@ -263,7 +263,7 @@ static const FsmState_t state_kb_ter_ready = { .name = "KB_TER_RDY", .enter = kb
 
 
 static void kb_ter_ready_2_enter(void) {
-    g_robot_ctx.output.chassis = CHASSIS_TERRAIN_READY;
+    g_robot_ctx.output.chassis = CHASSIS_TERRAIN_READY_2;
     g_robot_ctx.ctrl_tick = 0;
 }
 static void kb_ter_ready_2_execute(void) {
