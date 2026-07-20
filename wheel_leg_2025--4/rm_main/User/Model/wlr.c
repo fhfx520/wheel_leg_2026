@@ -596,7 +596,7 @@ static void handle_sky_state(void)
         x3_balance_zero = x3_balance_zero_normal - 0.03f;
         x5_balance_zero = -0.08f;
         wlr.high_set = ramp_calc(&sky_height_ramp, sky_leg_length);
-		sky_dis = (wlr.double_flag ? 0.7f : 1.15f);
+		sky_dis = (wlr.double_flag ? 0.6f : 1.15f);
         sky_ccc++;
         if(g_robot_ctx.output.top_mode == TOP_MODE_REMOTE) {
 			if (abs(rc.ch2) > 500) { 
@@ -605,7 +605,7 @@ static void handle_sky_state(void)
 		}
 		
 		if(wlr.double_flag)
-            wlr.v_ref = ramp_calc(&jump_ramp, -2.4f);
+            wlr.v_ref = ramp_calc(&jump_ramp, -2.2f);
         else
             wlr.v_ref = ramp_calc(&jump_ramp, -3.0f);
 		
@@ -1099,7 +1099,7 @@ void wlr_init(void)
     
 	ramp_init(&height_ramp, 0.001f, LegLengthMin, LegLengthMax);			//日常腿长斜坡
 	ramp_init(&sky_height_ramp, 0.001f, LegLengthMin, LegLengthMax);		//空中腿长斜坡
-	ramp_init(&jump_ramp, 0.03f, -3.0f, 3.0f);z
+	ramp_init(&jump_ramp, 0.015f, -3.0f, 3.0f);
 	ramp_init(&stair_ramp, 0.05f, -2.0f, 2.0f);
 	ramp_init(&wz_ramp, 0.05f,  0,  3.0f);									//小陀螺加速K矩阵wz项斜坡
 	ramp_init(&sky_ramp[0], 10.0f, -450.0f,  450.0f);						//伸腿支持力斜坡
