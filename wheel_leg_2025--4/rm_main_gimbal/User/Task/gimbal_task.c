@@ -43,8 +43,8 @@ static void gimbal_init(void)
 {
     memset(&gimbal, 0, sizeof(gimbal_t));
 	
-	pid_init(&gimbal.pit_angle.pid, NONE, 30.0f, 0.6f, 0, 0, 20);
-    pid_init(&gimbal.pit_spd.pid, NONE, 1.5f, 0.01f, 0, 1.0f, 7.0f);
+	pid_init(&gimbal.pit_angle.pid, NONE, 20.0f, 0.0f, 0, 0, 20);
+    pid_init(&gimbal.pit_spd.pid, NONE, 1.25f, 0.01f, 0, 1.0f, 7.0f);
 	
 //	pid_init(&gimbal.yaw_angle.pid, NONE,40.0f, 0.2f, 1.0f, 0.0f, 5.0f);//尝试云台补偿算法			MPC：调yaw的pid
 //    pid_init(&gimbal.yaw_spd.pid, NONE, 10000.0f, 50.0f, 0, 2000.0f, 25000.0f);
@@ -59,7 +59,7 @@ static void gimbal_init(void)
 }
 float yaw_err;
 float slope_feed,last_yaw_ref,slope_feed_pit,last_pit_ref;
-float kkkkk = 0.1F;
+float kkkkk = 0.05F;
 static void gimbal_pid_calc(void)
 {
     float  pit_max, pit_min;

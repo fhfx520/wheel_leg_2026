@@ -227,10 +227,10 @@ float K_Array_Leg_recover[4][10] =
 };
 
 float K_Array_Leg_rotate[4][10] = 
-//{{0, -3.24553, 0, -1.23895, -17.1345, -2.25814, -5.86629, -0.830853, -7.25895, -1.13856},
-//{0, -3.24553, 0, 1.23895, -5.86629, -0.830853, -17.1345, -2.25814, -7.25895, -1.13856},
-//{0, 1.96624, 0, -2.17273, 27.4088, 2.91566, -14.71, -1.15579, -36.082, -3.93633},
-//{0, 1.96624, 0, 2.17273, -14.71, -1.15579, 27.4088, 2.91566, -36.082, -3.93633}
+{{0, -3.24553, 0, -1.23895, -17.1345, -2.25814, -5.86629, -0.830853, -7.25895, -1.13856},
+{0, -3.24553, 0, 1.23895, -5.86629, -0.830853, -17.1345, -2.25814, -7.25895, -1.13856},
+{0, 1.96624, 0, -2.17273, 27.4088, 2.91566, -14.71, -1.15579, -36.082, -3.93633},
+{0, 1.96624, 0, 2.17273, -14.71, -1.15579, 27.4088, 2.91566, -36.082, -3.93633}
 
 //{{0, -2.31269, -0.0, -1.49106, -10.4774, -1.00888, -5.60608, -0.55667, -6.39849, -1.08678},
 //{0, -2.31269, 0.0, 1.49106, -5.60608, -0.55667, -10.4774, -1.00888, -6.39849, -1.08678},
@@ -242,10 +242,10 @@ float K_Array_Leg_rotate[4][10] =
 //{0.0, 10.5736, -0.0, -2.7778, 61.5988, 5.08514, -3.00145, 0.648542, -20.8044, -1.51661},
 //{0.0, 10.5736, 0.0, 2.7778, -3.00145, 0.648542, 61.5988, 5.08514, -20.8044, -1.51661}
 
-{{-0.0, -2.2348, -0.0, -1.4881, -9.5618, -0.98342, -5.4557, -0.54754, -6.2954, -1.0767},
-{-0.0, -2.2348, 0.0, 1.4881, -5.4557, -0.54754, -9.5618, -0.98342, -6.2954, -1.0767},
-{0.0, 7.45919, -0.0, -3.12537, 45.6121, 3.9735, -10.2583, -0.206524, -29.4461, -3.01079},
-{0.0, 7.45919, 0.0, 3.12537, -10.2583, -0.206524, 45.6121, 3.9735, -29.4461, -3.01079}
+//{{-0.0, -2.2348, -0.0, -1.4881, -9.5618, -0.98342, -5.4557, -0.54754, -6.2954, -1.0767},
+//{-0.0, -2.2348, 0.0, 1.4881, -5.4557, -0.54754, -9.5618, -0.98342, -6.2954, -1.0767},
+//{0.0, 7.45919, -0.0, -3.12537, 45.6121, 3.9735, -10.2583, -0.206524, -29.4461, -3.01079},
+//{0.0, 7.45919, 0.0, 3.12537, -10.2583, -0.206524, 45.6121, 3.9735, -29.4461, -3.01079}
 };
 
 float K_Array_Stop[4][10] = 
@@ -605,7 +605,7 @@ static void handle_sky_state(void)
 		}
 		
 		if(wlr.double_flag)
-            wlr.v_ref = ramp_calc(&jump_ramp, -2.2f);
+            wlr.v_ref = ramp_calc(&jump_ramp, -2.0f); 
         else
             wlr.v_ref = ramp_calc(&jump_ramp, -3.0f);
 		
@@ -620,7 +620,10 @@ static void handle_sky_state(void)
         wlr.high_set = 0.35f;
         jump_ramp.out = 0.0f; 
         wlr.v_ref = v_ref; 
-        x3_balance_zero = x3_balance_zero_normal;
+		if(wlr.double_flag)
+			x3_balance_zero = x3_balance_zero_normal + 0.15f;
+		else
+			x3_balance_zero = x3_balance_zero_normal;
         x5_balance_zero = 0.0f; 
 
         if (vmc[0].L_fdb > 0.32f && vmc[1].L_fdb > 0.32f) {
@@ -636,7 +639,7 @@ static void handle_sky_state(void)
         x3_balance_zero = 0.0f;
         x5_balance_zero = 0.0f;
         wlr.sky_cnt++;
-        target_cnt = (wlr.double_flag ? 200 : 150);
+        target_cnt = (wlr.double_flag ? 250 : 150);
 		
         if (wlr.sky_cnt > target_cnt) {
             wlr.sky_cnt = 0;
@@ -835,10 +838,14 @@ static void update_rotate_state(void)
 		}
 		else
 		{
-			K_Array_Leg_rotate[0][3] = -ramp_calc(&wz_ramp, 0.96186f);		//K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
-			K_Array_Leg_rotate[1][3] = ramp_calc(&wz_ramp, 0.96186f);
-			K_Array_Leg_rotate[2][3] = -3.12537f;		                    //K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
-			K_Array_Leg_rotate[3][3] = 3.12537f;
+//			K_Array_Leg_rotate[0][3] = -ramp_calc(&wz_ramp, 0.96186f);		//K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
+//			K_Array_Leg_rotate[1][3] = ramp_calc(&wz_ramp, 0.96186f);
+//			K_Array_Leg_rotate[2][3] = -3.12537f;		                    //K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
+//			K_Array_Leg_rotate[3][3] = 3.12537f;
+			K_Array_Leg_rotate[0][3] = -ramp_calc(&wz_ramp, 1.23895f);		//K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
+			K_Array_Leg_rotate[1][3] = ramp_calc(&wz_ramp, 1.23895f);
+			K_Array_Leg_rotate[2][3] = -2.17273f;		                    //K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
+			K_Array_Leg_rotate[3][3] = 2.17273f;
 		}
 		
     } else {
@@ -1078,8 +1085,8 @@ static void apply_output_limits(void)
 		{
 			if(wlr.double_flag)
 				lqr.U_ref[i] *= 0.05f;
-			else
-				lqr.U_ref[i] *= 0.3f;
+			else     
+				lqr.U_ref[i] *= 0.15f;
 		}
 		
         wlr.side[i].T1 = vmc[i].T_ref.e.T2_ref;
@@ -1118,7 +1125,7 @@ void wlr_init(void)
 		pid_init(&pid_leg_sky_jump[i],  NONE, 2500, 3.0, 0.0f, 150.0, 500);				//跳跃专用pid
 		pid_init(&pid_leg_recover[i], NONE, 1800, 1.5f, 20000.0f, 300, 500);			//起身专用pid
         pid_init(&pid_leg_length_fly[i], NONE, 1000, 0.0, 0, 0, 300);					//离地腿长/缓冲腿长pid
-        pid_init(&pid_L_test[i], CHANG_I_RATE,1500, 2.0, 40000, 30, 300);					//日常腿长pid
+        pid_init(&pid_L_test[i], CHANG_I_RATE,1500, 2.0, 45000, 30, 300);					//日常腿长pid
 		pid_L_test[i].threshold_a = 0.01f;
 		pid_L_test[i].threshold_b = 0.03f;
 		pid_init(&pid_rescue[i], NONE, 2.0f, 0.5f, 0, 45, 50);							//翻倒起身腿转速pid

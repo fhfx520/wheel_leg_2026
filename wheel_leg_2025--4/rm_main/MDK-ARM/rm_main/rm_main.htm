@@ -3,7 +3,7 @@
 <title>Static Call Graph - [rm_main\rm_main.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image rm_main\rm_main.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Mon Jul 20 18:15:36 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Tue Jul 21 17:38:39 2026
 <BR><P>
 <H3>Maximum Stack Usage =        864 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -717,7 +717,8 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[239]"></a>strcpy</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, strcpy.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[250]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_init_g_6_6
+<BR><BR>[Called By]<UL><LI><a href="#[3b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_update (via Veneer)
+<LI><a href="#[250]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_init_g_6_6
 <LI><a href="#[24f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_init_g_6_5
 <LI><a href="#[24e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_init_g_6_4
 <LI><a href="#[24d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_init_g_6_3
@@ -738,7 +739,6 @@ Global Symbols
 <LI><a href="#[23c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_init_g_3_3
 <LI><a href="#[23b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_init_g_3_2
 <LI><a href="#[238]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_init_g_3_1
-<LI><a href="#[3b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_update (via Veneer)
 </UL>
 
 <P><STRONG><a name="[3cc]"></a>__aeabi_uidiv</STRONG> (Thumb, 0 bytes, Stack size 12 bytes, uidiv.o(.text), UNUSED)
@@ -1094,10 +1094,10 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[112]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GetTick
 </UL>
-<BR>[Called By]<UL><LI><a href="#[17e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_SetCurrentMode
-<LI><a href="#[231]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_Reset
+<BR>[Called By]<UL><LI><a href="#[231]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_Reset
 <LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 <LI><a href="#[25c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dm_motor_init
+<LI><a href="#[17e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_SetCurrentMode
 </UL>
 
 <P><STRONG><a name="[13a]"></a>HAL_FDCAN_ActivateNotification</STRONG> (Thumb, 254 bytes, Stack size 20 bytes, stm32h7xx_hal_fdcan.o(.text.HAL_FDCAN_ActivateNotification))
@@ -1326,9 +1326,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[112]"></a>HAL_GetTick</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, stm32h7xx_hal.o(.text.HAL_GetTick))
-<BR><BR>[Called By]<UL><LI><a href="#[195]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCCEx_PLL3_Config
-<LI><a href="#[194]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCCEx_PLL2_Config
-<LI><a href="#[113]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DMA_Init
+<BR><BR>[Called By]<UL><LI><a href="#[113]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DMA_Init
 <LI><a href="#[19b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RNG_Init
 <LI><a href="#[12e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_Init
 <LI><a href="#[183]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCCEx_PeriphCLKConfig
@@ -1352,6 +1350,8 @@ Global Symbols
 <LI><a href="#[2bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;power_check_offline
 <LI><a href="#[284]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;judge_check_offline
 <LI><a href="#[2f1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rc_check_offline
+<LI><a href="#[195]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCCEx_PLL3_Config
+<LI><a href="#[194]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCCEx_PLL2_Config
 <LI><a href="#[111]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DMA_Abort
 <LI><a href="#[1f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_WaitOnFlagUntilTimeout
 <LI><a href="#[1d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_CheckIdleState
@@ -1370,9 +1370,9 @@ Global Symbols
 <P><STRONG><a name="[13d]"></a>HAL_Init</STRONG> (Thumb, 122 bytes, Stack size 16 bytes, stm32h7xx_hal.o(.text.HAL_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 192<LI>Call Chain = HAL_Init &rArr; HAL_InitTick &rArr; HAL_TIM_Base_Init &rArr; HAL_TIM_Base_MspInit &rArr; HAL_NVIC_SetPriority &rArr; NVIC_EncodePriority
 </UL>
-<BR>[Calls]<UL><LI><a href="#[13f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_GetSysClockFreq
-<LI><a href="#[140]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_InitTick
+<BR>[Calls]<UL><LI><a href="#[140]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_InitTick
 <LI><a href="#[141]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_MspInit
+<LI><a href="#[13f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_GetSysClockFreq
 <LI><a href="#[13e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_NVIC_SetPriorityGrouping
 </UL>
 <BR>[Called By]<UL><LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
@@ -1732,9 +1732,9 @@ Global Symbols
 <P><STRONG><a name="[183]"></a>HAL_RCCEx_PeriphCLKConfig</STRONG> (Thumb, 4076 bytes, Stack size 112 bytes, stm32h7xx_hal_rcc_ex.o(.text.HAL_RCCEx_PeriphCLKConfig))
 <BR><BR>[Stack]<UL><LI>Max Depth = 144<LI>Call Chain = HAL_RCCEx_PeriphCLKConfig &rArr; RCCEx_PLL3_Config
 </UL>
-<BR>[Calls]<UL><LI><a href="#[195]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCCEx_PLL3_Config
+<BR>[Calls]<UL><LI><a href="#[112]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GetTick
+<LI><a href="#[195]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCCEx_PLL3_Config
 <LI><a href="#[194]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCCEx_PLL2_Config
-<LI><a href="#[112]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GetTick
 </UL>
 <BR>[Called By]<UL><LI><a href="#[1d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_MspInit
 <LI><a href="#[19c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RNG_MspInit
@@ -1749,9 +1749,9 @@ Global Symbols
 <P><STRONG><a name="[196]"></a>HAL_RCC_ClockConfig</STRONG> (Thumb, 1176 bytes, Stack size 32 bytes, stm32h7xx_hal_rcc.o(.text.HAL_RCC_ClockConfig))
 <BR><BR>[Stack]<UL><LI>Max Depth = 208<LI>Call Chain = HAL_RCC_ClockConfig &rArr; HAL_InitTick &rArr; HAL_TIM_Base_Init &rArr; HAL_TIM_Base_MspInit &rArr; HAL_NVIC_SetPriority &rArr; NVIC_EncodePriority
 </UL>
-<BR>[Calls]<UL><LI><a href="#[13f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_GetSysClockFreq
-<LI><a href="#[140]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_InitTick
+<BR>[Calls]<UL><LI><a href="#[140]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_InitTick
 <LI><a href="#[112]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GetTick
+<LI><a href="#[13f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_GetSysClockFreq
 </UL>
 <BR>[Called By]<UL><LI><a href="#[1f6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemClock_Config
 </UL>
@@ -1767,9 +1767,9 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[13f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_GetSysClockFreq
 </UL>
-<BR>[Called By]<UL><LI><a href="#[197]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_GetPCLK1Freq
-<LI><a href="#[143]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_GetPCLK2Freq
+<BR>[Called By]<UL><LI><a href="#[143]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_GetPCLK2Freq
 <LI><a href="#[161]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_PCD_IRQHandler
+<LI><a href="#[197]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_GetPCLK1Freq
 <LI><a href="#[193]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCCEx_GetD3PCLK1Freq
 </UL>
 
@@ -1793,9 +1793,9 @@ Global Symbols
 <P><STRONG><a name="[13f]"></a>HAL_RCC_GetSysClockFreq</STRONG> (Thumb, 748 bytes, Stack size 40 bytes, stm32h7xx_hal_rcc.o(.text.HAL_RCC_GetSysClockFreq))
 <BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = HAL_RCC_GetSysClockFreq
 </UL>
-<BR>[Called By]<UL><LI><a href="#[174]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_GetHCLKFreq
-<LI><a href="#[196]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_ClockConfig
+<BR>[Called By]<UL><LI><a href="#[196]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_ClockConfig
 <LI><a href="#[13d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_Init
+<LI><a href="#[174]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_GetHCLKFreq
 </UL>
 
 <P><STRONG><a name="[198]"></a>HAL_RCC_NMI_IRQHandler</STRONG> (Thumb, 42 bytes, Stack size 8 bytes, stm32h7xx_hal_rcc.o(.text.HAL_RCC_NMI_IRQHandler))
@@ -1927,8 +1927,8 @@ Global Symbols
 <P><STRONG><a name="[144]"></a>HAL_TIM_Base_Init</STRONG> (Thumb, 168 bytes, Stack size 16 bytes, stm32h7xx_hal_tim.o(.text.HAL_TIM_Base_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 104<LI>Call Chain = HAL_TIM_Base_Init &rArr; HAL_TIM_Base_MspInit &rArr; HAL_NVIC_SetPriority &rArr; NVIC_EncodePriority
 </UL>
-<BR>[Calls]<UL><LI><a href="#[1a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_Base_SetConfig
-<LI><a href="#[1a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_Base_MspInit
+<BR>[Calls]<UL><LI><a href="#[1a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_Base_MspInit
+<LI><a href="#[1a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_Base_SetConfig
 </UL>
 <BR>[Called By]<UL><LI><a href="#[140]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_InitTick
 <LI><a href="#[1e2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_TIM2_Init
@@ -1970,14 +1970,14 @@ Global Symbols
 <P><STRONG><a name="[1af]"></a>HAL_TIM_IRQHandler</STRONG> (Thumb, 592 bytes, Stack size 24 bytes, stm32h7xx_hal_tim.o(.text.HAL_TIM_IRQHandler))
 <BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = HAL_TIM_IRQHandler &rArr; HAL_TIM_PeriodElapsedCallback
 </UL>
-<BR>[Calls]<UL><LI><a href="#[1b7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIMEx_CommutCallback
+<BR>[Calls]<UL><LI><a href="#[1b3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_PeriodElapsedCallback
+<LI><a href="#[1b7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIMEx_CommutCallback
 <LI><a href="#[1b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_TriggerCallback
 <LI><a href="#[1b5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIMEx_Break2Callback
 <LI><a href="#[1b4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIMEx_BreakCallback
 <LI><a href="#[1b1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_OC_DelayElapsedCallback
 <LI><a href="#[1b0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_IC_CaptureCallback
 <LI><a href="#[1b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_PWM_PulseFinishedCallback
-<LI><a href="#[1b3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_PeriodElapsedCallback
 </UL>
 <BR>[Called By]<UL><LI><a href="#[3c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM2_IRQHandler
 <LI><a href="#[39]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM1_UP_IRQHandler
@@ -2013,8 +2013,8 @@ Global Symbols
 <P><STRONG><a name="[1c0]"></a>HAL_TIM_PWM_Init</STRONG> (Thumb, 168 bytes, Stack size 16 bytes, stm32h7xx_hal_tim.o(.text.HAL_TIM_PWM_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 28<LI>Call Chain = HAL_TIM_PWM_Init &rArr; TIM_Base_SetConfig
 </UL>
-<BR>[Calls]<UL><LI><a href="#[1a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_Base_SetConfig
-<LI><a href="#[1c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_PWM_MspInit
+<BR>[Calls]<UL><LI><a href="#[1c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_PWM_MspInit
+<LI><a href="#[1a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_Base_SetConfig
 </UL>
 <BR>[Called By]<UL><LI><a href="#[1e4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_TIM3_Init
 </UL>
@@ -2564,10 +2564,10 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[1d3]"></a>UART_SetConfig</STRONG> (Thumb, 2638 bytes, Stack size 128 bytes, stm32h7xx_hal_uart.o(.text.UART_SetConfig))
-<BR><BR>[Stack]<UL><LI>Max Depth = 192<LI>Call Chain = UART_SetConfig &rArr; HAL_RCC_GetPCLK1Freq &rArr; HAL_RCC_GetHCLKFreq &rArr; HAL_RCC_GetSysClockFreq
+<BR><BR>[Stack]<UL><LI>Max Depth = 192<LI>Call Chain = UART_SetConfig &rArr; HAL_RCC_GetPCLK2Freq &rArr; HAL_RCC_GetHCLKFreq &rArr; HAL_RCC_GetSysClockFreq
 </UL>
-<BR>[Calls]<UL><LI><a href="#[197]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_GetPCLK1Freq
-<LI><a href="#[143]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_GetPCLK2Freq
+<BR>[Calls]<UL><LI><a href="#[143]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_GetPCLK2Freq
+<LI><a href="#[197]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_GetPCLK1Freq
 <LI><a href="#[193]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCCEx_GetD3PCLK1Freq
 <LI><a href="#[200]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCCEx_GetPLL3ClockFreq
 <LI><a href="#[1ff]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCCEx_GetPLL2ClockFreq
@@ -2920,10 +2920,10 @@ Global Symbols
 <P><STRONG><a name="[218]"></a>USBD_LL_Init</STRONG> (Thumb, 136 bytes, Stack size 24 bytes, usbd_conf.o(.text.USBD_LL_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 448<LI>Call Chain = USBD_LL_Init &rArr; HAL_PCD_Init &rArr; HAL_PCD_MspInit &rArr; HAL_RCCEx_PeriphCLKConfig &rArr; RCCEx_PLL3_Config
 </UL>
-<BR>[Calls]<UL><LI><a href="#[21f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_PCDEx_SetRxFiFo
+<BR>[Calls]<UL><LI><a href="#[184]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Error_Handler
+<LI><a href="#[21f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_PCDEx_SetRxFiFo
 <LI><a href="#[220]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_PCDEx_SetTxFiFo
 <LI><a href="#[17a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_PCD_Init
-<LI><a href="#[184]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Error_Handler
 </UL>
 <BR>[Called By]<UL><LI><a href="#[1ee]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_Init
 </UL>
@@ -3198,10 +3198,10 @@ Global Symbols
 <P><STRONG><a name="[15f]"></a>USB_EP0_OutStart</STRONG> (Thumb, 158 bytes, Stack size 24 bytes, stm32h7xx_ll_usb.o(.text.USB_EP0_OutStart))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = USB_EP0_OutStart
 </UL>
-<BR>[Called By]<UL><LI><a href="#[15d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_PCD_EP_SetStall
+<BR>[Called By]<UL><LI><a href="#[161]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_PCD_IRQHandler
+<LI><a href="#[15d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_PCD_EP_SetStall
 <LI><a href="#[168]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PCD_EP_OutSetupPacket_int
 <LI><a href="#[167]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PCD_EP_OutXfrComplete_int
-<LI><a href="#[161]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_PCD_IRQHandler
 </UL>
 
 <P><STRONG><a name="[158]"></a>USB_EPClearStall</STRONG> (Thumb, 160 bytes, Stack size 16 bytes, stm32h7xx_ll_usb.o(.text.USB_EPClearStall))
@@ -3246,8 +3246,8 @@ Global Symbols
 <P><STRONG><a name="[16c]"></a>USB_FlushTxFifo</STRONG> (Thumb, 122 bytes, Stack size 16 bytes, stm32h7xx_ll_usb.o(.text.USB_FlushTxFifo))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = USB_FlushTxFifo
 </UL>
-<BR>[Called By]<UL><LI><a href="#[17f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_DevInit
-<LI><a href="#[161]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_PCD_IRQHandler
+<BR>[Called By]<UL><LI><a href="#[161]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_PCD_IRQHandler
+<LI><a href="#[17f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_DevInit
 </UL>
 
 <P><STRONG><a name="[173]"></a>USB_GetDevSpeed</STRONG> (Thumb, 76 bytes, Stack size 16 bytes, stm32h7xx_ll_usb.o(.text.USB_GetDevSpeed))
@@ -3259,8 +3259,8 @@ Global Symbols
 <P><STRONG><a name="[162]"></a>USB_GetMode</STRONG> (Thumb, 16 bytes, Stack size 4 bytes, stm32h7xx_ll_usb.o(.text.USB_GetMode))
 <BR><BR>[Stack]<UL><LI>Max Depth = 4<LI>Call Chain = USB_GetMode
 </UL>
-<BR>[Called By]<UL><LI><a href="#[17e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_SetCurrentMode
-<LI><a href="#[161]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_PCD_IRQHandler
+<BR>[Called By]<UL><LI><a href="#[161]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_PCD_IRQHandler
+<LI><a href="#[17e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_SetCurrentMode
 </UL>
 
 <P><STRONG><a name="[16a]"></a>USB_ReadDevAllInEpInterrupt</STRONG> (Thumb, 36 bytes, Stack size 12 bytes, stm32h7xx_ll_usb.o(.text.USB_ReadDevAllInEpInterrupt))
@@ -3312,8 +3312,8 @@ Global Symbols
 <P><STRONG><a name="[17e]"></a>USB_SetCurrentMode</STRONG> (Thumb, 222 bytes, Stack size 32 bytes, stm32h7xx_ll_usb.o(.text.USB_SetCurrentMode))
 <BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = USB_SetCurrentMode &rArr; HAL_Delay
 </UL>
-<BR>[Calls]<UL><LI><a href="#[162]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_GetMode
-<LI><a href="#[11a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_Delay
+<BR>[Calls]<UL><LI><a href="#[11a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_Delay
+<LI><a href="#[162]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_GetMode
 </UL>
 <BR>[Called By]<UL><LI><a href="#[17a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_PCD_Init
 </UL>
@@ -3349,8 +3349,8 @@ Global Symbols
 <P><STRONG><a name="[232]"></a>_ui_init_g_1_0</STRONG> (Thumb, 1180 bytes, Stack size 32 bytes, ui_g.o(.text._ui_init_g_1_0))
 <BR><BR>[Stack]<UL><LI>Max Depth = 164<LI>Call Chain = _ui_init_g_1_0 &rArr; judge_send_data &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vListInsertEnd
 </UL>
-<BR>[Calls]<UL><LI><a href="#[233]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_proc_7_frame
-<LI><a href="#[234]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;judge_send_data
+<BR>[Calls]<UL><LI><a href="#[234]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;judge_send_data
+<LI><a href="#[233]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_proc_7_frame
 </UL>
 <BR>[Called By]<UL><LI><a href="#[2f6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_init_g_1
 </UL>
@@ -3358,8 +3358,8 @@ Global Symbols
 <P><STRONG><a name="[235]"></a>_ui_init_g_2_0</STRONG> (Thumb, 1204 bytes, Stack size 40 bytes, ui_g.o(.text._ui_init_g_2_0))
 <BR><BR>[Stack]<UL><LI>Max Depth = 172<LI>Call Chain = _ui_init_g_2_0 &rArr; judge_send_data &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vListInsertEnd
 </UL>
-<BR>[Calls]<UL><LI><a href="#[233]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_proc_7_frame
-<LI><a href="#[234]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;judge_send_data
+<BR>[Calls]<UL><LI><a href="#[234]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;judge_send_data
+<LI><a href="#[233]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_proc_7_frame
 </UL>
 <BR>[Called By]<UL><LI><a href="#[2f7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_init_g_2
 </UL>
@@ -3367,8 +3367,8 @@ Global Symbols
 <P><STRONG><a name="[236]"></a>_ui_init_g_3_0</STRONG> (Thumb, 320 bytes, Stack size 24 bytes, ui_g.o(.text._ui_init_g_3_0))
 <BR><BR>[Stack]<UL><LI>Max Depth = 156<LI>Call Chain = _ui_init_g_3_0 &rArr; judge_send_data &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vListInsertEnd
 </UL>
-<BR>[Calls]<UL><LI><a href="#[237]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_proc_1_frame
-<LI><a href="#[234]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;judge_send_data
+<BR>[Calls]<UL><LI><a href="#[234]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;judge_send_data
+<LI><a href="#[237]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_proc_1_frame
 </UL>
 <BR>[Called By]<UL><LI><a href="#[2f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_init_g_3
 </UL>
@@ -3496,8 +3496,8 @@ Global Symbols
 <P><STRONG><a name="[246]"></a>_ui_init_g_5_0</STRONG> (Thumb, 730 bytes, Stack size 32 bytes, ui_g.o(.text._ui_init_g_5_0))
 <BR><BR>[Stack]<UL><LI>Max Depth = 164<LI>Call Chain = _ui_init_g_5_0 &rArr; judge_send_data &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vListInsertEnd
 </UL>
-<BR>[Calls]<UL><LI><a href="#[247]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_proc_5_frame
-<LI><a href="#[234]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;judge_send_data
+<BR>[Calls]<UL><LI><a href="#[234]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;judge_send_data
+<LI><a href="#[247]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_proc_5_frame
 </UL>
 <BR>[Called By]<UL><LI><a href="#[2fa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_init_g_5
 </UL>
@@ -3595,8 +3595,8 @@ Global Symbols
 <P><STRONG><a name="[251]"></a>_ui_update_g_1_0</STRONG> (Thumb, 80 bytes, Stack size 16 bytes, ui_g.o(.text._ui_update_g_1_0))
 <BR><BR>[Stack]<UL><LI>Max Depth = 148<LI>Call Chain = _ui_update_g_1_0 &rArr; judge_send_data &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vListInsertEnd
 </UL>
-<BR>[Calls]<UL><LI><a href="#[233]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_proc_7_frame
-<LI><a href="#[234]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;judge_send_data
+<BR>[Calls]<UL><LI><a href="#[234]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;judge_send_data
+<LI><a href="#[233]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_proc_7_frame
 </UL>
 <BR>[Called By]<UL><LI><a href="#[2ff]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_update_g_1
 </UL>
@@ -3604,8 +3604,8 @@ Global Symbols
 <P><STRONG><a name="[252]"></a>_ui_update_g_2_0</STRONG> (Thumb, 80 bytes, Stack size 16 bytes, ui_g.o(.text._ui_update_g_2_0))
 <BR><BR>[Stack]<UL><LI>Max Depth = 148<LI>Call Chain = _ui_update_g_2_0 &rArr; judge_send_data &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vListInsertEnd
 </UL>
-<BR>[Calls]<UL><LI><a href="#[233]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_proc_7_frame
-<LI><a href="#[234]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;judge_send_data
+<BR>[Calls]<UL><LI><a href="#[234]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;judge_send_data
+<LI><a href="#[233]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_proc_7_frame
 </UL>
 <BR>[Called By]<UL><LI><a href="#[300]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_update_g_2
 </UL>
@@ -3613,8 +3613,8 @@ Global Symbols
 <P><STRONG><a name="[253]"></a>_ui_update_g_5_0</STRONG> (Thumb, 80 bytes, Stack size 16 bytes, ui_g.o(.text._ui_update_g_5_0))
 <BR><BR>[Stack]<UL><LI>Max Depth = 148<LI>Call Chain = _ui_update_g_5_0 &rArr; judge_send_data &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vListInsertEnd
 </UL>
-<BR>[Calls]<UL><LI><a href="#[247]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_proc_5_frame
-<LI><a href="#[234]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;judge_send_data
+<BR>[Calls]<UL><LI><a href="#[234]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;judge_send_data
+<LI><a href="#[247]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_proc_5_frame
 </UL>
 <BR>[Called By]<UL><LI><a href="#[301]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_update_g_5
 </UL>
@@ -3722,19 +3722,19 @@ Global Symbols
 <P><STRONG><a name="[2fd]"></a>calc_crc16</STRONG> (Thumb, 106 bytes, Stack size 16 bytes, ui_interface.o(.text.calc_crc16))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = calc_crc16
 </UL>
-<BR>[Called By]<UL><LI><a href="#[233]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_proc_7_frame
+<BR>[Called By]<UL><LI><a href="#[23a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_proc_string_frame
+<LI><a href="#[233]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_proc_7_frame
 <LI><a href="#[247]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_proc_5_frame
 <LI><a href="#[237]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_proc_1_frame
-<LI><a href="#[23a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_proc_string_frame
 </UL>
 
 <P><STRONG><a name="[2fc]"></a>calc_crc8</STRONG> (Thumb, 70 bytes, Stack size 12 bytes, ui_interface.o(.text.calc_crc8))
 <BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = calc_crc8
 </UL>
-<BR>[Called By]<UL><LI><a href="#[233]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_proc_7_frame
+<BR>[Called By]<UL><LI><a href="#[23a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_proc_string_frame
+<LI><a href="#[233]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_proc_7_frame
 <LI><a href="#[247]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_proc_5_frame
 <LI><a href="#[237]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_proc_1_frame
-<LI><a href="#[23a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ui_proc_string_frame
 </UL>
 
 <P><STRONG><a name="[258]"></a>can_comm_init</STRONG> (Thumb, 612 bytes, Stack size 120 bytes, can_comm.o(.text.can_comm_init))
@@ -4096,7 +4096,20 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[286]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
 <LI><a href="#[1d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_Transmit_DMA
 </UL>
-<BR>[Called By]<UL><LI><a href="#[250]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_init_g_6_6
+<BR>[Called By]<UL><LI><a href="#[342]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_leg_ls_offline (via Veneer)
+<LI><a href="#[341]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_leg_lb_offline (via Veneer)
+<LI><a href="#[349]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_wheel_r_offline (via Veneer)
+<LI><a href="#[348]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_wheel_l_offline (via Veneer)
+<LI><a href="#[347]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_trigger_offline (via Veneer)
+<LI><a href="#[33f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_fric_r_offline (via Veneer)
+<LI><a href="#[33e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_fric_l_offline (via Veneer)
+<LI><a href="#[340]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_gimbal_imu_offline (via Veneer)
+<LI><a href="#[345]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_pit_offline (via Veneer)
+<LI><a href="#[34a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_yaw_offline (via Veneer)
+<LI><a href="#[344]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_leg_rs_offline (via Veneer)
+<LI><a href="#[343]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_leg_rb_offline (via Veneer)
+<LI><a href="#[346]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_spin_warning (via Veneer)
+<LI><a href="#[250]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_init_g_6_6
 <LI><a href="#[24f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_init_g_6_5
 <LI><a href="#[24e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_init_g_6_4
 <LI><a href="#[24d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_init_g_6_3
@@ -4124,19 +4137,6 @@ Global Symbols
 <LI><a href="#[235]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_init_g_2_0
 <LI><a href="#[251]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_g_1_0
 <LI><a href="#[232]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_init_g_1_0
-<LI><a href="#[342]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_leg_ls_offline (via Veneer)
-<LI><a href="#[341]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_leg_lb_offline (via Veneer)
-<LI><a href="#[349]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_wheel_r_offline (via Veneer)
-<LI><a href="#[348]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_wheel_l_offline (via Veneer)
-<LI><a href="#[347]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_trigger_offline (via Veneer)
-<LI><a href="#[33f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_fric_r_offline (via Veneer)
-<LI><a href="#[33e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_fric_l_offline (via Veneer)
-<LI><a href="#[340]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_gimbal_imu_offline (via Veneer)
-<LI><a href="#[345]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_pit_offline (via Veneer)
-<LI><a href="#[34a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_yaw_offline (via Veneer)
-<LI><a href="#[344]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_leg_rs_offline (via Veneer)
-<LI><a href="#[343]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_leg_rb_offline (via Veneer)
-<LI><a href="#[346]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_spin_warning (via Veneer)
 </UL>
 
 <P><STRONG><a name="[287]"></a>kalman_filter_K_update</STRONG> (Thumb, 252 bytes, Stack size 16 bytes, kalman_filter.o(.text.kalman_filter_K_update))
@@ -4332,9 +4332,9 @@ Global Symbols
 <P><STRONG><a name="[2a6]"></a>log_scope_data_output</STRONG> (Thumb, 92 bytes, Stack size 16 bytes, data_log.o(.text.log_scope_data_output))
 <BR><BR>[Stack]<UL><LI>Max Depth = 124<LI>Call Chain = log_scope_data_output &rArr; HAL_UART_Transmit_DMA &rArr; HAL_DMA_Start_IT &rArr; DMA_SetConfig
 </UL>
-<BR>[Calls]<UL><LI><a href="#[2a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;log_scope_data_generate
-<LI><a href="#[2a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;log_scope_data_pkg (via Veneer)
+<BR>[Calls]<UL><LI><a href="#[2a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;log_scope_data_pkg (via Veneer)
 <LI><a href="#[1d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_Transmit_DMA
+<LI><a href="#[2a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;log_scope_data_generate
 </UL>
 <BR>[Called By]<UL><LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_task (via Veneer)
 </UL>
@@ -4750,7 +4750,20 @@ Global Symbols
 <LI><a href="#[2fc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;calc_crc8
 <LI><a href="#[2fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strlen
 </UL>
-<BR>[Called By]<UL><LI><a href="#[250]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_init_g_6_6
+<BR>[Called By]<UL><LI><a href="#[342]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_leg_ls_offline (via Veneer)
+<LI><a href="#[341]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_leg_lb_offline (via Veneer)
+<LI><a href="#[349]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_wheel_r_offline (via Veneer)
+<LI><a href="#[348]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_wheel_l_offline (via Veneer)
+<LI><a href="#[347]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_trigger_offline (via Veneer)
+<LI><a href="#[33f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_fric_r_offline (via Veneer)
+<LI><a href="#[33e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_fric_l_offline (via Veneer)
+<LI><a href="#[340]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_gimbal_imu_offline (via Veneer)
+<LI><a href="#[345]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_pit_offline (via Veneer)
+<LI><a href="#[34a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_yaw_offline (via Veneer)
+<LI><a href="#[344]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_leg_rs_offline (via Veneer)
+<LI><a href="#[343]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_leg_rb_offline (via Veneer)
+<LI><a href="#[346]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_spin_warning (via Veneer)
+<LI><a href="#[250]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_init_g_6_6
 <LI><a href="#[24f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_init_g_6_5
 <LI><a href="#[24e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_init_g_6_4
 <LI><a href="#[24d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_init_g_6_3
@@ -4771,19 +4784,6 @@ Global Symbols
 <LI><a href="#[23c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_init_g_3_3
 <LI><a href="#[23b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_init_g_3_2
 <LI><a href="#[238]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_init_g_3_1
-<LI><a href="#[342]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_leg_ls_offline (via Veneer)
-<LI><a href="#[341]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_leg_lb_offline (via Veneer)
-<LI><a href="#[349]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_wheel_r_offline (via Veneer)
-<LI><a href="#[348]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_wheel_l_offline (via Veneer)
-<LI><a href="#[347]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_trigger_offline (via Veneer)
-<LI><a href="#[33f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_fric_r_offline (via Veneer)
-<LI><a href="#[33e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_fric_l_offline (via Veneer)
-<LI><a href="#[340]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_gimbal_imu_offline (via Veneer)
-<LI><a href="#[345]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_pit_offline (via Veneer)
-<LI><a href="#[34a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_yaw_offline (via Veneer)
-<LI><a href="#[344]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_leg_rs_offline (via Veneer)
-<LI><a href="#[343]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_leg_rb_offline (via Veneer)
-<LI><a href="#[346]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ui_update_spin_warning (via Veneer)
 </UL>
 
 <P><STRONG><a name="[2ff]"></a>ui_update_g_1</STRONG> (Thumb, 8 bytes, Stack size 8 bytes, ui_g.o(.text.ui_update_g_1))
@@ -6055,7 +6055,7 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[365]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[38a]"></a>handle_sky_state</STRONG> (Thumb, 1084 bytes, Stack size 24 bytes, wlr.o(.text.handle_sky_state))
+<P><STRONG><a name="[38a]"></a>handle_sky_state</STRONG> (Thumb, 1120 bytes, Stack size 24 bytes, wlr.o(.text.handle_sky_state))
 <BR><BR>[Stack]<UL><LI>Max Depth = 52<LI>Call Chain = handle_sky_state &rArr; ramp_calc &rArr; data_limit
 </UL>
 <BR>[Calls]<UL><LI><a href="#[2ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_calc (via Veneer)

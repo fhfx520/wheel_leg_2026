@@ -43,6 +43,7 @@ void log_scope_data_pkg(void)
 			log_scope_get_data(gimbal.yaw_spd.ref);
             log_scope_get_data(gimbal.yaw_spd.fdb);
 			log_scope_get_data(circle_error(gimbal.yaw_angle.ref, gimbal.yaw_angle.fdb, 2*PI));
+			log_scope_get_data(vision.shoot_enable);
 //			log_scope_get_data(shoot.fric_spd[0].fdb);
 //            log_scope_get_data(shoot.fric_spd[1].fdb);
 //			log_scope_get_data(shoot.fric_output[0]);

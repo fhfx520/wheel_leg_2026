@@ -15,8 +15,8 @@
 
 //#define VISION_HAND_EYE_CALIBRATION
 
-#define VISION_SP_FIRE_YAW_ERR (2.0f * PI / 180.0f)
-#define VISION_SP_FIRE_PIT_ERR (2.0f * PI / 180.0f)
+#define VISION_SP_FIRE_YAW_ERR (3.0f * PI / 180.0f)
+#define VISION_SP_FIRE_PIT_ERR (3.0f * PI / 180.0f)
 
 vision_t vision;
 vision_tx_msg_t vision_tx_msg;

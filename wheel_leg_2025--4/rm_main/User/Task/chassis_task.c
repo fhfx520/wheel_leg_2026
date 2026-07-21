@@ -60,7 +60,7 @@ float spin_limit;
 float spin_zero;
 
 chassis_scale_t chassis_scale = {
-    .remote = 1.0f/660*2.5f,
+    .remote = 1.0f/660*2.6f,
     .keyboard = 3.0f
 };
 
