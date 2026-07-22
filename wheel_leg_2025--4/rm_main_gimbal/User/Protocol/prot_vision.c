@@ -29,19 +29,20 @@ uint32_t send_cnt;
 static uint8_t vision_get_sp_mode(void)
 {
     if (ctrl_mode == KEYBOARD_MODE) {
-        if (KEY_PRESS_VISION1) {
-            return VISION_SP_MODE_BIG_BUFF;
-        } else if (KEY_PRESS_VISION2) {
-            return VISION_SP_MODE_SMALL_BUFF;
-        } else if (rc.mouse.r == 1) {
+		if(vision_data_rec.energy_flag == 1 && vision_data_rec.energy_state == 1){
+			return VISION_SP_MODE_SMALL_BUFF;
+		}
+		else if(vision_data_rec.energy_flag == 1 && vision_data_rec.energy_state == 2){
+			return VISION_SP_MODE_BIG_BUFF;
+        } 
+		else if (rc.mouse.r == 1) {
             return VISION_SP_MODE_AUTO_AIM;
         }
     } else if (ctrl_mode == REMOTER_MODE) {
-        if (rc_fsm_check(RC_LEFT_LD) && rc_fsm_check(RC_RIGHT_RD)) {
+        if (rc_fsm_check(RC_RIGHT_RD)) {
             return VISION_SP_MODE_AUTO_AIM;
         }
     }
-
     return VISION_SP_MODE_IDLE;
 }
 
@@ -376,8 +377,8 @@ void vision_output_data_sp(void)
 
     vision_tx_msg_sp.head[0] = 'S';
     vision_tx_msg_sp.head[1] = 'P';
-//    vision_tx_msg_sp.mode = vision_get_sp_mode();
-	  vision_tx_msg_sp.mode = VISION_SP_MODE_AUTO_AIM;
+    vision_tx_msg_sp.mode = vision_get_sp_mode();
+//	  vision_tx_msg_sp.mode = VISION_SP_MODE_AUTO_AIM;
 
     vision_euler_to_quat_wxyz(yaw_tx, -gimbal_imu.pit, gimbal_imu.rol, q);
     for (uint8_t i = 0; i < 4; i++) {

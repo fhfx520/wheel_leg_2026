@@ -621,10 +621,10 @@ static void shoot_mode_switch(void)
         }
         case KEYBOARD_MODE: {
             /* 射频切换 */
-            if (rc.mouse.r)
-                shoot.trigger_period = TRIGGER_PERIOD2;
-            else
-                shoot.trigger_period = TRIGGER_PERIOD;
+//            if (rc.mouse.r)
+//                shoot.trigger_period = TRIGGER_PERIOD2;
+//            else
+//                shoot.trigger_period = TRIGGER_PERIOD;
             /* 摩擦轮模式切换 */
             if (robot_status.power_management_shooter_output || 1) {  //发射机构得到供电  展示底盘没发上云台
                 shoot.fric_mode = FRIC_MODE_RUN;  //开关摩擦轮         
@@ -640,21 +640,21 @@ static void shoot_mode_switch(void)
 //            } else {
 //                vision_tx_msg.mode_msg.aiming_status = 0;
 //            }
-			 if ( vision_data_rec.energy_flag == 1 &&  vision_data_rec.energy_state == 1) {
-				vision_tx_msg.mode_msg.aiming_status = 2;
-            } else if (vision_data_rec.energy_flag == 1 && vision_data_rec.energy_state == 2 ) {
-               vision_tx_msg.mode_msg.aiming_status = 1;
-            } else {
-                vision_tx_msg.mode_msg.aiming_status = 0;
-            }
+//			 if ( vision_data_rec.energy_flag == 1 && vision_data_rec.energy_state == 1) {
+//				vision_tx_msg.mode_msg.aiming_status = 2;
+//            } else if (vision_data_rec.energy_flag == 1 && vision_data_rec.energy_state == 2 ) {
+//               vision_tx_msg.mode_msg.aiming_status = 1;
+//            } else {
+//                vision_tx_msg.mode_msg.aiming_status = 0;
+//            }
             /* 拨盘模式切换 */
-            if (shoot.fric_mode != FRIC_MODE_RUN) {
-                shoot.trigger_mode = TRIGGER_MODE_STOP;
-            } else if (vision.tx.data.aiming_mode != 0) {
-                shoot.trigger_mode = TRIGGER_MODE_SINGLE;
-            } else {
-                shoot.trigger_mode = TRIGGER_MODE_SERIES;
-            }
+//            if (shoot.fric_mode != FRIC_MODE_RUN) {
+//                shoot.trigger_mode = TRIGGER_MODE_STOP;
+//            } else if (vision.tx.data.aiming_mode != 0) {
+//                shoot.trigger_mode = TRIGGER_MODE_SINGLE;
+//            } else {
+//                shoot.trigger_mode = TRIGGER_MODE_SERIES;
+//            }
             break;
         }
         default: break;

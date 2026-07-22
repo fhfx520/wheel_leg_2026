@@ -487,8 +487,8 @@ static void update_leg_height_and_balance(float yaw_error)
             x3_balance_zero = (wlr.direction == 0 ? x3_balance_zero_normal : -x3_balance_zero_normal - 0.01f);
         }
 		else if (wlr.energy_flag) {
-			wlr.high_set = 0.12f;
-			x3_balance_zero = x3_balance_zero_normal - 0.3f;
+			wlr.high_set = 0.12f;	
+			x3_balance_zero = x3_balance_zero_normal - 0.6f;
 		}
 		height_ramp.max = LegLengthMax;
 		x5_balance_zero = 0.00f;
@@ -1085,7 +1085,7 @@ static void apply_output_limits(void)
 		{
 			if(wlr.double_flag)
 				lqr.U_ref[i] *= 0.05f;
-			else     
+			else     	
 				lqr.U_ref[i] *= 0.15f;
 		}
 		
