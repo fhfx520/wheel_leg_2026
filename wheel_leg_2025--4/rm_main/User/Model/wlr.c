@@ -206,10 +206,10 @@ float K_Array_Energy[4][10] =
 };
 
 float K_Array_Sky[4][10] =  
-{{0, -3.30473, 0, 0, 0, 0, 0, 0, 0, 0},
-{0, -3.30473, 0, 0, 0, 0, 0, 0, 0, 0},
-{0, 0, 0, 0, 65.6678, 4.65538, -24.386, -0.926331, -40.1188, -4.05432},
-{0, 0, 0, 0, -24.386, -0.926331, 65.6678, 4.65538, -40.1188, -4.05432}
+{{0, 0, -10.93547, -2.73306, -13.261, -1.35136, -5.91916, -0.706618, -6.2552, -1.1978},
+{0, 0, 10.93547, 2.73306, -5.91916, -0.706618, -13.261, -1.35136, -6.2552, -1.1978},
+{0, 0, -15.9699, -4.51907, 65.6678, 4.65538, -24.386, -0.926331, -40.1188, -4.05432},
+{0, 0, 15.9699, 4.51907, -24.386, -0.926331, 65.6678, 4.65538, -40.1188, -4.05432}
 };
 
 float K_Array_Land[4][10] = 
@@ -586,6 +586,7 @@ static void handle_sky_state(void)
 	static uint16_t target_cnt = 0;
 	static float v_ref;
 	static float sky_dis = 0.0f;
+//	wlr.double_flag = 1;
     if (wlr.sky_flag == WLR_SKY_FOLDING) {
         pid_leg_sky_jump[0].i_out = pid_leg_sky_jump[1].i_out = \
 	    pid_leg_sky_cover[0].i_out = pid_leg_sky_cover[1].i_out = \
@@ -622,7 +623,7 @@ static void handle_sky_state(void)
         wlr.v_ref = v_ref; 
 		if(wlr.double_flag)
 			x3_balance_zero = x3_balance_zero_normal + 0.15f;
-		else
+		else 
 			x3_balance_zero = x3_balance_zero_normal;
         x5_balance_zero = 0.0f; 
 
@@ -639,7 +640,7 @@ static void handle_sky_state(void)
         x3_balance_zero = 0.0f;
         x5_balance_zero = 0.0f;
         wlr.sky_cnt++;
-        target_cnt = (wlr.double_flag ? 250 : 150);
+        target_cnt = (wlr.double_flag ? 250 : 190);
 		
         if (wlr.sky_cnt > target_cnt) {
             wlr.sky_cnt = 0;
@@ -1085,8 +1086,8 @@ static void apply_output_limits(void)
 		{
 			if(wlr.double_flag)
 				lqr.U_ref[i] *= 0.05f;
-			else     	
-				lqr.U_ref[i] *= 0.15f;
+			else     	 
+				lqr.U_ref[i] *= 0.0f;  
 		}
 		
         wlr.side[i].T1 = vmc[i].T_ref.e.T2_ref;
@@ -1105,7 +1106,7 @@ void wlr_init(void)
     wlr.recover_length = 0.13f;
     
 	ramp_init(&height_ramp, 0.001f, LegLengthMin, LegLengthMax);			//日常腿长斜坡
-	ramp_init(&sky_height_ramp, 0.001f, LegLengthMin, LegLengthMax);		//空中腿长斜坡
+	ramp_init(&sky_height_ramp, 0.0005f, LegLengthMin, LegLengthMax);		//空中腿长斜坡
 	ramp_init(&jump_ramp, 0.015f, -3.0f, 3.0f);
 	ramp_init(&stair_ramp, 0.05f, -2.0f, 2.0f);
 	ramp_init(&wz_ramp, 0.05f,  0,  3.0f);									//小陀螺加速K矩阵wz项斜坡
