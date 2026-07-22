@@ -599,6 +599,7 @@ void log_scope_data_pkg(void)
 		log_scope_get_data(chassis_imu.wz);
 		log_scope_get_data(driver_motor[0].tx_current);
 		log_scope_get_data(driver_motor[1].tx_current);
+		log_scope_get_data(wlr.stair_flag);
 		break;
 	}
 	}

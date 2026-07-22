@@ -315,6 +315,16 @@
           <WinNumber>1</WinNumber>
           <ItemText>gimbal_imu,0x0A</ItemText>
         </Ww>
+        <Ww>
+          <count>32</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>\\rm_main\../User/Model/wheel_leg_model.c\tlm.leg_length_err</ItemText>
+        </Ww>
+        <Ww>
+          <count>33</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>lqr</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>

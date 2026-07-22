@@ -185,10 +185,20 @@ float K_Array_Leg_018[4][10] =
 //{1.75045, 3.95914, -10.779, -2.60538, 32.6298, 2.71171, -11.8714, -0.650329, -23.9471, -2.87401},
 //{1.75045, 3.95914, 10.779, 2.60538, -11.8714, -0.650329, 32.6298, 2.71171, -23.9471, -2.87401}
 
-{{-1.42014, -3.33196, -7.93547, -1.7827, -14.4093, -1.3678, -6.61056, -0.704354, -6.17496, -1.09785},
-{-1.42014, -3.33196, 7.93547, 1.7827, -6.61056, -0.704354, -14.4093, -1.3678, -6.17496, -1.09785},
-{1.68027, 3.81959, -10.9699, -2.67155, 36.3341, 2.7569, -15.3919, -0.765804, -24.5291, -2.99319},
-{1.68027, 3.81959, 10.9699, 2.67155, -15.3919, -0.765804, 36.3341, 2.7569, -24.5291, -2.99319}
+//{{-1.42014, -3.33196, -7.93547, -1.7827, -14.4093, -1.3678, -6.61056, -0.704354, -6.17496, -1.09785},
+//{-1.42014, -3.33196, 7.93547, 1.7827, -6.61056, -0.704354, -14.4093, -1.3678, -6.17496, -1.09785},
+//{1.68027, 3.81959, -10.9699, -2.67155, 36.3341, 2.7569, -15.3919, -0.765804, -24.5291, -2.99319},
+//{1.68027, 3.81959, 10.9699, 2.67155, -15.3919, -0.765804, 36.3341, 2.7569, -24.5291, -2.99319}
+
+//{{-1.18666, -2.8115, -5.34791, -1.53545, -12.6152, -1.20415, -5.95277, -0.621779, -4.66985, -0.976881},
+//{-1.18666, -2.8115, 5.34791, 1.53545, -5.95277, -0.621779, -12.6152, -1.20415, -4.66985, -0.976881},
+//{1.91374, 4.35887, -8.38044, -2.54509, 38.0945, 2.93117, -13.7789, -0.608062, -17.078, -2.54549},
+//{1.91374, 4.35887, 8.38044, 2.54509, -13.7789, -0.608062, 38.0945, 2.93117, -17.078, -2.54549}
+
+{{-1.0317, -2.46302, -4.81649, -1.39977, -11.4295, -1.09603, -5.60309, -0.572509, -4.4605, -0.935662},
+{-1.0317, -2.46302, 4.81649, 1.39977, -5.60309, -0.572509, -11.4295, -1.09603, -4.4605, -0.935662},
+{2.07024, 4.75069, -8.19261, -2.49568, 39.2539, 3.04942, -12.8503, -0.509098, -16.4595, -2.42252},
+{2.07024, 4.75069, 8.19261, 2.49568, -12.8503, -0.509098, 39.2539, 3.04942, -16.4595, -2.42252}
 };
 
 float K_Array_Leg_015[4][10] = 
@@ -227,20 +237,20 @@ float K_Array_Leg_recover[4][10] =
 };
 
 float K_Array_Leg_rotate[4][10] = 
-{{0, -3.24553, 0, -1.23895, -17.1345, -2.25814, -5.86629, -0.830853, -7.25895, -1.13856},
-{0, -3.24553, 0, 1.23895, -5.86629, -0.830853, -17.1345, -2.25814, -7.25895, -1.13856},
-{0, 1.96624, 0, -2.17273, 27.4088, 2.91566, -14.71, -1.15579, -36.082, -3.93633},
-{0, 1.96624, 0, 2.17273, -14.71, -1.15579, 27.4088, 2.91566, -36.082, -3.93633}
+//{{0, -3.24553, 0, -1.23895, -17.1345, -2.25814, -5.86629, -0.830853, -7.25895, -1.13856},
+//{0, -3.24553, 0, 1.23895, -5.86629, -0.830853, -17.1345, -2.25814, -7.25895, -1.13856},
+//{0, 1.96624, 0, -2.17273, 27.4088, 2.91566, -14.71, -1.15579, -36.082, -3.93633},
+//{0, 1.96624, 0, 2.17273, -14.71, -1.15579, 27.4088, 2.91566, -36.082, -3.93633}
 
 //{{0, -2.31269, -0.0, -1.49106, -10.4774, -1.00888, -5.60608, -0.55667, -6.39849, -1.08678},
 //{0, -2.31269, 0.0, 1.49106, -5.60608, -0.55667, -10.4774, -1.00888, -6.39849, -1.08678},
 //{0, 7.78801, -0.0, -3.09768, 52.2133, 4.13352, -11.3148, -0.205599, -29.023, -2.97022},
 //{0, 7.78801, 0.0, 3.09768, -11.3148, -0.205599, 52.2133, 4.13352, -29.023, -2.97022}
 
-//{{-0.0, -1.0924, -0.0, -0.96186, -6.6294, -0.64925, -4.1344, -0.3711, -4.6945, -0.84492},
-//{-0.0, -1.0924, 0.0, 0.96186, -4.1344, -0.3711, -6.6294, -0.64925, -4.6945, -0.84492},
-//{0.0, 10.5736, -0.0, -2.7778, 61.5988, 5.08514, -3.00145, 0.648542, -20.8044, -1.51661},
-//{0.0, 10.5736, 0.0, 2.7778, -3.00145, 0.648542, 61.5988, 5.08514, -20.8044, -1.51661}
+{{-0.0, -3.24553, -0.0, -0.96186, -6.6294, -0.64925, -4.1344, -0.3711, -4.6945, -0.84492},
+{-0.0, -3.24553, 0.0, 0.96186, -4.1344, -0.3711, -6.6294, -0.64925, -4.6945, -0.84492},
+{0.0, 1.96624, -0.0, -2.7778, 61.5988, 5.08514, -3.00145, 0.648542, -20.8044, -1.51661},
+{0.0, 1.96624, 0.0, 2.7778, -3.00145, 0.648542, 61.5988, 5.08514, -20.8044, -1.51661}
 
 //{{-0.0, -2.2348, -0.0, -1.4881, -9.5618, -0.98342, -5.4557, -0.54754, -6.2954, -1.0767},
 //{-0.0, -2.2348, 0.0, 1.4881, -5.4557, -0.54754, -9.5618, -0.98342, -6.2954, -1.0767},
@@ -578,7 +588,7 @@ static void handle_jump_state(void)
 //	{
 //		wlr.high_set = ramp_calc(&height_ramp, 0.18f);
 //	}
-}
+} 
 
 static void handle_sky_state(void)
 {
@@ -586,6 +596,7 @@ static void handle_sky_state(void)
 	static uint16_t target_cnt = 0;
 	static float v_ref;
 	static float sky_dis = 0.0f;
+//	wlr.double_flag = 1;
     if (wlr.sky_flag == WLR_SKY_FOLDING) {
         pid_leg_sky_jump[0].i_out = pid_leg_sky_jump[1].i_out = \
 	    pid_leg_sky_cover[0].i_out = pid_leg_sky_cover[1].i_out = \
@@ -609,7 +620,7 @@ static void handle_sky_state(void)
         else
             wlr.v_ref = ramp_calc(&jump_ramp, -3.0f);
 		
-		if (wlr.sky_cnt > 50 || wlr.side[0].Front_dis_fdb < sky_dis && sky_ccc > 400) {
+		if (wlr.sky_cnt > 50 || ((wlr.side[0].Front_dis_fdb + wlr.side[1].Front_dis_fdb) / 2.0f) < sky_dis && sky_ccc > 400) {
 			sky_ccc = 0;
 			wlr.sky_cnt = 0;
 			v_ref = wlr.v_fdb;
@@ -639,7 +650,7 @@ static void handle_sky_state(void)
         x3_balance_zero = 0.0f;
         x5_balance_zero = 0.0f;
         wlr.sky_cnt++;
-        target_cnt = (wlr.double_flag ? 250 : 150);
+        target_cnt = (wlr.double_flag ? 250 : 190);
 		
         if (wlr.sky_cnt > target_cnt) {
             wlr.sky_cnt = 0;
@@ -826,7 +837,7 @@ static void update_rotate_state(void)
 			wlr.high_set = LegLengthRotate;
 		pid_L_test[0].i_out = pid_L_test[1].i_out = 0;
        	 if (g_robot_ctx.output.chassis  == CHASSIS_LOW_SPIN) {
-			x5_balance_zero = -0.02F;
+			x5_balance_zero = temp;
 			Rotate_balance_zero = pid_calc(&pid_rotate_balance_zero,0,(fabsf(driver_motor[0].velocity) - fabsf(driver_motor[1].velocity)));
         } 
 		if(fabsf(wlr.v_ref) > 0.5f)
@@ -838,14 +849,14 @@ static void update_rotate_state(void)
 		}
 		else
 		{
-//			K_Array_Leg_rotate[0][3] = -ramp_calc(&wz_ramp, 0.96186f);		//K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
-//			K_Array_Leg_rotate[1][3] = ramp_calc(&wz_ramp, 0.96186f);
-//			K_Array_Leg_rotate[2][3] = -3.12537f;		                    //K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
-//			K_Array_Leg_rotate[3][3] = 3.12537f;
-			K_Array_Leg_rotate[0][3] = -ramp_calc(&wz_ramp, 1.23895f);		//K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
-			K_Array_Leg_rotate[1][3] = ramp_calc(&wz_ramp, 1.23895f);
-			K_Array_Leg_rotate[2][3] = -2.17273f;		                    //K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
-			K_Array_Leg_rotate[3][3] = 2.17273f;
+			K_Array_Leg_rotate[0][3] = -ramp_calc(&wz_ramp, 0.96186f);		//K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
+			K_Array_Leg_rotate[1][3] = ramp_calc(&wz_ramp, 0.96186f);
+			K_Array_Leg_rotate[2][3] = -2.7778f;		                    //K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
+			K_Array_Leg_rotate[3][3] = 2.7778f;
+//			K_Array_Leg_rotate[0][3] = -ramp_calc(&wz_ramp, 1.23895f);		//K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
+//			K_Array_Leg_rotate[1][3] = ramp_calc(&wz_ramp, 1.23895f);
+//			K_Array_Leg_rotate[2][3] = -2.17273f;		                    //K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
+//			K_Array_Leg_rotate[3][3] = 2.17273f;
 		}
 		
     } else {
@@ -1022,7 +1033,7 @@ static void map_virtual_force(uint8_t index)
     } 
 	else if (rotate_flag || rotate_ramp_flag == 1) {//小陀螺和小陀螺斜坡停
         wlr.side[index].Fy = pid_calc(&pid_rotate_leg[index], tlm.l_ref[index], vmc[index].L_fdb)
-                              + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs) - 20.0f;
+                              + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
     }
 	else if(wlr.jump_flag == WLR_JUMP_ASCEND){//磕台阶站高
 		wlr.side[index].Fy = pid_calc(&pid_ascend[index], tlm.l_ref[index], vmc[index].L_fdb) - 30.0f
@@ -1106,7 +1117,7 @@ void wlr_init(void)
     
 	ramp_init(&height_ramp, 0.001f, LegLengthMin, LegLengthMax);			//日常腿长斜坡
 	ramp_init(&sky_height_ramp, 0.001f, LegLengthMin, LegLengthMax);		//空中腿长斜坡
-	ramp_init(&jump_ramp, 0.015f, -3.0f, 3.0f);
+	ramp_init(&jump_ramp, 0.05f, -3.0f, 3.0f);
 	ramp_init(&stair_ramp, 0.05f, -2.0f, 2.0f);
 	ramp_init(&wz_ramp, 0.05f,  0,  3.0f);									//小陀螺加速K矩阵wz项斜坡
 	ramp_init(&sky_ramp[0], 10.0f, -450.0f,  450.0f);						//伸腿支持力斜坡
@@ -1125,14 +1136,14 @@ void wlr_init(void)
 		pid_init(&pid_leg_sky_jump[i],  NONE, 2500, 3.0, 0.0f, 150.0, 500);				//跳跃专用pid
 		pid_init(&pid_leg_recover[i], NONE, 1800, 1.5f, 20000.0f, 300, 500);			//起身专用pid
         pid_init(&pid_leg_length_fly[i], NONE, 1000, 0.0, 0, 0, 300);					//离地腿长/缓冲腿长pid
-        pid_init(&pid_L_test[i], CHANG_I_RATE,1500, 2.0, 45000, 30, 300);					//日常腿长pid
+        pid_init(&pid_L_test[i], CHANG_I_RATE,1500, 2.0, 45000, 60, 300);					//日常腿长pid
 		pid_L_test[i].threshold_a = 0.01f;
 		pid_L_test[i].threshold_b = 0.03f;
 		pid_init(&pid_rescue[i], NONE, 2.0f, 0.5f, 0, 45, 50);							//翻倒起身腿转速pid
 		pid_init(&pid_rotate_leg[i], NONE, 1500.0f, 0.0f, 40000.0f, 0, 300);		
 		pid_init(&pid_energy_leg[i], NONE, 1000.0f, 0.0f, 40000.0f, 0, 300);
-		pid_init(&pid_ascend[i], NONE, 700, 0.0f, 80000, 70, 300);						//磕台阶腿长pid
-		pid_init(&pid_rotate_balance_zero, NONE, 0.015f, 0.0f, 0, 0.0f, 0.1f);			//磕台阶腿长pid
+		pid_init(&pid_ascend[i], NONE, 800, 0.0f, 80000, 70, 300);						//磕台阶腿长pid
+		pid_init(&pid_rotate_balance_zero, NONE, 0.015f, 0.0f, 0, 0.0f, 0.0f);			//磕台阶腿长pid
 	}
 	pid_init(&pid_roll, NONE, 1000, 0,0, 0, 100);										//roll偏移支持力补偿
 	//卡尔曼滤波器初始化
@@ -1204,7 +1215,7 @@ void wlr_control(void)
     lqr.X_fdb[9] = wlr.wy_fdb;
 	
     lqr.X_fdb[4] = x3_balance_zero + (-PI / 2 + lqr.X_fdb[8] + vmc[0].q_fdb[0]);
-    lqr.X_fdb[5] = lqr.X_fdb[9] + vmc[0].V_fdb.e.vw0_fdb;
+    lqr.X_fdb[5] = lqr.X_fdb[9] + vmc[0].V_fdb.e.vw0_fdb; 
     lqr.dot_leg_w[0] = (lqr.X_fdb[5] - lqr.last_leg_w[0]) / 0.002f;
     lqr.last_leg_w[0] = lqr.X_fdb[5];
     
@@ -1214,7 +1225,7 @@ void wlr_control(void)
     lqr.last_leg_w[1] = lqr.X_fdb[7];
 
     for (int i = 0; i < WLR_SIDE_COUNT; i++) {
-		if(tof[0].dis > 2000 || tof[0].confidence <= 50)
+		if(tof[i].dis > 2000 || tof[i].confidence <= 50)
 			wlr.side[i].Front_dis_fdb = 2.0f;
 		else
 			wlr.side[i].Front_dis_fdb = (float)tof[0].dis * 0.001f;

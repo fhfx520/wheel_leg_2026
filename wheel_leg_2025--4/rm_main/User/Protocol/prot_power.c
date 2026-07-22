@@ -236,6 +236,11 @@ static float supercap_velocity_addmap(void)
         return (supercap.volume_percent - 50.0f) / 50.0f * 0.4f;//线性映射，电容电压从40%到100%时，速度增加0-0.4f
 }
 
+static float supercap_rotate_addmap(void)
+{
+    return (supercap.volage - 22.0f) / 6.0f * 2.0f;//线性映射，电容电压从40%到100%时，速度增加0-0.4f
+}
+
 float power_control_target_velocity(void)
 {
     power_judge_update();
@@ -287,7 +292,7 @@ float power_control_target_Vrotate(void)
 		}
     }
     //根据电容电压进行微调
-    return (base_rotate);
+    return (base_rotate + supercap_rotate_addmap());
 }
 
 uint8_t power_check_offline(void)

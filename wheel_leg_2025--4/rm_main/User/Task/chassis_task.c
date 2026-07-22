@@ -200,6 +200,7 @@ void chassis_reset_finish_flag(void)
 {
 	g_robot_ctx.sky_finish_flag = 0;
 	g_robot_ctx.jump_finish_flag = 0;
+	g_robot_ctx.stair_finish_flag = 0;
 }
 
 // 恢复你本来的代码
@@ -405,6 +406,8 @@ static void chassis_execute_fsm(void)
 			wlr.jump_flag = WLR_JUMP_IDLE;
 			if(wlr.stair_flag == WLR_STAIR_IDLE && wlr.direction == 1)
 				wlr.stair_flag = WLR_STAIR_ASCEND;
+			if(wlr.stair_flag == WLR_STAIR_RECOVER_LONG)
+				g_robot_ctx.stair_finish_flag = 1;
 			break;
 		}
 		
@@ -461,7 +464,7 @@ static void chassis_data_input(void)
 
     // ================= 旋转控制算法 (完全替换旧模式) =================
     switch (g_robot_ctx.output.chassis) {
-        
+        chassis.turn_fight_flag = 1;
         case CHASSIS_STOP: {
             wlr.yaw_ref = (float)yaw_motor.ecd / 8192 * 2 * PI;
             wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;
