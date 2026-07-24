@@ -247,15 +247,22 @@ float K_Array_Leg_rotate[4][10] =
 //{0, 7.78801, -0.0, -3.09768, 52.2133, 4.13352, -11.3148, -0.205599, -29.023, -2.97022},
 //{0, 7.78801, 0.0, 3.09768, -11.3148, -0.205599, 52.2133, 4.13352, -29.023, -2.97022}
 
-{{-0.0, -3.24553, -0.0, -0.96186, -6.6294, -0.64925, -4.1344, -0.3711, -4.6945, -0.84492},
-{-0.0, -3.24553, 0.0, 0.96186, -4.1344, -0.3711, -6.6294, -0.64925, -4.6945, -0.84492},
-{0.0, 1.96624, -0.0, -2.7778, 61.5988, 5.08514, -3.00145, 0.648542, -20.8044, -1.51661},
-{0.0, 1.96624, 0.0, 2.7778, -3.00145, 0.648542, 61.5988, 5.08514, -20.8044, -1.51661}
+{{-0.0, 0.0, -0.0, -0.96186, -6.6294, -0.64925, -4.1344, -0.3711, -4.6945, -0.84492},
+{-0.0, 0.0, 0.0, 0.96186, -4.1344, -0.3711, -6.6294, -0.64925, -4.6945, -0.84492},
+{0.0, 0.0, -0.0, -2.7778, 61.5988, 5.08514, -3.00145, 0.648542, -20.8044, -1.51661},
+{0.0, 0.0, 0.0, 2.7778, -3.00145, 0.648542, 61.5988, 5.08514, -20.8044, -1.51661}
 
 //{{-0.0, -2.2348, -0.0, -1.4881, -9.5618, -0.98342, -5.4557, -0.54754, -6.2954, -1.0767},
 //{-0.0, -2.2348, 0.0, 1.4881, -5.4557, -0.54754, -9.5618, -0.98342, -6.2954, -1.0767},
 //{0.0, 7.45919, -0.0, -3.12537, 45.6121, 3.9735, -10.2583, -0.206524, -29.4461, -3.01079},
 //{0.0, 7.45919, 0.0, 3.12537, -10.2583, -0.206524, 45.6121, 3.9735, -29.4461, -3.01079}
+};
+
+float K_Array_Leg_rotate_move[4][10] = 
+{{0, -3.24553, 0, -1.23895, -17.1345, -2.25814, -5.86629, -0.830853, -7.25895, -1.13856},
+{0, -3.24553, 0, 1.23895, -5.86629, -0.830853, -17.1345, -2.25814, -7.25895, -1.13856},
+{0, 1.96624, 0, -2.17273, 27.4088, 2.91566, -14.71, -1.15579, -36.082, -3.93633},
+{0, 1.96624, 0, 2.17273, -14.71, -1.15579, 27.4088, 2.91566, -36.082, -3.93633}
 };
 
 float K_Array_Stop[4][10] = 
@@ -840,24 +847,14 @@ static void update_rotate_state(void)
 			x5_balance_zero = temp;
 			Rotate_balance_zero = pid_calc(&pid_rotate_balance_zero,0,(fabsf(driver_motor[0].velocity) - fabsf(driver_motor[1].velocity)));
         } 
-		if(fabsf(wlr.v_ref) > 0.5f)
-		{
-			K_Array_Leg_rotate[0][3] = -ramp_calc(&wz_ramp, 0.23574f);		//K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
-			K_Array_Leg_rotate[1][3] = ramp_calc(&wz_ramp, 0.23574f);
-			K_Array_Leg_rotate[2][3] = -1.17273f;		                    //K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
-			K_Array_Leg_rotate[3][3] = 1.17273f;
-		}
-		else
-		{
-			K_Array_Leg_rotate[0][3] = -ramp_calc(&wz_ramp, 0.96186f);		//K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
-			K_Array_Leg_rotate[1][3] = ramp_calc(&wz_ramp, 0.96186f);
-			K_Array_Leg_rotate[2][3] = -2.7778f;		                    //K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
-			K_Array_Leg_rotate[3][3] = 2.7778f;
-//			K_Array_Leg_rotate[0][3] = -ramp_calc(&wz_ramp, 1.23895f);		//K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
-//			K_Array_Leg_rotate[1][3] = ramp_calc(&wz_ramp, 1.23895f);
-//			K_Array_Leg_rotate[2][3] = -2.17273f;		                    //K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
-//			K_Array_Leg_rotate[3][3] = 2.17273f;
-		}
+//			K_Array_Leg_rotate[0][3] = -ramp_calc(&wz_ramp, 0.96186f);		//K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
+//			K_Array_Leg_rotate[1][3] = ramp_calc(&wz_ramp, 0.96186f);
+//			K_Array_Leg_rotate[2][3] = -2.7778f;		                    //K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
+//			K_Array_Leg_rotate[3][3] = 2.7778f;
+			K_Array_Leg_rotate[0][3] = -ramp_calc(&wz_ramp, 1.23895f);		//K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
+			K_Array_Leg_rotate[1][3] = ramp_calc(&wz_ramp, 1.23895f);
+			K_Array_Leg_rotate[2][3] = -2.17273f;		                    //K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
+			K_Array_Leg_rotate[3][3] = 2.17273f;
 		
     } else {
         Rotate_balance_zero = 0.0f;
@@ -897,8 +894,11 @@ static void select_control_matrix(void)
 	else if (chassis.recover_flag == 2) {		//收腿起立时，先把车身以前导轮撑起，再收腿
         aMartix_Cover(lqr.K, (float*)K_Array_Leg_recover, 4, 10);
     } 
-	else if (rotate_flag == 1 || rotate_ramp_flag == 1) {					//小陀螺
-        aMartix_Cover(lqr.K, (float*)K_Array_Leg_rotate, 4, 10);
+	else if (rotate_flag == 1 || rotate_ramp_flag == 1) {//小陀螺
+		if(fabsf(wlr.v_ref) > 0.5f)
+			aMartix_Cover(lqr.K, (float*)K_Array_Leg_rotate_move, 4, 10);
+		else
+			aMartix_Cover(lqr.K, (float*)K_Array_Leg_rotate, 4, 10);
     } 
 	else if(wlr.energy_flag) {
 		aMartix_Cover(lqr.K, (float*)K_Array_Energy, 4, 10);
@@ -953,19 +953,6 @@ static void update_motion_reference(void)
 
     if (wlr_both_legs_flying() || wlr.sky_flag >= WLR_SKY_EXTENDING) {
         lqr.X_ref[0] = wlr.s_ref = wlr.s_adapt = wlr.s_fdb;
-    }
-
-    if (rotate_flag == 1) {
-		if(fabsf(wlr.v_ref) > 0.5f)
-		{
-			K_Array_Leg_rotate[0][1] = -3.24553f; K_Array_Leg_rotate[1][1] = -3.24553f;
-			K_Array_Leg_rotate[2][1] = 1.96624f;  K_Array_Leg_rotate[3][1] = 1.96624f;
-		}
-		else 
-		{
-			K_Array_Leg_rotate[0][1] = 0.0f; K_Array_Leg_rotate[1][1] = 0.0f;
-			K_Array_Leg_rotate[2][1] = 0.0f; K_Array_Leg_rotate[3][1] = 0.0f;
-		}
     }
 
     lqr.X_ref[1] = wlr.v_ref;
@@ -1035,8 +1022,8 @@ static void map_virtual_force(uint8_t index)
         wlr.side[index].Fy = pid_calc(&pid_rotate_leg[index], tlm.l_ref[index], vmc[index].L_fdb)
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
     }
-	else if(wlr.jump_flag == WLR_JUMP_ASCEND){//磕台阶站高
-		wlr.side[index].Fy = pid_calc(&pid_ascend[index], tlm.l_ref[index], vmc[index].L_fdb) - 30.0f
+	else if(wlr.jump_flag == WLR_JUMP_ASCEND){//磕台阶站高  
+		wlr.side[index].Fy = pid_calc(&pid_ascend[index], tlm.l_ref[index], vmc[index].L_fdb)
                             + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
 	}
 	else if (wlr.sky_flag == WLR_SKY_FOLDING) {//准备跳
@@ -1143,7 +1130,7 @@ void wlr_init(void)
 		pid_init(&pid_rotate_leg[i], NONE, 1500.0f, 0.0f, 40000.0f, 0, 300);		
 		pid_init(&pid_energy_leg[i], NONE, 1000.0f, 0.0f, 40000.0f, 0, 300);
 		pid_init(&pid_ascend[i], NONE, 800, 0.0f, 80000, 70, 300);						//磕台阶腿长pid
-		pid_init(&pid_rotate_balance_zero, NONE, 0.015f, 0.0f, 0, 0.0f, 0.0f);			//磕台阶腿长pid
+		pid_init(&pid_rotate_balance_zero, NONE, 0.015f, 0.0f, 0, 0.0f, 0.05f);			//磕台阶腿长pid
 	}
 	pid_init(&pid_roll, NONE, 1000, 0,0, 0, 100);										//roll偏移支持力补偿
 	//卡尔曼滤波器初始化

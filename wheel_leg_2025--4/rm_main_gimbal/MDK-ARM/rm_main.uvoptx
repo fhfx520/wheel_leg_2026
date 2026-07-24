@@ -322,6 +322,11 @@
           <WinNumber>2</WinNumber>
           <ItemText>gimbal_imu</ItemText>
         </Ww>
+        <Ww>
+          <count>11</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>vision_tx_msg_sp.mode,0x0A</ItemText>
+        </Ww>
       </WatchWindow2>
       <MemoryWindow1>
         <Mm>
