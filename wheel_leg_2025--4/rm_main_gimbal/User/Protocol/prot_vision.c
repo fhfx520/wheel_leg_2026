@@ -378,7 +378,7 @@ void vision_output_data_sp(void)
     vision_tx_msg_sp.head[0] = 'S';
     vision_tx_msg_sp.head[1] = 'P';
     vision_tx_msg_sp.mode = vision_get_sp_mode();
-//	  vision_tx_msg_sp.mode = VISION_SP_MODE_AUTO_AIM;
+//	  vision_tx_msg_sp.mode = VISION_SP_MODE_BIG_BUFF;
 
     vision_euler_to_quat_wxyz(yaw_tx, -gimbal_imu.pit, gimbal_imu.rol, q);
     for (uint8_t i = 0; i < 4; i++) {

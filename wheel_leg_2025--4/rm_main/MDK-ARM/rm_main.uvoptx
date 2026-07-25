@@ -325,6 +325,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>lqr</ItemText>
         </Ww>
+        <Ww>
+          <count>34</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>wlr.v_ref</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>

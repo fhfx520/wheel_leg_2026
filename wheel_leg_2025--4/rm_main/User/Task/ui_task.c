@@ -374,8 +374,8 @@ void ui_update(void)
 	//ui_group4 update end
 	
 	//ui_group5 update begin
-	ui_g_5_left_lazer->number = wlr.side[0].Front_dis_kal * 1000.0f;
-	ui_g_5_right_lazer->number = wlr.side[1].Front_dis_kal * 1000.0f;
+	ui_g_5_left_lazer->number = wlr.side[0].Front_dis_fdb * 1000.0f;
+	ui_g_5_right_lazer->number = wlr.side[1].Front_dis_fdb * 1000.0f;
 	ui_g_5_left_leg_length->number = vmc[0].L_fdb * 1000.0f;
 	ui_g_5_right_leg_length->number = vmc[1].L_fdb * 1000.0f;
 	ui_update_g_5();

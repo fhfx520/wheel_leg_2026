@@ -463,8 +463,8 @@ static void chassis_data_input(void)
     }
 
     // ================= 旋转控制算法 (完全替换旧模式) =================
+	chassis.turn_fight_flag = 0;
     switch (g_robot_ctx.output.chassis) {
-        chassis.turn_fight_flag = 1;
         case CHASSIS_STOP: {
             wlr.yaw_ref = (float)yaw_motor.ecd / 8192 * 2 * PI;
             wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;

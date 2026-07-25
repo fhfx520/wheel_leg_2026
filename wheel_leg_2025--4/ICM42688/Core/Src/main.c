@@ -58,7 +58,7 @@
 /* USER CODE BEGIN PM */
 uint32_t dwt_count;
 float dt_can;
-float TempWheninit = 43.0f;
+float TempWheninit = 45.0f;
 static uint32_t led_count;
 
 /* USER CODE END PM */

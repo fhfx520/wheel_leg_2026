@@ -212,7 +212,7 @@ static float power_velocity_table[11][2] = {
     {75.0f ,1.8f},//7
     {80.0f ,2.0f},//8
     {90.0f ,2.0f},//9
-    {100.0f,2.1f},//10
+    {100.0f,2.0f},//10
 };
 
 static float power_rotate_table[11][2] = {
@@ -230,10 +230,7 @@ static float power_rotate_table[11][2] = {
 };
 static float supercap_velocity_addmap(void)
 {
-    if(supercap.volume_percent < 50.0f)
-        return 0.0f;
-    else
-        return (supercap.volume_percent - 50.0f) / 50.0f * 0.4f;//线性映射，电容电压从40%到100%时，速度增加0-0.4f
+   return (supercap.volage - 22.0f) / 6.0f * 0.4f;//线性映射，电容电压从40%到100%时，速度增加0-0.4f
 }
 
 static float supercap_rotate_addmap(void)
