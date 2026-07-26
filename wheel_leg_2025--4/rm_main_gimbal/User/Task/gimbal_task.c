@@ -43,8 +43,8 @@ static void gimbal_init(void)
 {
     memset(&gimbal, 0, sizeof(gimbal_t));
 	
-	pid_init(&gimbal.pit_angle.pid, NONE, 20.0f, 0.0f, 0, 0, 20);
-    pid_init(&gimbal.pit_spd.pid, NONE, 1.25f, 0.01f, 0, 1.0f, 7.0f);
+	pid_init(&gimbal.pit_angle.pid, NONE, 30.0f, 0.0f, 10, 0, 10); 
+    pid_init(&gimbal.pit_spd.pid, NONE, 1.2f, 0.01f, 0, 0.5f, 7.0f);
 	
 //	pid_init(&gimbal.yaw_angle.pid, NONE,40.0f, 0.2f, 1.0f, 0.0f, 5.0f);//尝试云台补偿算法			MPC：调yaw的pid
 //    pid_init(&gimbal.yaw_spd.pid, NONE, 10000.0f, 50.0f, 0, 2000.0f, 25000.0f);
@@ -73,7 +73,7 @@ static void gimbal_pid_calc(void)
 //    pit_min = -arm_cos_f32(yaw_err) * chassis_imu.pit - 0.35f;
 	
 	pit_max = 0.5f;		//0.5 滑槽卡头
-	pit_min = -0.39f;
+	pit_min = -0.3f;
 	
 	gimbal.feedback_alpha_speed_input = gimbal_data_rec.feedback_alpha_speed_input;
 	
@@ -125,8 +125,8 @@ static void gimbal_pid_calc(void)
 	gimbal.yaw_spd.ref = pid_calc(&gimbal.yaw_angle.pid, gimbal.yaw_angle.fdb + yaw_err, gimbal.yaw_angle.fdb) \
                                 + vision_mpc_k * gimbal.vision_velocity  + gimbal.feedback_alpha_speed_input * kkkkk ;
 	//起身先转pitch yaw阻尼
-	if((!(fabsf(gimbal.pit_angle.ref - gimbal.pit_angle.fdb) < 0.08f) && !gimbal.start_up) && gimbal.start_cnt < 200)
-		 gimbal.yaw_spd.ref = 0.0f;
+//	if((!(fabsf(gimbal.pit_angle.ref - gimbal.pit_angle.fdb) < 0.08f) && !gimbal.start_up) && gimbal.start_cnt < 200)
+//		 gimbal.yaw_spd.ref = 0.0f;
 	
     gimbal.yaw_spd.fdb = gimbal_imu.wz;
     gimbal.yaw_output = pid_calc(&gimbal.yaw_spd.pid, gimbal.yaw_spd.ref, gimbal.yaw_spd.fdb);//SMC
@@ -223,7 +223,7 @@ void gimbal_task(void const *argu)
 					else
 						gimbal.yaw_angle.ref = gimbal_imu.yaw + (float)yaw_motor.ecd / 8192 * 2 * PI -  (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI;	
 				}
-                gimbal.pit_angle.ref = 0.3f;		//0.3 滑槽卡头
+                gimbal.pit_angle.ref = 0.3f;
                 gimbal.pit_output = 0;
                 gimbal.yaw_output = 0;
                 break;
@@ -235,7 +235,7 @@ void gimbal_task(void const *argu)
                 } 
                 else {
 					gimbal.yaw_angle.pid.out_max = 5.0f;
-                   gimbal.yaw_ecd.ref   -= rc.ch1 * gimbal_scale.ecd_remote;
+//                   gimbal.yaw_ecd.ref   -= rc.ch1 * gimbal_scale.ecd_remote;
                    gimbal.pit_angle.ref -= -rc.ch2 * gimbal_scale.angle_remote;
                    gimbal.yaw_angle.ref -= rc.ch1 * gimbal_scale.angle_remote;
                 }

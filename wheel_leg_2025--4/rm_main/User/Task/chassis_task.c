@@ -993,7 +993,7 @@ static void chassis_data_output(void)
     } else if (wlr.ctrl_mode == 2) {//力控
         dji_motor_set_torque(&driver_motor[0], -wlr.side[0].Tw);
         dji_motor_set_torque(&driver_motor[1],  wlr.side[1].Tw);
-		if(chassis.recover_flag == 1 || chassis.recover_flag == 2) 
+		if((chassis.recover_flag == 1 || chassis.recover_flag == 2)) 
 			chassis_self_rescue();
 		if(rc_fsm_check(RC_LEFT_RU))
 			chassis_hardest_rescue();

@@ -463,7 +463,7 @@ static void update_leg_height_and_balance(float yaw_error)
 		if(wlr.high_cnt > 50)
 			wlr.high_cnt = 51;
         if (wlr_both_legs_flying()) {
-            wlr.high_set = 0.21f;
+            wlr.high_set = 0.18f;
             height_ramp.out = LegLengthHigh;	
         } else if (wlr.jump_flag == WLR_JUMP_IDLE && wlr.sky_flag == WLR_SKY_IDLE) {
 			height_ramp.max = LegLengthHigh;
@@ -473,7 +473,7 @@ static void update_leg_height_and_balance(float yaw_error)
 			else
 				x3_balance_zero = x3_balance_zero_normal;
         }
-		x5_balance_zero = 0.0f;
+		x5_balance_zero = -0.0f;
 		(wlr.direction == 0) ? (Last_cnt = 300) : (Last_cnt = 300);
 		 
 		DO_LAST(!wlr_both_legs_flying() && wlr_either_leg_flying(),Last_cnt){
@@ -642,7 +642,7 @@ static void handle_sky_state(void)
         jump_ramp.out = 0.0f; 
         wlr.v_ref = v_ref; 
 		if(wlr.double_flag)
-			x3_balance_zero = x3_balance_zero_normal + 0.15f;
+			x3_balance_zero = x3_balance_zero_normal;
 		else
 			x3_balance_zero = x3_balance_zero_normal;
         x5_balance_zero = 0.0f; 
@@ -1124,7 +1124,7 @@ void wlr_init(void)
 		pid_init(&pid_leg_sky_jump[i],  NONE, 2500, 3.0, 0.0f, 150.0, 500);				//跳跃专用pid
 		pid_init(&pid_leg_recover[i], NONE, 1800, 1.5f, 20000.0f, 300, 500);			//起身专用pid
         pid_init(&pid_leg_length_fly[i], NONE, 1000, 0.0, 0, 0, 300);					//离地腿长/缓冲腿长pid
-        pid_init(&pid_L_test[i], CHANG_I_RATE,1500, 2.0, 35000, 60, 300);					//日常腿长pid
+        pid_init(&pid_L_test[i], CHANG_I_RATE,1500, 2.0, 45000, 60, 300);					//日常腿长pid
 		pid_L_test[i].threshold_a = 0.01f;
 		pid_L_test[i].threshold_b = 0.03f;
 		pid_init(&pid_rescue[i], NONE, 2.0f, 0.5f, 0, 45, 50);							//翻倒起身腿转速pid
@@ -1196,10 +1196,12 @@ void wlr_control(void)
 		lqr.X_fdb[1] = wlr.v_fdb;
 	else
 		lqr.X_fdb[1] = kal_fusion_vel.filter_vector[1];
+	
 	if(wlr.sky_flag == WLR_SKY_EXTENDING)
 		lqr.X_fdb[2] = wlr.yaw_fdb + sky_yaw_offset;
 	else
 		lqr.X_fdb[2] = wlr.yaw_fdb;
+	
     lqr.X_fdb[3] = -wlr.wz_fdb;
 	
     lqr.X_fdb[8] = x5_balance_zero + wlr.pit_fdb;		//wlr.pit_fdb = -chassis_imu.pit;
