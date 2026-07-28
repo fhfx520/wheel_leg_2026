@@ -3,7 +3,7 @@
 <title>Static Call Graph - [rm_main\rm_main.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image rm_main\rm_main.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Sun Jul 26 18:57:07 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Tue Jul 28 19:20:15 2026
 <BR><P>
 <H3>Maximum Stack Usage =        864 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -5872,7 +5872,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(.rodata..L__const.MX_FREERTOS_Init.os_thread_def_UITask)
 </UL>
-<P><STRONG><a name="[3b6]"></a>ui_update</STRONG> (Thumb, 4246 bytes, Stack size 80 bytes, ui_task.o(.text.ui_update))
+<P><STRONG><a name="[3b6]"></a>ui_update</STRONG> (Thumb, 4220 bytes, Stack size 80 bytes, ui_task.o(.text.ui_update))
 <BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = ui_update &rArr; ui_update_g_5 &rArr; _ui_update_g_5_0 &rArr; judge_send_data &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vListInsertEnd
 </UL>
 <BR>[Calls]<UL><LI><a href="#[34e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;circle_error (via Veneer)
@@ -5969,8 +5969,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_task
 </UL>
 
-<P><STRONG><a name="[35d]"></a>wlr_init</STRONG> (Thumb, 1284 bytes, Stack size 152 bytes, wlr.o(.text.wlr_init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 312<LI>Call Chain = wlr_init &rArr; twm_init &rArr; kalman_filter_init &rArr; malloc &rArr; internal_alloc
+<P><STRONG><a name="[35d]"></a>wlr_init</STRONG> (Thumb, 1336 bytes, Stack size 160 bytes, wlr.o(.text.wlr_init))
+<BR><BR>[Stack]<UL><LI>Max Depth = 320<LI>Call Chain = wlr_init &rArr; twm_init &rArr; kalman_filter_init &rArr; malloc &rArr; internal_alloc
 </UL>
 <BR>[Calls]<UL><LI><a href="#[28e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kalman_filter_init (via Veneer)
 <LI><a href="#[3b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tlm_init
@@ -6041,15 +6041,15 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[365]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[389]"></a>handle_jump_state</STRONG> (Thumb, 656 bytes, Stack size 16 bytes, wlr.o(.text.handle_jump_state))
-<BR><BR>[Stack]<UL><LI>Max Depth = 44<LI>Call Chain = handle_jump_state &rArr; ramp_calc &rArr; data_limit
+<P><STRONG><a name="[389]"></a>handle_jump_state</STRONG> (Thumb, 652 bytes, Stack size 24 bytes, wlr.o(.text.handle_jump_state))
+<BR><BR>[Stack]<UL><LI>Max Depth = 52<LI>Call Chain = handle_jump_state &rArr; ramp_calc &rArr; data_limit
 </UL>
 <BR>[Calls]<UL><LI><a href="#[2f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_calc (via Veneer)
 </UL>
 <BR>[Called By]<UL><LI><a href="#[365]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[38a]"></a>handle_sky_state</STRONG> (Thumb, 1120 bytes, Stack size 24 bytes, wlr.o(.text.handle_sky_state))
+<P><STRONG><a name="[38a]"></a>handle_sky_state</STRONG> (Thumb, 1128 bytes, Stack size 24 bytes, wlr.o(.text.handle_sky_state))
 <BR><BR>[Stack]<UL><LI>Max Depth = 52<LI>Call Chain = handle_sky_state &rArr; ramp_calc &rArr; data_limit
 </UL>
 <BR>[Calls]<UL><LI><a href="#[2f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_calc (via Veneer)
@@ -6108,7 +6108,7 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[365]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[38c]"></a>map_virtual_force</STRONG> (Thumb, 1764 bytes, Stack size 32 bytes, wlr.o(.text.map_virtual_force))
+<P><STRONG><a name="[38c]"></a>map_virtual_force</STRONG> (Thumb, 1912 bytes, Stack size 32 bytes, wlr.o(.text.map_virtual_force))
 <BR><BR>[Stack]<UL><LI>Max Depth = 272<LI>Call Chain = map_virtual_force &rArr; vmc_inverse_solution_five &rArr; aMartix_Mul
 </UL>
 <BR>[Calls]<UL><LI><a href="#[38e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vmc_inverse_solution_five
@@ -6798,7 +6798,7 @@ Local Symbols
 <BR>[Address Reference Count : 1]<UL><LI> gimbal_task.o(.rodata.mb_callback)
 </UL>
 <P><STRONG><a name="[35c]"></a>chassis_init</STRONG> (Thumb, 520 bytes, Stack size 64 bytes, chassis_task.o(.text.chassis_init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 376<LI>Call Chain = chassis_init &rArr; wlr_init &rArr; twm_init &rArr; kalman_filter_init &rArr; malloc &rArr; internal_alloc
+<BR><BR>[Stack]<UL><LI>Max Depth = 384<LI>Call Chain = chassis_init &rArr; wlr_init &rArr; twm_init &rArr; kalman_filter_init &rArr; malloc &rArr; internal_alloc
 </UL>
 <BR>[Calls]<UL><LI><a href="#[28e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kalman_filter_init (via Veneer)
 <LI><a href="#[35f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_init (via Veneer)

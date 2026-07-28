@@ -43,7 +43,7 @@ static void gimbal_init(void)
 {
     memset(&gimbal, 0, sizeof(gimbal_t));
 	
-	pid_init(&gimbal.pit_angle.pid, NONE, 30.0f, 0.0f, 10, 0, 10); 
+	pid_init(&gimbal.pit_angle.pid, NONE, 20.0f, 0.0f, 10, 0, 10); 
     pid_init(&gimbal.pit_spd.pid, NONE, 1.2f, 0.01f, 0, 0.5f, 7.0f);
 	
 //	pid_init(&gimbal.yaw_angle.pid, NONE,40.0f, 0.2f, 1.0f, 0.0f, 5.0f);//尝试云台补偿算法			MPC：调yaw的pid
@@ -51,8 +51,8 @@ static void gimbal_init(void)
 	
 	
 	//视觉mpc用这个  
-	pid_init(&gimbal.yaw_angle.pid, CHANG_I_RATE,20.0f, 0.0f, 0.0f, 0, 5);	
-    pid_init(&gimbal.yaw_spd.pid, NONE, 20000.0f, 50.0f, 0, 0.0f, 25000.0f) ;							
+	pid_init(&gimbal.yaw_angle.pid, CHANG_I_RATE,15.0f, 0.0f, 0.0f, 0, 3);	
+    pid_init(&gimbal.yaw_spd.pid, NONE, 25000.0f, 50.0f, 0, 0.0f, 25000.0f) ;							
 	
     pid_init(&gimbal.yaw_ecd.pid, NONE, 10.0f, 0, 0, 0.0f, 30.0f);
 	pid_init(&gimbal.yaw_spd_ecd.pid, NONE, 6000.0f, 10.00f, 0, 1000.0f, 25000.0f);
@@ -231,10 +231,10 @@ void gimbal_task(void const *argu)
             case REMOTER_MODE: {
                 if (rc_fsm_check(RC_RIGHT_RD) ){ //遥控器开启视觉
                     gimbal_get_vision_data();
-					gimbal.yaw_angle.pid.out_max = 5.0f;
+//					gimbal.yaw_angle.pid.out_max = 5.0f;
                 } 
                 else {
-					gimbal.yaw_angle.pid.out_max = 5.0f;
+//					gimbal.yaw_angle.pid.out_max = 5.0f;
 //                   gimbal.yaw_ecd.ref   -= rc.ch1 * gimbal_scale.ecd_remote;
                    gimbal.pit_angle.ref -= -rc.ch2 * gimbal_scale.angle_remote;
                    gimbal.yaw_angle.ref -= rc.ch1 * gimbal_scale.angle_remote;
@@ -259,7 +259,7 @@ void gimbal_task(void const *argu)
                     else if (key_scan_clear(KEY_GIMBAL_TURN_L)) {
                         gimbal.yaw_angle.ref += PI / 2;
                     }
-                    gimbal.pit_angle.ref += rc.mouse.y * gimbal_scale.angle_keyboard ;
+                    gimbal.pit_angle.ref += rc.mouse.y * gimbal_scale.angle_keyboard;
                     gimbal.yaw_angle.ref -= rc.mouse.x * gimbal_scale.angle_keyboard;
                 }
 								

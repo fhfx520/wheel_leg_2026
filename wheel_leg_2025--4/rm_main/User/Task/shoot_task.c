@@ -217,7 +217,8 @@ static uint8_t recover_flag = 0;
 //uint16_t sbtrigger = 52937;		//2026-5-11 0:29
 //uint16_t sbtrigger = 31328;		//2026-5-13 0:38
 //uint16_t sbtrigger = 60822;			//2026-5-14 3:59
-uint16_t sbtrigger = 53067;
+//uint16_t sbtrigger = 53067;
+uint16_t sbtrigger = 25370;
 
 static void pre_fabricated_trigger_position(void)
 {

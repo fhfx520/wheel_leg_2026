@@ -35,7 +35,7 @@ static uint8_t vision_get_sp_mode(void)
 		else if(vision_data_rec.energy_flag == 1 && vision_data_rec.energy_state == 2){
 			return VISION_SP_MODE_BIG_BUFF;
         } 
-		else if (rc.mouse.r == 1) {
+		else{
             return VISION_SP_MODE_AUTO_AIM;
         }
     } else if (ctrl_mode == REMOTER_MODE) {

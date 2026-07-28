@@ -325,6 +325,7 @@ pid_t pid_leg_length_fly[2];
 pid_t pid_roll;
 pid_t pid_L_test[2];
 pid_t pid_ascend[2];
+pid_t pid_stair[2];
 pid_t pid_rotate_leg[2];
 pid_t pid_energy_leg[2];
 pid_t pid_rotate_balance_zero;
@@ -553,7 +554,7 @@ static void handle_jump_state(void)
          jump_leg_length = (wlr.double_flag ? 0.33f : 0.33f);
 		 limit_q = (wlr.double_flag ? 0.4f : 0.4f);
 		 wlr.high_set = ramp_calc(&height_ramp, jump_leg_length);
-		 x3_balance_zero = x3_balance_zero_normal - 0.04F;
+		 x3_balance_zero = x3_balance_zero_normal;
          x5_balance_zero = -0.0f;
 		 wlr.jump_run++;
 
@@ -620,7 +621,7 @@ static void handle_sky_state(void)
 		
 		if(wlr.double_flag)
 		{
-			x3_balance_zero = x3_balance_zero_normal;
+			x3_balance_zero = x3_balance_zero_normal + 0.1f;
 //            wlr.v_ref = ramp_calc(&jump_ramp, -2.0f); 
 			wlr.v_ref = -2.0f; 
 		}
@@ -1026,7 +1027,11 @@ static void map_virtual_force(uint8_t index)
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
     }
 	else if(wlr.jump_flag == WLR_JUMP_ASCEND){//磕台阶站高  
-		wlr.side[index].Fy = pid_calc(&pid_ascend[index], tlm.l_ref[index], vmc[index].L_fdb)
+		wlr.side[index].Fy = pid_calc(&pid_ascend[index], tlm.l_ref[index], vmc[index].L_fdb) - 10.0f
+                            + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
+	}
+	else if(wlr.stair_flag == WLR_STAIR_ASCEND){
+		wlr.side[index].Fy = pid_calc(&pid_stair[index], tlm.l_ref[index], vmc[index].L_fdb)
                             + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
 	}
 	else if (wlr.sky_flag == WLR_SKY_FOLDING) {//准备跳
@@ -1131,7 +1136,8 @@ void wlr_init(void)
 		pid_init(&pid_rotate_leg[i], NONE, 1500.0f, 0.0f, 40000.0f, 0, 300);		
 		pid_init(&pid_energy_leg[i], NONE, 1000.0f, 0.0f, 40000.0f, 0, 300);
 		pid_init(&pid_ascend[i], NONE, 800, 0.0f, 80000, 70, 300);						//磕台阶腿长pid
-		pid_init(&pid_rotate_balance_zero, NONE, 0.015f, 0.0f, 0, 0.0f, 0.05f);			//磕台阶腿长pid
+		pid_init(&pid_stair[i], NONE, 800, 0.0f, 30000, 70, 300);						//下台阶腿长pid
+		pid_init(&pid_rotate_balance_zero, NONE, 0.015f, 0.0f, 0, 0.0f, 0.05f);			//小陀螺平衡摆角pid
 	}
 	pid_init(&pid_roll, NONE, 1000, 0,0, 0, 100);										//roll偏移支持力补偿
 	//卡尔曼滤波器初始化
