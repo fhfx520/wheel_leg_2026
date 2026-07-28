@@ -51,6 +51,8 @@ uint8_t dr16_get_data(dr16_t *rc, uint8_t *data)
         memset(rc, 0, sizeof(dr16_t));
         return 1;
     }
+	if(ABS(rc->ch1) < 50)
+		rc->ch1 = 0;
     rc->mouse.x = data[6] | (data[7] << 8);
     rc->mouse.y = data[8] | (data[9] << 8);
     rc->mouse.z = data[10] | (data[11] << 8);

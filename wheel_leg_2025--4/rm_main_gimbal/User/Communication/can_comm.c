@@ -31,7 +31,7 @@ void can_comm_init(void)
     can_filter.FilterIndex = 0;
     can_filter.FilterType = FDCAN_FILTER_DUAL;//等于过滤
     can_filter.FilterID1 = FDCAN_CHA_TO_GIMBAL_ID;
-    can_filter.FilterID2 = IMU_ALL_ID;
+//    can_filter.FilterID2 = IMU_ALL_ID;
     can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO1;//通过过滤后给邮箱1
     HAL_FDCAN_ConfigFilter(&hfdcan1, &can_filter);
 	
@@ -48,6 +48,14 @@ void can_comm_init(void)
     can_filter.FilterID1 = FRIC_MOTOR_LEFT_ID;
     can_filter.FilterID2 = FRIC_MOTOR_RIGHT_ID;
     can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;//通过过滤后给邮箱1
+    HAL_FDCAN_ConfigFilter(&hfdcan2, &can_filter);
+	
+	can_filter.IdType = FDCAN_STANDARD_ID;//标准帧
+    can_filter.FilterIndex = 1;
+    can_filter.FilterType = FDCAN_FILTER_RANGE;//等于过滤
+    can_filter.FilterID1 = IMU_PIT_ID;
+    can_filter.FilterID2 = IMU_ROL_ID;
+    can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO1;//通过过滤后给邮箱1
     HAL_FDCAN_ConfigFilter(&hfdcan2, &can_filter);
 	
     HAL_FDCAN_ConfigGlobalFilter(&hfdcan2, FDCAN_REJECT, FDCAN_REJECT, FDCAN_REJECT_REMOTE, FDCAN_REJECT_REMOTE);
@@ -138,11 +146,23 @@ void HAL_FDCAN_RxFifo1Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo1ITs)
 					dji_motor_get_data(CAN_CHANNEL_1,YAW_MOTOR_ID,gimbal_data_rec.yaw_raw_data);
 					break;
 				}
-				case IMU_ALL_ID : {imu_get_data(&gimbal_imu, fdcan_rx_fifo1_message.Identifier, fdcan_rx_fifo1_data);break;}
+//				case IMU_ALL_ID : {imu_get_data(&gimbal_imu, fdcan_rx_fifo1_message.Identifier, fdcan_rx_fifo1_data);break;}
 				default : break;
 			}
         } else if (hfdcan->Instance == FDCAN2) {
-			;
+			HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO1, &rx_fifo1_message, rx_fifo1_data);
+			switch(rx_fifo1_message.Identifier)
+			{
+				case IMU_PIT_ID:
+				case IMU_YAW_ID:
+				case IMU_ROL_ID:
+				{
+					imu_get_data(&gimbal_imu, rx_fifo1_message.Identifier, rx_fifo1_data);
+				}break;
+				default : break;
+			}
+			
+				
         } else if (hfdcan->Instance == FDCAN3) {
 			;
         }

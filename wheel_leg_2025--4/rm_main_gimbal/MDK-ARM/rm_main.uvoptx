@@ -173,7 +173,7 @@
         <Ww>
           <count>3</count>
           <WinNumber>1</WinNumber>
-          <ItemText>gimbal_imu</ItemText>
+          <ItemText>gimbal_imu,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>4</count>
@@ -265,6 +265,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>gimbal.feedback_alpha_speed_input</ItemText>
         </Ww>
+        <Ww>
+          <count>22</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>rx_fifo0_message</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
@@ -341,6 +346,16 @@
           <count>14</count>
           <WinNumber>2</WinNumber>
           <ItemText>gimbal.pit_angle.pid</ItemText>
+        </Ww>
+        <Ww>
+          <count>15</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>rx_fifo1_message.Identifier</ItemText>
+        </Ww>
+        <Ww>
+          <count>16</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>rx_fifo1_message</ItemText>
         </Ww>
       </WatchWindow2>
       <MemoryWindow1>

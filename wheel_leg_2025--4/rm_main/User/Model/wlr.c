@@ -504,13 +504,15 @@ static void update_leg_height_and_balance(float yaw_error)
         if (wlr.jump_flag == WLR_JUMP_IDLE && wlr.sky_flag == WLR_SKY_IDLE && wlr.stair_flag == WLR_STAIR_IDLE && !wlr.energy_flag) {
             wlr.high_set = ramp_calc(&height_ramp, LegLengthNormal);
             x3_balance_zero = (wlr.direction == 0 ? x3_balance_zero_normal : -x3_balance_zero_normal - 0.01f);
+			x5_balance_zero = 0.00f;
         }
 		else if (wlr.energy_flag) {
 			wlr.high_set = 0.12f;	
-			x3_balance_zero = x3_balance_zero_normal - 0.6f;
+			x5_balance_zero = -0.3f;
+//			x3_balance_zero = x3_balance_zero_normal - 0.6f;
 		}
 		height_ramp.max = LegLengthMax;
-		x5_balance_zero = 0.00f;
+		
     }
 
     if (wlr.jump_flag == WLR_JUMP_ASCEND) {
@@ -621,7 +623,7 @@ static void handle_sky_state(void)
 		
 		if(wlr.double_flag)
 		{
-			x3_balance_zero = x3_balance_zero_normal + 0.1f;
+			x3_balance_zero = x3_balance_zero_normal;
 //            wlr.v_ref = ramp_calc(&jump_ramp, -2.0f); 
 			wlr.v_ref = -2.0f; 
 		}
@@ -643,9 +645,9 @@ static void handle_sky_state(void)
         jump_ramp.out = 0.0f; 
         wlr.v_ref = v_ref; 
 		if(wlr.double_flag)
-			x3_balance_zero = x3_balance_zero_normal;
+			x3_balance_zero = x3_balance_zero_normal + 0.1f;
 		else
-			x3_balance_zero = x3_balance_zero_normal;
+			x3_balance_zero = x3_balance_zero_normal - 0.03f;
         x5_balance_zero = 0.0f; 
 
         if (vmc[0].L_fdb > 0.32f && vmc[1].L_fdb > 0.32f) {
@@ -783,14 +785,15 @@ static void handle_stair_state(void)
 	static uint16_t stair_cnt = 0;
     if(wlr.stair_flag == WLR_STAIR_ASCEND)
 	{
-		wlr.v_ref = ramp_calc(&stair_ramp,2.0f);
+		wlr.v_ref = (wlr.direction == 1 ? 1.0f : -1.0f);
 		stair_cnt++;
 		 Fy_ramp[0].out = Fy_ramp[1].out= 0;
-		 wlr.high_set = ramp_calc(&height_ramp, LegLengthStair);
+		 wlr.high_set = LegLengthStair;
 		 x3_balance_zero = x3_balance_zero_normal;
-         x5_balance_zero = 0.0f;
-		 if((fabsf(lqr.X_fdb[4]) > 0.2f || fabsf(lqr.X_fdb[6]) > 0.2f) && stair_cnt > 600) {
-			 stair_cnt = 0;
+         x5_balance_zero = (wlr.direction == 1 ? 0.0f : -0.05f);
+//		 if((fabsf(lqr.X_fdb[4]) > 0.2f || fabsf(lqr.X_fdb[6]) > 0.2f) && stair_cnt > 600) 
+		 if((chassis_imu.pit < -0.07f && wlr.direction == 1) || (chassis_imu.pit > 0.1f && wlr.direction == 0)) {
+			stair_cnt = 0;
 			wlr.v_ref = 0;
 			wlr.high_set = 0.12f;
 			wlr.stair_flag = WLR_STAIR_RECOVER_SHORT;
@@ -801,13 +804,14 @@ static void handle_stair_state(void)
 		stair_ramp.out = 0.0F;
 		data_limit(&wlr.v_ref,-1.0f,1.0f);
         wlr.high_set = 0.12f;
-        x3_balance_zero = 1.00f;
-//        if (fabsf(wlr.high_set - vmc[0].L_fdb) < 0.03f && fabsf(wlr.high_set - vmc[1].L_fdb) < 0.03f) 
-		stair_cnt++;
-		if (stair_cnt > 50)
+        x3_balance_zero = x3_balance_zero_normal;
+		x5_balance_zero = -0.0f;
+        if (fabsf(wlr.high_set - vmc[0].L_fdb) < 0.03f && fabsf(wlr.high_set - vmc[1].L_fdb) < 0.03f) 
+//		stair_cnt++;
+//		if (stair_cnt > 50)
 		{
 			stair_cnt = 0;
-			wlr.stair_flag = WLR_STAIR_RECOVER_LONG;
+			wlr.stair_flag = WLR_STAIR_LANDING;
 			height_ramp.out = 0.12f;
         }
 	}
@@ -815,7 +819,8 @@ static void handle_stair_state(void)
 	{
 		stair_cnt++;
 		data_limit(&wlr.v_ref,-1.0f,1.0f);
-		x3_balance_zero = 1.0f;
+		x3_balance_zero = x3_balance_zero_normal  ;
+		x5_balance_zero = -0.0f;
 		wlr.high_set = 0.21f;
 //		if(wlr.side[0].Fn_kal > 160.0f || wlr.side[1].Fn_kal > 160.0f)
 		if(stair_cnt > 75)
@@ -826,10 +831,11 @@ static void handle_stair_state(void)
 	}
     else if(wlr.stair_flag == WLR_STAIR_LANDING)
 	{
-		wlr.v_ref = ramp_calc(&stair_ramp,2.0f);
+		wlr.v_ref = (wlr.direction == 1 ? ramp_calc(&stair_ramp,2.0f) : ramp_calc(&stair_ramp,-1.0f));
 		stair_cnt = 0;
-		data_limit(&wlr.v_ref,-1.5f,1.5f);
+		data_limit(&wlr.v_ref,-2.0f,2.0f);
 		x3_balance_zero = x3_balance_zero_normal;
+		x5_balance_zero = (wlr.direction == 1 ? 0.0f : -0.05f);
 		wlr.high_set = 0.21f;
 	}
 	else if(wlr.stair_flag == WLR_STAIR_IDLE)
@@ -1034,6 +1040,9 @@ static void map_virtual_force(uint8_t index)
 		wlr.side[index].Fy = pid_calc(&pid_stair[index], tlm.l_ref[index], vmc[index].L_fdb)
                             + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
 	}
+	else if(wlr.stair_flag == WLR_STAIR_RECOVER_SHORT){
+		wlr.side[index].Fy = -150.0f;
+	}
 	else if (wlr.sky_flag == WLR_SKY_FOLDING) {//准备跳
         wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 30.0f
 								+ WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
@@ -1043,10 +1052,10 @@ static void map_virtual_force(uint8_t index)
 		Fy_temp = 400.0f;
 		wlr.side[index].Fy = ramp_calc(&sky_ramp[index], Fy_temp);
     } 
-	else if (wlr.sky_flag == WLR_SKY_AIR_FOLDING || wlr.stair_flag == WLR_STAIR_RECOVER_SHORT) {//空中收腿
+	else if (wlr.sky_flag == WLR_SKY_AIR_FOLDING) {//空中收腿
         Fy_temp = pid_calc(&pid_leg_sky_cover[index], tlm.l_ref[index], vmc[index].L_fdb) - 100.0f ;
         wlr.side[index].Fy = ramp_calc(&Fy_ramp[index], Fy_temp);
-    } 
+	}
 //	else if (wlr.sky_flag == WLR_SKY_LANDING) {//跳跃落地缓冲
 //         wlr.side[index].Fy = pid_calc(&pid_leg_length_fly[index], tlm.l_ref[index], vmc[index].L_fdb);
 //    } 
@@ -1057,7 +1066,7 @@ static void map_virtual_force(uint8_t index)
 	else if (wlr.energy_flag){//击打能量机关
 		wlr.side[index].Fy = pid_calc(&pid_energy_leg[index], tlm.l_ref[index], vmc[index].L_fdb) - 60.0f;
 	}
-	else if (wlr.high_flag == 1 || wlr.stair_flag == WLR_STAIR_RECOVER_LONG){//中腿长
+	else if (wlr.high_flag == 1 || wlr.stair_flag == WLR_STAIR_LANDING){//中腿长
         wlr.side[index].Fy = pid_calc(&pid_L_test[index], tlm.l_ref[index], vmc[index].L_fdb) - 30.0f
                               + WLR_SIGN(index) * (wlr.roll_offs + wlr.inertial_offs);
     }
@@ -1277,7 +1286,6 @@ void wlr_control(void)
 	
     if(chassis.turn_back_flag 
 		|| (g_robot_ctx.output.chassis == CHASSIS_ASCEND && wlr.direction == 1)
-		|| (g_robot_ctx.output.chassis == CHASSIS_STAIR && wlr.direction == 0)
 		|| (chassis.turn_fight_flag))//切换跟随时屏蔽运动有关项且限制yaw_err的差值
     {
         data_limit(&lqr.X_diff[0], 0.0f, 0.0f);

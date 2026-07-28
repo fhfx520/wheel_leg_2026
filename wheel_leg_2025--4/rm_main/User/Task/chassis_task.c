@@ -200,7 +200,6 @@ void chassis_reset_finish_flag(void)
 {
 	g_robot_ctx.sky_finish_flag = 0;
 	g_robot_ctx.jump_finish_flag = 0;
-	g_robot_ctx.stair_finish_flag = 0;
 }
 
 // 恢复你本来的代码
@@ -404,10 +403,8 @@ static void chassis_execute_fsm(void)
 			wlr.high_flag = 0;
 			wlr.sky_flag = WLR_SKY_IDLE;
 			wlr.jump_flag = WLR_JUMP_IDLE;
-			if(wlr.stair_flag == WLR_STAIR_IDLE && wlr.direction == 1)
+			if(wlr.stair_flag == WLR_STAIR_IDLE)
 				wlr.stair_flag = WLR_STAIR_ASCEND;
-			if(wlr.stair_flag == WLR_STAIR_RECOVER_LONG)
-				g_robot_ctx.stair_finish_flag = 1;
 			break;
 		}
 		
@@ -473,6 +470,7 @@ static void chassis_data_input(void)
             break;
         }
         case CHASSIS_LOW:
+		case CHASSIS_STAIR:
         case CHASSIS_HIGH:
         case CHASSIS_TERRAIN_READY:		{ // 整合了原版的所有 FOLLOW 和 PRONE
 		case CHASSIS_TERRAIN_READY_2 :
@@ -538,15 +536,15 @@ static void chassis_data_input(void)
 			if(fabsf(wlr.yaw_err) < PI / 8.0f) wlr.direction = 0;
 			break;
 		}
-	   case CHASSIS_STAIR:
-		 {
-			wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI;
-			wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;  
-			wlr.wz_ref = 0;
-			wlr.yaw_err = circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
-			if(fabsf(wlr.yaw_err) < PI / 8.0f) wlr.direction = 1;
-			break;
-		}
+//	   case CHASSIS_STAIR:
+//		 {
+//			wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI;
+//			wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;  
+//			wlr.wz_ref = 0;
+//			wlr.yaw_err = circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
+//			if(fabsf(wlr.yaw_err) < PI / 8.0f) wlr.direction = 1;
+//			break;
+//		}
         case CHASSIS_FIGHT: {
             wlr.yaw_ref = (float)CHASSIS_YAW_FIGHT / 8192 * 2 * PI;
             wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;

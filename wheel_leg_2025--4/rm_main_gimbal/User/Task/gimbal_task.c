@@ -72,8 +72,8 @@ static void gimbal_pid_calc(void)
 //	//pit_max = -arm_cos_f32(yaw_err) * chassis_imu.pit + 0.32f;
 //    pit_min = -arm_cos_f32(yaw_err) * chassis_imu.pit - 0.35f;
 	
-	pit_max = 0.5f;		//0.5 滑槽卡头
-	pit_min = -0.3f;
+	pit_max = 0.5f + imu_data_rec.pit;		//0.5 滑槽卡头
+	pit_min = -0.3f + imu_data_rec.pit; 
 	
 	gimbal.feedback_alpha_speed_input = gimbal_data_rec.feedback_alpha_speed_input;
 	

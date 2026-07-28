@@ -37,6 +37,7 @@ static const FsmState_t state_rem_ter_ready;
 static const FsmState_t state_rem_ter_ready_2;
 static const FsmState_t state_rem_ascend;
 static const FsmState_t state_rem_stair;
+static const FsmState_t state_rem_energy;
 
 static const FsmState_t state_kb_low;
 static const FsmState_t state_kb_high;
@@ -95,16 +96,25 @@ static void rem_low_execute(void) {
     g_robot_ctx.output.gimbal  = GIMBAL_GYRO_STABILIZE;
     g_robot_ctx.output.shoot   = SHOOT_STOP; 
     
-    if (check_ch3_trigger()) { fsm_change(&fsm_remote_sub, &state_rem_spin); return; }
-    if (g_robot_ctx.input.sw2 == RC_SW_MID) fsm_change(&fsm_remote_sub, &state_rem_high);
-    if (g_robot_ctx.input.sw2 == RC_SW_DOWN) 
+	if(rc_fsm_check(RC_RIGHT_RD))
 	{
-		if(rc_fsm_check(RC_LEFT_LU))
-			fsm_change(&fsm_remote_sub, &state_rem_ter_ready);
-		else
-			fsm_change(&fsm_remote_sub, &state_rem_ascend);
+		g_robot_ctx.output.shoot   = SHOOT_SINGLE; 
+		if (g_robot_ctx.input.sw2 == RC_SW_MID) fsm_change(&fsm_remote_sub, &state_rem_energy);
+		if (g_robot_ctx.input.sw2 == RC_SW_DOWN) g_robot_ctx.output.shoot   = SHOOT_SERIES;
 	}
-    if(g_robot_ctx.input.ch2 > 600) fsm_change(&fsm_remote_sub, &state_rem_stair);
+	else
+	{
+		if (check_ch3_trigger()) { fsm_change(&fsm_remote_sub, &state_rem_spin); return; }
+		if (g_robot_ctx.input.sw2 == RC_SW_MID) fsm_change(&fsm_remote_sub, &state_rem_high);
+		if (g_robot_ctx.input.sw2 == RC_SW_DOWN) 
+		{
+			if(rc_fsm_check(RC_LEFT_LU))
+				fsm_change(&fsm_remote_sub, &state_rem_ter_ready);
+			else
+				fsm_change(&fsm_remote_sub, &state_rem_ascend);
+		}
+		if(g_robot_ctx.input.ch2 > 600) fsm_change(&fsm_remote_sub, &state_rem_stair);
+	}
 }
 static const FsmState_t state_rem_low = { .name = "REM_LOW", .enter = rem_low_enter, .execute = rem_low_execute };
 
@@ -191,6 +201,18 @@ static void rem_stair_execute(void) {
     }
 }
 static const FsmState_t state_rem_stair = { .name = "REM_STAIR", .enter = rem_stair_enter, .execute = rem_stair_execute };
+
+static void rem_energy_enter(void) { g_robot_ctx.output.chassis = CHASSIS_ENERGY; }
+static void rem_energy_execute(void) {
+    g_robot_ctx.output.chassis = CHASSIS_ENERGY;
+    g_robot_ctx.output.gimbal  = GIMBAL_GYRO_STABILIZE;
+    g_robot_ctx.output.shoot   = SHOOT_SINGLE;
+    
+	if (g_robot_ctx.input.ch3 < -400) g_robot_ctx.output.shoot   = SHOOT_SERIES;
+	if (g_robot_ctx.input.sw2 == RC_SW_UP || g_robot_ctx.input.sw2 == RC_SW_DOWN) fsm_change(&fsm_remote_sub, &state_rem_low);
+}
+static const FsmState_t state_rem_energy = { .name = "REM_ENERGY", .enter = rem_energy_enter, .execute = rem_energy_execute };
+
 
 // =========================================================================
 // KEYBOARD 模式子状态机 
@@ -305,7 +327,7 @@ static void kb_stair_execute(void) {
     g_robot_ctx.output.gimbal = get_kb_gimbal_mode();
     g_robot_ctx.output.shoot  = get_kb_shoot_mode();
 
-	if(!g_robot_ctx.input.kb.bit.F || g_robot_ctx.stair_finish_flag) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
+	if(!g_robot_ctx.input.kb.bit.F) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
 }
 static const FsmState_t state_kb_stair = { .name = "KB_STAIR", .enter = kb_stair_enter, .execute = kb_stair_execute };
 

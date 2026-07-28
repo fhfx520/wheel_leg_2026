@@ -50,7 +50,7 @@
 /* USER CODE BEGIN PD */
 
 //          #define Calibrate //操作此宏定义决定是否校准
-			#define Fdcan //操作此宏定义决定是否使用fdcan
+//			#define Fdcan //操作此宏定义决定是否使用fdcan
 
 /* USER CODE END PD */
 
@@ -272,7 +272,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		}
 		else{
 			can_std_transmit(&hfdcan1,0x013,imu_msg_send.rol_msg.array);
-			can_std_transmit(&hfdcan1,0x014,imu_msg_send.cha_angle_msg.array);
+//			can_std_transmit(&hfdcan1,0x014,imu_msg_send.cha_angle_msg.array);
 		}
 #else
 		if(send_dnt++ % 2 == 0)

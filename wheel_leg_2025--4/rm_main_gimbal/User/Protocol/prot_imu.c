@@ -34,7 +34,7 @@ void imu_get_data(imu_t *imu, uint32_t id, uint8_t *data)
 		}
 		case IMU_ROL_ID: {
 			imu->rol = 1.0f * buffer[0] * PI / 180;
-			imu->wx = 1.0f * buffer[1] / 16.384f * PI / 180;
+			imu->wx = 1.0f * buffer[1];
 			break;
 		}
 		case IMU_ACC_ID: {
