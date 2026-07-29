@@ -98,9 +98,9 @@ static void rem_low_execute(void) {
     
 	if(rc_fsm_check(RC_RIGHT_RD))
 	{
-		g_robot_ctx.output.shoot   = SHOOT_SINGLE; 
-		if (g_robot_ctx.input.sw2 == RC_SW_MID) fsm_change(&fsm_remote_sub, &state_rem_energy);
-		if (g_robot_ctx.input.sw2 == RC_SW_DOWN) g_robot_ctx.output.shoot   = SHOOT_SERIES;
+		if (check_ch3_trigger() && g_robot_ctx.input.sw2 == RC_SW_UP) fsm_change(&fsm_remote_sub, &state_rem_spin);
+		if (g_robot_ctx.input.sw2 == RC_SW_MID)	g_robot_ctx.output.shoot   = SHOOT_SINGLE; 
+		if (g_robot_ctx.input.sw2 == RC_SW_DOWN) 					  fsm_change(&fsm_remote_sub, &state_rem_energy);
 	}
 	else
 	{
@@ -129,7 +129,7 @@ static void rem_spin_execute(void) {
 	else
 		g_robot_ctx.output.shoot   = SHOOT_SERIES;
     
-    if (check_ch3_trigger()) fsm_change(&fsm_remote_sub, &state_rem_low);
+    if (check_ch3_trigger() && g_robot_ctx.input.sw2 != RC_SW_DOWN) fsm_change(&fsm_remote_sub, &state_rem_low);
 }
 static const FsmState_t state_rem_spin = { .name = "REM_SPIN", .enter = rem_spin_enter, .execute = rem_spin_execute };
 
@@ -209,7 +209,7 @@ static void rem_energy_execute(void) {
     g_robot_ctx.output.shoot   = SHOOT_SINGLE;
     
 	if (g_robot_ctx.input.ch3 < -400) g_robot_ctx.output.shoot   = SHOOT_SERIES;
-	if (g_robot_ctx.input.sw2 == RC_SW_UP || g_robot_ctx.input.sw2 == RC_SW_DOWN) fsm_change(&fsm_remote_sub, &state_rem_low);
+	if (g_robot_ctx.input.sw2 == RC_SW_UP || g_robot_ctx.input.sw2 == RC_SW_MID) fsm_change(&fsm_remote_sub, &state_rem_low);
 }
 static const FsmState_t state_rem_energy = { .name = "REM_ENERGY", .enter = rem_energy_enter, .execute = rem_energy_execute };
 

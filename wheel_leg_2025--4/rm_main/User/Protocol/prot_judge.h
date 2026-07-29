@@ -62,7 +62,7 @@ typedef enum
     LEN_referee_warning             = 3,
     LEN_dart_info                   = 3,
 
-    LEN_robot_status                = 13,
+    LEN_robot_status                = 17,
     LEN_power_heat_data             = 14,
     LEN_robot_pos                   = 12,//手册有矛盾 有16和12
     LEN_buff                        = 8,
@@ -125,7 +125,7 @@ typedef __PACKED_STRUCT
 	uint16_t ally_2_robot_HP;//己方2号工程机器人血量
 	uint16_t ally_3_robot_HP;//己方3号步兵机器人血量
 	uint16_t ally_4_robot_HP;//己方4号步兵机器人血量
-	uint16_t reserved;		 //保留位
+	int16_t damage_difference;//己方全队总伤害与对方全队总伤害之差
 	uint16_t ally_7_robot_HP;//己方7号哨兵机器人血量
 	uint16_t ally_outpost_HP;//己方前哨站血量 
 	uint16_t ally_base_HP;	 //己方基地血量
@@ -201,6 +201,8 @@ typedef __PACKED_STRUCT
     uint16_t shooter_barrel_heat_limit;
 	/*机器人底盘功率上限*/
     uint16_t chassis_power_limit;
+	/*机器人射击初速度上限*/
+	float bullet_speed_limit; 
 	/* 电源管理模块的输出情况： 
 	 bit 0：gimbal口输出，0为无输出，1为 24V输出 
 	 bit 1：chassis口输出，0为无输出，1为24V输出 
@@ -351,6 +353,7 @@ typedef __PACKED_STRUCT
 {
     uint32_t sentry_info;
 	uint16_t sentry_info_2; 
+	uint64_t sentry_info_3;
 } sentry_info_t;
 
 typedef __PACKED_STRUCT

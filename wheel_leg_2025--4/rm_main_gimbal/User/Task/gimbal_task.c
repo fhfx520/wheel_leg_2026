@@ -229,7 +229,8 @@ void gimbal_task(void const *argu)
                 break;
             }
             case REMOTER_MODE: {
-                if (rc_fsm_check(RC_RIGHT_RD) ){ //遥控器开启视觉
+				//只开启视觉且右拨杆不在上 或 开启视觉并且注释底盘 时云台听视觉
+                if ((rc_fsm_check(RC_RIGHT_RD) && rc.sw2 != RC_UP) || (rc_fsm_check(RC_RIGHT_RD) && rc_fsm_check(RC_LEFT_LD))){ 
                     gimbal_get_vision_data();
 //					gimbal.yaw_angle.pid.out_max = 5.0f;
                 } 

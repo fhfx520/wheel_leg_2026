@@ -3,7 +3,7 @@
 <title>Static Call Graph - [rm_main\rm_main.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image rm_main\rm_main.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Wed Jul 29 17:23:29 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Wed Jul 29 22:48:49 2026
 <BR><P>
 <H3>Maximum Stack Usage =        864 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -4023,8 +4023,8 @@ Global Symbols
 <LI><a href="#[da]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rem_ascend_execute
 <LI><a href="#[e6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rem_ter_ready_execute
 <LI><a href="#[de]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rem_high_execute
-<LI><a href="#[e2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rem_spin_execute
 <LI><a href="#[dc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rem_energy_execute
+<LI><a href="#[e2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rem_spin_execute
 <LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rem_low_execute
 <LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;keyboard_execute
 <LI><a href="#[e8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;remote_execute
@@ -4073,8 +4073,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;status_task (via Veneer)
 </UL>
 
-<P><STRONG><a name="[287]"></a>judge_get_data</STRONG> (Thumb, 852 bytes, Stack size 24 bytes, prot_judge.o(.text.judge_get_data))
-<BR><BR>[Stack]<UL><LI>Max Depth = 64 + In Cycle
+<P><STRONG><a name="[287]"></a>judge_get_data</STRONG> (Thumb, 842 bytes, Stack size 32 bytes, prot_judge.o(.text.judge_get_data))
+<BR><BR>[Stack]<UL><LI>Max Depth = 72 + In Cycle
 <LI>Call Chain = judge_get_data &rArr;  judge_get_data (Cycle)
 </UL>
 <BR>[Calls]<UL><LI><a href="#[271]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;crc16_verify_checksum
@@ -6031,7 +6031,7 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[367]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[3c2]"></a>reset_jump_state</STRONG> (Thumb, 106 bytes, Stack size 0 bytes, wlr.o(.text.reset_jump_state))
+<P><STRONG><a name="[3c2]"></a>reset_jump_state</STRONG> (Thumb, 116 bytes, Stack size 0 bytes, wlr.o(.text.reset_jump_state))
 <BR><BR>[Called By]<UL><LI><a href="#[367]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
@@ -6044,15 +6044,15 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[367]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[38b]"></a>handle_jump_state</STRONG> (Thumb, 652 bytes, Stack size 24 bytes, wlr.o(.text.handle_jump_state))
-<BR><BR>[Stack]<UL><LI>Max Depth = 52<LI>Call Chain = handle_jump_state &rArr; ramp_calc &rArr; data_limit
+<P><STRONG><a name="[38b]"></a>handle_jump_state</STRONG> (Thumb, 656 bytes, Stack size 16 bytes, wlr.o(.text.handle_jump_state))
+<BR><BR>[Stack]<UL><LI>Max Depth = 44<LI>Call Chain = handle_jump_state &rArr; ramp_calc &rArr; data_limit
 </UL>
 <BR>[Calls]<UL><LI><a href="#[2f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_calc (via Veneer)
 </UL>
 <BR>[Called By]<UL><LI><a href="#[367]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[38c]"></a>handle_sky_state</STRONG> (Thumb, 1132 bytes, Stack size 24 bytes, wlr.o(.text.handle_sky_state))
+<P><STRONG><a name="[38c]"></a>handle_sky_state</STRONG> (Thumb, 1128 bytes, Stack size 24 bytes, wlr.o(.text.handle_sky_state))
 <BR><BR>[Stack]<UL><LI>Max Depth = 52<LI>Call Chain = handle_sky_state &rArr; ramp_calc &rArr; data_limit
 </UL>
 <BR>[Calls]<UL><LI><a href="#[2f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_calc (via Veneer)
@@ -6099,7 +6099,7 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[367]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[3ad]"></a>stable_velocity_control</STRONG> (Thumb, 416 bytes, Stack size 24 bytes, wlr.o(.text.stable_velocity_control))
+<P><STRONG><a name="[3ad]"></a>stable_velocity_control</STRONG> (Thumb, 460 bytes, Stack size 24 bytes, wlr.o(.text.stable_velocity_control))
 <BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = stable_velocity_control &rArr; power_control_target_velocity
 </UL>
 <BR>[Calls]<UL><LI><a href="#[3ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;limit_velocity (via Veneer)
@@ -6202,7 +6202,7 @@ Local Symbols
 <P><STRONG><a name="[df]"></a>rem_low_enter</STRONG> (Thumb, 14 bytes, Stack size 0 bytes, robot_logic.o(.text.rem_low_enter))
 <BR>[Address Reference Count : 1]<UL><LI> robot_logic.o(.rodata.state_rem_low)
 </UL>
-<P><STRONG><a name="[e0]"></a>rem_low_execute</STRONG> (Thumb, 288 bytes, Stack size 8 bytes, robot_logic.o(.text.rem_low_execute))
+<P><STRONG><a name="[e0]"></a>rem_low_execute</STRONG> (Thumb, 330 bytes, Stack size 8 bytes, robot_logic.o(.text.rem_low_execute))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = rem_low_execute &rArr; fsm_change
 </UL>
 <BR>[Calls]<UL><LI><a href="#[2f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rc_fsm_check
@@ -6218,6 +6218,17 @@ Local Symbols
 <LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rem_low_execute
 </UL>
 
+<P><STRONG><a name="[e1]"></a>rem_spin_enter</STRONG> (Thumb, 14 bytes, Stack size 0 bytes, robot_logic.o(.text.rem_spin_enter))
+<BR>[Address Reference Count : 1]<UL><LI> robot_logic.o(.rodata.state_rem_spin)
+</UL>
+<P><STRONG><a name="[e2]"></a>rem_spin_execute</STRONG> (Thumb, 134 bytes, Stack size 8 bytes, robot_logic.o(.text.rem_spin_execute))
+<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = rem_spin_execute &rArr; fsm_change
+</UL>
+<BR>[Calls]<UL><LI><a href="#[2f6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;check_ch3_trigger
+<LI><a href="#[298]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fsm_change
+</UL>
+<BR>[Address Reference Count : 1]<UL><LI> robot_logic.o(.rodata.state_rem_spin)
+</UL>
 <P><STRONG><a name="[db]"></a>rem_energy_enter</STRONG> (Thumb, 14 bytes, Stack size 0 bytes, robot_logic.o(.text.rem_energy_enter))
 <BR>[Address Reference Count : 1]<UL><LI> robot_logic.o(.rodata.state_rem_energy)
 </UL>
@@ -6227,17 +6238,6 @@ Local Symbols
 <BR>[Calls]<UL><LI><a href="#[298]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fsm_change
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> robot_logic.o(.rodata.state_rem_energy)
-</UL>
-<P><STRONG><a name="[e1]"></a>rem_spin_enter</STRONG> (Thumb, 14 bytes, Stack size 0 bytes, robot_logic.o(.text.rem_spin_enter))
-<BR>[Address Reference Count : 1]<UL><LI> robot_logic.o(.rodata.state_rem_spin)
-</UL>
-<P><STRONG><a name="[e2]"></a>rem_spin_execute</STRONG> (Thumb, 118 bytes, Stack size 8 bytes, robot_logic.o(.text.rem_spin_execute))
-<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = rem_spin_execute &rArr; fsm_change
-</UL>
-<BR>[Calls]<UL><LI><a href="#[2f6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;check_ch3_trigger
-<LI><a href="#[298]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fsm_change
-</UL>
-<BR>[Address Reference Count : 1]<UL><LI> robot_logic.o(.rodata.state_rem_spin)
 </UL>
 <P><STRONG><a name="[dd]"></a>rem_high_enter</STRONG> (Thumb, 14 bytes, Stack size 0 bytes, robot_logic.o(.text.rem_high_enter))
 <BR>[Address Reference Count : 1]<UL><LI> robot_logic.o(.rodata.state_rem_high)

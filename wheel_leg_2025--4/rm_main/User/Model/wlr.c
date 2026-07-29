@@ -447,6 +447,8 @@ static void stable_velocity_control(void)
 	}
     if(wlr.sky_flag == WLR_SKY_FOLDING)
 		data_limit(&lqr.X_ref[1],-3.0f,3.0f);
+	else if(wlr.jump_flag == WLR_JUMP_ASCEND)
+		data_limit(&lqr.X_ref[1],-1.5f,1.5f);
 	else
 		data_limit(&lqr.X_ref[1],-2.3f,2.3f);
 	if (wlr_either_leg_flying()) 
@@ -540,6 +542,7 @@ static void reset_jump_state(void)
 		wlr.sky_over = 0;
 		wlr.sky_cnt = 0;
 		sky_ccc = 0;
+		jump_ramp.out = 0.0f; 
 		sky_height_ramp.out = 0.23f;
     }
 }
@@ -556,7 +559,7 @@ static void handle_jump_state(void)
          jump_leg_length = (wlr.double_flag ? 0.33f : 0.33f);
 		 limit_q = (wlr.double_flag ? 0.4f : 0.4f);
 		 wlr.high_set = ramp_calc(&height_ramp, jump_leg_length);
-		 x3_balance_zero = x3_balance_zero_normal;
+		 x3_balance_zero = x3_balance_zero_normal - 0.04f;
          x5_balance_zero = -0.0f;
 		 wlr.jump_run++;
 
@@ -629,7 +632,7 @@ static void handle_sky_state(void)
 		}
         else
 		{
-			x3_balance_zero = x3_balance_zero_normal;
+			x3_balance_zero = x3_balance_zero_normal - 0.015f;
             wlr.v_ref = ramp_calc(&jump_ramp, -3.0f);
 		}
 		
@@ -645,7 +648,7 @@ static void handle_sky_state(void)
         jump_ramp.out = 0.0f; 
         wlr.v_ref = v_ref; 
 		if(wlr.double_flag)
-			x3_balance_zero = x3_balance_zero_normal + 0.1f;
+			x3_balance_zero = x3_balance_zero_normal + 0.05f;
 		else
 			x3_balance_zero = x3_balance_zero_normal - 0.03f;
         x5_balance_zero = 0.0f; 
@@ -663,7 +666,7 @@ static void handle_sky_state(void)
         x3_balance_zero = 0.0f;
         x5_balance_zero = 0.0f;
         wlr.sky_cnt++;
-        target_cnt = (wlr.double_flag ? 250 : 190);
+        target_cnt = (wlr.double_flag ? 190 : 190);
 		
         if (wlr.sky_cnt > target_cnt) {
             wlr.sky_cnt = 0;

@@ -114,7 +114,7 @@ int main(void)
   MX_TIM1_Init();
   MX_FDCAN1_Init();
   MX_TIM3_Init();
-  MX_IWDG_Init();
+//  MX_IWDG_Init();
   /* USER CODE BEGIN 2 */
 #ifndef Fdcan
   MY_FDCAN1_Init();
