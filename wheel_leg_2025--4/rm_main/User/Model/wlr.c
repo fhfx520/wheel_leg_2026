@@ -806,7 +806,7 @@ static void handle_stair_state(void)
         wlr.high_set = 0.12f;
         x3_balance_zero = x3_balance_zero_normal;
 		x5_balance_zero = -0.0f;
-        if (fabsf(wlr.high_set - vmc[0].L_fdb) < 0.03f && fabsf(wlr.high_set - vmc[1].L_fdb) < 0.03f) 
+        if (fabsf(wlr.high_set - vmc[0].L_fdb) < 0.02f && fabsf(wlr.high_set - vmc[1].L_fdb) < 0.02f) 
 //		stair_cnt++;
 //		if (stair_cnt > 50)
 		{
@@ -815,20 +815,20 @@ static void handle_stair_state(void)
 			height_ramp.out = 0.12f;
         }
 	}
-    else if(wlr.stair_flag == WLR_STAIR_RECOVER_LONG)
-	{
-		stair_cnt++;
-		data_limit(&wlr.v_ref,-1.0f,1.0f);
-		x3_balance_zero = x3_balance_zero_normal  ;
-		x5_balance_zero = -0.0f;
-		wlr.high_set = 0.21f;
-//		if(wlr.side[0].Fn_kal > 160.0f || wlr.side[1].Fn_kal > 160.0f)
-		if(stair_cnt > 75)
-		{
-			stair_cnt = 0;
-			wlr.stair_flag = WLR_STAIR_LANDING;
-		}
-	}
+//    else if(wlr.stair_flag == WLR_STAIR_RECOVER_LONG)
+//	{
+//		stair_cnt++;
+//		data_limit(&wlr.v_ref,-1.0f,1.0f);
+//		x3_balance_zero = x3_balance_zero_normal  ;
+//		x5_balance_zero = -0.0f;
+//		wlr.high_set = 0.21f;
+////		if(wlr.side[0].Fn_kal > 160.0f || wlr.side[1].Fn_kal > 160.0f)
+//		if(stair_cnt > 75)
+//		{
+//			stair_cnt = 0;
+//			wlr.stair_flag = WLR_STAIR_LANDING;
+//		}
+//	}
     else if(wlr.stair_flag == WLR_STAIR_LANDING)
 	{
 		wlr.v_ref = (wlr.direction == 1 ? ramp_calc(&stair_ramp,2.0f) : ramp_calc(&stair_ramp,-1.0f));

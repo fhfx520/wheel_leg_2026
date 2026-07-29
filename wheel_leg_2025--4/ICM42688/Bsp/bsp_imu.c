@@ -107,10 +107,10 @@ void IMU_AHRS_Calcu_task(void){
 				//待发送数据			
 				//按坐标轴分
 				imu_msg_send.rol_msg.e.rol = INS.Pitch;
-				imu_msg_send.rol_msg.e.wx = INS.Gyro[Y_axis];
+				imu_msg_send.rol_msg.e.wx = INS.Gyro[X_axis];
 				
 				imu_msg_send.pit_msg.e.pit = INS.Roll;
-				imu_msg_send.pit_msg.e.wy = INS.Gyro[X_axis];
+				imu_msg_send.pit_msg.e.wy = INS.Gyro[Y_axis];
 				
 				imu_msg_send.yaw_msg.e.yaw = INS.Yaw;
 				imu_msg_send.yaw_msg.e.wz = INS.Gyro[Z_axis];
