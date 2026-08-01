@@ -340,6 +340,16 @@
           <WinNumber>1</WinNumber>
           <ItemText>tof,0x0A</ItemText>
         </Ww>
+        <Ww>
+          <count>37</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>zzzzzz</ItemText>
+        </Ww>
+        <Ww>
+          <count>38</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>gimbal.yaw_output</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>

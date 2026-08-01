@@ -207,7 +207,7 @@ static uint8_t series_shoot_enable(void)
 				
         && ((shoot.barrel.heat_remain >= MIN_HEAT))  //热量控制
         && frequency_cnt * SHOOT_PERIOD >= shoot.trigger_period  //射频控制
-        && ABS(trigger_ecd_error) <  0.05f * TRIGGER_MOTOR_ECD_SERIES  //拨盘误差控制		
+        && ABS(trigger_ecd_error) <  0.2f * TRIGGER_MOTOR_ECD_SERIES  //拨盘误差控制		
     );
 }
 static uint16_t init_cnt = 0; 

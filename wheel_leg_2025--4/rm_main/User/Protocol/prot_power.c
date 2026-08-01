@@ -30,8 +30,8 @@ void power_init(void)
 		power_control.normal_add_power   = 120.0f;
 //    power_control.limit_power        = 170.0f;//170 250
 //    supercap.max_volage              = 23.6f;
-	supercap.max_volage				 = 28.0f;
-    supercap.min_volage              = 10.0f;
+	supercap.max_volage				 = 28.5f;
+    supercap.min_volage              = 0.0f;
     supercap.volume_percent          = 100;
     supercap.volage                  = supercap.min_volage;
 }
@@ -202,31 +202,31 @@ void power_get_status(uint8_t *data)
 
 
 static float power_velocity_table[11][2] = {
-    {35.0f ,1.3f},//节能状态
-    {45.0f ,1.3f},//1
-    {50.0f ,1.4f},//2
-    {55.0f ,1.5f},//3
-    {60.0f ,1.6f},//4
-    {65.0f ,1.7f},//5
-    {70.0f ,1.8f},//6
+    {35.0f ,1.0f},//节能状态
+    {45.0f ,1.2f},//1
+    {50.0f ,1.3f},//2
+    {55.0f ,1.4f},//3
+    {60.0f ,1.5f},//4
+    {65.0f ,1.6f},//5
+    {70.0f ,1.7f},//6
     {75.0f ,1.8f},//7
-    {80.0f ,2.0f},//8
+    {80.0f ,1.9f},//8
     {90.0f ,2.0f},//9
     {100.0f,2.0f},//10
 };
 
 static float power_rotate_table[11][2] = {
-    {35.0f ,7.0f},//节能状态
-    {45.0f ,7.0f},//1
-    {50.0f ,8.0f},//2
-    {55.0f ,8.0f},//3
-    {60.0f ,9.0f},//4
-    {65.0f ,10.0f},//5
+    {35.0f ,6.0f},//节能状态
+    {45.0f ,6.0f},//1
+    {50.0f ,7.0f},//2
+    {55.0f ,7.0f},//3
+    {60.0f ,8.0f},//4
+    {65.0f ,9.0f},//5
     {70.0f ,10.0f},//6
-    {75.0f ,11.0f},//7
-    {80.0f ,11.0f},//8
-    {90.0f ,12.0f},//9
-    {100.0f,12.0f},//10
+    {75.0f ,10.0f},//7
+    {80.0f ,10.0f},//8
+    {90.0f ,10.0f},//9
+    {100.0f,10.0f},//10
 };
 static float supercap_velocity_addmap(void)
 {

@@ -69,7 +69,7 @@ const float LegLengthFly 	 = 0.20f; //正常腿长腾空
 const float LegLengthHigh2 	 = 0.34f; //超长腿
 const float LegLengthHigh 	 = 0.21f; //长腿 0.23
 const float LegLengthRotate  = 0.15f; //正常
-const float LegLengthRotateHigh  = 0.23f; //正常
+const float LegLengthRotateHigh  = 0.25f; //正常
 const float LegLengthNormal  = 0.16f; //正常
 const float LegLengthStair   = 0.18f; //磕碰下台阶腿长
 
@@ -85,7 +85,7 @@ const float Hinge_gas_Lengh = 0.0481f;//大小腿转轴到气弹簧固定支座�
 float x3_balance_zero = 0.0f;//腿摆角角度偏置   负值：腿摆角向膝关节方向偏	正值：腿摆角向膝关节反方向偏 
 float x5_balance_zero = 0.0f;//机身倾角偏置     负值：抬头				正值：低头
 const float x3_balance_zero_normal = 0.0f; //车头朝前正常情况偏置
-const float sky_yaw_offset = -0.15f;//跳跃yaw偏置 不知为何导致车起跳的时候会往右扭，这里给个向左的偏置去抵消向右扭的趋势
+const float sky_yaw_offset = -0.3f;//跳跃yaw偏置 不知为何导致车起跳的时候会往右扭，这里给个向左的偏置去抵消向右扭的趋势
 
 float Rotate_balance_zero 		 = 0.17f ;
 float IMU_Roll_balance_zero		 = -0.0f;		//陀螺仪roll偏置
@@ -466,7 +466,7 @@ static void update_leg_height_and_balance(float yaw_error)
 		if(wlr.high_cnt > 50)
 			wlr.high_cnt = 51;
         if (wlr_both_legs_flying()) {
-            wlr.high_set = 0.18f;
+            wlr.high_set = 0.25f;
             height_ramp.out = LegLengthHigh;	
         } else if (wlr.jump_flag == WLR_JUMP_IDLE && wlr.sky_flag == WLR_SKY_IDLE) {
 			height_ramp.max = LegLengthHigh;
@@ -616,7 +616,7 @@ static void handle_sky_state(void)
         
         x5_balance_zero = -0.08f;
         wlr.high_set = ramp_calc(&sky_height_ramp, sky_leg_length);
-		sky_dis = (wlr.double_flag ? 0.7f : 1.15f);
+		sky_dis = (wlr.double_flag ? 0.7f : 1.1f);
         sky_ccc++;
         if(g_robot_ctx.output.top_mode == TOP_MODE_REMOTE) {
 			if (abs(rc.ch2) > 500) { 
@@ -632,7 +632,7 @@ static void handle_sky_state(void)
 		}
         else
 		{
-			x3_balance_zero = x3_balance_zero_normal - 0.015f;
+			x3_balance_zero = x3_balance_zero_normal - 0.03f;
             wlr.v_ref = ramp_calc(&jump_ramp, -3.0f);
 		}
 		
@@ -650,7 +650,7 @@ static void handle_sky_state(void)
 		if(wlr.double_flag)
 			x3_balance_zero = x3_balance_zero_normal + 0.05f;
 		else
-			x3_balance_zero = x3_balance_zero_normal - 0.03f;
+			x3_balance_zero = x3_balance_zero_normal + 0.25F;
         x5_balance_zero = 0.0f; 
 
         if (vmc[0].L_fdb > 0.32f && vmc[1].L_fdb > 0.32f) {
@@ -851,7 +851,7 @@ static void handle_stair_state(void)
 static void update_rotate_state(void)
 {
     if (rotate_flag) {
-		if(g_robot_ctx.input.kb.bit.SHIFT)
+		if(g_robot_ctx.input.kb.bit.SHIFT || g_robot_ctx.input.ch2 > 600)
 			wlr.high_set = LegLengthRotateHigh;
 		else
 			wlr.high_set = LegLengthRotate;

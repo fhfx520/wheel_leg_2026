@@ -263,7 +263,6 @@ static void gimbal_execute_fsm(void)
 	switch(g_robot_ctx.output.gimbal)
 	{
 		//听云台算完发下来的电流
-		case GIMBAL_STOP:
 		case GIMBAL_GYRO_STABILIZE:
 		case GIMBAL_MOUSE_CONTROL:
 		case GIMBAL_AUTO_AIM:

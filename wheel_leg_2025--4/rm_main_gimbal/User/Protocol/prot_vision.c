@@ -39,9 +39,11 @@ static uint8_t vision_get_sp_mode(void)
             return VISION_SP_MODE_AUTO_AIM;
         }
     } else if (ctrl_mode == REMOTER_MODE) {
-        if (rc_fsm_check(RC_RIGHT_RD)) {
-            return VISION_SP_MODE_AUTO_AIM;
+        if (rc_fsm_check(RC_RIGHT_RD) && vision_data_rec.energy_flag == 1 && vision_data_rec.energy_state == 1) {
+            return VISION_SP_MODE_SMALL_BUFF;
         }
+		else
+			return VISION_SP_MODE_AUTO_AIM;
     }
     return VISION_SP_MODE_IDLE;
 }

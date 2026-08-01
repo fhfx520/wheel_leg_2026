@@ -52,7 +52,7 @@ static void gimbal_init(void)
 	
 	//视觉mpc用这个  
 	pid_init(&gimbal.yaw_angle.pid, CHANG_I_RATE,15.0f, 0.0f, 0.0f, 0, 3);	
-    pid_init(&gimbal.yaw_spd.pid, NONE, 25000.0f, 50.0f, 0, 0.0f, 25000.0f) ;							
+    pid_init(&gimbal.yaw_spd.pid, NONE, 25000.0f, 50.0f, 0, 0.0f, 25000.0f);							
 	
     pid_init(&gimbal.yaw_ecd.pid, NONE, 10.0f, 0, 0, 0.0f, 30.0f);
 	pid_init(&gimbal.yaw_spd_ecd.pid, NONE, 6000.0f, 10.00f, 0, 1000.0f, 25000.0f);

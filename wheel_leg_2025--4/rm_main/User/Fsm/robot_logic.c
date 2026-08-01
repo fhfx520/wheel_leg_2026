@@ -96,7 +96,7 @@ static void rem_low_execute(void) {
     g_robot_ctx.output.gimbal  = GIMBAL_GYRO_STABILIZE;
     g_robot_ctx.output.shoot   = SHOOT_STOP; 
     
-	if(rc_fsm_check(RC_RIGHT_RD))
+	if(rc_fsm_check(RC_RIGHT_RD) && !rc_fsm_check(RC_LEFT_LD))
 	{
 		if (check_ch3_trigger() && g_robot_ctx.input.sw2 == RC_SW_UP) fsm_change(&fsm_remote_sub, &state_rem_spin);
 		if (g_robot_ctx.input.sw2 == RC_SW_MID)	g_robot_ctx.output.shoot   = SHOOT_SINGLE; 
