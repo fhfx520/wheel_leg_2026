@@ -17,6 +17,7 @@
 #include "robot_logic.h"
 #include "container.h"
 #include "board_comm.h"
+#include "prot_tof.h"
 
 status_t status;
 
@@ -46,6 +47,7 @@ void status_task(void const* argument)
         status.dji_motor = dji_motor_check_offline();
         status.dm_motor = dm_motor_check_offline();
         status.lk_motor = lk_check_offline();
+		tof_check_offline();
         
         if (status.remote == 1 && status.vision == 1 && status.judge == 1 && \
             status.power == 1 && status.imu == 1 && status.dji_motor == 0 && \

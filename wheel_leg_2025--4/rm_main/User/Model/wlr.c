@@ -1235,6 +1235,12 @@ void wlr_control(void)
     lqr.dot_leg_w[1] = (lqr.X_fdb[7] - lqr.last_leg_w[1]) / 0.002f;
     lqr.last_leg_w[1] = lqr.X_fdb[7];
 
+	if(tof[LEFT].online && !tof[RIGHT].online)
+		tof[RIGHT].dis = tof[LEFT].dis;
+	else if(!tof[LEFT].online && tof[RIGHT].online)
+		tof[LEFT].dis = tof[RIGHT].dis;
+	else if(!tof[LEFT].online && !tof[RIGHT].online)
+		tof[LEFT].dis = tof[RIGHT].dis = 4.0f;
     for (int i = 0; i < WLR_SIDE_COUNT; i++) {
 		if(tof[i].dis > 2000 || tof[i].confidence <= 50)
 			wlr.side[i].Front_dis_fdb = 2.0f;

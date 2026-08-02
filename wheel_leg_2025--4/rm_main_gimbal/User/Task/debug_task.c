@@ -24,6 +24,7 @@ uint32_t no_online_imu;
 //-D__weak="__attribute__((weak))" -D__packed="__attribute__((__packed__))"  -D__NOINLINE="__attribute__ ( (noinline) )"  -Wno-error=armcc-pragma-import -Wno-error=armcc-pragma-arm
 extern float feed_torque;
 extern float velocity_err;
+extern uint8_t vis_e[2];
 void log_scope_data_pkg(void)
 {
     switch(debug_wave) {
@@ -44,6 +45,9 @@ void log_scope_data_pkg(void)
             log_scope_get_data(gimbal.yaw_spd.fdb);
 			log_scope_get_data(circle_error(gimbal.yaw_angle.ref, gimbal.yaw_angle.fdb, 2*PI));
 			log_scope_get_data(vision.shoot_enable);
+			log_scope_get_data(vis_e[0]);
+			log_scope_get_data(vis_e[1]);
+			log_scope_get_data(vision_rx_msg_sp.mode);
 //			log_scope_get_data(shoot.fric_spd[0].fdb);
 //            log_scope_get_data(shoot.fric_spd[1].fdb);
 //			log_scope_get_data(shoot.fric_output[0]);

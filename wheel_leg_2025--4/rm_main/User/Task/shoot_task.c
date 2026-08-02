@@ -164,7 +164,7 @@ void shoot_set_container(void)
 	shoot_set_vision_data_container.energy_flag = wlr.energy_flag;
 	if(wlr.energy_flag && !g_robot_ctx.input.kb.bit.CTRL)//如果小能量机关正在激活、已激活
         shoot_set_vision_data_container.energy_state = 1;
-    else if(wlr.energy_flag && g_robot_ctx.input.kb.bit.CTRL)//如果大能量机关正在激活、已激活
+    else if(wlr.energy_flag && (g_robot_ctx.input.kb.bit.CTRL))//如果大能量机关正在激活、已激活
         shoot_set_vision_data_container.energy_state = 2;
     else
         shoot_set_vision_data_container.energy_state = 0;
@@ -184,6 +184,7 @@ static uint8_t single_shoot_enable(void)
     return (
         shoot_enable
         && shoot.barrel.heat_remain >= MIN_HEAT
+		&& (wlr.energy_flag ? shoot_get_vision_data_container.vision_enanle : 1)
         && ((rc.mouse.l && ctrl_mode == KEYBOARD_MODE) || (rc.ch3 > 400 && ctrl_mode == REMOTER_MODE))
         && ABS(trigger_ecd_error) < 0.4f * TRIGGER_MOTOR_ECD_SINGLE
     );

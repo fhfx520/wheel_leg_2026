@@ -26,7 +26,8 @@ void status_task(void const* argument)
             status.task.gimbal == 1 &&
 			status.task.board == 1 &&
             status.task.shoot == 1 &&
-            status.task.mode_switch == 1) {
+            status.task.mode_switch == 1 &&
+			status.board == 1        ) {
             status.task.comm = 0;
             status.task.gimbal = 0;
             status.task.chassis = 0;
