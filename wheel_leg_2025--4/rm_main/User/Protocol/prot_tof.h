@@ -7,7 +7,7 @@
 #define TOF_HEAD	0x20
 #define TOF_TAIL	0x0A
 
-#define TOF_MAX_OFFLINE_TIMEOUT_MS 100
+#define TOF_MAX_OFFLINE_TIMEOUT_MS 300
 
 typedef struct
 {

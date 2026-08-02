@@ -30,7 +30,6 @@ void tof_get_data(uint8_t *buff, uint16_t len, uint8_t side)
 		}
 		tof[side].dis = distance;
 		tof[side].confidence = confidence;
-		tof[side].online = 1;
 		tof[side].last_rx_tick = HAL_GetTick();
 		return;
 	}
