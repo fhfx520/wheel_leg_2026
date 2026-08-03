@@ -69,7 +69,7 @@ const float LegLengthFly 	 = 0.20f; //正常腿长腾空
 const float LegLengthHigh2 	 = 0.34f; //超长腿
 const float LegLengthHigh 	 = 0.21f; //长腿 0.23
 const float LegLengthRotate  = 0.15f; //正常
-const float LegLengthRotateHigh  = 0.25f; //正常
+const float LegLengthRotateHigh  = 0.28f; //正常
 const float LegLengthNormal  = 0.16f; //正常
 const float LegLengthStair   = 0.18f; //磕碰下台阶腿长
 
@@ -85,12 +85,12 @@ const float Hinge_gas_Lengh = 0.0481f;//大小腿转轴到气弹簧固定支座�
 float x3_balance_zero = 0.0f;//腿摆角角度偏置   负值：腿摆角向膝关节方向偏	正值：腿摆角向膝关节反方向偏 
 float x5_balance_zero = 0.0f;//机身倾角偏置     负值：抬头				正值：低头
 const float x3_balance_zero_normal = 0.0f; //车头朝前正常情况偏置
-const float sky_yaw_offset = -0.3f;//跳跃yaw偏置 不知为何导致车起跳的时候会往右扭，这里给个向左的偏置去抵消向右扭的趋势
+const float sky_yaw_offset = -0.25f;//跳跃yaw偏置 不知为何导致车起跳的时候会往右扭，这里给个向左的偏置去抵消向右扭的趋势
 
 float Rotate_balance_zero 		 = 0.17f ;
 float IMU_Roll_balance_zero		 = -0.0f;		//陀螺仪roll偏置
 
-float temp = 0.0f;
+float temp = -0.02f;
 
 uint16_t quadrant_cnt = 0;
 float real_vel;
@@ -310,6 +310,7 @@ kalman_filter_t kal_fn[2];
 kalman_filter_t tfmini_fn[2];
 	
 ramp_t height_ramp;
+ramp_t rotate_length_ramp;
 ramp_t jump_ramp;
 ramp_t stair_ramp;
 ramp_t wz_ramp;
@@ -616,7 +617,7 @@ static void handle_sky_state(void)
         
         x5_balance_zero = -0.08f;
         wlr.high_set = ramp_calc(&sky_height_ramp, sky_leg_length);
-		sky_dis = (wlr.double_flag ? 0.7f : 1.1f);
+		sky_dis = (wlr.double_flag ? 0.7f : 1.15f);
         sky_ccc++;
         if(g_robot_ctx.output.top_mode == TOP_MODE_REMOTE) {
 			if (abs(rc.ch2) > 500) { 
@@ -648,9 +649,9 @@ static void handle_sky_state(void)
         jump_ramp.out = 0.0f; 
         wlr.v_ref = v_ref; 
 		if(wlr.double_flag)
-			x3_balance_zero = x3_balance_zero_normal + 0.05f;
+			x3_balance_zero = x3_balance_zero_normal;
 		else
-			x3_balance_zero = x3_balance_zero_normal + 0.25F;
+			x3_balance_zero = x3_balance_zero_normal + 0.2F;
         x5_balance_zero = 0.0f; 
 
         if (vmc[0].L_fdb > 0.32f && vmc[1].L_fdb > 0.32f) {
@@ -666,7 +667,7 @@ static void handle_sky_state(void)
         x3_balance_zero = 0.0f;
         x5_balance_zero = 0.0f;
         wlr.sky_cnt++;
-        target_cnt = (wlr.double_flag ? 190 : 190);
+        target_cnt = (wlr.double_flag ? 220 : 190);
 		
         if (wlr.sky_cnt > target_cnt) {
             wlr.sky_cnt = 0;
@@ -788,14 +789,14 @@ static void handle_stair_state(void)
 	static uint16_t stair_cnt = 0;
     if(wlr.stair_flag == WLR_STAIR_ASCEND)
 	{
-		wlr.v_ref = (wlr.direction == 1 ? 1.0f : -1.0f);
+		wlr.v_ref = (wlr.direction == 1 ? 1.0f : -1.5f);
 		stair_cnt++;
 		 Fy_ramp[0].out = Fy_ramp[1].out= 0;
 		 wlr.high_set = LegLengthStair;
 		 x3_balance_zero = x3_balance_zero_normal;
          x5_balance_zero = (wlr.direction == 1 ? 0.0f : -0.05f);
 //		 if((fabsf(lqr.X_fdb[4]) > 0.2f || fabsf(lqr.X_fdb[6]) > 0.2f) && stair_cnt > 600) 
-		 if((chassis_imu.pit < -0.07f && wlr.direction == 1) || (chassis_imu.pit > 0.1f && wlr.direction == 0)) {
+		 if((chassis_imu.pit < -0.07f && wlr.direction == 1) || (chassis_imu.pit > 0.13f && wlr.direction == 0)) {
 			stair_cnt = 0;
 			wlr.v_ref = 0;
 			wlr.high_set = 0.12f;
@@ -852,13 +853,16 @@ static void update_rotate_state(void)
 {
     if (rotate_flag) {
 		if(g_robot_ctx.input.kb.bit.SHIFT || g_robot_ctx.input.ch2 > 600)
-			wlr.high_set = LegLengthRotateHigh;
+//			wlr.high_set = LegLengthRotateHigh;
+			wlr.high_set = ramp_calc(&rotate_length_ramp, LegLengthRotateHigh);
 		else
-			wlr.high_set = LegLengthRotate;
+		{
+			wlr.high_set = ramp_calc(&rotate_length_ramp, LegLengthRotate);
+		}
 		pid_L_test[0].i_out = pid_L_test[1].i_out = 0;
        	 if (g_robot_ctx.output.chassis  == CHASSIS_LOW_SPIN) {
 			x5_balance_zero = temp;
-			Rotate_balance_zero = pid_calc(&pid_rotate_balance_zero,0,(fabsf(driver_motor[0].velocity) - fabsf(driver_motor[1].velocity)));
+//			Rotate_balance_zero = pid_calc(&pid_rotate_balance_zero,0,(fabsf(driver_motor[0].velocity) - fabsf(driver_motor[1].velocity)));
         } 
 //			K_Array_Leg_rotate[0][3] = -ramp_calc(&wz_ramp, 0.96186f);		//K_Array_Leg_rotate[0][3] 越大 小陀螺越不稳定
 //			K_Array_Leg_rotate[1][3] = ramp_calc(&wz_ramp, 0.96186f);
@@ -1123,6 +1127,7 @@ void wlr_init(void)
 	ramp_init(&height_ramp, 0.001f, LegLengthMin, LegLengthMax);			//日常腿长斜坡
 	ramp_init(&sky_height_ramp, 0.001f, LegLengthMin, LegLengthMax);		//空中腿长斜坡
 	ramp_init(&jump_ramp, 0.05f, -3.0f, 3.0f);
+	ramp_init(&rotate_length_ramp,0.0005f,LegLengthMin,LegLengthMax);
 	ramp_init(&stair_ramp, 0.05f, -2.0f, 2.0f);
 	ramp_init(&wz_ramp, 0.05f,  0,  3.0f);									//小陀螺加速K矩阵wz项斜坡
 	ramp_init(&sky_ramp[0], 10.0f, -450.0f,  450.0f);						//伸腿支持力斜坡

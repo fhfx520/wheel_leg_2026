@@ -3,7 +3,7 @@
 <title>Static Call Graph - [rm_main\rm_main.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image rm_main\rm_main.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Sun Aug  2 17:25:44 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6240002: Last Updated: Mon Aug  3 16:13:22 2026
 <BR><P>
 <H3>Maximum Stack Usage =        864 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -4469,7 +4469,6 @@ Global Symbols
 </UL>
 <BR>[Called By]<UL><LI><a href="#[38f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;map_virtual_force (via Veneer)
 <LI><a href="#[3bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_motion_reference (via Veneer)
-<LI><a href="#[3be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_rotate_state (via Veneer)
 <LI><a href="#[3ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;shoot_pid_calc (via Veneer)
 <LI><a href="#[356]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_data_output (via Veneer)
 </UL>
@@ -5955,7 +5954,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mode_switch_task
 </UL>
 
-<P><STRONG><a name="[368]"></a>wlr_control</STRONG> (Thumb, 2020 bytes, Stack size 528 bytes, wlr.o(.text.wlr_control))
+<P><STRONG><a name="[368]"></a>wlr_control</STRONG> (Thumb, 2016 bytes, Stack size 528 bytes, wlr.o(.text.wlr_control))
 <BR><BR>[Stack]<UL><LI>Max Depth = 848<LI>Call Chain = wlr_control &rArr; vmc_forward_solution_five &rArr; aMartix_Mul
 </UL>
 <BR>[Calls]<UL><LI><a href="#[3c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;aMartix_Mul (via Veneer)
@@ -5985,7 +5984,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_task
 </UL>
 
-<P><STRONG><a name="[360]"></a>wlr_init</STRONG> (Thumb, 1336 bytes, Stack size 160 bytes, wlr.o(.text.wlr_init))
+<P><STRONG><a name="[360]"></a>wlr_init</STRONG> (Thumb, 1360 bytes, Stack size 160 bytes, wlr.o(.text.wlr_init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 320<LI>Call Chain = wlr_init &rArr; twm_init &rArr; kalman_filter_init &rArr; malloc &rArr; internal_alloc
 </UL>
 <BR>[Calls]<UL><LI><a href="#[290]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;kalman_filter_init (via Veneer)
@@ -6065,7 +6064,7 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[368]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[38d]"></a>handle_sky_state</STRONG> (Thumb, 1124 bytes, Stack size 24 bytes, wlr.o(.text.handle_sky_state))
+<P><STRONG><a name="[38d]"></a>handle_sky_state</STRONG> (Thumb, 1132 bytes, Stack size 24 bytes, wlr.o(.text.handle_sky_state))
 <BR><BR>[Stack]<UL><LI>Max Depth = 52<LI>Call Chain = handle_sky_state &rArr; ramp_calc &rArr; data_limit
 </UL>
 <BR>[Calls]<UL><LI><a href="#[2f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_calc (via Veneer)
@@ -6074,11 +6073,10 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[368]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>
 
-<P><STRONG><a name="[3be]"></a>update_rotate_state</STRONG> (Thumb, 308 bytes, Stack size 24 bytes, wlr.o(.text.update_rotate_state))
-<BR><BR>[Stack]<UL><LI>Max Depth = 84<LI>Call Chain = update_rotate_state &rArr; pid_calc &rArr; f_changing_intergration_rate
+<P><STRONG><a name="[3be]"></a>update_rotate_state</STRONG> (Thumb, 272 bytes, Stack size 24 bytes, wlr.o(.text.update_rotate_state))
+<BR><BR>[Stack]<UL><LI>Max Depth = 52<LI>Call Chain = update_rotate_state &rArr; ramp_calc &rArr; data_limit
 </UL>
-<BR>[Calls]<UL><LI><a href="#[2bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_calc (via Veneer)
-<LI><a href="#[2f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_calc (via Veneer)
+<BR>[Calls]<UL><LI><a href="#[2f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ramp_calc (via Veneer)
 </UL>
 <BR>[Called By]<UL><LI><a href="#[368]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wlr_control
 </UL>

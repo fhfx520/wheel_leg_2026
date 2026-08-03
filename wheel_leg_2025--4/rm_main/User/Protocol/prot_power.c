@@ -217,8 +217,8 @@ static float power_velocity_table[11][2] = {
 
 static float power_rotate_table[11][2] = {
     {35.0f ,6.0f},//节能状态
-    {45.0f ,6.0f},//1
-    {50.0f ,7.0f},//2
+    {45.0f ,9.0f},//1
+    {50.0f ,9.0f},//2
     {55.0f ,7.0f},//3
     {60.0f ,8.0f},//4
     {65.0f ,9.0f},//5

@@ -261,7 +261,7 @@ static void chassis_init(void)
 
     ramp_init(&chassis_x_ramp, 0.01f, -3.0f, 3.0f);
     ramp_init(&chassis_y_ramp, 0.01f, -3.0f, 3.0f);
-    ramp_init(&chassis_rotate_ramp, 0.06f, -2.0f * CHASSIS_ROTATE_SPEED, 2.0f * CHASSIS_ROTATE_SPEED);
+    ramp_init(&chassis_rotate_ramp, 0.06f, -12.0f, 12.0f);
 
 	//基于虚拟杆角度控制
 	pid_init(&crash_pid_L, NONE, 50.0f, 0.0f, 300.0f, 0.0f, 5.0f);//max_err大约为0.6f
