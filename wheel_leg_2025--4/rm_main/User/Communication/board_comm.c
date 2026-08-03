@@ -37,7 +37,7 @@ void fdcan_board_comm_get(uint32_t id,uint8_t *pdata)
 		memcpy(&online_data_rec,&fdcan_board_comm.rx_msg.e.online_data,sizeof(online_data_rec));
 		
 		fdcan_board_comm.last_rx_tick = HAL_GetTick();
-		fdcan_board_comm.online = 1;
+//		fdcan_board_comm.online = 1;
 	}
 }
 

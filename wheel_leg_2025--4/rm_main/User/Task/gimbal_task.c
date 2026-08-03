@@ -260,6 +260,8 @@ static void yaw_control(void)
 static void gimbal_execute_fsm(void)
 {
 	gimbal.start_up = gimbal_get_gimbal_data_container.gimbal_start_up;
+	if(!fdcan_board_comm.online)
+		gimbal.yaw_output = gimbal_data_rec.yaw_output = 0.0f;
 	switch(g_robot_ctx.output.gimbal)
 	{
 		//听云台算完发下来的电流

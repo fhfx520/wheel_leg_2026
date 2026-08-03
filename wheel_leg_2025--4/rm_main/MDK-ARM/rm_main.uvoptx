@@ -360,6 +360,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>zzz1</ItemText>
         </Ww>
+        <Ww>
+          <count>41</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>zzzz</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>

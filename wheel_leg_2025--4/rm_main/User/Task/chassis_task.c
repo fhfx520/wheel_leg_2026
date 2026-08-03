@@ -420,7 +420,7 @@ static void chassis_execute_fsm(void)
     }
 
     if (g_robot_ctx.output.chassis == CHASSIS_HIGH) 
-       	chassis_scale.keyboard = 2.4f;
+       	chassis_scale.keyboard = 2.6f;
     else
         chassis_scale.keyboard = 2.3f;
 
@@ -428,7 +428,7 @@ static void chassis_execute_fsm(void)
 		chassis_scale.keyboard = 1.7f;
 
     if (g_robot_ctx.output.chassis == CHASSIS_HIGH) 
-		chassis_scale.remote = 1.0f / 660 * 2.4f;
+		chassis_scale.remote = 1.0f / 660 * 2.6f;
     else 
 		chassis_scale.remote = 1.0f /660 * 2.3f; 
 }
