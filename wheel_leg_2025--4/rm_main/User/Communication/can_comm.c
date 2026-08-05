@@ -178,10 +178,7 @@ void HAL_FDCAN_RxFifo1Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo1ITs)
 			dm_motor_get_data(rx_fifo1_message.Identifier, rx_fifo1_data);
         } else if (hfdcan->Instance == FDCAN2) {
 			HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO1, &fdcan_rx_fifo1_message, fdcan_rx_fifo1_data);
-			if(fdcan_rx_fifo1_message.Identifier == 0x016)
-				imu_get_data(&gimbal_imu, fdcan_rx_fifo1_message.Identifier, fdcan_rx_fifo1_data);
-			else
-				fdcan_board_comm_get(fdcan_rx_fifo1_message.Identifier, fdcan_rx_fifo1_data);
+			fdcan_board_comm_get(fdcan_rx_fifo1_message.Identifier, fdcan_rx_fifo1_data);
         } else if (hfdcan->Instance == FDCAN3) {
 			HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO1, &rx_fifo1_message, rx_fifo1_data);
 			if(rx_fifo1_message.Identifier == TRIGGER_MOTOR_ID)

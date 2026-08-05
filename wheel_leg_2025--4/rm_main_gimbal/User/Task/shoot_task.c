@@ -479,7 +479,7 @@ static void shoot_init(void)
     shoot.fric_mode     = FRIC_MODE_PROTECT;
     //枪管参数初始化
     shoot.trigger_period = TRIGGER_PERIOD;
-    shoot.fric_speed_set = 630;//650
+    shoot.fric_speed_set = 650;//650
 //	shoot.fric_speed_set = 800;//650
 //	  shoot.fric_speed_set = 200;
 	

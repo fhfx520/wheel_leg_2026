@@ -230,12 +230,18 @@ static float power_rotate_table[11][2] = {
 };
 static float supercap_velocity_addmap(void)
 {
-   return (supercap.volage - 22.0f) / 6.0f * 0.4f;//线性映射，电容电压从40%到100%时，速度增加0-0.4f
+	if(supercap.volage == 0.0f || !power_control.online)
+		return 0.4f;
+	else
+		return (supercap.volage - 22.0f) / 6.0f * 0.4f;//线性映射，电容电压从40%到100%时，速度增加0-0.4f
 }
 
 static float supercap_rotate_addmap(void)
 {
-    return (supercap.volage - 22.0f) / 6.0f * 2.0f;//线性映射，电容电压从40%到100%时，速度增加0-0.4f
+	if(supercap.volage == 0.0f || !power_control.online)
+		return 2.0f;
+	else
+		return (supercap.volage - 22.0f) / 6.0f * 2.0f;//线性映射，电容电压从40%到100%时，速度增加0-0.4f
 }
 
 float power_control_target_velocity(void)

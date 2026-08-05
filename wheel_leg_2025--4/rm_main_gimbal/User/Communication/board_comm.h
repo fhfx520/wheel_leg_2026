@@ -90,7 +90,7 @@ typedef struct
         uint8_t buff[FDCAN_BOARD_DATA_LEN];
 		struct
 		{
-			struct 
+			struct//8bytes
 			{
 				uint16_t channel_0 : 11;
 				uint16_t channel_1 : 11;

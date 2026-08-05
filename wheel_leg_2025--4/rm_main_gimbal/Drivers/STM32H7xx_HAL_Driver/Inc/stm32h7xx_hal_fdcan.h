@@ -993,7 +993,7 @@ typedef  void (*pFDCAN_TT_GlobalTimeCallbackTypeDef)(FDCAN_HandleTypeDef *hfdcan
 #define FDCAN_ESI_ACTIVE  ((uint32_t)0x00000000U) /*!< Transmitting node is error active  */
 #define FDCAN_ESI_PASSIVE ((uint32_t)0x80000000U) /*!< Transmitting node is error passive */
 /**
-  * @}
+  * @}	
   */
 
 /** @defgroup FDCAN_bit_rate_switching FDCAN Bit Rate Switching

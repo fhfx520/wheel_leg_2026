@@ -183,7 +183,7 @@ __weak void start_task(void const * argument)
 {
   /* init code for USB_DEVICE */
 	MX_IWDG1_Init();
-  MX_USB_DEVICE_Init();
+	MX_USB_DEVICE_Init();
   /* USER CODE BEGIN start_task */
 
   /* Infinite loop */

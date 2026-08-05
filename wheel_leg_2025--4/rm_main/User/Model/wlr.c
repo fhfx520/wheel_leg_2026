@@ -617,7 +617,7 @@ static void handle_sky_state(void)
         
         x5_balance_zero = -0.08f;
         wlr.high_set = ramp_calc(&sky_height_ramp, sky_leg_length);
-		sky_dis = (wlr.double_flag ? 0.7f : 1.15f);
+		sky_dis = (wlr.double_flag ? 0.8f : 1.15f);
         sky_ccc++;
         if(g_robot_ctx.output.top_mode == TOP_MODE_REMOTE) {
 			if (abs(rc.ch2) > 500) { 
@@ -629,7 +629,7 @@ static void handle_sky_state(void)
 		{
 			x3_balance_zero = x3_balance_zero_normal;
 //            wlr.v_ref = ramp_calc(&jump_ramp, -2.0f); 
-			wlr.v_ref = -2.0f; 
+			wlr.v_ref = -2.3f; 
 		}
         else
 		{
@@ -649,7 +649,7 @@ static void handle_sky_state(void)
         jump_ramp.out = 0.0f; 
         wlr.v_ref = v_ref; 
 		if(wlr.double_flag)
-			x3_balance_zero = x3_balance_zero_normal;
+			x3_balance_zero = x3_balance_zero_normal + 0.1f;
 		else
 			x3_balance_zero = x3_balance_zero_normal + 0.2F;
         x5_balance_zero = 0.0f; 
@@ -1220,7 +1220,7 @@ void wlr_control(void)
 	else
 		lqr.X_fdb[1] = kal_fusion_vel.filter_vector[1];
 	
-	if(wlr.sky_flag == WLR_SKY_EXTENDING)
+	if(wlr.sky_flag == WLR_SKY_EXTENDING && !wlr.double_flag)
 		lqr.X_fdb[2] = wlr.yaw_fdb + sky_yaw_offset;
 	else
 		lqr.X_fdb[2] = wlr.yaw_fdb;

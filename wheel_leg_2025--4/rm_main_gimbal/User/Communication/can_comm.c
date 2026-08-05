@@ -31,7 +31,6 @@ void can_comm_init(void)
     can_filter.FilterIndex = 0;
     can_filter.FilterType = FDCAN_FILTER_DUAL;//等于过滤
     can_filter.FilterID1 = FDCAN_CHA_TO_GIMBAL_ID;
-//    can_filter.FilterID2 = IMU_ALL_ID;
     can_filter.FilterConfig = FDCAN_FILTER_TO_RXFIFO1;//通过过滤后给邮箱1
     HAL_FDCAN_ConfigFilter(&hfdcan1, &can_filter);
 	

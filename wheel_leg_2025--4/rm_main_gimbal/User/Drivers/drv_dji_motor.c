@@ -179,7 +179,7 @@ static void dji_motor_fill_data(void)
 void dji_motor_output_data(void)
 {
     dji_motor_fill_data();
-    for (can_channel_e can_channel = CAN_CHANNEL_2; can_channel != CAN_CHANNEL_NUM; can_channel++) {//排除can1
+    for (can_channel_e can_channel = CAN_CHANNEL_2; can_channel != CAN_CHANNEL_3; can_channel++) {//排除can1，can3
         for (int i = 0; i < 4; i++) {
             if (motor_send_flag[can_channel][i] == 1) {
 				if((status.dji_motor != 2 && status.dji_motor != 3) || trigger_motor.online)

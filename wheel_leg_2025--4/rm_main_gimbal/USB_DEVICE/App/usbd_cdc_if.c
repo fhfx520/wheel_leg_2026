@@ -93,7 +93,7 @@
 uint8_t UserRxBufferHS[APP_RX_DATA_SIZE];
 
 /** Data to send over USB CDC are stored in this buffer   */
-uint8_t UserTxBufferHS[APP_TX_DATA_SIZE] __attribute__((aligned(32)));
+uint8_t UserTxBufferHS[APP_TX_DATA_SIZE];
 
 /* USER CODE BEGIN PRIVATE_VARIABLES */
 
