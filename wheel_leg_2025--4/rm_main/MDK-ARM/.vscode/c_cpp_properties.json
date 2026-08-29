@@ -40,7 +40,9 @@
                 "d:/RM/wheel_leg_2026/wheel_leg_2025--4/rm_main/User/Middle",
                 "d:/RM/wheel_leg_2026/wheel_leg_2025--4/rm_main/User/Task",
                 "d:/RM/wheel_leg_2026/wheel_leg_2025--4/rm_main/User/UI",
-                "d:/RM/wheel_leg_2026/wheel_leg_2025--4/rm_main/User/Fsm"
+                "d:/RM/wheel_leg_2026/wheel_leg_2025--4/rm_main/User/Fsm",
+                "d:/RM/wheel_leg_2026/wheel_leg_2025--4/rm_main/Middlewares/ST/AI/Inc",
+                "d:/RM/wheel_leg_2026/wheel_leg_2025--4/rm_main/X-CUBE-AI/App"
             ],
             "defines": [
                 "USE_HAL_DRIVER",

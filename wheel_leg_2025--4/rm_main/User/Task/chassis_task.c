@@ -26,6 +26,7 @@
 #include "board_comm.h"
 #include "container.h"
 #include "prot_ms53l0m.h"
+#include "rl_policy_design.h"
 
 #ifndef DO_ONCE
 	#define DO_ONCE(code_block) { static int _flag = 0; if (!_flag) { _flag = 1; code_block; } }
@@ -281,7 +282,9 @@ static void chassis_init(void)
         kal_wy.A_data[0] = 1; kal_wy.H_data[0] = 1;
         kal_wy.Q_data[0] = 1; kal_wy.R_data[0] = 100;
     });
-    
+	
+    RLPolicy_Init(RLPolicy_GetInstance());
+	
     FGT_sin_init (&FGT_sin_chassis,2,0,6000,7.0f,0,7.0f,-0.0f);
     chassis.init = 1;
 }

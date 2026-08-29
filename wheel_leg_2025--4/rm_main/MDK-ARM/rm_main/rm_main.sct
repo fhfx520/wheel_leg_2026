@@ -16,6 +16,7 @@ LR_IROM1 0x08000000 0x00100000  {    ; load region size_region
     wlr.o (+RO)
     leg_vmc.o (+RO)
     wheel_leg_model.o (+RO)
+    rl_policy_design.o (+RO)
     board_comm_task.o (+RO)
     debug_task.o (+RO)
     comm_task.o (+RO)

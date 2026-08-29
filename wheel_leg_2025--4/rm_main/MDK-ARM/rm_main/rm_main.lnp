@@ -1,4 +1,4 @@
---cpu Cortex-M7.fp.sp
+--cpu Cortex-M7.fp.dp
 "rm_main\main.o"
 "rm_main\gpio.o"
 "rm_main\freertos.o"
@@ -15,6 +15,7 @@
 "rm_main\wlr.o"
 "rm_main\leg_vmc.o"
 "rm_main\wheel_leg_model.o"
+"rm_main\rl_policy_design.o"
 "rm_main\fsm_core.o"
 "rm_main\robot_logic.o"
 "rm_main\board_comm_task.o"
@@ -110,6 +111,10 @@
 "rm_main\usbd_cdc_if.o"
 "rm_main\usbd_conf.o"
 "rm_main\startup_stm32h723xx.o"
+"..\Middlewares\ST\AI\Lib\NetworkRuntime1020_CM7_Keil.lib"
+"rm_main\stable.o"
+"rm_main\stable_data.o"
+"rm_main\stable_data_params.o"
 "rm_main\basicmathfunctions.o"
 "rm_main\basicmathfunctionsf16.o"
 "rm_main\bayesfunctions.o"
