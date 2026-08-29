@@ -5,21 +5,67 @@
 
 
 
-wheel_leg_2025--4/rm_main/MDK-ARM/rm_main
-o*
-d*
-rm_main.uvguix.*
+# wheel_leg_2025--4/rm_main/MDK-ARM/rm_main
+# o*
+# d*
+# rm_main.uvguix.*
 
-wheel_leg_2025--4/rm_main_gimbal/MDK-ARM/rm_main
-o*
-d*
-rm_main.uvguix.*
+# wheel_leg_2025--4/rm_main_gimbal/MDK-ARM/rm_main
+# o*
+# d*
+# rm_main.uvguix.*
 
-wheel_leg_2025--4/ICM42688/MDK-ARM/Taurus_imu_icm_test
-o*
-d*
+# wheel_leg_2025--4/ICM42688/MDK-ARM/Taurus_imu_icm_test
+# o*
+# d*
 
 
-wheel_leg_2025--4/IMU/MDK-ARM/
-o*
-d*
+# wheel_leg_2025--4/IMU/MDK-ARM/
+# o*
+# d*
+
+# ===== 编译产物 =====
+*.o
+*.d
+*.crf
+*.lst
+*.map
+*.dep
+*.axf
+*.elf
+*.hex
+*.bin
+*.iex
+
+# ===== MDK 临时文件 =====
+*.htm
+*.build_log.htm
+JLinkLog.txt
+JLinkSettings.ini
+
+# MDK 用户特定配置（保留共享工程文件 *.uvprojx, *.uvoptx）
+*.uvguix.*
+*.scvd
+*.uvguix.*
+
+# STM32CubeMX 不需要的备份
+*.bak
+*.orig
+*.ioc.bak
+
+# ===== IDE / 编辑器 =====
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.tmp
+
+# ===== 系统文件 =====
+Thumbs.db
+.DS_Store
+Desktop.ini
+
+# ===== 想保留但先注释的文件类型 =====
+# 如果需要保留 hex 发布版本，请取消下一行注释并删除上方 *.hex
+# !release/*.hex
