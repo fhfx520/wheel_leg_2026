@@ -2,6 +2,7 @@
 #include "shoot_task.h"
 #include "ui_interface.h"
 #include "cmsis_os.h"
+#include "dcache_handle.h"
 #include "string.h"
 #include "crc.h"
 //机器人阵营
@@ -129,6 +130,7 @@ void judge_send_data(uint8_t* message, int length)
 //        osDelay(1);
 //    }
 	osDelay(75);
+	CleanDCacheForDmaTx(message,length);
     HAL_UART_Transmit_DMA(judge_huart, message, length);
 }
 uint8_t judge_check_offline(void)

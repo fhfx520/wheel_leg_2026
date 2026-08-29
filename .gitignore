@@ -2,28 +2,6 @@
 # 根目录 gitignore 配置
 # 路径从 wheel_leg_2026 下面开始写
 # =======================================================
-
-
-
-# wheel_leg_2025--4/rm_main/MDK-ARM/rm_main
-# o*
-# d*
-# rm_main.uvguix.*
-
-# wheel_leg_2025--4/rm_main_gimbal/MDK-ARM/rm_main
-# o*
-# d*
-# rm_main.uvguix.*
-
-# wheel_leg_2025--4/ICM42688/MDK-ARM/Taurus_imu_icm_test
-# o*
-# d*
-
-
-# wheel_leg_2025--4/IMU/MDK-ARM/
-# o*
-# d*
-
 # ===== 编译产物 =====
 *.o
 *.d

@@ -8,6 +8,7 @@
 #include "prot_ms53l2m.h"
 #include "prot_ms53l0m.h"
 #include "prot_tof.h"
+#include "dcache_handle.h"
 #define DEBUG_DATA_LEN 10
 #define JUDGE_DATA_LEN 150
 #define TFMINIPLUS_BUFF_SIZE 50
@@ -63,16 +64,20 @@ void usart_user_handler(UART_HandleTypeDef *huart)
         if (huart == &DBUS_HUART) {
             dr16_get_data(&rc, dr16_dma_rx_buf);
             HAL_UART_Receive_DMA(huart, dr16_dma_rx_buf, DR16_DATA_LEN);
+			InvalidateDCacheForDmaRx(dr16_dma_rx_buf,DR16_DATA_LEN);
         } else if (huart == &JUDGE_HUART) {
             judge_get_data(judge_data_rx_buf);
             HAL_UART_Receive_DMA(huart, judge_data_rx_buf, JUDGE_DATA_LEN);
+			InvalidateDCacheForDmaRx(judge_data_rx_buf,JUDGE_DATA_LEN);
         } else if (huart == &TOF_RIGHT_HUART) { 
 			tof_get_data(TOFBuffArray_RIGHT, TOF_BUFF_SIZE,1);
             HAL_UART_Receive_DMA(huart, TOFBuffArray_RIGHT, TOF_BUFF_SIZE);
+			InvalidateDCacheForDmaRx(TOFBuffArray_RIGHT,TOF_BUFF_SIZE);
 		} 
         else if (huart == &TOF_LEFT_HUART) {
             tof_get_data(TOFBuffArray_LEFT, TOF_BUFF_SIZE,0);
             HAL_UART_Receive_DMA(huart, TOFBuffArray_LEFT, TOF_BUFF_SIZE);
+			InvalidateDCacheForDmaRx(TOFBuffArray_LEFT,TOF_BUFF_SIZE);
 			ccnct++;
         }
     }

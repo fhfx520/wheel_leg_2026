@@ -23,6 +23,7 @@ extern "C"
 
 #include "usart.h"
 #include "stdio.h"
+#include "dcache_handle.h"
 
 /*DATA_DEBUG_LEVEL为0U时，取消各种Log
  *                为1U时，使用Log打印日志
@@ -101,7 +102,8 @@ extern "C"
         if((LOG_FILE_LINE_EN) && (level <= LOG_ERROR))                                                                             \
             len += snprintf(&log_str[len], DATA_LOG_LEN - len, "(%s,%d)", __FILE__, __LINE__);                                     \
         len += log_printf_to_buffer(&log_str[len], DATA_LOG_LEN - len, __VA_ARGS__);                                               \
-        HAL_UART_Transmit_DMA(&DATA_LOG_UART, (uint8_t*)log_str, len);                                                             \
+        CleanDCacheForDmaTx((uint8_t*)log_str,len);																									   \
+		HAL_UART_Transmit_DMA(&DATA_LOG_UART, (uint8_t*)log_str, len);                                                             \
     } while(0)
 
 extern char log_str[DATA_LOG_LEN];

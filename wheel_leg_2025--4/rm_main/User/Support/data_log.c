@@ -56,6 +56,7 @@ void log_printf(const char *format, ...)
     {
         len = sizeof(log_str) - 1;
     }
+	CleanDCacheForDmaTx((uint8_t*)log_str,len);
     HAL_UART_Transmit_DMA(log_huart, (uint8_t*)log_str, (uint16_t)len);
 }
 
@@ -170,8 +171,10 @@ void log_scope_data_output(void)
 {
     log_scope_data_pkg();
     data_scope.send_count = log_scope_data_generate(data_scope.data_num);
-    if(data_scope.send_count != 0)
+    if(data_scope.send_count != 0) {
+		CleanDCacheForDmaTx(data_scope.output_buffer,data_scope.send_count);
         HAL_UART_Transmit_DMA(log_huart, data_scope.output_buffer, data_scope.send_count);
+	}
     data_scope.data_num = 0;
     data_scope.send_count = 0;
 }
