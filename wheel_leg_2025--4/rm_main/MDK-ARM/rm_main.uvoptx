@@ -198,7 +198,7 @@
         <Ww>
           <count>8</count>
           <WinNumber>1</WinNumber>
-          <ItemText>chassis_imu</ItemText>
+          <ItemText>chassis_imu,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>9</count>
@@ -213,7 +213,7 @@
         <Ww>
           <count>11</count>
           <WinNumber>1</WinNumber>
-          <ItemText>hfdcan3</ItemText>
+          <ItemText>hfdcan3,0x10</ItemText>
         </Ww>
         <Ww>
           <count>12</count>
@@ -404,6 +404,16 @@
           <count>49</count>
           <WinNumber>1</WinNumber>
           <ItemText>lqr</ItemText>
+        </Ww>
+        <Ww>
+          <count>50</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>temp</ItemText>
+        </Ww>
+        <Ww>
+          <count>51</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>rotate_roll_offset</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>
@@ -670,7 +680,7 @@
 
   <Group>
     <GroupName>Application/User/Core</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -2154,7 +2164,7 @@
 
   <Group>
     <GroupName>Application/MDK-ARM</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>

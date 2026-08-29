@@ -190,6 +190,16 @@
           <WinNumber>1</WinNumber>
           <ItemText>fdcan_tx_message.ErrorStateIndicator</ItemText>
         </Ww>
+        <Ww>
+          <count>7</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>kkkkk</ItemText>
+        </Ww>
+        <Ww>
+          <count>8</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>gimbal_imu</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>

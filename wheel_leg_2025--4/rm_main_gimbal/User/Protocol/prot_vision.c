@@ -44,7 +44,11 @@ static uint8_t vision_get_sp_mode(void)
         }
 		else
 			return VISION_SP_MODE_AUTO_AIM;
-    }
+    } else if(ctrl_mode == PROTECT_MODE){
+		if(rc_fsm_check(RC_RIGHT_RD))
+			return VISION_SP_MODE_AUTO_AIM;
+	}
+		
     return VISION_SP_MODE_IDLE;
 }
 
@@ -382,7 +386,7 @@ void vision_output_data_sp(void)
     vision_tx_msg_sp.mode = vision_get_sp_mode();
 //	  vision_tx_msg_sp.mode = VISION_SP_MODE_BIG_BUFF;
 
-    vision_euler_to_quat_wxyz(yaw_tx, -gimbal_imu.pit, gimbal_imu.rol, q);
+    vision_euler_to_quat_wxyz(yaw_tx, -gimbal_imu.pit, -gimbal_imu.rol, q);
     for (uint8_t i = 0; i < 4; i++) {
         vision_sp_write_float(vision_tx_msg_sp.q[i], q[i]);
     }

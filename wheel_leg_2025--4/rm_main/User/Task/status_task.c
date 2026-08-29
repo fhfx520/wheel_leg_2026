@@ -18,7 +18,7 @@
 #include "container.h"
 #include "board_comm.h"
 #include "prot_tof.h"
-
+#include "fdcan.h"
 status_t status;
 
 void status_task(void const* argument)
@@ -29,7 +29,8 @@ void status_task(void const* argument)
         if (status.task.comm == 1 &&
             status.task.chassis == 1 &&
             status.task.shoot == 1 &&
-            status.task.mode_switch == 1) {
+            status.task.mode_switch == 1 &&
+			hfdcan3.ErrorCode == 0) {
             status.task.comm = 0;
             status.task.chassis = 0;
             status.task.shoot = 0;

@@ -229,7 +229,7 @@ static void kb_low_execute(void) {
 	if (check_key_trigger(KEY_C)) { fsm_change(&fsm_keyboard_sub, &state_kb_ter_ready); return; }
 	if (check_key_trigger(KEY_Z)) { fsm_change(&fsm_keyboard_sub, &state_kb_ascend); return; }
 	if (check_key_trigger(KEY_B)) { fsm_change(&fsm_keyboard_sub, &state_kb_energy); return; }
-    if (check_key_trigger(KEY_F)) { fsm_change(&fsm_keyboard_sub, &state_kb_stair); return; }
+    if (check_key_trigger(KEY_X)) { fsm_change(&fsm_keyboard_sub, &state_kb_stair); return; }
 	if (check_key_trigger(KEY_V)) { fsm_change(&fsm_keyboard_sub, &state_kb_ter_ready_2); return; }
 }
 static const FsmState_t state_kb_low = { .name = "KB_LOW", .enter = kb_low_enter, .execute = kb_low_execute };
@@ -327,7 +327,7 @@ static void kb_stair_execute(void) {
     g_robot_ctx.output.gimbal = get_kb_gimbal_mode();
     g_robot_ctx.output.shoot  = get_kb_shoot_mode();
 
-	if(!g_robot_ctx.input.kb.bit.F) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
+	if(!g_robot_ctx.input.kb.bit.X) { fsm_change(&fsm_keyboard_sub, &state_kb_low); return; }
 }
 static const FsmState_t state_kb_stair = { .name = "KB_STAIR", .enter = kb_stair_enter, .execute = kb_stair_execute };
 

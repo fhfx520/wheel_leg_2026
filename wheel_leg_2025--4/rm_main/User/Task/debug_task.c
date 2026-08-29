@@ -595,11 +595,17 @@ void log_scope_data_pkg(void)
 	}
 	case 10://超电调试
 	{
-		log_scope_get_data(supercap.power);
-		log_scope_get_data(chassis_imu.wz);
-		log_scope_get_data(driver_motor[0].tx_current);
-		log_scope_get_data(driver_motor[1].tx_current);
-		log_scope_get_data(wlr.stair_flag);
+		log_scope_get_data(supercap.volage);
+		log_scope_get_data(supercap.power_mode);
+		log_scope_get_data(supercap.state.cap_v_over);
+		log_scope_get_data(supercap.state.cap_v_low);
+		log_scope_get_data(supercap.state.chassis_i_over);
+		log_scope_get_data(supercap.state.judge_msg_miss);
+		log_scope_get_data(supercap.current);
+		log_scope_get_data(supercap.state.bat_v_over);
+//		log_scope_get_data(driver_motor[0].tx_current);
+//		log_scope_get_data(driver_motor[1].tx_current);
+//		log_scope_get_data(wlr.stair_flag);
 		break;
 	}
 	}

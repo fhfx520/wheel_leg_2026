@@ -30,7 +30,7 @@ void power_init(void)
 		power_control.normal_add_power   = 120.0f;
 //    power_control.limit_power        = 170.0f;//170 250
 //    supercap.max_volage              = 23.6f;
-	supercap.max_volage				 = 28.5f;
+	supercap.max_volage				 = 28.0f;
     supercap.min_volage              = 0.0f;
     supercap.volume_percent          = 100;
     supercap.volage                  = supercap.min_volage;

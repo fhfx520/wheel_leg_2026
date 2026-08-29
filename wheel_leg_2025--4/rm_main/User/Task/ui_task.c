@@ -538,7 +538,7 @@ void ui_task(void const* argument)
         thread_wake_time = osKernelSysTick();
         us_timer_interval_test_start(&ui_time);
 		ui_update_cnt++;
-        if(rc.kb.bit.X)
+        if(rc.kb.bit.F)
 		{
 			ui_init();
         }

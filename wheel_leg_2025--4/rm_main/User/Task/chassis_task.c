@@ -264,8 +264,8 @@ static void chassis_init(void)
     ramp_init(&chassis_rotate_ramp, 0.06f, -12.0f, 12.0f);
 
 	//基于虚拟杆角度控制
-	pid_init(&crash_pid_L, NONE, 50.0f, 0.0f, 300.0f, 0.0f, 5.0f);//max_err大约为0.6f
-	pid_init(&crash_pid_R, NONE, 50.0f, 0.0f, 300.0f, 0.0f, 5.0f);
+	pid_init(&crash_pid_L, NONE, 50.0f, 0.0f, 500.0f, 0.0f, 4.0f);//max_err大约为0.6f
+	pid_init(&crash_pid_R, NONE, 50.0f, 0.0f, 500.0f, 0.0f, 4.0f);
 
     wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
     wlr.yaw_offset = 1.7f;
