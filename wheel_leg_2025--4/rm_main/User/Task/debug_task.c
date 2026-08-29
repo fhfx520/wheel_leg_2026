@@ -25,11 +25,12 @@
 #include "prot_ms53l0m.h"
 #include "prot_tof.h"
 #include "drv_lk_motor.h"
+#include "rl_deploy.h"
 
 #define row_debug 2 * 10
 #define DEBUG_TEXT_LOG_DIV       2u
-#define DEBUG_TEXT_LOG_SLOT_NUM  21u
-uint8_t debug_wave = 10	;
+#define DEBUG_TEXT_LOG_SLOT_NUM  22u
+uint8_t debug_wave = 11;
 uint8_t debug_text_log_enable = 1;
 float test_hex = 1;
 extern FGT_sin_t FGT_sin_chassis;
@@ -422,6 +423,22 @@ static void debug_log_shoot_delay_update(void)
                (unsigned long)shoot_delay_timeout_cnt);
 }
 
+static void debug_log_rl_status(void)
+{
+    log_printf("[rl] ready=%u ok=%u n=%lu fail=%lu us=%lu act=%.3f,%.3f,%.3f,%.3f,%.3f,%.3f\r\n",
+               rl_deploy_debug.policy_ready,
+               rl_deploy_debug.inference_ok,
+               (unsigned long)rl_deploy_debug.inference_count,
+               (unsigned long)rl_deploy_debug.inference_fail_count,
+               (unsigned long)rl_deploy_debug.last_inference_us,
+               rl_deploy_debug.actions[0],
+               rl_deploy_debug.actions[1],
+               rl_deploy_debug.actions[2],
+               rl_deploy_debug.actions[3],
+               rl_deploy_debug.actions[4],
+               rl_deploy_debug.actions[5]);
+}
+
 static void debug_log_text_output(void)
 {
     static uint8_t log_slot = 0;
@@ -491,8 +508,11 @@ static void debug_log_text_output(void)
         case 19:
             debug_log_fly_left_status();
             break;
-        default:
+        case 20:
             debug_log_fly_right_status();
+            break;
+        default:
+            debug_log_rl_status();
             break;
     }
 
@@ -606,6 +626,26 @@ void log_scope_data_pkg(void)
 //		log_scope_get_data(driver_motor[0].tx_current);
 //		log_scope_get_data(driver_motor[1].tx_current);
 //		log_scope_get_data(wlr.stair_flag);
+		break;
+	}
+	case 11: /* RL shadow inference: 6 actions + key diagnostics */
+	{
+		log_scope_get_data(rl_deploy_debug.actions[0]);
+		log_scope_get_data(rl_deploy_debug.actions[1]);
+		log_scope_get_data(rl_deploy_debug.actions[2]);
+		log_scope_get_data(rl_deploy_debug.actions[3]);
+		log_scope_get_data(rl_deploy_debug.actions[4]);
+		log_scope_get_data(rl_deploy_debug.actions[5]);
+		log_scope_get_data(rl_deploy_debug.obs[0]);
+		log_scope_get_data(rl_deploy_debug.obs[1]);
+		log_scope_get_data(rl_deploy_debug.obs[2]);
+		log_scope_get_data(rl_deploy_debug.obs[3]);
+		log_scope_get_data(rl_deploy_debug.obs[4]);
+		log_scope_get_data(rl_deploy_debug.obs[5]);
+		log_scope_get_data((float)rl_deploy_debug.inference_ok);
+		log_scope_get_data((float)rl_deploy_debug.policy_ready);
+		log_scope_get_data((float)rl_deploy_debug.last_inference_us);
+		log_scope_get_data((float)rl_deploy_debug.inference_fail_count);
 		break;
 	}
 	}

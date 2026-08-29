@@ -2,6 +2,8 @@
 
 #include <string.h>
 
+#include "dwt.h"
+#include "main.h"
 
 /* ============================================================
  * CubeAI generated model headers
@@ -128,8 +130,9 @@ NetworkContext_t *RLPolicy_GetContext(
     switch (model)
     {
         case RL_POLICY_MODEL_STABLE:
-        default:
             return &stable_ctx;
+        default:
+            return NULL;
     }
 }
 
@@ -162,14 +165,8 @@ uint8_t RLPolicy_Init(RLPolicy_t *policy)
         return 1U;
     }
 
-    /*
-     * CubeAI may depend on CRC peripheral clock.
-     *
-     * If the HAL macro exists, enable CRC clock.
-     */
-#if defined(__HAL_RCC_CRC_CLK_ENABLE)
+    /* CubeAI runtime requires the CRC peripheral clock on STM32H7. */
     __HAL_RCC_CRC_CLK_ENABLE();
-#endif
 
     /*
      * Do not use:
@@ -207,6 +204,7 @@ uint8_t RLPolicy_Run(
     ai_float *actions_output;
 
     ai_i32 processed_batches = 0;
+    uint64_t inference_start_us;
 
     if ((policy == NULL) ||
         (obs == NULL) ||
@@ -285,10 +283,11 @@ uint8_t RLPolicy_Run(
      * Copy input data
      * ======================================================== */
 
+    inference_start_us = DWT_GetTimeline_us();
+
     switch (model)
     {
         case RL_POLICY_MODEL_STABLE:
-        default:
 
             memcpy(
                 obs_input,
@@ -309,7 +308,14 @@ uint8_t RLPolicy_Run(
             );
 
             break;
+
+        default:
+            memset(actions, 0, sizeof(float) * RL_POLICY_ACTION_SIZE);
+            return 0U;
     }
+
+    policy->last_inference_us =
+        (uint32_t)(DWT_GetTimeline_us() - inference_start_us);
 
 
     /* ========================================================
@@ -324,8 +330,9 @@ uint8_t RLPolicy_Run(
         switch (model)
         {
             case RL_POLICY_MODEL_STABLE:
-            default:
                 (void)ai_stable_get_error(ctx->network);
+                break;
+            default:
                 break;
         }
 
@@ -346,7 +353,6 @@ uint8_t RLPolicy_Run(
     switch (model)
     {
         case RL_POLICY_MODEL_STABLE:
-        default:
 
             memcpy(
                 actions,
@@ -355,13 +361,11 @@ uint8_t RLPolicy_Run(
             );
 
             break;
+
+        default:
+            memset(actions, 0, sizeof(float) * RL_POLICY_ACTION_SIZE);
+            return 0U;
     }
-
-
-    /*
-     * DWT timing was removed from the original implementation.
-     */
-    policy->last_inference_us = 0U;
 
     return 1U;
 }

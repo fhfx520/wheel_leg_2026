@@ -650,6 +650,16 @@
               <FileType>5</FileType>
               <FilePath>..\User\Model\rl_policy_design.h</FilePath>
             </File>
+            <File>
+              <FileName>rl_deploy.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Model\rl_deploy.c</FilePath>
+            </File>
+            <File>
+              <FileName>rl_deploy.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\User\Model\rl_deploy.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
