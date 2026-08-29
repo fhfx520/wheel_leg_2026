@@ -16,6 +16,7 @@
 "rm_main\leg_vmc.o"
 "rm_main\wheel_leg_model.o"
 "rm_main\rl_policy_design.o"
+"rm_main\rl_deploy.o"
 "rm_main\fsm_core.o"
 "rm_main\robot_logic.o"
 "rm_main\board_comm_task.o"

@@ -14,8 +14,8 @@
 #define RL_DEPLOY_MIN_SIN                 1.0e-4f
 
 /* Constants retained from the released Stable policy deployment. */
-#define RL_DEPLOY_SOURCE_L1               0.175f
-#define RL_DEPLOY_SOURCE_L2               0.208f
+#define RL_DEPLOY_SOURCE_L1               0.21f
+#define RL_DEPLOY_SOURCE_L2               0.25f
 #define RL_DEPLOY_THIGH_OFFSET            0.2569f
 #define RL_DEPLOY_SHANK_OFFSET            0.7670f
 
@@ -115,19 +115,20 @@ static RLDeployLegState_t rl_solve_leg(float phi1,
 
 static void rl_update_joint_state(void)
 {
+	// Ê¹left_thighÊÇRL_DEPLOY_THIGH_OFFSET
     const float left_thigh =
-        rl_wrap_to_pi(wlr.side[WLR_SIDE_LEFT].q1 - RL_DEPLOY_THIGH_OFFSET);
+        rl_wrap_to_pi(wlr.side[WLR_SIDE_LEFT].q1 - 5.82516956f - RL_DEPLOY_THIGH_OFFSET);
     const float left_shank =
-        rl_wrap_to_pi(wlr.side[WLR_SIDE_LEFT].q2 + RL_DEPLOY_SHANK_OFFSET);
+        rl_wrap_to_pi(wlr.side[WLR_SIDE_LEFT].q2 - 1.20149851f + RL_DEPLOY_SHANK_OFFSET);
     const float right_thigh =
-        rl_wrap_to_pi(wlr.side[WLR_SIDE_RIGHT].q1 + RL_DEPLOY_THIGH_OFFSET);
+        rl_wrap_to_pi(-wlr.side[WLR_SIDE_RIGHT].q1 + 5.80829477f + RL_DEPLOY_THIGH_OFFSET);
     const float right_shank =
-        rl_wrap_to_pi(wlr.side[WLR_SIDE_RIGHT].q2 - RL_DEPLOY_SHANK_OFFSET);
+        rl_wrap_to_pi(-wlr.side[WLR_SIDE_RIGHT].q2 + 1.24368358f - RL_DEPLOY_SHANK_OFFSET);
 
     const float left_thigh_velocity = wlr.side[WLR_SIDE_LEFT].w1;
     const float left_shank_velocity = wlr.side[WLR_SIDE_LEFT].w2;
-    const float right_thigh_velocity = wlr.side[WLR_SIDE_RIGHT].w1;
-    const float right_shank_velocity = wlr.side[WLR_SIDE_RIGHT].w2;
+    const float right_thigh_velocity = -wlr.side[WLR_SIDE_RIGHT].w1;
+    const float right_shank_velocity = -wlr.side[WLR_SIDE_RIGHT].w2;
 
     const RLDeployLegState_t left_leg =
         rl_solve_leg(left_shank,
@@ -151,7 +152,7 @@ static void rl_update_joint_state(void)
 
     rl_deploy_debug.qd[RL_DOF_LF0] = left_thigh_velocity;
     rl_deploy_debug.qd[RL_DOF_LF1] = left_leg.relative_phi3_dot;
-    rl_deploy_debug.qd[RL_DOF_LW] = wlr.side[WLR_SIDE_LEFT].wy;
+    rl_deploy_debug.qd[RL_DOF_LW] = -wlr.side[WLR_SIDE_LEFT].wy;
     rl_deploy_debug.qd[RL_DOF_RF0] = right_thigh_velocity;
     rl_deploy_debug.qd[RL_DOF_RF1] = right_leg.relative_phi3_dot;
     rl_deploy_debug.qd[RL_DOF_RW] = wlr.side[WLR_SIDE_RIGHT].wy;
@@ -159,7 +160,7 @@ static void rl_update_joint_state(void)
 
 static void rl_update_projected_gravity(void)
 {
-    const float roll = chassis_imu.rol;
+    const float roll = -chassis_imu.rol;
     const float pitch = chassis_imu.pit;
     const float sin_roll = sinf(roll);
     const float cos_roll = cosf(roll);
@@ -174,11 +175,13 @@ static void rl_update_projected_gravity(void)
 
 static void rl_build_observation(void)
 {
+    // ²ßÂÔ½Ç
     static const float default_obs_dof_pos[4] = {
         -0.23f, -0.65f, 0.23f, 0.65f
     };
+	//roll pit yaw
     const float gyro[3] = {
-        chassis_imu.wx,
+        -chassis_imu.wx,
         chassis_imu.wy,
         chassis_imu.wz
     };
