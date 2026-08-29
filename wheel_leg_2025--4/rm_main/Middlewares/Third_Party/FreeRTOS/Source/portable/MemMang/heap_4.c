@@ -337,7 +337,7 @@ uint8_t *pucAlignedHeap;
 size_t uxAddress;
 size_t xTotalHeapSize = configTOTAL_HEAP_SIZE;
 
-	/* Ensure the heap starts on a  correctlyaligned boundary. */
+	/* Ensure the heap starts on a correctly aligned boundary. */
 	uxAddress = ( size_t ) ucHeap;
 
 	if( ( uxAddress & portBYTE_ALIGNMENT_MASK ) != 0 )

@@ -1,47 +1,45 @@
-# 编译生成的文件
+# ===== 编译产物 =====
 *.o
-*.obj
-*.a
-*.lib
 *.d
-*.elf
+*.crf
+*.lst
+*.map
+*.dep
 *.axf
+*.elf
 *.hex
 *.bin
-*.asm
-*.map
+*.iex
 
-# MDK-ARM 编译输出
-MDK-ARM/rm_main/*.d
-MDK-ARM/rm_main/*.o
+# ===== MDK 临时文件 =====
+*.htm
+*.build_log.htm
+JLinkLog.txt
+JLinkSettings.ini
 
-# 构建目录
-build/
-Debug/
-Release/
-Output/
+# MDK 用户特定配置（保留共享工程文件 *.uvprojx, *.uvoptx）
+*.uvguix.*
+*.scvd
+*.uvguix.*
 
-# IDE 和编辑器配置
+# STM32CubeMX 不需要的备份
+*.bak
+*.orig
+*.ioc.bak
+
+# ===== IDE / 编辑器 =====
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
-.DS_Store
+*.tmp
 
-# 系统文件
+# ===== 系统文件 =====
 Thumbs.db
 .DS_Store
+Desktop.ini
 
-# 临时文件
-*.bak
-*.tmp
-*.log
-
-# 保留所有源代码文件
-!Drivers/**/*.c
-!Drivers/**/*.h
-!User/Drivers/**/*.c
-!User/Drivers/**/*.h
-!User/**/*.c
-!User/**/*.h
+# ===== 想保留但先注释的文件类型 =====
+# 如果需要保留 hex 发布版本，请取消下一行注释并删除上方 *.hex
+# !release/*.hex

@@ -400,6 +400,16 @@
               <FilePath>../Core/Src/freertos.c</FilePath>
             </File>
             <File>
+              <FileName>dma.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Core/Src/dma.c</FilePath>
+            </File>
+            <File>
+              <FileName>fdcan.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Core/Src/fdcan.c</FilePath>
+            </File>
+            <File>
               <FileName>iwdg.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/Src/iwdg.c</FilePath>
@@ -454,16 +464,6 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
-            </File>
-            <File>
-              <FileName>dma.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Core/Src/dma.c</FilePath>
-            </File>
-            <File>
-              <FileName>fdcan.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Core/Src/fdcan.c</FilePath>
             </File>
             <File>
               <FileName>rng.c</FileName>
