@@ -210,6 +210,16 @@
           <WinNumber>1</WinNumber>
           <ItemText>wlr.v_ref</ItemText>
         </Ww>
+        <Ww>
+          <count>11</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>chassis_imu</ItemText>
+        </Ww>
+        <Ww>
+          <count>12</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>wlr.side[0].q1</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
@@ -236,6 +246,11 @@
           <count>4</count>
           <WinNumber>2</WinNumber>
           <ItemText>dr16_dma_rx_buf</ItemText>
+        </Ww>
+        <Ww>
+          <count>5</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>rl_deploy_debug,0x0A</ItemText>
         </Ww>
       </WatchWindow2>
       <MemoryWindow1>
