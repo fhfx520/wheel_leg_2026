@@ -30,7 +30,7 @@
 #define row_debug 2 * 10
 #define DEBUG_TEXT_LOG_DIV       2u
 #define DEBUG_TEXT_LOG_SLOT_NUM  22u
-uint8_t debug_wave = 11;
+uint8_t debug_wave = 10;
 uint8_t debug_text_log_enable = 1;
 float test_hex = 1;
 extern FGT_sin_t FGT_sin_chassis;

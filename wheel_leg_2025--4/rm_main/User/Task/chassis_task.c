@@ -283,7 +283,9 @@ static void chassis_init(void)
         kal_wy.Q_data[0] = 1; kal_wy.R_data[0] = 100;
     });
 	
+	#ifdef AI_CONTROL
     RLDeploy_Init();
+	#endif
 	
     FGT_sin_init (&FGT_sin_chassis,2,0,6000,7.0f,0,7.0f,-0.0f);
     chassis.init = 1;
@@ -1088,8 +1090,10 @@ void chassis_task(void const *argu)
         // 3. 期望速度和旋转矩阵计算
         chassis_data_input();
 
+	#ifdef AI_CONTROL
         // RL shadow deployment: 500 Hz sampling, 100 Hz inference, no motor output.
         RLDeploy_Step500Hz();
+	#endif
         
         // 4. 恢复你本来的执行逻辑结构
         if(g_robot_ctx.output.chassis != CHASSIS_STOP)

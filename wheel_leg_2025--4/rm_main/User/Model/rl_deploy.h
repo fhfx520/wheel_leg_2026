@@ -5,6 +5,8 @@
 
 #include "rl_policy_design.h"
 
+#define AI_CONTROL
+
 /*
  * RL shadow deployment:
  * - samples the chassis state at 500 Hz;
