@@ -9,18 +9,19 @@
 #include "prot_ms53l0m.h"
 #include "prot_tof.h"
 #include "dcache_handle.h"
+
 #define DEBUG_DATA_LEN 10
 #define JUDGE_DATA_LEN 150
 #define TFMINIPLUS_BUFF_SIZE 50
 #define TOF_BUFF_SIZE 11
 
-uint8_t dr16_dma_rx_buf[DR16_DATA_LEN];
-uint8_t judge_data_rx_buf[JUDGE_DATA_LEN];
-uint8_t debug_dma_rx_buf[DEBUG_DATA_LEN];
+__ALIGNED(DCACHE_LINE_SIZE) uint8_t dr16_dma_rx_buf[DR16_DATA_LEN];
+__ALIGNED(DCACHE_LINE_SIZE) uint8_t judge_data_rx_buf[JUDGE_DATA_LEN];
+__ALIGNED(DCACHE_LINE_SIZE) uint8_t debug_dma_rx_buf[DEBUG_DATA_LEN];
 //uint8_t TFminiPlusBuffArray_Front_Left[TFMINIPLUS_BUFF_SIZE];
 //uint8_t TFminiPlusBuffArray_Front_Right[TFMINIPLUS_BUFF_SIZE];
-uint8_t TOFBuffArray_LEFT[TOF_BUFF_SIZE];
-uint8_t TOFBuffArray_RIGHT[TOF_BUFF_SIZE];
+__ALIGNED(DCACHE_LINE_SIZE) uint8_t TOFBuffArray_LEFT[TOF_BUFF_SIZE];
+__ALIGNED(DCACHE_LINE_SIZE) uint8_t TOFBuffArray_RIGHT[TOF_BUFF_SIZE];
 //uint8_t Hipnuc_buff[82];
 uint32_t ccnct;
 /*

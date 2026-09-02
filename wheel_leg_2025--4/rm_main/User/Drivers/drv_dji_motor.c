@@ -94,7 +94,7 @@ static void dji_motor_get_single_data(dji_motor_t * motor, uint8_t *data)
 void dji_motor_get_data(can_channel_e can_periph, uint32_t id, uint8_t *data)
 {
     list_t *node = NULL;
-    dji_motor_t *object;
+    dji_motor_t *object = NULL;
     for (node = object_list.next; node != &(object_list); node = node->next) {
         object = list_entry(node, dji_motor_t, list);
         if (object->can_id == id && object->can_channel == can_periph) {

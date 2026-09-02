@@ -85,7 +85,7 @@ const float Hinge_gas_Lengh = 0.0481f;//大小腿转轴到气弹簧固定支座�
 float x3_balance_zero = 0.0f;//腿摆角角度偏置   负值：腿摆角向膝关节方向偏	正值：腿摆角向膝关节反方向偏 
 float x5_balance_zero = 0.0f;//机身倾角偏置     负值：抬头				正值：低头
 const float x3_balance_zero_normal = 0.0f; //车头朝前正常情况偏置
-const float sky_yaw_offset = -0.25f;//跳跃yaw偏置 不知为何导致车起跳的时候会往右扭，这里给个向左的偏置去抵消向右扭的趋势
+const float sky_yaw_offset = -0.1f;//跳跃yaw偏置 不知为何导致车起跳的时候会往右扭，这里给个向左的偏置去抵消向右扭的趋势
 
 float Rotate_balance_zero 		 = 0.17f ;
 float IMU_Roll_balance_zero		 = -0.0f;		//陀螺仪roll偏置
@@ -427,8 +427,10 @@ static void stable_velocity_control(void)
 	static float power_limit_velocity = 0;
 	static float power_limit_rotate = 0;
 	static uint16_t velocity_limit_cnt = 0;
-	power_limit_velocity = power_control_target_velocity();
-	power_limit_rotate = power_control_target_Vrotate();
+//	power_limit_velocity = power_control_target_velocity();
+//	power_limit_rotate = power_control_target_Vrotate();
+	power_limit_velocity = 2.5f;
+	power_limit_rotate = 13.0f;
     if(wlr.sky_flag == WLR_SKY_IDLE && wlr.jump_flag == WLR_JUMP_IDLE && wlr.high_flag == 0)//磕台阶，跳跃，飞坡时不限制速度输入
     {
         data_limit(&lqr.X_ref[1],-power_limit_velocity,power_limit_velocity);
@@ -451,7 +453,7 @@ static void stable_velocity_control(void)
 	else if(wlr.jump_flag == WLR_JUMP_ASCEND)
 		data_limit(&lqr.X_ref[1],-1.5f,1.5f);
 	else
-		data_limit(&lqr.X_ref[1],-2.3f,2.3f);
+		data_limit(&lqr.X_ref[1],-2.5f,2.5f);
 	if (wlr_either_leg_flying()) 
         lqr.X_ref[1] = 0;
 }
@@ -615,16 +617,11 @@ static void handle_sky_state(void)
 
         sky_leg_length = 0.11f;
         
-        x5_balance_zero = -0.08f;
+        x5_balance_zero = 0.0f;
         wlr.high_set = ramp_calc(&sky_height_ramp, sky_leg_length);
 		sky_dis = (wlr.double_flag ? 0.8f : 1.15f);
         sky_ccc++;
-        if(g_robot_ctx.output.top_mode == TOP_MODE_REMOTE) {
-			if (abs(rc.ch2) > 500) { 
-				wlr.sky_cnt++;  
-			} 
-		}
-		
+		#ifdef AUTO_JUMP_ENABLE
 		if(wlr.double_flag)
 		{
 			x3_balance_zero = x3_balance_zero_normal;
@@ -636,13 +633,26 @@ static void handle_sky_state(void)
 			x3_balance_zero = x3_balance_zero_normal - 0.03f;
             wlr.v_ref = ramp_calc(&jump_ramp, -3.0f);
 		}
-		
 		if (wlr.sky_cnt > 50 || ((wlr.side[0].Front_dis_fdb + wlr.side[1].Front_dis_fdb) / 2.0f) < sky_dis && sky_ccc > 400) {
 			sky_ccc = 0;
 			wlr.sky_cnt = 0;
 			v_ref = wlr.v_fdb;
 			wlr.sky_flag = WLR_SKY_EXTENDING;
 		} 
+		#else
+		if(g_robot_ctx.output.top_mode == TOP_MODE_REMOTE) {
+			if (abs(rc.ch2) > 500) { 
+				wlr.sky_cnt++;  
+			} 
+		}
+		x3_balance_zero = x3_balance_zero_normal + 0.05f;
+		if (wlr.sky_cnt > 50) {
+			sky_ccc = 0;
+			wlr.sky_cnt = 0;
+			v_ref = wlr.v_fdb;
+			wlr.sky_flag = WLR_SKY_EXTENDING;
+		} 
+		#endif
     } else if (wlr.sky_flag == WLR_SKY_EXTENDING) {
 		
         wlr.high_set = 0.35f;
@@ -651,7 +661,7 @@ static void handle_sky_state(void)
 		if(wlr.double_flag)
 			x3_balance_zero = x3_balance_zero_normal + 0.1f;
 		else
-			x3_balance_zero = x3_balance_zero_normal + 0.2F;
+			x3_balance_zero = x3_balance_zero_normal + 0.4F;
         x5_balance_zero = 0.0f; 
 
         if (vmc[0].L_fdb > 0.32f && vmc[1].L_fdb > 0.32f) {
@@ -667,7 +677,7 @@ static void handle_sky_state(void)
         x3_balance_zero = 0.0f;
         x5_balance_zero = 0.0f;
         wlr.sky_cnt++;
-        target_cnt = (wlr.double_flag ? 220 : 190);
+        target_cnt = (wlr.double_flag ? 220 : 150);
 		
         if (wlr.sky_cnt > target_cnt) {
             wlr.sky_cnt = 0;
@@ -693,9 +703,14 @@ static void handle_sky_state(void)
 //    } 
 	else if(wlr.sky_flag == WLR_SKY_STAND)
 	{
-        sky_leg_length = 0.16f;
+//		if((wlr.side[0].Fn_kal > 150.0f || wlr.side[1].Fn_kal > 150.0f))
+//		{
+//			sky_leg_length = 0.16f;
+//		}
+//		else
+			sky_leg_length = 0.16f;
 		wlr.high_set = ramp_calc(&sky_height_ramp, sky_leg_length);
-		target_cnt = (wlr.double_flag ? 400 : 400);
+		target_cnt = (wlr.double_flag ? 600 : 600);
 		DO_LAST(!wlr.sky_cnt,target_cnt){
 			wlr.sky_cnt++;
 			data_limit(&wlr.v_ref,-2.0f,2.0f);

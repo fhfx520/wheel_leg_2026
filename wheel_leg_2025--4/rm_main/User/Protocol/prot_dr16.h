@@ -3,7 +3,7 @@
 
 #include "stm32h7xx.h"
 
-#define DR16_DATA_LEN 18
+#define DR16_DATA_LEN 32
 
 #define RC_LEFT_LU  ( 1<<0 ) //居左上 遥控器切换DEBUG灯板
 #define RC_LEFT_RU  ( 1<<1 ) //居右上 遥控器注释底盘

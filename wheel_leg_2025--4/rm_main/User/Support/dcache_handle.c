@@ -3,7 +3,7 @@
 #include "stm32h7xx.h"                  // Device header
 #include "core_cm7.h"
 
-#define DCACHE_LINE_SIZE    32U
+
 
 void CleanDCacheForDmaTx(const void *addr, uint32_t len)
 {
