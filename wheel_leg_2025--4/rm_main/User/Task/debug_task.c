@@ -30,7 +30,7 @@
 #define row_debug 2 * 10
 #define DEBUG_TEXT_LOG_DIV       2u
 #define DEBUG_TEXT_LOG_SLOT_NUM  22u
-uint8_t debug_wave = 10;
+uint8_t debug_wave = 11;
 uint8_t debug_text_log_enable = 1;
 float test_hex = 1;
 extern FGT_sin_t FGT_sin_chassis;
@@ -628,7 +628,7 @@ void log_scope_data_pkg(void)
 //		log_scope_get_data(wlr.stair_flag);
 		break;
 	}
-	case 11: /* RL shadow inference: 6 actions + key diagnostics */
+	case 11: /* RL shadow: actions, diagnostics, then 6 virtual PD torques */
 	{
 		log_scope_get_data(rl_deploy_debug.actions[0]);
 		log_scope_get_data(rl_deploy_debug.actions[1]);
@@ -646,6 +646,12 @@ void log_scope_data_pkg(void)
 		log_scope_get_data((float)rl_deploy_debug.policy_ready);
 		log_scope_get_data((float)rl_deploy_debug.last_inference_us);
 		log_scope_get_data((float)rl_deploy_debug.inference_fail_count);
+		log_scope_get_data(rl_deploy_debug.tau_virtual[0]);
+		log_scope_get_data(rl_deploy_debug.tau_virtual[1]);
+		log_scope_get_data(rl_deploy_debug.tau_virtual[2]);
+		log_scope_get_data(rl_deploy_debug.tau_virtual[3]);
+		log_scope_get_data(rl_deploy_debug.tau_virtual[4]);
+		log_scope_get_data(rl_deploy_debug.tau_virtual[5]);
 		break;
 	}
 	}

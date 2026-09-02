@@ -34,6 +34,10 @@ typedef struct
     float obs[RL_POLICY_OBS_SIZE];
     float obs_history[RL_POLICY_OBS_HISTORY_SIZE];
     float actions[RL_POLICY_ACTION_SIZE];
+    float action_clipped[RL_POLICY_ACTION_SIZE];
+    float target_q[RL_POLICY_ACTION_SIZE];
+    float target_qd[RL_POLICY_ACTION_SIZE];
+    float tau_virtual[RL_POLICY_ACTION_SIZE];
 } RLDeployDebug_t;
 
 extern RLDeployDebug_t rl_deploy_debug;

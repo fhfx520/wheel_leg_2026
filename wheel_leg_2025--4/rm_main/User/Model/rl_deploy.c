@@ -21,6 +21,11 @@
 #define RL_DEPLOY_THIGH_OFFSET            0.506f
 #define RL_DEPLOY_SHANK_OFFSET            1.175f
 
+#define RL_DEPLOY_ACTION_CLIP             100.0f
+#define RL_DEPLOY_POSITION_ACTION_SCALE   0.5f
+#define RL_DEPLOY_VELOCITY_ACTION_SCALE   10.0f
+#define RL_DEPLOY_VIRTUAL_TORQUE_LIMIT    1000.0f
+
 enum
 {
     RL_DOF_LF0 = 0,
@@ -43,6 +48,31 @@ RLDeployDebug_t rl_deploy_debug;
 
 static uint8_t rl_deploy_initialized = 0U;
 static uint8_t rl_inference_divider = 0U;
+
+static const float rl_stable_default_dof_pos[RL_POLICY_ACTION_SIZE] = {
+    -0.23f, -0.65f, 0.0f, 0.23f, 0.65f, 0.0f
+};
+
+static const float rl_stable_p_gains[RL_POLICY_ACTION_SIZE] = {
+    15.0f, 15.0f, 0.0f, 15.0f, 15.0f, 0.0f
+};
+
+static const float rl_stable_d_gains[RL_POLICY_ACTION_SIZE] = {
+    1.0f, 1.0f, 0.1f, 1.0f, 1.0f, 0.1f
+};
+
+static float rl_clip(float value, float limit)
+{
+    if (value > limit)
+    {
+        return limit;
+    }
+    if (value < -limit)
+    {
+        return -limit;
+    }
+    return value;
+}
 
 static float rl_wrap_to_pi(float angle)
 {
@@ -117,7 +147,7 @@ static RLDeployLegState_t rl_solve_leg(float phi1,
 
 static void rl_update_joint_state(void)
 {
-	// Ê¹left_thighÊÇRL_DEPLOY_THIGH_OFFSET
+	// ä½¿left_thighæ˜¯RL_DEPLOY_THIGH_OFFSET
     const float left_thigh =
         rl_wrap_to_pi(joint_motor[0].position - 2.35201263f - RL_DEPLOY_THIGH_OFFSET);
     const float left_shank =
@@ -177,7 +207,7 @@ static void rl_update_projected_gravity(void)
 
 static void rl_build_observation(void)
 {
-    // ²ßÂÔ½Ç
+    // ç­–ç•¥è§’
     static const float default_obs_dof_pos[4] = {
         -0.23f, -0.65f, 0.23f, 0.65f
     };
@@ -222,6 +252,41 @@ static void rl_build_observation(void)
     }
 }
 
+static void rl_calculate_shadow_pd(void)
+{
+    uint32_t i;
+
+    for (i = 0U; i < RL_POLICY_ACTION_SIZE; ++i)
+    {
+        const float action = rl_clip(rl_deploy_debug.actions[i], RL_DEPLOY_ACTION_CLIP);
+        float position_offset = 0.0f;
+        float velocity_target = 0.0f;
+        float torque;
+
+        if ((i == RL_DOF_LF0) || (i == RL_DOF_LF1) ||
+            (i == RL_DOF_RF0) || (i == RL_DOF_RF1))
+        {
+            position_offset = action * RL_DEPLOY_POSITION_ACTION_SCALE;
+        }
+        else
+        {
+            velocity_target = action * RL_DEPLOY_VELOCITY_ACTION_SCALE;
+        }
+
+        rl_deploy_debug.action_clipped[i] = action;
+        rl_deploy_debug.target_q[i] = rl_stable_default_dof_pos[i] + position_offset;
+        rl_deploy_debug.target_qd[i] = velocity_target;
+
+        torque =
+            rl_stable_p_gains[i] *
+                (rl_deploy_debug.target_q[i] - rl_deploy_debug.q[i]) +
+            rl_stable_d_gains[i] *
+                (rl_deploy_debug.target_qd[i] - rl_deploy_debug.qd[i]);
+        rl_deploy_debug.tau_virtual[i] =
+            rl_clip(torque, RL_DEPLOY_VIRTUAL_TORQUE_LIMIT);
+    }
+}
+
 static void rl_update_history(void)
 {
     uint32_t frame;
@@ -250,6 +315,10 @@ void RLDeploy_ResetHistory(void)
 {
     memset(rl_deploy_debug.obs_history, 0, sizeof(rl_deploy_debug.obs_history));
     memset(rl_deploy_debug.actions, 0, sizeof(rl_deploy_debug.actions));
+    memset(rl_deploy_debug.action_clipped, 0, sizeof(rl_deploy_debug.action_clipped));
+    memset(rl_deploy_debug.target_q, 0, sizeof(rl_deploy_debug.target_q));
+    memset(rl_deploy_debug.target_qd, 0, sizeof(rl_deploy_debug.target_qd));
+    memset(rl_deploy_debug.tau_virtual, 0, sizeof(rl_deploy_debug.tau_virtual));
     rl_deploy_debug.history_initialized = 0U;
     rl_inference_divider = 0U;
 }
@@ -283,6 +352,7 @@ void RLDeploy_Step500Hz(void)
     ++rl_inference_divider;
     if (rl_inference_divider < RL_DEPLOY_INFERENCE_DIVIDER)
     {
+        rl_calculate_shadow_pd();
         return;
     }
     rl_inference_divider = 0U;
@@ -305,5 +375,7 @@ void RLDeploy_Step500Hz(void)
         ++rl_deploy_debug.inference_fail_count;
     }
 
-    /* Shadow mode: actions are intentionally not copied to motor commands. */
+    rl_calculate_shadow_pd();
+
+    /* Shadow mode: PD torques remain debug-only and never reach motor commands. */
 }
