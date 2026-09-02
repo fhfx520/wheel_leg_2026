@@ -14,6 +14,8 @@
 #define RL_DEPLOY_PI                      3.14159265358979323846f
 #define RL_DEPLOY_TWO_PI                  (2.0f * RL_DEPLOY_PI)
 #define RL_DEPLOY_MIN_SIN                 1.0e-4f
+#define RL_DEPLOY_MIN_LEG_LENGTH          1.0e-2f
+#define RL_DEPLOY_MIN_FORCE_MAP_DET       1.0e-6f
 
 /* Constants retained from the released Stable policy deployment. */
 #define RL_DEPLOY_SOURCE_L1               0.21f
@@ -25,6 +27,11 @@
 #define RL_DEPLOY_POSITION_ACTION_SCALE   0.5f
 #define RL_DEPLOY_VELOCITY_ACTION_SCALE   10.0f
 #define RL_DEPLOY_VIRTUAL_TORQUE_LIMIT    1000.0f
+#define RL_DEPLOY_REAL_TORQUE_LIMIT       100.0f
+#define RL_DEPLOY_PARALLEL_TORQUE_LIMIT   35.0f
+#define RL_DEPLOY_WHEEL_TORQUE_LIMIT      5.0f
+#define RL_DEPLOY_LEFT_GAS_SPRING_K       370.1f
+#define RL_DEPLOY_RIGHT_GAS_SPRING_K      370.1f
 
 enum
 {
@@ -38,16 +45,33 @@ enum
 
 typedef struct
 {
+    float j11;
+    float j12;
+    float j21;
+    float j22;
+    float det;
+    uint8_t valid;
+} RLDeployForceTorqueMap_t;
+
+typedef struct
+{
     float phi2;
     float phi3;
+    float phi0;
+    float l0;
     float relative_phi3;
     float relative_phi3_dot;
+    float jacobian_shank;
+    float jacobian_thigh;
+    RLDeployForceTorqueMap_t force_torque_map;
 } RLDeployLegState_t;
 
 RLDeployDebug_t rl_deploy_debug;
 
 static uint8_t rl_deploy_initialized = 0U;
 static uint8_t rl_inference_divider = 0U;
+static RLDeployLegState_t rl_left_leg;
+static RLDeployLegState_t rl_right_leg;
 
 static const float rl_stable_default_dof_pos[RL_POLICY_ACTION_SIZE] = {
     -0.23f, -0.65f, 0.0f, 0.23f, 0.65f, 0.0f
@@ -94,7 +118,7 @@ static RLDeployLegState_t rl_solve_leg(float phi1,
                                        float thigh_velocity,
                                        uint8_t is_right)
 {
-    RLDeployLegState_t state = {0.0f, 0.0f, 0.0f, 0.0f};
+    RLDeployLegState_t state;
     const float xb = RL_DEPLOY_SOURCE_L1 * cosf(phi1);
     const float yb = RL_DEPLOY_SOURCE_L1 * sinf(phi1);
     const float xd = RL_DEPLOY_SOURCE_L1 * cosf(phi4);
@@ -106,10 +130,13 @@ static RLDeployLegState_t rl_solve_leg(float phi1,
     const float c0 = dx * dx + dy * dy;
     float discriminant = a0 * a0 + b0 * b0 - c0 * c0;
     float sin_phi3_phi2;
+    float force_map_sin;
     float dphi3_dphi1 = 0.0f;
     float dphi3_dphi4_relative = 0.0f;
     float xc;
     float yc;
+
+    memset(&state, 0, sizeof(state));
 
     if (discriminant < 0.0f)
     {
@@ -120,6 +147,8 @@ static RLDeployLegState_t rl_solve_leg(float phi1,
     xc = xb + RL_DEPLOY_SOURCE_L2 * cosf(state.phi2);
     yc = yb + RL_DEPLOY_SOURCE_L2 * sinf(state.phi2);
     state.phi3 = atan2f(yc - yd, xc - xd);
+    state.phi0 = atan2f(yc, xc);
+    state.l0 = sqrtf(xc * xc + yc * yc);
 
     sin_phi3_phi2 = sinf(state.phi3 - state.phi2);
     if (fabsf(sin_phi3_phi2) >= RL_DEPLOY_MIN_SIN)
@@ -128,6 +157,39 @@ static RLDeployLegState_t rl_solve_leg(float phi1,
         dphi3_dphi1 = RL_DEPLOY_SOURCE_L1 * sinf(phi1 - state.phi2) / denominator;
         dphi3_dphi4_relative =
             -RL_DEPLOY_SOURCE_L1 * sinf(phi4 - state.phi2) / denominator - 1.0f;
+    }
+
+    state.jacobian_shank = dphi3_dphi1;
+    state.jacobian_thigh = dphi3_dphi4_relative;
+
+    force_map_sin = sin_phi3_phi2;
+    if (fabsf(force_map_sin) < RL_DEPLOY_MIN_SIN)
+    {
+        force_map_sin =
+            (force_map_sin < 0.0f) ? -RL_DEPLOY_MIN_SIN : RL_DEPLOY_MIN_SIN;
+    }
+    {
+        const float safe_l0 =
+            (state.l0 > RL_DEPLOY_MIN_LEG_LENGTH) ?
+            state.l0 : RL_DEPLOY_MIN_LEG_LENGTH;
+        const float common_phi1 =
+            RL_DEPLOY_SOURCE_L1 * sinf(phi1 - state.phi2) / force_map_sin;
+        const float common_phi4 =
+            RL_DEPLOY_SOURCE_L1 * sinf(state.phi3 - phi4) / force_map_sin;
+
+        state.force_torque_map.j11 =
+            sinf(state.phi0 - state.phi3) * common_phi1;
+        state.force_torque_map.j12 =
+            cosf(state.phi0 - state.phi3) * common_phi1 / safe_l0;
+        state.force_torque_map.j21 =
+            sinf(state.phi0 - state.phi2) * common_phi4;
+        state.force_torque_map.j22 =
+            cosf(state.phi0 - state.phi2) * common_phi4 / safe_l0;
+        state.force_torque_map.det =
+            state.force_torque_map.j11 * state.force_torque_map.j22 -
+            state.force_torque_map.j12 * state.force_torque_map.j21;
+        state.force_torque_map.valid =
+            (fabsf(state.force_torque_map.det) >= RL_DEPLOY_MIN_FORCE_MAP_DET) ? 1U : 0U;
     }
 
     if (is_right)
@@ -162,13 +224,13 @@ static void rl_update_joint_state(void)
     const float right_thigh_velocity = joint_motor[2].velocity;
     const float right_shank_velocity = joint_motor[3].velocity;
 
-    const RLDeployLegState_t left_leg =
+    rl_left_leg =
         rl_solve_leg(left_shank,
                      left_thigh,
                      left_shank_velocity,
                      left_thigh_velocity,
                      0U);
-    const RLDeployLegState_t right_leg =
+    rl_right_leg =
         rl_solve_leg(-right_shank,
                      -right_thigh,
                      right_shank_velocity,
@@ -176,18 +238,29 @@ static void rl_update_joint_state(void)
                      1U);
 
     rl_deploy_debug.q[RL_DOF_LF0] = left_thigh;
-    rl_deploy_debug.q[RL_DOF_LF1] = left_leg.relative_phi3;
+    rl_deploy_debug.q[RL_DOF_LF1] = rl_left_leg.relative_phi3;
     rl_deploy_debug.q[RL_DOF_LW] = 0.0f;
     rl_deploy_debug.q[RL_DOF_RF0] = right_thigh;
-    rl_deploy_debug.q[RL_DOF_RF1] = right_leg.relative_phi3;
+    rl_deploy_debug.q[RL_DOF_RF1] = rl_right_leg.relative_phi3;
     rl_deploy_debug.q[RL_DOF_RW] = 0.0f;
 
     rl_deploy_debug.qd[RL_DOF_LF0] = left_thigh_velocity;
-    rl_deploy_debug.qd[RL_DOF_LF1] = left_leg.relative_phi3_dot;
+    rl_deploy_debug.qd[RL_DOF_LF1] = rl_left_leg.relative_phi3_dot;
     rl_deploy_debug.qd[RL_DOF_LW] = -driver_motor[0].velocity;
     rl_deploy_debug.qd[RL_DOF_RF0] = right_thigh_velocity;
-    rl_deploy_debug.qd[RL_DOF_RF1] = right_leg.relative_phi3_dot;
+    rl_deploy_debug.qd[RL_DOF_RF1] = rl_right_leg.relative_phi3_dot;
     rl_deploy_debug.qd[RL_DOF_RW] = -driver_motor[1].velocity;;
+
+    rl_deploy_debug.leg_jacobian[0] = rl_left_leg.jacobian_shank;
+    rl_deploy_debug.leg_jacobian[1] = rl_left_leg.jacobian_thigh;
+    rl_deploy_debug.leg_jacobian[2] = rl_right_leg.jacobian_shank;
+    rl_deploy_debug.leg_jacobian[3] = rl_right_leg.jacobian_thigh;
+    rl_deploy_debug.leg_length[0] = rl_left_leg.l0;
+    rl_deploy_debug.leg_length[1] = rl_right_leg.l0;
+    rl_deploy_debug.force_map_det[0] = rl_left_leg.force_torque_map.det;
+    rl_deploy_debug.force_map_det[1] = rl_right_leg.force_torque_map.det;
+    rl_deploy_debug.force_map_valid[0] = rl_left_leg.force_torque_map.valid;
+    rl_deploy_debug.force_map_valid[1] = rl_right_leg.force_torque_map.valid;
 }
 
 static void rl_update_projected_gravity(void)
@@ -287,6 +360,79 @@ static void rl_calculate_shadow_pd(void)
     }
 }
 
+static void rl_apply_gas_spring_compensation(const RLDeployLegState_t *leg,
+                                             float gas_spring_k,
+                                             float force_sign,
+                                             float *tau_thigh,
+                                             float *tau_shank)
+{
+    const RLDeployForceTorqueMap_t *map = &leg->force_torque_map;
+
+    if (map->valid)
+    {
+        float foot_force =
+            (map->j22 * (*tau_shank) - map->j12 * (*tau_thigh)) / map->det;
+        const float foot_torque =
+            (-map->j21 * (*tau_shank) + map->j11 * (*tau_thigh)) / map->det;
+
+        foot_force += force_sign * gas_spring_k * leg->l0;
+        *tau_shank = map->j11 * foot_force + map->j12 * foot_torque;
+        *tau_thigh = map->j21 * foot_force + map->j22 * foot_torque;
+    }
+}
+
+static void rl_calculate_shadow_motor_torques(void)
+{
+    float left_thigh =
+        rl_deploy_debug.tau_virtual[RL_DOF_LF0] +
+        rl_deploy_debug.tau_virtual[RL_DOF_LF1] * rl_left_leg.jacobian_thigh;
+    float left_shank =
+        rl_deploy_debug.tau_virtual[RL_DOF_LF1] * rl_left_leg.jacobian_shank;
+    float right_thigh =
+        rl_deploy_debug.tau_virtual[RL_DOF_RF0] +
+        rl_deploy_debug.tau_virtual[RL_DOF_RF1] * rl_right_leg.jacobian_thigh;
+    float right_shank =
+        rl_deploy_debug.tau_virtual[RL_DOF_RF1] * rl_right_leg.jacobian_shank;
+    uint32_t i;
+
+    /* Exact left/right signs used by the released deployment. */
+    rl_apply_gas_spring_compensation(&rl_left_leg,
+                                     RL_DEPLOY_LEFT_GAS_SPRING_K,
+                                     -1.0f,
+                                     &left_thigh,
+                                     &left_shank);
+    rl_apply_gas_spring_compensation(&rl_right_leg,
+                                     RL_DEPLOY_RIGHT_GAS_SPRING_K,
+                                     1.0f,
+                                     &right_thigh,
+                                     &right_shank);
+
+    rl_deploy_debug.tau_motor_raw[RL_DOF_LF0] = left_thigh;
+    rl_deploy_debug.tau_motor_raw[RL_DOF_LF1] = left_shank;
+    rl_deploy_debug.tau_motor_raw[RL_DOF_LW] =
+        -rl_deploy_debug.tau_virtual[RL_DOF_LW];
+    rl_deploy_debug.tau_motor_raw[RL_DOF_RF0] = right_thigh;
+    rl_deploy_debug.tau_motor_raw[RL_DOF_RF1] = right_shank;
+    rl_deploy_debug.tau_motor_raw[RL_DOF_RW] =
+        -rl_deploy_debug.tau_virtual[RL_DOF_RW];
+
+    for (i = 0U; i < RL_POLICY_ACTION_SIZE; ++i)
+    {
+        const float output_torque =
+            rl_clip(rl_deploy_debug.tau_motor_raw[i], RL_DEPLOY_REAL_TORQUE_LIMIT);
+        rl_deploy_debug.tau_motor_shadow[i] =
+            rl_clip(output_torque,
+                    ((i == RL_DOF_LW) || (i == RL_DOF_RW)) ?
+                    RL_DEPLOY_WHEEL_TORQUE_LIMIT : RL_DEPLOY_PARALLEL_TORQUE_LIMIT);
+    }
+}
+
+static void rl_calculate_shadow_control(void)
+{
+    rl_calculate_shadow_pd();
+    rl_calculate_shadow_motor_torques();
+}
+
 static void rl_update_history(void)
 {
     uint32_t frame;
@@ -319,6 +465,8 @@ void RLDeploy_ResetHistory(void)
     memset(rl_deploy_debug.target_q, 0, sizeof(rl_deploy_debug.target_q));
     memset(rl_deploy_debug.target_qd, 0, sizeof(rl_deploy_debug.target_qd));
     memset(rl_deploy_debug.tau_virtual, 0, sizeof(rl_deploy_debug.tau_virtual));
+    memset(rl_deploy_debug.tau_motor_raw, 0, sizeof(rl_deploy_debug.tau_motor_raw));
+    memset(rl_deploy_debug.tau_motor_shadow, 0, sizeof(rl_deploy_debug.tau_motor_shadow));
     rl_deploy_debug.history_initialized = 0U;
     rl_inference_divider = 0U;
 }
@@ -352,7 +500,7 @@ void RLDeploy_Step500Hz(void)
     ++rl_inference_divider;
     if (rl_inference_divider < RL_DEPLOY_INFERENCE_DIVIDER)
     {
-        rl_calculate_shadow_pd();
+        rl_calculate_shadow_control();
         return;
     }
     rl_inference_divider = 0U;
@@ -375,7 +523,7 @@ void RLDeploy_Step500Hz(void)
         ++rl_deploy_debug.inference_fail_count;
     }
 
-    rl_calculate_shadow_pd();
+    rl_calculate_shadow_control();
 
-    /* Shadow mode: PD torques remain debug-only and never reach motor commands. */
+    /* Shadow mode: mapped physical torques remain debug-only. */
 }

@@ -37,7 +37,17 @@ typedef struct
     float action_clipped[RL_POLICY_ACTION_SIZE];
     float target_q[RL_POLICY_ACTION_SIZE];
     float target_qd[RL_POLICY_ACTION_SIZE];
+    /* Policy-coordinate torques: [lf0, lf1_virtual, lw, rf0, rf1_virtual, rw]. */
     float tau_virtual[RL_POLICY_ACTION_SIZE];
+    /* Five-bar Jacobian: [left_shank, left_thigh, right_shank, right_thigh]. */
+    float leg_jacobian[4];
+    float leg_length[2];
+    float force_map_det[2];
+    uint8_t force_map_valid[2];
+    /* Physical motor order: [left_thigh, left_shank, left_wheel,
+       right_thigh, right_shank, right_wheel]. */
+    float tau_motor_raw[RL_POLICY_ACTION_SIZE];
+    float tau_motor_shadow[RL_POLICY_ACTION_SIZE];
 } RLDeployDebug_t;
 
 extern RLDeployDebug_t rl_deploy_debug;
