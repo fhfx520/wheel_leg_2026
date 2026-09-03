@@ -387,8 +387,8 @@ static void chassis_execute_fsm(void)
 			wlr.stair_flag = WLR_STAIR_IDLE;
 			if(wlr.jump_flag == WLR_JUMP_IDLE && wlr.direction == 0) 
 				wlr.jump_flag = WLR_JUMP_ASCEND; 
-			if(wlr.jump_flag == WLR_JUMP_RECOVER_LONG && !g_robot_ctx.jump_finish_flag)
-				g_robot_ctx.jump_finish_flag = 1;
+			if(wlr.jump_flag == WLR_JUMP_RECOVER_LONG)
+				wlr.jump_flag = WLR_JUMP_IDLE;
 			break;
 		}
 		

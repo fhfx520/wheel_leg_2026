@@ -572,7 +572,7 @@ static void handle_jump_state(void)
             jump_ramp.out = 0.0f;
 			wlr.crash_flag = 1;
 		 }
-		 if((fabs(lqr.X_fdb[4]) > 1.0f && fabs(lqr.X_fdb[6]) > 1.0f && wlr.crash_flag))
+		 if((fabs(lqr.X_fdb[4]) > 0.4f && fabs(lqr.X_fdb[6]) > 0.4f && wlr.crash_flag))
 		 {
 			wlr.jump_flag = WLR_JUMP_RECOVER_SHORT;
 			wlr.crash_flag = 0;
@@ -584,9 +584,9 @@ static void handle_jump_state(void)
 	else if(wlr.jump_flag == WLR_JUMP_RECOVER_SHORT)
 	{
 		 wlr.high_set = 0.16f;
-		 if (fabsf(vmc[0].L_fdb - wlr.high_set) < 0.05f && fabsf(vmc[1].L_fdb - wlr.high_set) < 0.05f) {
+		 if (fabsf(vmc[0].L_fdb - wlr.high_set) < 0.07f && fabsf(vmc[1].L_fdb - wlr.high_set) < 0.07f) {
 			 wlr.jump_cnt++;
-			 if(wlr.jump_cnt > 50)
+			 if(wlr.jump_cnt > 130)
 			 {
 				 wlr.jump_flag = WLR_JUMP_RECOVER_LONG;
 				 wlr.crash_flag = 0;
