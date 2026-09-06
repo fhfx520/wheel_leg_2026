@@ -7,6 +7,7 @@
 #include "wlr.h"
 #include "drv_dm_motor.h"
 #include "drv_dji_motor.h"
+#include "robot_logic.h"
 
 #define RL_DEPLOY_INFERENCE_DIVIDER       5U
 #define RL_DEPLOY_HISTORY_FRAMES          5U
@@ -416,7 +417,10 @@ static void rl_build_observation(void)
 
     rl_deploy_debug.command[0] = wlr.v_ref * 3.0f;
     rl_deploy_debug.command[1] = k * wlr.yaw_err * 0.25f;
-    rl_deploy_debug.command[2] = wlr.high_set * 5.0f;
+	if(g_robot_ctx.output.chassis == CHASSIS_HIGH)
+		rl_deploy_debug.command[2] = 0.14f * 5.0f;
+	if(g_robot_ctx.output.chassis == CHASSIS_ASCEND)
+		rl_deploy_debug.command[2] = 0.26f * 5.0f;
 
     for (i = 0U; i < 3U; ++i)
     {

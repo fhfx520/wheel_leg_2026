@@ -381,14 +381,10 @@ static void chassis_execute_fsm(void)
 		
 		case CHASSIS_ASCEND:
 		{
-			wlr.ctrl_mode = 2;
-			wlr.high_flag = 0;
-			wlr.sky_flag = WLR_SKY_IDLE;
-			wlr.stair_flag = WLR_STAIR_IDLE;
-			if(wlr.jump_flag == WLR_JUMP_IDLE && wlr.direction == 0) 
-				wlr.jump_flag = WLR_JUMP_ASCEND; 
-			if(wlr.jump_flag == WLR_JUMP_RECOVER_LONG)
-				wlr.jump_flag = WLR_JUMP_IDLE;
+			 wlr.ctrl_mode = 2;
+            wlr.high_flag = 0; 
+            chassis_reset_special_flag();
+			chassis_reset_finish_flag();
 			break;
 		}
 		
@@ -994,8 +990,10 @@ static void chassis_data_output(void)
 			dm_motor_set_control_para(&joint_motor[i], 0, 0, 0, 0, 0);
         }
     }else if (wlr.ctrl_mode == 2) {//力控
-		if(rc.sw2 == RC_MI)
+		if(rc.sw2 == RC_MI || rc.sw2 == RC_DN || (chassis.recover_flag == 1 && chassis.rescue_inter_flag == CHASSIS_RESCUE_RECOVER))
 		{
+			if (fabsf(vmc[0].L_fdb - wlr.recover_length) < 0.1f && fabsf(vmc[1].L_fdb - wlr.recover_length) < 0.1f)
+				 chassis.recover_flag = 0;
 			dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, rl_deploy_debug.tau_motor_shadow[0]);
 			dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, rl_deploy_debug.tau_motor_shadow[1]);
 			dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, rl_deploy_debug.tau_motor_shadow[3]);
