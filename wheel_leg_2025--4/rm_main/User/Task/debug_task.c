@@ -30,7 +30,7 @@
 #define row_debug 2 * 10
 #define DEBUG_TEXT_LOG_DIV       2u
 #define DEBUG_TEXT_LOG_SLOT_NUM  22u
-uint8_t debug_wave = 11;
+uint8_t debug_wave = 13;
 uint8_t debug_text_log_enable = 1;
 float test_hex = 1;
 extern FGT_sin_t FGT_sin_chassis;
@@ -666,6 +666,24 @@ void log_scope_data_pkg(void)
 		log_scope_get_data(rl_deploy_debug.leg_jacobian[1]);
 		log_scope_get_data(rl_deploy_debug.leg_jacobian[2]);
 		log_scope_get_data(rl_deploy_debug.leg_jacobian[3]);
+		break;
+	}
+	case 13: /* RL mapping: 6 virtual + 6 raw motor torques + 4 Jacobian values */
+	{
+//		log_scope_get_data(rl_deploy_debug.q[0]);
+//		log_scope_get_data(rl_deploy_debug.q[1]);
+//		log_scope_get_data(rl_deploy_debug.q[3]);
+//		log_scope_get_data(rl_deploy_debug.q[4]);
+//		log_scope_get_data(rl_deploy_debug.target_q[0]);
+//		log_scope_get_data(rl_deploy_debug.target_q[1]);
+//		log_scope_get_data(rl_deploy_debug.target_q[3]);
+//		log_scope_get_data(rl_deploy_debug.target_q[4]);
+		log_scope_get_data(joint_motor[0].torque);
+		log_scope_get_data(joint_motor[1].torque);
+		log_scope_get_data(joint_motor[2].torque);
+		log_scope_get_data(joint_motor[3].torque);
+		log_scope_get_data(vmc[0].F_fdb.e.Fy_fdb);
+		log_scope_get_data(vmc[1].F_fdb.e.Fy_fdb);
 		break;
 	}
 	}

@@ -25,13 +25,13 @@
 
 #define RL_DEPLOY_ACTION_CLIP             100.0f
 #define RL_DEPLOY_POSITION_ACTION_SCALE   0.5f
-#define RL_DEPLOY_VELOCITY_ACTION_SCALE   10.0f
+#define RL_DEPLOY_VELOCITY_ACTION_SCALE   3.0f
 #define RL_DEPLOY_VIRTUAL_TORQUE_LIMIT    1000.0f
 #define RL_DEPLOY_REAL_TORQUE_LIMIT       100.0f
 #define RL_DEPLOY_PARALLEL_TORQUE_LIMIT   35.0f
 #define RL_DEPLOY_WHEEL_TORQUE_LIMIT      5.0f
-#define RL_DEPLOY_LEFT_GAS_SPRING_K       370.1f
-#define RL_DEPLOY_RIGHT_GAS_SPRING_K      370.1f
+#define RL_DEPLOY_LEFT_GAS_SPRING_K       520.1f
+#define RL_DEPLOY_RIGHT_GAS_SPRING_K      520.1f
 
 enum
 {
@@ -70,8 +70,8 @@ RLDeployDebug_t rl_deploy_debug;
 
 static uint8_t rl_deploy_initialized = 0U;
 static uint8_t rl_inference_divider = 0U;
-static RLDeployLegState_t rl_left_leg;
-static RLDeployLegState_t rl_right_leg;
+RLDeployLegState_t rl_left_leg;
+RLDeployLegState_t rl_right_leg;
 
 static const float rl_stable_default_dof_pos[RL_POLICY_ACTION_SIZE] = {
     -0.23f, -0.65f, 0.0f, 0.23f, 0.65f, 0.0f
@@ -206,7 +206,7 @@ static RLDeployLegState_t rl_solve_leg(float phi1,
 
     return state;
 }
-
+float left_shank_debug = 0.0f;
 static void rl_update_joint_state(void)
 {
 	// 使left_thigh是RL_DEPLOY_THIGH_OFFSET
@@ -223,7 +223,7 @@ static void rl_update_joint_state(void)
     const float left_shank_velocity = joint_motor[1].velocity;
     const float right_thigh_velocity = joint_motor[2].velocity;
     const float right_shank_velocity = joint_motor[3].velocity;
-
+	left_shank_debug = left_shank;
     rl_left_leg =
         rl_solve_leg(left_shank,
                      left_thigh,
@@ -265,7 +265,7 @@ static void rl_update_joint_state(void)
 
 static void rl_update_projected_gravity(void)
 {
-    const float roll = -chassis_imu.rol;
+    const float roll = chassis_imu.rol;
     const float pitch = chassis_imu.pit;
     const float sin_roll = sinf(roll);
     const float cos_roll = cosf(roll);
@@ -277,7 +277,7 @@ static void rl_update_projected_gravity(void)
     rl_deploy_debug.projected_gravity[1] = -sin_roll * cos_pitch;
     rl_deploy_debug.projected_gravity[2] = -cos_roll * cos_pitch;
 }
-
+float k = 5.0f;
 static void rl_build_observation(void)
 {
     // 策略角
@@ -286,7 +286,7 @@ static void rl_build_observation(void)
     };
 	//roll pit yaw
     const float gyro[3] = {
-        -chassis_imu.wx,
+        chassis_imu.wx,
         chassis_imu.wy,
         chassis_imu.wz
     };
@@ -294,7 +294,7 @@ static void rl_build_observation(void)
     uint32_t i;
 
     rl_deploy_debug.command[0] = wlr.v_ref * 3.0f;
-    rl_deploy_debug.command[1] = wlr.wz_ref * 0.25f;
+    rl_deploy_debug.command[1] = k * wlr.yaw_err * 0.25f;
     rl_deploy_debug.command[2] = wlr.high_set * 5.0f;
 
     for (i = 0U; i < 3U; ++i)

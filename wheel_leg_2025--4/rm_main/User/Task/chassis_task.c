@@ -325,7 +325,7 @@ static void chassis_execute_fsm(void)
         case CHASSIS_HIGH:
 		{
             wlr.ctrl_mode = 2;
-            wlr.high_flag = 1; 
+            wlr.high_flag = 0; 
             chassis_reset_special_flag();
 			chassis_reset_finish_flag();
             break;
@@ -993,7 +993,17 @@ static void chassis_data_output(void)
         for (int i = 0; i < 4; i++) {
 			dm_motor_set_control_para(&joint_motor[i], 0, 0, 0, 0, 0);
         }
-    } else if (wlr.ctrl_mode == 2) {//力控
+    }else if (wlr.ctrl_mode == 2) {//力控
+		if(rc.sw2 == RC_MI)
+		{
+			dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, rl_deploy_debug.tau_motor_shadow[0]);
+			dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, rl_deploy_debug.tau_motor_shadow[1]);
+			dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, rl_deploy_debug.tau_motor_shadow[3]);
+			dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, rl_deploy_debug.tau_motor_shadow[4]);  
+			dji_motor_set_torque(&driver_motor[0], -rl_deploy_debug.tau_motor_shadow[2]);
+			dji_motor_set_torque(&driver_motor[1],  -rl_deploy_debug.tau_motor_shadow[5]);
+		}
+		else{
         dji_motor_set_torque(&driver_motor[0], -wlr.side[0].Tw);
         dji_motor_set_torque(&driver_motor[1],  wlr.side[1].Tw);
 		if((chassis.recover_flag == 1 || chassis.recover_flag == 2)) 
@@ -1028,6 +1038,7 @@ static void chassis_data_output(void)
 				dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);  
 			}
 		}
+	}
     } else {
         wlr_protest();
         dji_motor_set_torque(&driver_motor[0], 0);
@@ -1096,7 +1107,7 @@ void chassis_task(void const *argu)
 	#endif
         
         // 4. 恢复你本来的执行逻辑结构
-        if(g_robot_ctx.output.chassis != CHASSIS_STOP)
+        if(g_robot_ctx.output.chassis != CHASSIS_STOP || 1)
             wlr_control();
         else
             chassis_init(); // 恢复你的原有保护调用

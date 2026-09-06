@@ -67,7 +67,7 @@ const float LegLengthMax = 0.34f, LegLengthMin = 0.11f;
 const float LegLengthHighFly = 0.28f; //长腿腿长腾空 0.28
 const float LegLengthFly 	 = 0.20f; //正常腿长腾空
 const float LegLengthHigh2 	 = 0.34f; //超长腿
-const float LegLengthHigh 	 = 0.21f; //长腿 0.23
+const float LegLengthHigh 	 = 0.16f; //长腿 0.23
 const float LegLengthRotate  = 0.15f; //正常
 const float LegLengthRotateHigh  = 0.28f; //正常
 const float LegLengthNormal  = 0.16f; //正常
@@ -1028,7 +1028,7 @@ static void handle_quadrant_protection(uint8_t index)
         && (wlr.sky_flag == WLR_SKY_IDLE) && (wlr.jump_flag == WLR_JUMP_IDLE) && (wlr.stair_flag == WLR_STAIR_IDLE)
         && chassis.recover_flag == 0) {
         quadrant_cnt++;
-        if (quadrant_cnt > 200) {
+        if (quadrant_cnt > 200 && 0) {
             chassis.recover_flag = 1;
             wlr.high_flag = 0;
         }
