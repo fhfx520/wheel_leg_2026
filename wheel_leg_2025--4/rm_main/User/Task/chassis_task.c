@@ -1000,8 +1000,8 @@ static void chassis_data_output(void)
 			dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, rl_deploy_debug.tau_motor_shadow[1]);
 			dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, rl_deploy_debug.tau_motor_shadow[3]);
 			dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, rl_deploy_debug.tau_motor_shadow[4]);  
-			dji_motor_set_torque(&driver_motor[0], -rl_deploy_debug.tau_motor_shadow[2]);
-			dji_motor_set_torque(&driver_motor[1],  -rl_deploy_debug.tau_motor_shadow[5]);
+			dji_motor_set_torque(&driver_motor[0], rl_deploy_debug.tau_motor_shadow[2]);
+			dji_motor_set_torque(&driver_motor[1], rl_deploy_debug.tau_motor_shadow[5]);
 		}
 		else{
         dji_motor_set_torque(&driver_motor[0], -wlr.side[0].Tw);

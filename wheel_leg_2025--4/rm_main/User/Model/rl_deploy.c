@@ -26,7 +26,7 @@
 
 #define RL_DEPLOY_ACTION_CLIP             100.0f
 #define RL_DEPLOY_POSITION_ACTION_SCALE   0.5f
-#define RL_DEPLOY_VELOCITY_ACTION_SCALE   3.0f
+#define RL_DEPLOY_VELOCITY_ACTION_SCALE   10.0f
 #define RL_DEPLOY_VIRTUAL_TORQUE_LIMIT    1000.0f
 #define RL_DEPLOY_REAL_TORQUE_LIMIT       100.0f
 #define RL_DEPLOY_PARALLEL_TORQUE_LIMIT   35.0f
@@ -387,7 +387,7 @@ static uint8_t rl_imu_state_is_valid(void)
 static void rl_update_projected_gravity(void)
 {
     const float roll = chassis_imu.rol;
-    const float pitch = chassis_imu.pit;
+    const float pitch = -chassis_imu.pit;
     const float sin_roll = sinf(roll);
     const float cos_roll = cosf(roll);
     const float sin_pitch = sinf(pitch);
@@ -408,7 +408,7 @@ static void rl_build_observation(void)
 	//roll pit yaw
     const float gyro[3] = {
         chassis_imu.wx,
-        chassis_imu.wy,
+        -chassis_imu.wy,
         chassis_imu.wz
     };
     uint32_t index = 0U;

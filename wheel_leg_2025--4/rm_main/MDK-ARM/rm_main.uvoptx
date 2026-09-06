@@ -218,47 +218,32 @@
         <Ww>
           <count>12</count>
           <WinNumber>1</WinNumber>
-          <ItemText>wlr.side[0].q1</ItemText>
+          <ItemText>vmc</ItemText>
         </Ww>
         <Ww>
           <count>13</count>
           <WinNumber>1</WinNumber>
-          <ItemText>wlr.side[0].T1</ItemText>
+          <ItemText>vmc[0].F_fdb</ItemText>
         </Ww>
         <Ww>
           <count>14</count>
           <WinNumber>1</WinNumber>
-          <ItemText>wlr.side[0].T2</ItemText>
+          <ItemText>vmc[1].F_fdb</ItemText>
         </Ww>
         <Ww>
           <count>15</count>
           <WinNumber>1</WinNumber>
-          <ItemText>-wlr.side[1].T1,0x0A</ItemText>
+          <ItemText>rl_deploy_debug.tau_motor_shadow[5]</ItemText>
         </Ww>
         <Ww>
           <count>16</count>
           <WinNumber>1</WinNumber>
-          <ItemText>-wlr.side[1].T2,0x0A</ItemText>
+          <ItemText>-wlr.side[0].Tw</ItemText>
         </Ww>
         <Ww>
           <count>17</count>
           <WinNumber>1</WinNumber>
-          <ItemText>vmc</ItemText>
-        </Ww>
-        <Ww>
-          <count>18</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>wlr.side[0].Tw</ItemText>
-        </Ww>
-        <Ww>
-          <count>19</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>vmc[0].F_fdb</ItemText>
-        </Ww>
-        <Ww>
-          <count>20</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>vmc[1].F_fdb</ItemText>
+          <ItemText>wlr.side[1].Tw</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>
