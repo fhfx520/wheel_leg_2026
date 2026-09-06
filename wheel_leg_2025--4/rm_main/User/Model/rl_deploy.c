@@ -10,6 +10,7 @@
 
 #define RL_DEPLOY_INFERENCE_DIVIDER       5U
 #define RL_DEPLOY_HISTORY_FRAMES          5U
+#define RL_DEPLOY_FAULT_RECOVERY_RUNS     3U
 
 #define RL_DEPLOY_PI                      3.14159265358979323846f
 #define RL_DEPLOY_TWO_PI                  (2.0f * RL_DEPLOY_PI)
@@ -85,8 +86,108 @@ static const float rl_stable_d_gains[RL_POLICY_ACTION_SIZE] = {
     1.0f, 1.0f, 0.1f, 1.0f, 1.0f, 0.1f
 };
 
+static uint8_t rl_array_is_finite(const float *data, uint32_t size)
+{
+    uint32_t i;
+
+    for (i = 0U; i < size; ++i)
+    {
+        if (!isfinite(data[i]))
+        {
+            return 0U;
+        }
+    }
+
+    return 1U;
+}
+
+static uint8_t rl_force_map_is_valid(const RLDeployForceTorqueMap_t *map)
+{
+    return (uint8_t)(
+        map->valid &&
+        isfinite(map->j11) &&
+        isfinite(map->j12) &&
+        isfinite(map->j21) &&
+        isfinite(map->j22) &&
+        isfinite(map->det));
+}
+
+static uint8_t rl_leg_state_is_valid(const RLDeployLegState_t *leg)
+{
+    return (uint8_t)(
+        isfinite(leg->phi2) &&
+        isfinite(leg->phi3) &&
+        isfinite(leg->phi0) &&
+        isfinite(leg->l0) &&
+        (leg->l0 >= RL_DEPLOY_MIN_LEG_LENGTH) &&
+        isfinite(leg->relative_phi3) &&
+        isfinite(leg->relative_phi3_dot) &&
+        isfinite(leg->jacobian_shank) &&
+        isfinite(leg->jacobian_thigh) &&
+        rl_force_map_is_valid(&leg->force_torque_map));
+}
+
+static void rl_zero_torque_outputs(void)
+{
+    memset(rl_deploy_debug.action_clipped, 0, sizeof(rl_deploy_debug.action_clipped));
+    memset(rl_deploy_debug.target_q, 0, sizeof(rl_deploy_debug.target_q));
+    memset(rl_deploy_debug.target_qd, 0, sizeof(rl_deploy_debug.target_qd));
+    memset(rl_deploy_debug.tau_virtual, 0, sizeof(rl_deploy_debug.tau_virtual));
+    memset(rl_deploy_debug.tau_motor_raw, 0, sizeof(rl_deploy_debug.tau_motor_raw));
+    memset(rl_deploy_debug.tau_motor_shadow, 0, sizeof(rl_deploy_debug.tau_motor_shadow));
+}
+
+static void rl_clear_policy_runtime(void)
+{
+    memset(rl_deploy_debug.obs, 0, sizeof(rl_deploy_debug.obs));
+    memset(rl_deploy_debug.obs_history, 0, sizeof(rl_deploy_debug.obs_history));
+    memset(rl_deploy_debug.actions, 0, sizeof(rl_deploy_debug.actions));
+    rl_zero_torque_outputs();
+    rl_deploy_debug.history_initialized = 0U;
+    rl_inference_divider = 0U;
+}
+
+static void rl_enter_numeric_fault(RLDeployNumericFaultStage_t stage)
+{
+    if (!rl_deploy_debug.numeric_fault)
+    {
+        ++rl_deploy_debug.numeric_fault_count;
+        rl_deploy_debug.numeric_fault_stage = (uint8_t)stage;
+    }
+
+    rl_deploy_debug.numeric_fault = 1U;
+    rl_deploy_debug.numeric_valid_streak = 0U;
+    rl_deploy_debug.inference_ok = 0U;
+    rl_clear_policy_runtime();
+}
+
+static void rl_note_valid_inference(void)
+{
+    if (rl_deploy_debug.numeric_fault)
+    {
+        if (rl_deploy_debug.numeric_valid_streak < RL_DEPLOY_FAULT_RECOVERY_RUNS)
+        {
+            ++rl_deploy_debug.numeric_valid_streak;
+        }
+
+        if (rl_deploy_debug.numeric_valid_streak >= RL_DEPLOY_FAULT_RECOVERY_RUNS)
+        {
+            rl_deploy_debug.numeric_fault = 0U;
+        }
+    }
+    else
+    {
+        rl_deploy_debug.numeric_valid_streak = RL_DEPLOY_FAULT_RECOVERY_RUNS;
+    }
+}
+
 static float rl_clip(float value, float limit)
 {
+    if ((!isfinite(value)) || (!isfinite(limit)) || (limit <= 0.0f))
+    {
+        return 0.0f;
+    }
+
     if (value > limit)
     {
         return limit;
@@ -263,6 +364,26 @@ static void rl_update_joint_state(void)
     rl_deploy_debug.force_map_valid[1] = rl_right_leg.force_torque_map.valid;
 }
 
+static uint8_t rl_joint_state_is_valid(void)
+{
+    return (uint8_t)(
+        rl_array_is_finite(rl_deploy_debug.q, RL_POLICY_ACTION_SIZE) &&
+        rl_array_is_finite(rl_deploy_debug.qd, RL_POLICY_ACTION_SIZE) &&
+        rl_leg_state_is_valid(&rl_left_leg) &&
+        rl_leg_state_is_valid(&rl_right_leg));
+}
+
+static uint8_t rl_imu_state_is_valid(void)
+{
+    return (uint8_t)(
+        isfinite(chassis_imu.rol) &&
+        isfinite(chassis_imu.pit) &&
+        isfinite(chassis_imu.wx) &&
+        isfinite(chassis_imu.wy) &&
+        isfinite(chassis_imu.wz) &&
+        rl_array_is_finite(rl_deploy_debug.projected_gravity, 3U));
+}
+
 static void rl_update_projected_gravity(void)
 {
     const float roll = chassis_imu.rol;
@@ -325,9 +446,14 @@ static void rl_build_observation(void)
     }
 }
 
-static void rl_calculate_shadow_pd(void)
+static uint8_t rl_calculate_shadow_pd(void)
 {
     uint32_t i;
+
+    if (!rl_array_is_finite(rl_deploy_debug.actions, RL_POLICY_ACTION_SIZE))
+    {
+        return 0U;
+    }
 
     for (i = 0U; i < RL_POLICY_ACTION_SIZE; ++i)
     {
@@ -355,9 +481,21 @@ static void rl_calculate_shadow_pd(void)
                 (rl_deploy_debug.target_q[i] - rl_deploy_debug.q[i]) +
             rl_stable_d_gains[i] *
                 (rl_deploy_debug.target_qd[i] - rl_deploy_debug.qd[i]);
+
+        if (!isfinite(torque))
+        {
+            return 0U;
+        }
+
         rl_deploy_debug.tau_virtual[i] =
             rl_clip(torque, RL_DEPLOY_VIRTUAL_TORQUE_LIMIT);
     }
+
+    return (uint8_t)(
+        rl_array_is_finite(rl_deploy_debug.action_clipped, RL_POLICY_ACTION_SIZE) &&
+        rl_array_is_finite(rl_deploy_debug.target_q, RL_POLICY_ACTION_SIZE) &&
+        rl_array_is_finite(rl_deploy_debug.target_qd, RL_POLICY_ACTION_SIZE) &&
+        rl_array_is_finite(rl_deploy_debug.tau_virtual, RL_POLICY_ACTION_SIZE));
 }
 
 static void rl_apply_gas_spring_compensation(const RLDeployLegState_t *leg,
@@ -381,7 +519,7 @@ static void rl_apply_gas_spring_compensation(const RLDeployLegState_t *leg,
     }
 }
 
-static void rl_calculate_shadow_motor_torques(void)
+static uint8_t rl_calculate_shadow_motor_torques(void)
 {
     float left_thigh =
         rl_deploy_debug.tau_virtual[RL_DOF_LF0] +
@@ -425,12 +563,20 @@ static void rl_calculate_shadow_motor_torques(void)
                     ((i == RL_DOF_LW) || (i == RL_DOF_RW)) ?
                     RL_DEPLOY_WHEEL_TORQUE_LIMIT : RL_DEPLOY_PARALLEL_TORQUE_LIMIT);
     }
+
+    return (uint8_t)(
+        rl_array_is_finite(rl_deploy_debug.tau_motor_raw, RL_POLICY_ACTION_SIZE) &&
+        rl_array_is_finite(rl_deploy_debug.tau_motor_shadow, RL_POLICY_ACTION_SIZE));
 }
 
-static void rl_calculate_shadow_control(void)
+static uint8_t rl_calculate_shadow_control(void)
 {
-    rl_calculate_shadow_pd();
-    rl_calculate_shadow_motor_torques();
+    if (!rl_calculate_shadow_pd())
+    {
+        return 0U;
+    }
+
+    return rl_calculate_shadow_motor_torques();
 }
 
 static void rl_update_history(void)
@@ -459,16 +605,10 @@ static void rl_update_history(void)
 
 void RLDeploy_ResetHistory(void)
 {
-    memset(rl_deploy_debug.obs_history, 0, sizeof(rl_deploy_debug.obs_history));
-    memset(rl_deploy_debug.actions, 0, sizeof(rl_deploy_debug.actions));
-    memset(rl_deploy_debug.action_clipped, 0, sizeof(rl_deploy_debug.action_clipped));
-    memset(rl_deploy_debug.target_q, 0, sizeof(rl_deploy_debug.target_q));
-    memset(rl_deploy_debug.target_qd, 0, sizeof(rl_deploy_debug.target_qd));
-    memset(rl_deploy_debug.tau_virtual, 0, sizeof(rl_deploy_debug.tau_virtual));
-    memset(rl_deploy_debug.tau_motor_raw, 0, sizeof(rl_deploy_debug.tau_motor_raw));
-    memset(rl_deploy_debug.tau_motor_shadow, 0, sizeof(rl_deploy_debug.tau_motor_shadow));
-    rl_deploy_debug.history_initialized = 0U;
-    rl_inference_divider = 0U;
+    rl_clear_policy_runtime();
+    rl_deploy_debug.numeric_fault = 0U;
+    rl_deploy_debug.numeric_fault_stage = RL_DEPLOY_NUMERIC_FAULT_NONE;
+    rl_deploy_debug.numeric_valid_streak = 0U;
 }
 
 void RLDeploy_Init(void)
@@ -495,18 +635,47 @@ void RLDeploy_Step500Hz(void)
 
     ++rl_deploy_debug.sample_count;
     rl_update_joint_state();
+    if (!rl_joint_state_is_valid())
+    {
+        rl_enter_numeric_fault(RL_DEPLOY_NUMERIC_FAULT_JOINT_STATE);
+        return;
+    }
+
     rl_update_projected_gravity();
+    if (!rl_imu_state_is_valid())
+    {
+        rl_enter_numeric_fault(RL_DEPLOY_NUMERIC_FAULT_IMU_STATE);
+        return;
+    }
 
     ++rl_inference_divider;
     if (rl_inference_divider < RL_DEPLOY_INFERENCE_DIVIDER)
     {
-        rl_calculate_shadow_control();
+        if (!rl_calculate_shadow_control())
+        {
+            rl_enter_numeric_fault(RL_DEPLOY_NUMERIC_FAULT_CONTROL_TORQUE);
+        }
+        else if (rl_deploy_debug.numeric_fault)
+        {
+            rl_zero_torque_outputs();
+        }
         return;
     }
     rl_inference_divider = 0U;
 
     rl_build_observation();
+    if (!rl_array_is_finite(rl_deploy_debug.obs, RL_POLICY_OBS_SIZE))
+    {
+        rl_enter_numeric_fault(RL_DEPLOY_NUMERIC_FAULT_OBSERVATION);
+        return;
+    }
+
     rl_update_history();
+    if (!rl_array_is_finite(rl_deploy_debug.obs_history, RL_POLICY_OBS_HISTORY_SIZE))
+    {
+        rl_enter_numeric_fault(RL_DEPLOY_NUMERIC_FAULT_HISTORY);
+        return;
+    }
 
     policy = RLPolicy_GetInstance();
     rl_deploy_debug.inference_ok = RLPolicy_Run(
@@ -521,9 +690,29 @@ void RLDeploy_Step500Hz(void)
     if (!rl_deploy_debug.inference_ok)
     {
         ++rl_deploy_debug.inference_fail_count;
+        rl_enter_numeric_fault(RL_DEPLOY_NUMERIC_FAULT_POLICY_OUTPUT);
+        return;
     }
 
-    rl_calculate_shadow_control();
+    if (!rl_array_is_finite(rl_deploy_debug.actions, RL_POLICY_ACTION_SIZE))
+    {
+        ++rl_deploy_debug.inference_fail_count;
+        rl_enter_numeric_fault(RL_DEPLOY_NUMERIC_FAULT_POLICY_OUTPUT);
+        return;
+    }
+
+    rl_note_valid_inference();
+
+    if (!rl_calculate_shadow_control())
+    {
+        rl_enter_numeric_fault(RL_DEPLOY_NUMERIC_FAULT_CONTROL_TORQUE);
+        return;
+    }
+
+    if (rl_deploy_debug.numeric_fault)
+    {
+        rl_zero_torque_outputs();
+    }
 
     /* Shadow mode: mapped physical torques remain debug-only. */
 }

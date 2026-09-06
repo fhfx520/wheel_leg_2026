@@ -7,6 +7,17 @@
 
 #define AI_CONTROL
 
+typedef enum
+{
+    RL_DEPLOY_NUMERIC_FAULT_NONE = 0,
+    RL_DEPLOY_NUMERIC_FAULT_JOINT_STATE = 1,
+    RL_DEPLOY_NUMERIC_FAULT_IMU_STATE = 2,
+    RL_DEPLOY_NUMERIC_FAULT_OBSERVATION = 3,
+    RL_DEPLOY_NUMERIC_FAULT_HISTORY = 4,
+    RL_DEPLOY_NUMERIC_FAULT_POLICY_OUTPUT = 5,
+    RL_DEPLOY_NUMERIC_FAULT_CONTROL_TORQUE = 6
+} RLDeployNumericFaultStage_t;
+
 /*
  * RL shadow deployment:
  * - samples the chassis state at 500 Hz;
@@ -21,10 +32,14 @@ typedef struct
     uint8_t policy_ready;
     uint8_t inference_ok;
     uint8_t history_initialized;
+    uint8_t numeric_fault;
+    uint8_t numeric_fault_stage;
+    uint8_t numeric_valid_streak;
 
     uint32_t sample_count;
     uint32_t inference_count;
     uint32_t inference_fail_count;
+    uint32_t numeric_fault_count;
     uint32_t last_inference_us;
 
     float command[3];

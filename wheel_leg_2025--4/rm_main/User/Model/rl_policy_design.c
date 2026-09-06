@@ -1,5 +1,6 @@
 #include "rl_policy_design.h"
 
+#include <math.h>
 #include <string.h>
 
 #include "dwt.h"
@@ -37,6 +38,21 @@ NetworkContext_t stable_ctx = {
     NULL,
     0
 };
+
+static uint8_t rl_policy_array_is_finite(const float *data, uint32_t size)
+{
+    uint32_t i;
+
+    for (i = 0U; i < size; ++i)
+    {
+        if (!isfinite(data[i]))
+        {
+            return 0U;
+        }
+    }
+
+    return 1U;
+}
 
 /* ============================================================
  * Activation buffers
@@ -214,6 +230,14 @@ uint8_t RLPolicy_Run(
         return 0U;
     }
 
+    /* Never copy NaN/Inf into the CubeAI activation buffers. */
+    if ((!rl_policy_array_is_finite(obs, RL_POLICY_OBS_SIZE)) ||
+        (!rl_policy_array_is_finite(obs_history, RL_POLICY_OBS_HISTORY_SIZE)))
+    {
+        memset(actions, 0, sizeof(float) * RL_POLICY_ACTION_SIZE);
+        return 0U;
+    }
+
     /*
      * Make sure all networks are initialized.
      */
@@ -342,6 +366,13 @@ uint8_t RLPolicy_Run(
             sizeof(float) * RL_POLICY_ACTION_SIZE
         );
 
+        return 0U;
+    }
+
+    /* A successful ai_run only means the graph executed; validate its numbers. */
+    if (!rl_policy_array_is_finite(actions_output, RL_POLICY_ACTION_SIZE))
+    {
+        memset(actions, 0, sizeof(float) * RL_POLICY_ACTION_SIZE);
         return 0U;
     }
 
