@@ -1,35 +1,35 @@
 ST Edge AI Core v2.2.0-20266 2adc00962
-Created date          : 2026-09-07 14:11:13
-Parameters            : generate --target stm32h7 --name stable -m D:/RM/XYEGA_RM2026_WheelLeg_Infatry_RLdeploy-main/pseudocode/example/onnx/stable/stable_pos0.23_0.65_p15.0_d1.0_0.1.onnx --compression none --verbosity 1 -O time --workspace C:/Users/25328/AppData/Local/Temp/mxAI_workspace104725200664090018374196776164651909 --output C:/Users/25328/.stm32cubemx/stable_output
+Created date          : 2026-09-07 14:11:39
+Parameters            : generate --target stm32h7 --name upstairs -m D:/RM/XYEGA_RM2026_WheelLeg_Infatry_RLdeploy-main/pseudocode/example/onnx/upstairs/upstairs_pos0.23_0.65_p15.0_d1.0_0.1.onnx --compression none --verbosity 1 -O time --workspace C:/Users/25328/AppData/Local/Temp/mxAI_workspace10472801383952002344970758730389010 --output C:/Users/25328/.stm32cubemx/upstairs_output
 
 Exec/report summary (generate)
---------------------------------------------------------------------------------------------------------------------------------------------------
-model file         :   D:\RM\XYEGA_RM2026_WheelLeg_Infatry_RLdeploy-main\pseudocode\example\onnx\stable\stable_pos0.23_0.65_p15.0_d1.0_0.1.onnx   
-type               :   onnx                                                                                                                       
-c_name             :   stable                                                                                                                     
-compression        :   none                                                                                                                       
-options            :   allocate-inputs, allocate-outputs                                                                                          
-optimization       :   time                                                                                                                       
-target/series      :   stm32h7                                                                                                                    
-workspace dir      :   C:\Users\25328\AppData\Local\Temp\mxAI_workspace104725200664090018374196776164651909                                       
-output dir         :   C:\Users\25328\.stm32cubemx\stable_output                                                                                  
-model_fmt          :   float                                                                                                                      
-model_name         :   stable_pos0_23_0_65_p15_0_d1_0_0_1                                                                                         
-model_hash         :   0xbb40793d542fa3a8b877ef069ccd02a6                                                                                         
-params #           :   38,825 items (151.66 KiB)                                                                                                  
---------------------------------------------------------------------------------------------------------------------------------------------------
-input 1/2          :   'obs', f32(1x25), 100 Bytes, activations                                                                                   
-input 2/2          :   'obs_history', f32(1x125), 500 Bytes, activations                                                                          
-inputs (total)     :   600 Bytes                                                                                                                  
-output 1/1         :   'actions', f32(1x6), 24 Bytes, activations                                                                                 
-macc               :   43,401                                                                                                                     
-weights (ro)       :   155,300 B (151.66 KiB) (1 segment)                                                                                         
-activations (rw)   :   1,112 B (1.09 KiB) (1 segment) *                                                                                           
-ram (total)        :   1,112 B (1.09 KiB) = 1,112 + 0 + 0                                                                                         
---------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+model file         :   D:\RM\XYEGA_RM2026_WheelLeg_Infatry_RLdeploy-main\pseudocode\example\onnx\upstairs\upstairs_pos0.23_0.65_p15.0_d1.0_0.1.onnx   
+type               :   onnx                                                                                                                           
+c_name             :   upstairs                                                                                                                       
+compression        :   none                                                                                                                           
+options            :   allocate-inputs, allocate-outputs                                                                                              
+optimization       :   time                                                                                                                           
+target/series      :   stm32h7                                                                                                                        
+workspace dir      :   C:\Users\25328\AppData\Local\Temp\mxAI_workspace10472801383952002344970758730389010                                            
+output dir         :   C:\Users\25328\.stm32cubemx\upstairs_output                                                                                    
+model_fmt          :   float                                                                                                                          
+model_name         :   upstairs_pos0_23_0_65_p15_0_d1_0_0_1                                                                                           
+model_hash         :   0x978e5b35fb6cf58afc3cc07988bb3a3a                                                                                             
+params #           :   38,825 items (151.66 KiB)                                                                                                      
+------------------------------------------------------------------------------------------------------------------------------------------------------
+input 1/2          :   'obs', f32(1x25), 100 Bytes, activations                                                                                       
+input 2/2          :   'obs_history', f32(1x125), 500 Bytes, activations                                                                              
+inputs (total)     :   600 Bytes                                                                                                                      
+output 1/1         :   'actions', f32(1x6), 24 Bytes, activations                                                                                     
+macc               :   43,401                                                                                                                         
+weights (ro)       :   155,300 B (151.66 KiB) (1 segment)                                                                                             
+activations (rw)   :   1,112 B (1.09 KiB) (1 segment) *                                                                                               
+ram (total)        :   1,112 B (1.09 KiB) = 1,112 + 0 + 0                                                                                             
+------------------------------------------------------------------------------------------------------------------------------------------------------
 (*) 'input'/'output' buffers are allocated in the activations buffer
 
-Model name - stable_pos0_23_0_65_p15_0_d1_0_0_1
+Model name - upstairs_pos0_23_0_65_p15_0_d1_0_0_1
 ------ ---------------------------------------------------- --------------- --------------- -------- -------------------------------- --- --------------- ------------------ ------------------- 
 m_id   layer (type,original)                                oshape          param/size          macc                     connected to   | c_size          c_macc             c_type              
 ------ ---------------------------------------------------- --------------- --------------- -------- -------------------------------- --- --------------- ------------------ ------------------- 
@@ -104,8 +104,8 @@ model/c-model: macc=43,817/43,401 -416(-0.9%) weights=155,300/155,300  activatio
 
 Generated C-graph summary
 ------------------------------------------------------------------------------------------------------------------------
-model name            : stable_pos0_23_0_65_p15_0_d1_0_0_1
-c-name                : stable
+model name            : upstairs_pos0_23_0_65_p15_0_d1_0_0_1
+c-name                : upstairs
 c-node #              : 13
 c-array #             : 29
 activations size      : 1112 (1 segment)
@@ -262,8 +262,8 @@ macc=43,401 weights=155,300 act=1,112 ram_io=0
  module                            text    rodata    data     bss 
  ------------------------------ ------- --------- ------- ------- 
  NetworkRuntime1020_CM7_GCC.a     8,312         0       0       0 
- stable.o                           832       204   3,604     240 
- stable_data.o                       48        16      88       0 
+ upstairs.o                         832       204   3,604     240 
+ upstairs_data.o                     48        16      88       0 
  lib (toolchain)*                   324       328       0       0 
  ------------------------------ ------- --------- ------- ------- 
  RT total**                       9,516       548   3,692     240 
@@ -289,11 +289,11 @@ macc=43,401 weights=155,300 act=1,112 ram_io=0
 
 
 Generated files (7)
----------------------------------------------------------------- 
-C:\Users\25328\.stm32cubemx\stable_output\stable_data_params.h   
-C:\Users\25328\.stm32cubemx\stable_output\stable_data_params.c   
-C:\Users\25328\.stm32cubemx\stable_output\stable_data.h          
-C:\Users\25328\.stm32cubemx\stable_output\stable_data.c          
-C:\Users\25328\.stm32cubemx\stable_output\stable_config.h        
-C:\Users\25328\.stm32cubemx\stable_output\stable.h               
-C:\Users\25328\.stm32cubemx\stable_output\stable.c               
+-------------------------------------------------------------------- 
+C:\Users\25328\.stm32cubemx\upstairs_output\upstairs_data_params.h   
+C:\Users\25328\.stm32cubemx\upstairs_output\upstairs_data_params.c   
+C:\Users\25328\.stm32cubemx\upstairs_output\upstairs_data.h          
+C:\Users\25328\.stm32cubemx\upstairs_output\upstairs_data.c          
+C:\Users\25328\.stm32cubemx\upstairs_output\upstairs_config.h        
+C:\Users\25328\.stm32cubemx\upstairs_output\upstairs.h               
+C:\Users\25328\.stm32cubemx\upstairs_output\upstairs.c               

@@ -11,6 +11,8 @@
  * ============================================================ */
 #include "stable.h"
 #include "stable_data.h"
+#include "upstairs.h"
+#include "upstairs_data.h"
 
 /* ============================================================
  * Network Context
@@ -39,6 +41,13 @@ NetworkContext_t stable_ctx = {
     0
 };
 
+static NetworkContext_t upstairs_ctx = {
+    AI_HANDLE_NULL,
+    NULL,
+    NULL,
+    0
+};
+
 static uint8_t rl_policy_array_is_finite(const float *data, uint32_t size)
 {
     uint32_t i;
@@ -61,6 +70,7 @@ static uint8_t rl_policy_array_is_finite(const float *data, uint32_t size)
  * ============================================================ */
 
 AI_ALIGNED(4) static ai_u8 stable_activations[AI_STABLE_DATA_ACTIVATION_1_SIZE];
+AI_ALIGNED(4) static ai_u8 upstairs_activations[AI_UPSTAIRS_DATA_ACTIVATION_1_SIZE];
 
 /* ============================================================
  * Global RL Policy instance
@@ -76,7 +86,7 @@ RLPolicy_t rl_policy = {
  * Initialize Stable network
  * ============================================================ */
 
-uint8_t RLPolicy_InitStable(void)
+static uint8_t RLPolicy_InitStable(void)
 {
     const ai_handle activation_buffers[] = {
         AI_HANDLE_PTR(stable_activations)
@@ -126,7 +136,51 @@ uint8_t RLPolicy_InitStable(void)
 /* ============================================================
  * Initialize Upstairs network
  * ============================================================ */
+static uint8_t RLPolicy_InitUpstairs(void)
+{
+    const ai_handle activation_buffers[] = {
+        AI_HANDLE_PTR(upstairs_activations)
+    };
 
+    ai_error create_error;
+    ai_u16 input_count = 0;
+    ai_u16 output_count = 0;
+
+    if (upstairs_ctx.ready)
+    {
+        return 1U;
+    }
+
+    create_error = ai_upstairs_create_and_init(
+        &upstairs_ctx.network,
+        activation_buffers,
+        NULL
+    );
+
+    if (create_error.type != AI_ERROR_NONE)
+    {
+        upstairs_ctx.ready = 0U;
+        return 0U;
+    }
+
+    upstairs_ctx.inputs = ai_upstairs_inputs_get(
+        upstairs_ctx.network,
+        &input_count
+    );
+
+    upstairs_ctx.outputs = ai_upstairs_outputs_get(
+        upstairs_ctx.network,
+        &output_count
+    );
+
+    upstairs_ctx.ready =
+        (upstairs_ctx.inputs != NULL) &&
+        (upstairs_ctx.outputs != NULL) &&
+        (input_count == AI_UPSTAIRS_IN_NUM) &&
+        (output_count == AI_UPSTAIRS_OUT_NUM);
+
+    return upstairs_ctx.ready;
+}
 /* ============================================================
  * Initialize Pin network
  * ============================================================ */
@@ -147,6 +201,8 @@ NetworkContext_t *RLPolicy_GetContext(
     {
         case RL_POLICY_MODEL_STABLE:
             return &stable_ctx;
+		case RL_POLICY_MODEL_UPSTAIRS:
+            return &upstairs_ctx;
         default:
             return NULL;
     }
@@ -170,6 +226,7 @@ RLPolicy_t *RLPolicy_GetInstance(void)
 uint8_t RLPolicy_Init(RLPolicy_t *policy)
 {
     uint8_t stable_ok;
+	uint8_t upstairs_ok;
 
     if (policy == NULL)
     {
@@ -195,8 +252,10 @@ uint8_t RLPolicy_Init(RLPolicy_t *policy)
      */
 
     stable_ok = RLPolicy_InitStable();
-
-    policy->ready = stable_ok;
+	upstairs_ok = RLPolicy_InitUpstairs();
+	
+    policy->ready = (stable_ok && upstairs_ok);
+	
     return policy->ready;
 }
 
@@ -312,7 +371,7 @@ uint8_t RLPolicy_Run(
     switch (model)
     {
         case RL_POLICY_MODEL_STABLE:
-
+		{
             memcpy(
                 obs_input,
                 obs,
@@ -332,7 +391,29 @@ uint8_t RLPolicy_Run(
             );
 
             break;
+		}
+		case RL_POLICY_MODEL_UPSTAIRS:
+		{
+            memcpy(
+                obs_input,
+                obs,
+                AI_UPSTAIRS_IN_1_SIZE_BYTES
+            );
 
+            memcpy(
+                obs_history_input,
+                obs_history,
+                AI_UPSTAIRS_IN_2_SIZE_BYTES
+            );
+
+            processed_batches = ai_upstairs_run(
+                ctx->network,
+                ctx->inputs,
+                ctx->outputs
+            );
+			
+            break;
+		}
         default:
             memset(actions, 0, sizeof(float) * RL_POLICY_ACTION_SIZE);
             return 0U;
@@ -355,6 +436,9 @@ uint8_t RLPolicy_Run(
         {
             case RL_POLICY_MODEL_STABLE:
                 (void)ai_stable_get_error(ctx->network);
+                break;
+			case RL_POLICY_MODEL_UPSTAIRS:
+                (void)ai_upstairs_get_error(ctx->network);
                 break;
             default:
                 break;
@@ -389,6 +473,16 @@ uint8_t RLPolicy_Run(
                 actions,
                 actions_output,
                 AI_STABLE_OUT_1_SIZE_BYTES
+            );
+
+            break;
+		
+		case RL_POLICY_MODEL_UPSTAIRS:
+
+            memcpy(
+                actions,
+                actions_output,
+                AI_UPSTAIRS_OUT_1_SIZE_BYTES
             );
 
             break;

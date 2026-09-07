@@ -684,7 +684,7 @@ void RLDeploy_Step500Hz(void)
     policy = RLPolicy_GetInstance();
     rl_deploy_debug.inference_ok = RLPolicy_Run(
         policy,
-        RL_POLICY_MODEL_STABLE,
+        RL_POLICY_MODEL_UPSTAIRS,
         rl_deploy_debug.obs,
         rl_deploy_debug.obs_history,
         rl_deploy_debug.actions);
