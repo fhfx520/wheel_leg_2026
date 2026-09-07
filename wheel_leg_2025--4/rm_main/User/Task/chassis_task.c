@@ -990,16 +990,34 @@ static void chassis_data_output(void)
 			dm_motor_set_control_para(&joint_motor[i], 0, 0, 0, 0, 0);
         }
     }else if (wlr.ctrl_mode == 2) {//力控
-		if(g_robot_ctx.output.chassis == CHASSIS_HIGH || g_robot_ctx.output.chassis == CHASSIS_ASCEND || (chassis.recover_flag == 1 && chassis.rescue_inter_flag == CHASSIS_RESCUE_RECOVER))
+		if(g_robot_ctx.output.torque_source == CHASSIS_TORQUE_RL)
 		{
-			if (fabsf(vmc[0].L_fdb - wlr.recover_length) < 0.1f && fabsf(vmc[1].L_fdb - wlr.recover_length) < 0.1f)
+			if ((chassis.recover_flag == 1 && chassis.rescue_inter_flag == CHASSIS_RESCUE_RECOVER) &&
+				(fabsf(vmc[0].L_fdb - wlr.recover_length) < 0.1f) &&
+				(fabsf(vmc[1].L_fdb - wlr.recover_length) < 0.1f))
 				 chassis.recover_flag = 0;
-			dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, rl_deploy_debug.tau_motor_shadow[0]);
-			dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, rl_deploy_debug.tau_motor_shadow[1]);
-			dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, rl_deploy_debug.tau_motor_shadow[3]);
-			dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, rl_deploy_debug.tau_motor_shadow[4]);  
-			dji_motor_set_torque(&driver_motor[0], rl_deploy_debug.tau_motor_shadow[2]);
-			dji_motor_set_torque(&driver_motor[1], rl_deploy_debug.tau_motor_shadow[5]);
+
+			if (rl_deploy_debug.policy_ready &&
+				rl_deploy_debug.inference_ok &&
+				rl_deploy_debug.history_initialized &&
+				(!rl_deploy_debug.numeric_fault))
+			{
+				dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, rl_deploy_debug.tau_motor_shadow[0]);
+				dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, rl_deploy_debug.tau_motor_shadow[1]);
+				dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, rl_deploy_debug.tau_motor_shadow[3]);
+				dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, rl_deploy_debug.tau_motor_shadow[4]);
+				dji_motor_set_torque(&driver_motor[0], rl_deploy_debug.tau_motor_shadow[2]);
+				dji_motor_set_torque(&driver_motor[1], rl_deploy_debug.tau_motor_shadow[5]);
+			}
+			else
+			{
+				dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, 0);
+				dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);
+				dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, 0);
+				dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
+				dji_motor_set_torque(&driver_motor[0], 0);
+				dji_motor_set_torque(&driver_motor[1], 0);
+			}
 		}
 		else{
         dji_motor_set_torque(&driver_motor[0], -wlr.side[0].Tw);
@@ -1100,7 +1118,7 @@ void chassis_task(void const *argu)
         chassis_data_input();
 
 	#ifdef AI_CONTROL
-        // RL shadow deployment: 500 Hz sampling, 100 Hz inference, no motor output.
+        // RL deployment: 500 Hz sampling and 100 Hz inference.
         RLDeploy_Step500Hz();
 	#endif
         

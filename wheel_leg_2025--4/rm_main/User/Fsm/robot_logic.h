@@ -47,6 +47,11 @@ typedef enum {
 } TopMode_e;
 
 typedef enum {
+    CHASSIS_TORQUE_WLR = 0,
+    CHASSIS_TORQUE_RL
+} ChassisTorqueSource_e;
+
+typedef enum {
     CHASSIS_STOP = 0,
     CHASSIS_LOW,                
     CHASSIS_FIGHT,              
@@ -85,6 +90,7 @@ typedef struct {
         ChassisState_e chassis;    
         GimbalState_e  gimbal;     
         ShootState_e   shoot;       
+        ChassisTorqueSource_e torque_source;
     } output;
     
     uint8_t is_online;    

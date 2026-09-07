@@ -12,8 +12,6 @@
 #define RL_DEPLOY_INFERENCE_DIVIDER       5U
 #define RL_DEPLOY_HISTORY_FRAMES          5U
 #define RL_DEPLOY_FAULT_RECOVERY_RUNS     3U
-#define RL_DEPLOY_MODEL_DIAL_TRIGGER       500
-#define RL_DEPLOY_MODEL_DIAL_RELEASE       200
 #define RL_DEPLOY_JUMP_CROUCH_CYCLES       150U
 #define RL_DEPLOY_JUMP_ACTIVE_CYCLES       240U
 #define RL_DEPLOY_JUMP_HEIGHT              0.10f
@@ -96,7 +94,6 @@ volatile RLPolicyModel_t rl_deploy_model_select = RL_POLICY_MODEL_UPSTAIRS;
 
 static uint8_t rl_deploy_initialized = 0U;
 static uint8_t rl_inference_divider = 0U;
-static uint8_t rl_model_dial_armed = 1U;
 static uint8_t rl_model_keyboard_armed = 1U;
 static RLPolicyModel_t rl_active_model = RL_POLICY_MODEL_UPSTAIRS;
 static RLPolicyModel_t rl_keyboard_normal_model = RL_POLICY_MODEL_UPSTAIRS;
@@ -153,58 +150,24 @@ static const RLDeployModelParams_t *rl_get_model_params(void)
 
 static void rl_update_remote_model_selection(void)
 {
-    int16_t dial;
-    RLPolicyModel_t model;
-
-    dial = g_robot_ctx.input.ch5;
-
-    /*
-     * ch5 is unused elsewhere and is spring-centred.  Model selection is only
-     * accepted while the left switch is UP (top-level protection mode), so a
-     * model cannot be changed accidentally while the chassis is producing
-     * torque.  Return the dial to centre before requesting another change.
-     */
     if ((!g_robot_ctx.is_online) ||
-        (g_robot_ctx.output.top_mode != TOP_MODE_PROTECT) ||
-        (g_robot_ctx.input.sw1 != RC_SW_UP))
-    {
-        if ((dial > -RL_DEPLOY_MODEL_DIAL_RELEASE) &&
-            (dial < RL_DEPLOY_MODEL_DIAL_RELEASE))
-        {
-            rl_model_dial_armed = 1U;
-        }
-        return;
-    }
-
-    if ((dial > -RL_DEPLOY_MODEL_DIAL_RELEASE) &&
-        (dial < RL_DEPLOY_MODEL_DIAL_RELEASE))
-    {
-        rl_model_dial_armed = 1U;
-        return;
-    }
-
-    if (!rl_model_dial_armed)
+        (g_robot_ctx.output.top_mode != TOP_MODE_REMOTE))
     {
         return;
     }
 
-    model = rl_deploy_model_select;
-    if (!rl_model_is_valid(model))
+    /* Follow the existing remote-control chassis FSM automatically. */
+    if (g_robot_ctx.output.chassis == CHASSIS_LOW_SPIN)
     {
-        model = RL_POLICY_MODEL_STABLE;
+        (void)RLDeploy_SetModel(RL_POLICY_MODEL_PIN);
     }
-
-    if (dial > RL_DEPLOY_MODEL_DIAL_TRIGGER)
+    else if (g_robot_ctx.output.chassis == CHASSIS_ASCEND)
     {
-        model = (RLPolicyModel_t)(((uint32_t)model + 1U) % 4U);
-        (void)RLDeploy_SetModel(model);
-        rl_model_dial_armed = 0U;
+        (void)RLDeploy_SetModel(RL_POLICY_MODEL_JUMP);
     }
-    else if (dial < -RL_DEPLOY_MODEL_DIAL_TRIGGER)
+    else
     {
-        model = (RLPolicyModel_t)(((uint32_t)model + 3U) % 4U);
-        (void)RLDeploy_SetModel(model);
-        rl_model_dial_armed = 0U;
+        (void)RLDeploy_SetModel(RL_POLICY_MODEL_UPSTAIRS);
     }
 }
 
@@ -216,6 +179,18 @@ static void rl_update_keyboard_model_selection(void)
 
     if ((!g_robot_ctx.is_online) ||
         (g_robot_ctx.output.top_mode != TOP_MODE_KEYBOARD))
+    {
+        rl_keyboard_jump_phase = RL_DEPLOY_JUMP_IDLE;
+        rl_keyboard_jump_cycles = 0U;
+        if (wheel == 0)
+        {
+            rl_model_keyboard_armed = 1U;
+        }
+        return;
+    }
+
+    /* In WLR torque mode, RL must not advance or finish keyboard actions. */
+    if (g_robot_ctx.output.torque_source != CHASSIS_TORQUE_RL)
     {
         rl_keyboard_jump_phase = RL_DEPLOY_JUMP_IDLE;
         rl_keyboard_jump_cycles = 0U;

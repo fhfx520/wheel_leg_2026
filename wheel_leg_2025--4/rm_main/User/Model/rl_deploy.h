@@ -22,8 +22,8 @@ typedef enum
  * RL shadow deployment:
  * - samples the chassis state at 500 Hz;
  * - runs the selected policy at 100 Hz;
- * - exposes observations/actions for logging and debugger inspection;
- * - never writes motor commands.
+ * - exposes observations, actions and limited motor torques;
+ * - chassis_task decides whether WLR or these RL torques reach the motors.
  */
 
 typedef struct
@@ -77,9 +77,8 @@ extern RLDeployDebug_t rl_deploy_debug;
  * Keil Watch can write this variable directly:
  * 0=Stable, 1=Upstairs, 2=Spin, 3=Jump.
  * The new selection is applied safely in the next 500 Hz step.
- * Remote control: while the left switch is UP (protection mode), push the
- * ch5 dial above +500 for the next model or below -500 for the previous one,
- * then release it back to centre before selecting again.
+ * Remote control follows the chassis FSM automatically: LOW_SPIN selects
+ * Spin, ASCEND selects Jump, and every other remote state selects Upstairs.
  * Keyboard control follows the existing chassis FSM: R/LOW_SPIN selects Spin;
  * Z/ASCEND automatically runs Upstairs crouch -> Jump -> Upstairs; otherwise
  * wheel up selects Upstairs and wheel down selects Stable.

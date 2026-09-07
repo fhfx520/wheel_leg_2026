@@ -87,6 +87,8 @@ static ShootState_e get_kb_shoot_mode(void) {
 #define KEY_V     (1<<14)
 #define KEY_B     (1<<15)
 
+#define TORQUE_SOURCE_CH1_TRIGGER 500
+
 // =========================================================================
 // REMOTE 模式子状态机
 // =========================================================================
@@ -347,6 +349,20 @@ static void protect_execute(void) {
     g_robot_ctx.output.shoot    = SHOOT_PROTECT;
     
     if (g_robot_ctx.is_online) {
+        /*
+         * Torque source can only be changed while the robot is protected.
+         * ch1 left selects the original WLR/VMC controller; ch1 right selects
+         * the RL controller.  Returning ch1 to centre keeps the last choice.
+         */
+        if (g_robot_ctx.input.sw1 == RC_SW_UP) {
+            if (g_robot_ctx.input.ch1 > TORQUE_SOURCE_CH1_TRIGGER) {
+                g_robot_ctx.output.torque_source = CHASSIS_TORQUE_RL;
+            }
+            else if (g_robot_ctx.input.ch1 < -TORQUE_SOURCE_CH1_TRIGGER) {
+                g_robot_ctx.output.torque_source = CHASSIS_TORQUE_WLR;
+            }
+        }
+
         if (g_robot_ctx.input.sw1 == RC_SW_MID && g_robot_ctx.input.sw2 == RC_SW_UP) {
             fsm_change(&g_top_fsm, &state_remote);
         }
@@ -405,6 +421,7 @@ const FsmState_t state_keyboard = { .name = "KEYBOARD", .enter = keyboard_enter,
 // ==========================================
 void robot_logic_init(void) {
     memset(&g_robot_ctx, 0, sizeof(g_robot_ctx));
+    g_robot_ctx.output.torque_source = CHASSIS_TORQUE_WLR;
     fsm_init(&g_top_fsm, &state_protect);
 }
 
