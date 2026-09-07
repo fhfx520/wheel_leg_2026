@@ -415,7 +415,7 @@ static void rl_build_observation(void)
     uint32_t index = 0U;
     uint32_t i;
 
-    rl_deploy_debug.command[0] = wlr.v_ref * 3.0f;
+    rl_deploy_debug.command[0] = (wlr.v_ref < -2.0f ? -2.0f : wlr.v_ref) * 3.0f;
     rl_deploy_debug.command[1] = k * wlr.yaw_err * 0.25f;
 	if(g_robot_ctx.output.chassis == CHASSIS_HIGH)
 		rl_deploy_debug.command[2] = 0.14f * 5.0f;

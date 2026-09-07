@@ -164,7 +164,7 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
         HAL_FDCAN_ActivateNotification(hfdcan, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0);
     }
 }
-
+uint32_t cccc;
 /*
  * @brief  邮箱1接收回调函数
  * @retval void
@@ -179,6 +179,7 @@ void HAL_FDCAN_RxFifo1Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo1ITs)
         } else if (hfdcan->Instance == FDCAN2) {
 			HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO1, &fdcan_rx_fifo1_message, fdcan_rx_fifo1_data);
 			fdcan_board_comm_get(fdcan_rx_fifo1_message.Identifier, fdcan_rx_fifo1_data);
+			cccc++;
         } else if (hfdcan->Instance == FDCAN3) {
 			HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO1, &rx_fifo1_message, rx_fifo1_data);
 			if(rx_fifo1_message.Identifier == TRIGGER_MOTOR_ID)

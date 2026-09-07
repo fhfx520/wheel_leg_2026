@@ -800,56 +800,56 @@
   ],
   "environment": {
     "generated_model": {
-      "generated_time": "2026-09-07T20:06:02+0800",
+      "generated_time": "2026-09-07T20:06:32+0800",
       "model_files": [
         {
-          "name": "upstairs_data_params.h",
-          "signature": "0xc801a43890d4d0ff5d57ae187966c302"
+          "name": "jump_data_params.h",
+          "signature": "0x781be9c13ec29a20194c9e82d41e1893"
         },
         {
-          "name": "upstairs_data_params.c",
-          "signature": "0x127603d32d8b46f7a02e1cb3f3b91b2b"
+          "name": "jump_data_params.c",
+          "signature": "0xb019ac4953e82876ca30b718f09ad5d1"
         },
         {
-          "name": "upstairs_data.h",
-          "signature": "0x990903ff93ff9c17864d7ea4ccac856a"
+          "name": "jump_data.h",
+          "signature": "0x71adf708b82c28b80bad33d37654417c"
         },
         {
-          "name": "upstairs_data.c",
-          "signature": "0x28ba23b6d5f0f2d5117b695812eb1667"
+          "name": "jump_data.c",
+          "signature": "0xac5b5cacb5f6078ec2a40b58ed917b9b"
         },
         {
-          "name": "upstairs_config.h",
-          "signature": "0xe25f8ee1d496b4b756ed3401bc0d4aa2"
+          "name": "jump_config.h",
+          "signature": "0x2885fc6f7bb5ad5c971dcef5e4651de1"
         },
         {
-          "name": "upstairs.h",
-          "signature": "0x31e58541b5a5722446f82587802dbd82"
+          "name": "jump.h",
+          "signature": "0x7f2b5619adf946884f5c528a65a7f9b1"
         },
         {
-          "name": "upstairs.c",
-          "signature": "0xa3dc18bfa565b58126cd25f0415ae9d2"
+          "name": "jump.c",
+          "signature": "0xd5929b84d961e3033a6b0737c993494d"
         }
       ],
-      "name": "upstairs"
+      "name": "jump"
     },
-    "network_signature": "0xf71a09d582bccc72",
+    "network_signature": "0x1ba7e8ff732db91a",
     "test_name": "",
     "tools": [
       {
-        "arguments": "generate --target stm32h7 --name upstairs -m D:/RM/XYEGA_RM2026_WheelLeg_Infatry_RLdeploy-main/pseudocode/example/onnx/upstairs/upstairs_pos0.23_0.65_p15.0_d1.0_0.1.onnx --compression none --verbosity 1 -O time --workspace C:/Users/25328/AppData/Local/Temp/mxAI_workspace106854510275930012618814882463486597 --output C:/Users/25328/.stm32cubemx/upstairs_output",
+        "arguments": "generate --target stm32h7 --name jump -m D:/RM/XYEGA_RM2026_WheelLeg_Infatry_RLdeploy-main/pseudocode/example/onnx/jump/jump_pos0.2_0.4_p6.0_d0.5_0.2.onnx --compression none --verbosity 1 -O time --workspace C:/Users/25328/AppData/Local/Temp/mxAI_workspace1068572835057399884296502009362444 --output C:/Users/25328/.stm32cubemx/jump_output",
         "environment": [
           "STATS_TYPE=X-CUBE-AI"
         ],
         "input_model": {
           "model_files": [
             {
-              "name": "upstairs_pos0.23_0.65_p15.0_d1.0_0.1.onnx",
-              "signature": "0x978e5b35fb6cf58afc3cc07988bb3a3a"
+              "name": "jump_pos0.2_0.4_p6.0_d0.5_0.2.onnx",
+              "signature": "0xd04826a44e0f2dfdd2573f5bc85634cb"
             }
           ],
           "n_params": 38825,
-          "name": "upstairs_pos0_23_0_65_p15_0_d1_0_0_1",
+          "name": "jump_pos0_2_0_4_p6_0_d0_5_0_2",
           "size": 155300,
           "type": "onnx"
         },
@@ -1035,7 +1035,7 @@
         277,
         265
       ],
-      "name": "upstairs_pos0_23_0_65_p15_0_d1_0_0_1",
+      "name": "jump_pos0_2_0_4_p6_0_d0_5_0_2",
       "nodes": [
         {
           "attributes": {
@@ -1498,7 +1498,7 @@
       "virtual": false
     },
     {
-      "address": "s_upstairs_weights_array_u64",
+      "address": "s_jump_weights_array_u64",
       "alignment": 0,
       "attributes": {
         "latency": "UNDEF",

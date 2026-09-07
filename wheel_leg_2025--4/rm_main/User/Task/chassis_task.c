@@ -990,7 +990,7 @@ static void chassis_data_output(void)
 			dm_motor_set_control_para(&joint_motor[i], 0, 0, 0, 0, 0);
         }
     }else if (wlr.ctrl_mode == 2) {//力控
-		if(rc.sw2 == RC_MI || rc.sw2 == RC_DN || (chassis.recover_flag == 1 && chassis.rescue_inter_flag == CHASSIS_RESCUE_RECOVER))
+		if(g_robot_ctx.output.chassis == CHASSIS_HIGH || g_robot_ctx.output.chassis == CHASSIS_ASCEND || (chassis.recover_flag == 1 && chassis.rescue_inter_flag == CHASSIS_RESCUE_RECOVER))
 		{
 			if (fabsf(vmc[0].L_fdb - wlr.recover_length) < 0.1f && fabsf(vmc[1].L_fdb - wlr.recover_length) < 0.1f)
 				 chassis.recover_flag = 0;

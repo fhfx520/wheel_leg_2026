@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * @file    upstairs_data.h
+  * @file    spin_data.h
   * @author  AST Embedded Analytics Research Platform
-  * @date    2026-09-07T20:06:02+0800
+  * @date    2026-09-07T20:07:02+0800
   * @brief   AI Tool Automatic Code Generator for Embedded NN computing
   ******************************************************************************
   * Copyright (c) 2026 STMicroelectronics.
@@ -14,68 +14,68 @@
   ******************************************************************************
   */
 
-#ifndef UPSTAIRS_DATA_H
-#define UPSTAIRS_DATA_H
+#ifndef SPIN_DATA_H
+#define SPIN_DATA_H
 
-#include "upstairs_config.h"
-#include "upstairs_data_params.h"
-
-AI_DEPRECATED
-#define AI_UPSTAIRS_DATA_ACTIVATIONS(ptr_)  \
-  ai_upstairs_data_activations_buffer_get(AI_HANDLE_PTR(ptr_))
+#include "spin_config.h"
+#include "spin_data_params.h"
 
 AI_DEPRECATED
-#define AI_UPSTAIRS_DATA_WEIGHTS(ptr_)  \
-  ai_upstairs_data_weights_buffer_get(AI_HANDLE_PTR(ptr_))
+#define AI_SPIN_DATA_ACTIVATIONS(ptr_)  \
+  ai_spin_data_activations_buffer_get(AI_HANDLE_PTR(ptr_))
+
+AI_DEPRECATED
+#define AI_SPIN_DATA_WEIGHTS(ptr_)  \
+  ai_spin_data_weights_buffer_get(AI_HANDLE_PTR(ptr_))
 
 
 AI_API_DECLARE_BEGIN
 
 
-extern const ai_u64 s_upstairs_weights_array_u64[19413];
+extern const ai_u64 s_spin_weights_array_u64[19413];
 
 
 
 /*!
  * @brief Get network activations buffer initialized struct.
- * @ingroup upstairs_data
+ * @ingroup spin_data
  * @param[in] ptr a pointer to the activations array storage area
  * @return an ai_buffer initialized struct
  */
 AI_DEPRECATED
 AI_API_ENTRY
-ai_buffer ai_upstairs_data_activations_buffer_get(const ai_handle ptr);
+ai_buffer ai_spin_data_activations_buffer_get(const ai_handle ptr);
 
 /*!
  * @brief Get network weights buffer initialized struct.
- * @ingroup upstairs_data
+ * @ingroup spin_data
  * @param[in] ptr a pointer to the weights array storage area
  * @return an ai_buffer initialized struct
  */
 AI_DEPRECATED
 AI_API_ENTRY
-ai_buffer ai_upstairs_data_weights_buffer_get(const ai_handle ptr);
+ai_buffer ai_spin_data_weights_buffer_get(const ai_handle ptr);
 
 /*!
  * @brief Get network weights array pointer as a handle ptr.
- * @ingroup upstairs_data
+ * @ingroup spin_data
  * @return a ai_handle pointer to the weights array
  */
 AI_DEPRECATED
 AI_API_ENTRY
-ai_handle ai_upstairs_data_weights_get(void);
+ai_handle ai_spin_data_weights_get(void);
 
 
 /*!
  * @brief Get network params configuration data structure.
- * @ingroup upstairs_data
+ * @ingroup spin_data
  * @return true if a valid configuration is present, false otherwise
  */
 AI_API_ENTRY
-ai_bool ai_upstairs_data_params_get(ai_network_params* params);
+ai_bool ai_spin_data_params_get(ai_network_params* params);
 
 
 AI_API_DECLARE_END
 
-#endif /* UPSTAIRS_DATA_H */
+#endif /* SPIN_DATA_H */
 

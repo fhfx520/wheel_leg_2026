@@ -15,13 +15,15 @@
 #define TFMINIPLUS_BUFF_SIZE 50
 #define TOF_BUFF_SIZE 11
 
-__ALIGNED(DCACHE_LINE_SIZE) uint8_t dr16_dma_rx_buf[DR16_DATA_LEN];
-__ALIGNED(DCACHE_LINE_SIZE) uint8_t judge_data_rx_buf[JUDGE_DATA_LEN];
-__ALIGNED(DCACHE_LINE_SIZE) uint8_t debug_dma_rx_buf[DEBUG_DATA_LEN];
+#define ALIGN_UP_32(x)    (((x) + 31U) & ~31U)
+
+__ALIGNED(DCACHE_LINE_SIZE) uint8_t dr16_dma_rx_buf[ALIGN_UP_32(DR16_DATA_LEN)];
+__ALIGNED(DCACHE_LINE_SIZE) uint8_t judge_data_rx_buf[ALIGN_UP_32(JUDGE_DATA_LEN)];
+__ALIGNED(DCACHE_LINE_SIZE) uint8_t debug_dma_rx_buf[ALIGN_UP_32(DEBUG_DATA_LEN)];
 //uint8_t TFminiPlusBuffArray_Front_Left[TFMINIPLUS_BUFF_SIZE];
 //uint8_t TFminiPlusBuffArray_Front_Right[TFMINIPLUS_BUFF_SIZE];
-__ALIGNED(DCACHE_LINE_SIZE) uint8_t TOFBuffArray_LEFT[TOF_BUFF_SIZE];
-__ALIGNED(DCACHE_LINE_SIZE) uint8_t TOFBuffArray_RIGHT[TOF_BUFF_SIZE];
+__ALIGNED(DCACHE_LINE_SIZE) uint8_t TOFBuffArray_LEFT[ALIGN_UP_32(TOF_BUFF_SIZE)];
+__ALIGNED(DCACHE_LINE_SIZE) uint8_t TOFBuffArray_RIGHT[ALIGN_UP_32(TOF_BUFF_SIZE)];
 //uint8_t Hipnuc_buff[82];
 uint32_t ccnct;
 /*
@@ -83,3 +85,5 @@ void usart_user_handler(UART_HandleTypeDef *huart)
         }
     }
 }
+
+

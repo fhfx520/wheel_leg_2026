@@ -12,7 +12,7 @@ typedef enum
     RED
 } color_e;
 
-UART_HandleTypeDef *judge_huart;
+UART_HandleTypeDef *judge_huart = NULL;
 uint8_t online = 0;
 uint32_t last_rx_tick;
 //机器人接收的数据

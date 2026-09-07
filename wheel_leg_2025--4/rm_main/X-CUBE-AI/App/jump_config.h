@@ -1,9 +1,9 @@
 
 /**
   ******************************************************************************
-  * @file    stable_config.h
+  * @file    jump_config.h
   * @author  AST Embedded Analytics Research Platform
-  * @date    2026-09-07T20:05:34+0800
+  * @date    2026-09-07T20:06:32+0800
   * @brief   AI Tool Automatic Code Generator for Custom Layers Implementation
   ******************************************************************************
   * @attention
@@ -17,8 +17,8 @@
   ******************************************************************************
   */
 
-#ifndef AI_STABLE_CONFIG_H
-#define AI_STABLE_CONFIG_H
+#ifndef AI_JUMP_CONFIG_H
+#define AI_JUMP_CONFIG_H
 
 #undef AI_TOOLS_VERSION_MAJOR
 #undef AI_TOOLS_VERSION_MINOR
@@ -43,4 +43,4 @@
 #define AI_TOOLS_API_VERSION_MINOR (5)
 #define AI_TOOLS_API_VERSION_MICRO (0)
 
-#endif /*AI_STABLE_CONFIG_H*/
+#endif /*AI_JUMP_CONFIG_H*/
