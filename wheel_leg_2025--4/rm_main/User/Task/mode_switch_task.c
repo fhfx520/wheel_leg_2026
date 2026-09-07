@@ -107,7 +107,7 @@ static void sw1_mode_handler(void) { //由拨杆1决定系统模式切换，主�
 //			if (!driver_motor[0].online || !driver_motor[1].online) {
 //				 ctrl_mode = PROTECT_MODE;
 //		}
-		if (chassis.recover_flag == 1 && rotate_flag)
+		if (chassis.recover_flag == 1 && rotate_flag && g_robot_ctx.output.torque_source != CHASSIS_TORQUE_RL)
 			ctrl_mode = PROTECT_MODE;
 				
 		last_chassis_power = robot_status.power_management_chassis_output ;
@@ -121,7 +121,7 @@ static void remote_reset(void)
         NVIC_SystemReset();
     }
 }
-
+uint8_t adadadw;
 void modesw_set_container(void)
 {
 	modesw_set_rc_data_container.ch1 = rc.ch1;
@@ -142,6 +142,7 @@ void modesw_set_container(void)
 	last_chassis_rescue_flag = chassis.rescue_inter_flag;
 	
 	container_set(TAG_DR16_RC_DATA,&modesw_set_rc_data_container,sizeof(modesw_set_rc_data_container),CONTAINER_TYPE_STRUCT);
+	adadadw = modesw_set_rc_data_container.ctrl_mode;
 	
 	modesw_set_kb_data_container.l = rc.mouse.l;
 	modesw_set_kb_data_container.r = rc.mouse.r;

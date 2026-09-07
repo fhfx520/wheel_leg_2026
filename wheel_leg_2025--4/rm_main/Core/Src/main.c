@@ -126,7 +126,7 @@ int main(void)
   MX_FDCAN2_Init();
   MX_TIM3_Init();
   MX_SPI1_Init();
-  MX_IWDG1_Init();
+//  MX_IWDG1_Init();
   MX_USART3_UART_Init();
   MX_UART4_Init();
   /* USER CODE BEGIN 2 */
@@ -220,7 +220,7 @@ void SystemClock_Config(void)
 
   /** Enables the Clock Security System
   */
-  HAL_RCC_EnableCSS();
+//  HAL_RCC_EnableCSS();
 }
 
 /**

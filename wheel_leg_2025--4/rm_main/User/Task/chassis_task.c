@@ -473,42 +473,42 @@ static void chassis_data_input(void)
         case CHASSIS_LOW:
 		case CHASSIS_STAIR:
         case CHASSIS_HIGH:
-        case CHASSIS_TERRAIN_READY:		{ // 整合了原版的所有 FOLLOW 和 PRONE
-		case CHASSIS_TERRAIN_READY_2 :
-			if((key_scan_clear(KB_CTRL) || check_ch3_trigger()) && gimbal.start_up)
-				chassis.turn_back_flag = 1;
-			if(chassis.turn_back_flag && chassis.turn_back_cnt <= 1000)
-			{
-				chassis.turn_back_cnt++;//2s超时检测
-				if(wlr.direction)
-				{
-					wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
-					wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;  
-					wlr.wz_ref = 0.0f;
-					wlr.yaw_err = circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
-					if((wlr.yaw_err < PI / 3 && wlr.yaw_err > 0) || (wlr.yaw_err > - PI / 3 && wlr.yaw_err < 0))
-					{
-						wlr.direction = 0;
-						chassis.turn_back_flag = 0;
-					}
-				}
-				else
-				{
-					wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI;
-					wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;  
-					wlr.wz_ref = 0.0f;
-					wlr.yaw_err = circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
-					if((wlr.yaw_err < PI / 3 && wlr.yaw_err > 0) || (wlr.yaw_err > - PI / 3 && wlr.yaw_err < 0))
-					{
-						wlr.direction = 1;
-						chassis.turn_back_flag = 0;
-					}
-				}
-			}
-			else
-			{
-				chassis.turn_back_flag = 0;
-				chassis.turn_back_cnt = 0;
+        case CHASSIS_TERRAIN_READY:		 // 整合了原版的所有 FOLLOW 和 PRONE
+		case CHASSIS_TERRAIN_READY_2 : {
+//			if((key_scan_clear(KB_CTRL) || check_ch3_trigger()) && gimbal.start_up)
+//				chassis.turn_back_flag = 1;
+//			if(chassis.turn_back_flag && chassis.turn_back_cnt <= 1000)
+//			{
+//				chassis.turn_back_cnt++;//2s超时检测
+//				if(wlr.direction)
+//				{
+//					wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
+//					wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;  
+//					wlr.wz_ref = 0.0f;
+//					wlr.yaw_err = circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
+//					if((wlr.yaw_err < PI / 3 && wlr.yaw_err > 0) || (wlr.yaw_err > - PI / 3 && wlr.yaw_err < 0))
+//					{
+//						wlr.direction = 0;
+//						chassis.turn_back_flag = 0;
+//					}
+//				}
+//				else
+//				{
+//					wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI;
+//					wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;  
+//					wlr.wz_ref = 0.0f;
+//					wlr.yaw_err = circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
+//					if((wlr.yaw_err < PI / 3 && wlr.yaw_err > 0) || (wlr.yaw_err > - PI / 3 && wlr.yaw_err < 0))
+//					{
+//						wlr.direction = 1;
+//						chassis.turn_back_flag = 0;
+//					}
+//				}
+//			}
+//			else
+//			{
+//				chassis.turn_back_flag = 0;
+//				chassis.turn_back_cnt = 0;
 				if (gimbal.start_up)    
 					wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
 				else                    
@@ -518,14 +518,14 @@ static void chassis_data_input(void)
 				wlr.wz_ref = 0.0f;
 				wlr.yaw_err = circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
 				
-				if (wlr.yaw_err > PI / 2 || wlr.yaw_err < - PI / 2) {
-					wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI ;
-					wlr.direction = 1;
-				}
-				else if(wlr.yaw_err < PI / 2 || wlr.yaw_err > - PI / 2 ) {
-					wlr.direction = 0;
-				}
-			}
+//				if (wlr.yaw_err > PI / 2 || wlr.yaw_err < - PI / 2) {
+//					wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI ;
+//					wlr.direction = 1;
+//				}
+//				else if(wlr.yaw_err < PI / 2 || wlr.yaw_err > - PI / 2 ) {
+//					wlr.direction = 0;
+//				}
+//			}
 			chassis_rotate_ramp.out =0;
             break;
         }

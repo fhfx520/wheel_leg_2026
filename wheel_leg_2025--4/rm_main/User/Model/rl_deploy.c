@@ -12,9 +12,9 @@
 #define RL_DEPLOY_INFERENCE_DIVIDER       5U
 #define RL_DEPLOY_HISTORY_FRAMES          5U
 #define RL_DEPLOY_FAULT_RECOVERY_RUNS     3U
-#define RL_DEPLOY_JUMP_CROUCH_CYCLES       150U
+#define RL_DEPLOY_JUMP_CROUCH_CYCLES       750U
 #define RL_DEPLOY_JUMP_ACTIVE_CYCLES       240U
-#define RL_DEPLOY_JUMP_HEIGHT              0.10f
+#define RL_DEPLOY_JUMP_HEIGHT              0.05f
 #define RL_DEPLOY_NORMAL_HEIGHT            0.16f
 
 #define RL_DEPLOY_PI                      3.14159265358979323846f
@@ -600,7 +600,7 @@ static void rl_update_projected_gravity(void)
     rl_deploy_debug.projected_gravity[1] = -sin_roll * cos_pitch;
     rl_deploy_debug.projected_gravity[2] = -cos_roll * cos_pitch;
 }
-float k = 5.0f;
+float k = 1.0f;
 static void rl_build_observation(void)
 {
 	const RLDeployModelParams_t *params = rl_get_model_params();
@@ -618,7 +618,7 @@ static void rl_build_observation(void)
     if (rl_active_model == RL_POLICY_MODEL_PIN)
     {
         rl_deploy_debug.command[1] =
-            wlr.wz_ref * params->command_scale[1];
+           9.0f * params->command_scale[1];
     }
     else
     {
@@ -634,7 +634,7 @@ static void rl_build_observation(void)
     }
     else if (g_robot_ctx.output.chassis == CHASSIS_HIGH)
     {
-        rl_deploy_debug.command[2] = 0.14f * params->command_scale[2];
+        rl_deploy_debug.command[2] = 0.26f * params->command_scale[2];
     }
     else if (g_robot_ctx.output.chassis == CHASSIS_ASCEND)
     {
