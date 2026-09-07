@@ -21,7 +21,7 @@ typedef enum
 /*
  * RL shadow deployment:
  * - samples the chassis state at 500 Hz;
- * - runs the Stable policy at 100 Hz;
+ * - runs the selected policy at 100 Hz;
  * - exposes observations/actions for logging and debugger inspection;
  * - never writes motor commands.
  */
@@ -35,11 +35,17 @@ typedef struct
     uint8_t numeric_fault;
     uint8_t numeric_fault_stage;
     uint8_t numeric_valid_streak;
+    uint8_t requested_model;
+    uint8_t active_model;
+    uint8_t keyboard_normal_model;
+    uint8_t keyboard_jump_phase;
+    uint16_t keyboard_jump_cycles;
 
     uint32_t sample_count;
     uint32_t inference_count;
     uint32_t inference_fail_count;
     uint32_t numeric_fault_count;
+    uint32_t model_switch_count;
     uint32_t last_inference_us;
 
     float command[3];
@@ -67,8 +73,23 @@ typedef struct
 
 extern RLDeployDebug_t rl_deploy_debug;
 
+/*
+ * Keil Watch can write this variable directly:
+ * 0=Stable, 1=Upstairs, 2=Spin, 3=Jump.
+ * The new selection is applied safely in the next 500 Hz step.
+ * Remote control: while the left switch is UP (protection mode), push the
+ * ch5 dial above +500 for the next model or below -500 for the previous one,
+ * then release it back to centre before selecting again.
+ * Keyboard control follows the existing chassis FSM: R/LOW_SPIN selects Spin;
+ * Z/ASCEND automatically runs Upstairs crouch -> Jump -> Upstairs; otherwise
+ * wheel up selects Upstairs and wheel down selects Stable.
+ */
+extern volatile RLPolicyModel_t rl_deploy_model_select;
+
 void RLDeploy_Init(void);
 void RLDeploy_Step500Hz(void);
 void RLDeploy_ResetHistory(void);
+uint8_t RLDeploy_SetModel(RLPolicyModel_t model);
+RLPolicyModel_t RLDeploy_GetModel(void);
 
 #endif /* RL_DEPLOY_H */

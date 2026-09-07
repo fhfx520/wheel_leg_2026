@@ -12,6 +12,12 @@
 #define RL_DEPLOY_INFERENCE_DIVIDER       5U
 #define RL_DEPLOY_HISTORY_FRAMES          5U
 #define RL_DEPLOY_FAULT_RECOVERY_RUNS     3U
+#define RL_DEPLOY_MODEL_DIAL_TRIGGER       500
+#define RL_DEPLOY_MODEL_DIAL_RELEASE       200
+#define RL_DEPLOY_JUMP_CROUCH_CYCLES       150U
+#define RL_DEPLOY_JUMP_ACTIVE_CYCLES       240U
+#define RL_DEPLOY_JUMP_HEIGHT              0.10f
+#define RL_DEPLOY_NORMAL_HEIGHT            0.16f
 
 #define RL_DEPLOY_PI                      3.14159265358979323846f
 #define RL_DEPLOY_TWO_PI                  (2.0f * RL_DEPLOY_PI)
@@ -68,24 +74,244 @@ typedef struct
     RLDeployForceTorqueMap_t force_torque_map;
 } RLDeployLegState_t;
 
+typedef struct
+{
+    float default_dof_pos[RL_POLICY_ACTION_SIZE];
+    float default_obs_dof_pos[4];
+    float p_gains[RL_POLICY_ACTION_SIZE];
+    float d_gains[RL_POLICY_ACTION_SIZE];
+    float command_scale[3];
+} RLDeployModelParams_t;
+
+typedef enum
+{
+    RL_DEPLOY_JUMP_IDLE = 0,
+    RL_DEPLOY_JUMP_CROUCH,
+    RL_DEPLOY_JUMP_ACTIVE,
+    RL_DEPLOY_JUMP_COMPLETE
+} RLDeployJumpPhase_t;
+
 RLDeployDebug_t rl_deploy_debug;
+volatile RLPolicyModel_t rl_deploy_model_select = RL_POLICY_MODEL_UPSTAIRS;
 
 static uint8_t rl_deploy_initialized = 0U;
 static uint8_t rl_inference_divider = 0U;
+static uint8_t rl_model_dial_armed = 1U;
+static uint8_t rl_model_keyboard_armed = 1U;
+static RLPolicyModel_t rl_active_model = RL_POLICY_MODEL_UPSTAIRS;
+static RLPolicyModel_t rl_keyboard_normal_model = RL_POLICY_MODEL_UPSTAIRS;
+static RLDeployJumpPhase_t rl_keyboard_jump_phase = RL_DEPLOY_JUMP_IDLE;
+static uint16_t rl_keyboard_jump_cycles = 0U;
 RLDeployLegState_t rl_left_leg;
 RLDeployLegState_t rl_right_leg;
 
-static const float rl_stable_default_dof_pos[RL_POLICY_ACTION_SIZE] = {
-    -0.23f, -0.65f, 0.0f, 0.23f, 0.65f, 0.0f
+static const RLDeployModelParams_t rl_model_params[] = {
+    /* Stable */
+    {
+        {-0.23f, -0.65f, 0.0f, 0.23f, 0.65f, 0.0f},
+        {-0.23f, -0.65f, 0.23f, 0.65f},
+        {15.0f, 15.0f, 0.0f, 15.0f, 15.0f, 0.0f},
+        {1.0f, 1.0f, 0.1f, 1.0f, 1.0f, 0.1f},
+        {3.0f, 0.25f, 5.0f}
+    },
+    /* Upstairs / MiniRecover */
+    {
+        {-0.23f, -0.65f, 0.0f, 0.23f, 0.65f, 0.0f},
+        {-0.23f, -0.65f, 0.23f, 0.65f},
+        {15.0f, 15.0f, 0.0f, 15.0f, 15.0f, 0.0f},
+        {1.0f, 1.0f, 0.1f, 1.0f, 1.0f, 0.1f},
+        {3.0f, 0.25f, 5.0f}
+    },
+    /* Spin (the public enum retains the open-source name Pin). */
+    {
+        {-0.23f, -0.65f, 0.0f, 0.23f, 0.65f, 0.0f},
+        {-0.23f, -0.65f, 0.23f, 0.65f},
+        {10.0f, 10.0f, 0.0f, 10.0f, 10.0f, 0.0f},
+        {1.0f, 1.0f, 0.1f, 1.0f, 1.0f, 0.1f},
+        {2.0f, 0.25f, 5.0f}
+    },
+    /* Jump */
+    {
+        {0.2f, 0.4f, 0.0f, -0.2f, -0.4f, 0.0f},
+        {0.2f, 0.4f, -0.2f, -0.4f},
+        {6.0f, 6.0f, 0.0f, 6.0f, 6.0f, 0.0f},
+        {0.5f, 0.5f, 0.2f, 0.5f, 0.5f, 0.2f},
+        {3.0f, 0.25f, 5.0f}
+    }
 };
 
-static const float rl_stable_p_gains[RL_POLICY_ACTION_SIZE] = {
-    15.0f, 15.0f, 0.0f, 15.0f, 15.0f, 0.0f
-};
+static uint8_t rl_model_is_valid(RLPolicyModel_t model)
+{
+    return (uint8_t)((model >= RL_POLICY_MODEL_STABLE) &&
+                     (model <= RL_POLICY_MODEL_JUMP));
+}
 
-static const float rl_stable_d_gains[RL_POLICY_ACTION_SIZE] = {
-    1.0f, 1.0f, 0.1f, 1.0f, 1.0f, 0.1f
-};
+static const RLDeployModelParams_t *rl_get_model_params(void)
+{
+    return &rl_model_params[(uint32_t)rl_active_model];
+}
+
+static void rl_update_remote_model_selection(void)
+{
+    int16_t dial;
+    RLPolicyModel_t model;
+
+    dial = g_robot_ctx.input.ch5;
+
+    /*
+     * ch5 is unused elsewhere and is spring-centred.  Model selection is only
+     * accepted while the left switch is UP (top-level protection mode), so a
+     * model cannot be changed accidentally while the chassis is producing
+     * torque.  Return the dial to centre before requesting another change.
+     */
+    if ((!g_robot_ctx.is_online) ||
+        (g_robot_ctx.output.top_mode != TOP_MODE_PROTECT) ||
+        (g_robot_ctx.input.sw1 != RC_SW_UP))
+    {
+        if ((dial > -RL_DEPLOY_MODEL_DIAL_RELEASE) &&
+            (dial < RL_DEPLOY_MODEL_DIAL_RELEASE))
+        {
+            rl_model_dial_armed = 1U;
+        }
+        return;
+    }
+
+    if ((dial > -RL_DEPLOY_MODEL_DIAL_RELEASE) &&
+        (dial < RL_DEPLOY_MODEL_DIAL_RELEASE))
+    {
+        rl_model_dial_armed = 1U;
+        return;
+    }
+
+    if (!rl_model_dial_armed)
+    {
+        return;
+    }
+
+    model = rl_deploy_model_select;
+    if (!rl_model_is_valid(model))
+    {
+        model = RL_POLICY_MODEL_STABLE;
+    }
+
+    if (dial > RL_DEPLOY_MODEL_DIAL_TRIGGER)
+    {
+        model = (RLPolicyModel_t)(((uint32_t)model + 1U) % 4U);
+        (void)RLDeploy_SetModel(model);
+        rl_model_dial_armed = 0U;
+    }
+    else if (dial < -RL_DEPLOY_MODEL_DIAL_TRIGGER)
+    {
+        model = (RLPolicyModel_t)(((uint32_t)model + 3U) % 4U);
+        (void)RLDeploy_SetModel(model);
+        rl_model_dial_armed = 0U;
+    }
+}
+
+static void rl_update_keyboard_model_selection(void)
+{
+    int16_t wheel;
+
+    wheel = g_robot_ctx.input.mouse.z;
+
+    if ((!g_robot_ctx.is_online) ||
+        (g_robot_ctx.output.top_mode != TOP_MODE_KEYBOARD))
+    {
+        rl_keyboard_jump_phase = RL_DEPLOY_JUMP_IDLE;
+        rl_keyboard_jump_cycles = 0U;
+        if (wheel == 0)
+        {
+            rl_model_keyboard_armed = 1U;
+        }
+        return;
+    }
+
+    /* R is interpreted by the existing FSM as CHASSIS_LOW_SPIN. */
+    if (g_robot_ctx.output.chassis == CHASSIS_LOW_SPIN)
+    {
+        rl_keyboard_jump_phase = RL_DEPLOY_JUMP_IDLE;
+        rl_keyboard_jump_cycles = 0U;
+        (void)RLDeploy_SetModel(RL_POLICY_MODEL_PIN);
+        rl_deploy_debug.keyboard_normal_model = (uint8_t)rl_keyboard_normal_model;
+        rl_deploy_debug.keyboard_jump_phase = (uint8_t)rl_keyboard_jump_phase;
+        rl_deploy_debug.keyboard_jump_cycles = rl_keyboard_jump_cycles;
+        return;
+    }
+
+    /*
+     * Z is interpreted by the existing FSM as CHASSIS_ASCEND.  First crouch
+     * for 300 ms with Upstairs, run Jump for 480 ms, then return to Upstairs
+     * and notify the FSM that the automatic sequence has finished.
+     */
+    if (g_robot_ctx.output.chassis == CHASSIS_ASCEND)
+    {
+        if (rl_keyboard_jump_phase == RL_DEPLOY_JUMP_IDLE)
+        {
+            rl_keyboard_jump_phase = RL_DEPLOY_JUMP_CROUCH;
+            rl_keyboard_jump_cycles = 0U;
+            g_robot_ctx.jump_finish_flag = 0U;
+            (void)RLDeploy_SetModel(RL_POLICY_MODEL_UPSTAIRS);
+        }
+        else if (rl_keyboard_jump_phase == RL_DEPLOY_JUMP_CROUCH)
+        {
+            ++rl_keyboard_jump_cycles;
+            if (rl_keyboard_jump_cycles >= RL_DEPLOY_JUMP_CROUCH_CYCLES)
+            {
+                rl_keyboard_jump_phase = RL_DEPLOY_JUMP_ACTIVE;
+                rl_keyboard_jump_cycles = 0U;
+                (void)RLDeploy_SetModel(RL_POLICY_MODEL_JUMP);
+            }
+        }
+        else if (rl_keyboard_jump_phase == RL_DEPLOY_JUMP_ACTIVE)
+        {
+            ++rl_keyboard_jump_cycles;
+            if (rl_keyboard_jump_cycles >= RL_DEPLOY_JUMP_ACTIVE_CYCLES)
+            {
+                rl_keyboard_jump_phase = RL_DEPLOY_JUMP_COMPLETE;
+                rl_keyboard_jump_cycles = 0U;
+                rl_keyboard_normal_model = RL_POLICY_MODEL_UPSTAIRS;
+                (void)RLDeploy_SetModel(RL_POLICY_MODEL_UPSTAIRS);
+                g_robot_ctx.jump_finish_flag = 1U;
+            }
+        }
+        else
+        {
+            (void)RLDeploy_SetModel(RL_POLICY_MODEL_UPSTAIRS);
+            g_robot_ctx.jump_finish_flag = 1U;
+        }
+
+        rl_deploy_debug.keyboard_normal_model = (uint8_t)rl_keyboard_normal_model;
+        rl_deploy_debug.keyboard_jump_phase = (uint8_t)rl_keyboard_jump_phase;
+        rl_deploy_debug.keyboard_jump_cycles = rl_keyboard_jump_cycles;
+        return;
+    }
+
+    rl_keyboard_jump_phase = RL_DEPLOY_JUMP_IDLE;
+    rl_keyboard_jump_cycles = 0U;
+
+    if ((rl_deploy_model_select == RL_POLICY_MODEL_STABLE) ||
+        (rl_deploy_model_select == RL_POLICY_MODEL_UPSTAIRS))
+    {
+        rl_keyboard_normal_model = rl_deploy_model_select;
+    }
+
+    if (wheel == 0)
+    {
+        rl_model_keyboard_armed = 1U;
+    }
+    else if (rl_model_keyboard_armed)
+    {
+        /* Wheel up selects Upstairs; wheel down selects Stable. */
+        rl_keyboard_normal_model =
+            (wheel > 0) ? RL_POLICY_MODEL_UPSTAIRS : RL_POLICY_MODEL_STABLE;
+        rl_model_keyboard_armed = 0U;
+    }
+
+    (void)RLDeploy_SetModel(rl_keyboard_normal_model);
+    rl_deploy_debug.keyboard_normal_model = (uint8_t)rl_keyboard_normal_model;
+    rl_deploy_debug.keyboard_jump_phase = (uint8_t)rl_keyboard_jump_phase;
+    rl_deploy_debug.keyboard_jump_cycles = rl_keyboard_jump_cycles;
+}
 
 static uint8_t rl_array_is_finite(const float *data, uint32_t size)
 {
@@ -402,10 +628,7 @@ static void rl_update_projected_gravity(void)
 float k = 5.0f;
 static void rl_build_observation(void)
 {
-    // 策略角
-    static const float default_obs_dof_pos[4] = {
-        -0.23f, -0.65f, 0.23f, 0.65f
-    };
+	const RLDeployModelParams_t *params = rl_get_model_params();
 	//roll pit yaw
     const float gyro[3] = {
         chassis_imu.wx,
@@ -415,12 +638,38 @@ static void rl_build_observation(void)
     uint32_t index = 0U;
     uint32_t i;
 
-    rl_deploy_debug.command[0] = (wlr.v_ref < -2.0f ? -2.0f : wlr.v_ref) * 3.0f;
-    rl_deploy_debug.command[1] = k * wlr.yaw_err * 0.25f;
-	if(g_robot_ctx.output.chassis == CHASSIS_HIGH)
-		rl_deploy_debug.command[2] = 0.14f * 5.0f;
-	if(g_robot_ctx.output.chassis == CHASSIS_ASCEND)
-		rl_deploy_debug.command[2] = 0.26f * 5.0f;
+    rl_deploy_debug.command[0] =
+        (wlr.v_ref < -2.0f ? -2.0f : wlr.v_ref) * params->command_scale[0];
+    if (rl_active_model == RL_POLICY_MODEL_PIN)
+    {
+        rl_deploy_debug.command[1] =
+            wlr.wz_ref * params->command_scale[1];
+    }
+    else
+    {
+        rl_deploy_debug.command[1] =
+            k * wlr.yaw_err * params->command_scale[1];
+    }
+
+    if ((rl_keyboard_jump_phase == RL_DEPLOY_JUMP_CROUCH) ||
+        (rl_keyboard_jump_phase == RL_DEPLOY_JUMP_ACTIVE))
+    {
+        rl_deploy_debug.command[2] =
+            RL_DEPLOY_JUMP_HEIGHT * params->command_scale[2];
+    }
+    else if (g_robot_ctx.output.chassis == CHASSIS_HIGH)
+    {
+        rl_deploy_debug.command[2] = 0.14f * params->command_scale[2];
+    }
+    else if (g_robot_ctx.output.chassis == CHASSIS_ASCEND)
+    {
+        rl_deploy_debug.command[2] =
+            RL_DEPLOY_NORMAL_HEIGHT * params->command_scale[2];
+    }
+    else
+    {
+        rl_deploy_debug.command[2] = wlr.high_set * params->command_scale[2];
+    }
 
     for (i = 0U; i < 3U; ++i)
     {
@@ -435,10 +684,14 @@ static void rl_build_observation(void)
         rl_deploy_debug.obs[index++] = rl_deploy_debug.command[i];
     }
 
-    rl_deploy_debug.obs[index++] = rl_deploy_debug.q[RL_DOF_LF0] - default_obs_dof_pos[0];
-    rl_deploy_debug.obs[index++] = rl_deploy_debug.q[RL_DOF_LF1] - default_obs_dof_pos[1];
-    rl_deploy_debug.obs[index++] = rl_deploy_debug.q[RL_DOF_RF0] - default_obs_dof_pos[2];
-    rl_deploy_debug.obs[index++] = rl_deploy_debug.q[RL_DOF_RF1] - default_obs_dof_pos[3];
+    rl_deploy_debug.obs[index++] =
+        rl_deploy_debug.q[RL_DOF_LF0] - params->default_obs_dof_pos[0];
+    rl_deploy_debug.obs[index++] =
+        rl_deploy_debug.q[RL_DOF_LF1] - params->default_obs_dof_pos[1];
+    rl_deploy_debug.obs[index++] =
+        rl_deploy_debug.q[RL_DOF_RF0] - params->default_obs_dof_pos[2];
+    rl_deploy_debug.obs[index++] =
+        rl_deploy_debug.q[RL_DOF_RF1] - params->default_obs_dof_pos[3];
 
     for (i = 0U; i < RL_POLICY_ACTION_SIZE; ++i)
     {
@@ -452,6 +705,7 @@ static void rl_build_observation(void)
 
 static uint8_t rl_calculate_shadow_pd(void)
 {
+    const RLDeployModelParams_t *params = rl_get_model_params();
     uint32_t i;
 
     if (!rl_array_is_finite(rl_deploy_debug.actions, RL_POLICY_ACTION_SIZE))
@@ -477,13 +731,13 @@ static uint8_t rl_calculate_shadow_pd(void)
         }
 
         rl_deploy_debug.action_clipped[i] = action;
-        rl_deploy_debug.target_q[i] = rl_stable_default_dof_pos[i] + position_offset;
+        rl_deploy_debug.target_q[i] = params->default_dof_pos[i] + position_offset;
         rl_deploy_debug.target_qd[i] = velocity_target;
 
         torque =
-            rl_stable_p_gains[i] *
+            params->p_gains[i] *
                 (rl_deploy_debug.target_q[i] - rl_deploy_debug.q[i]) +
-            rl_stable_d_gains[i] *
+            params->d_gains[i] *
                 (rl_deploy_debug.target_qd[i] - rl_deploy_debug.qd[i]);
 
         if (!isfinite(torque))
@@ -615,6 +869,22 @@ void RLDeploy_ResetHistory(void)
     rl_deploy_debug.numeric_valid_streak = 0U;
 }
 
+uint8_t RLDeploy_SetModel(RLPolicyModel_t model)
+{
+    if (!rl_model_is_valid(model))
+    {
+        return 0U;
+    }
+
+    rl_deploy_model_select = model;
+    return 1U;
+}
+
+RLPolicyModel_t RLDeploy_GetModel(void)
+{
+    return rl_active_model;
+}
+
 void RLDeploy_Init(void)
 {
     if (rl_deploy_initialized)
@@ -623,6 +893,20 @@ void RLDeploy_Init(void)
     }
 
     memset(&rl_deploy_debug, 0, sizeof(rl_deploy_debug));
+    if (rl_model_is_valid(rl_deploy_model_select))
+    {
+        rl_active_model = rl_deploy_model_select;
+    }
+    else
+    {
+        rl_deploy_model_select = RL_POLICY_MODEL_STABLE;
+        rl_active_model = RL_POLICY_MODEL_STABLE;
+    }
+    rl_deploy_debug.requested_model = (uint8_t)rl_deploy_model_select;
+    rl_deploy_debug.active_model = (uint8_t)rl_active_model;
+    rl_deploy_debug.keyboard_normal_model = (uint8_t)rl_keyboard_normal_model;
+    rl_deploy_debug.keyboard_jump_phase = (uint8_t)rl_keyboard_jump_phase;
+    rl_deploy_debug.keyboard_jump_cycles = rl_keyboard_jump_cycles;
     rl_deploy_debug.policy_ready = RLPolicy_Init(RLPolicy_GetInstance());
     rl_deploy_debug.initialized = 1U;
     rl_deploy_initialized = 1U;
@@ -631,10 +915,24 @@ void RLDeploy_Init(void)
 void RLDeploy_Step500Hz(void)
 {
     RLPolicy_t *policy;
+    RLPolicyModel_t requested_model;
 
     if (!rl_deploy_initialized)
     {
         RLDeploy_Init();
+    }
+
+    rl_update_remote_model_selection();
+    rl_update_keyboard_model_selection();
+    requested_model = rl_deploy_model_select;
+    rl_deploy_debug.requested_model = (uint8_t)requested_model;
+    if (rl_model_is_valid(requested_model) &&
+        (requested_model != rl_active_model))
+    {
+        rl_active_model = requested_model;
+        rl_deploy_debug.active_model = (uint8_t)rl_active_model;
+        ++rl_deploy_debug.model_switch_count;
+        rl_clear_policy_runtime();
     }
 
     ++rl_deploy_debug.sample_count;
@@ -684,7 +982,7 @@ void RLDeploy_Step500Hz(void)
     policy = RLPolicy_GetInstance();
     rl_deploy_debug.inference_ok = RLPolicy_Run(
         policy,
-        RL_POLICY_MODEL_UPSTAIRS,
+        rl_active_model,
         rl_deploy_debug.obs,
         rl_deploy_debug.obs_history,
         rl_deploy_debug.actions);

@@ -13,6 +13,10 @@
 #include "stable_data.h"
 #include "upstairs.h"
 #include "upstairs_data.h"
+#include "spin.h"
+#include "spin_data.h"
+#include "jump.h"
+#include "jump_data.h"
 
 /* ============================================================
  * Network Context
@@ -48,6 +52,20 @@ static NetworkContext_t upstairs_ctx = {
     0
 };
 
+static NetworkContext_t spin_ctx = {
+    AI_HANDLE_NULL,
+    NULL,
+    NULL,
+    0
+};
+
+static NetworkContext_t jump_ctx = {
+    AI_HANDLE_NULL,
+    NULL,
+    NULL,
+    0
+};
+
 static uint8_t rl_policy_array_is_finite(const float *data, uint32_t size)
 {
     uint32_t i;
@@ -71,6 +89,8 @@ static uint8_t rl_policy_array_is_finite(const float *data, uint32_t size)
 
 AI_ALIGNED(4) static ai_u8 stable_activations[AI_STABLE_DATA_ACTIVATION_1_SIZE];
 AI_ALIGNED(4) static ai_u8 upstairs_activations[AI_UPSTAIRS_DATA_ACTIVATION_1_SIZE];
+AI_ALIGNED(4) static ai_u8 spin_activations[AI_SPIN_DATA_ACTIVATION_1_SIZE];
+AI_ALIGNED(4) static ai_u8 jump_activations[AI_JUMP_DATA_ACTIVATION_1_SIZE];
 
 /* ============================================================
  * Global RL Policy instance
@@ -181,13 +201,88 @@ static uint8_t RLPolicy_InitUpstairs(void)
 
     return upstairs_ctx.ready;
 }
+
 /* ============================================================
- * Initialize Pin network
+ * Initialize Spin (Pin policy) network
  * ============================================================ */
+static uint8_t RLPolicy_InitSpin(void)
+{
+    const ai_handle activation_buffers[] = {
+        AI_HANDLE_PTR(spin_activations)
+    };
+
+    ai_error create_error;
+    ai_u16 input_count = 0;
+    ai_u16 output_count = 0;
+
+    if (spin_ctx.ready)
+    {
+        return 1U;
+    }
+
+    create_error = ai_spin_create_and_init(
+        &spin_ctx.network,
+        activation_buffers,
+        NULL
+    );
+
+    if (create_error.type != AI_ERROR_NONE)
+    {
+        spin_ctx.ready = 0U;
+        return 0U;
+    }
+
+    spin_ctx.inputs = ai_spin_inputs_get(spin_ctx.network, &input_count);
+    spin_ctx.outputs = ai_spin_outputs_get(spin_ctx.network, &output_count);
+    spin_ctx.ready =
+        (spin_ctx.inputs != NULL) &&
+        (spin_ctx.outputs != NULL) &&
+        (input_count == AI_SPIN_IN_NUM) &&
+        (output_count == AI_SPIN_OUT_NUM);
+
+    return spin_ctx.ready;
+}
 
 /* ============================================================
  * Initialize Jump network
  * ============================================================ */
+static uint8_t RLPolicy_InitJump(void)
+{
+    const ai_handle activation_buffers[] = {
+        AI_HANDLE_PTR(jump_activations)
+    };
+
+    ai_error create_error;
+    ai_u16 input_count = 0;
+    ai_u16 output_count = 0;
+
+    if (jump_ctx.ready)
+    {
+        return 1U;
+    }
+
+    create_error = ai_jump_create_and_init(
+        &jump_ctx.network,
+        activation_buffers,
+        NULL
+    );
+
+    if (create_error.type != AI_ERROR_NONE)
+    {
+        jump_ctx.ready = 0U;
+        return 0U;
+    }
+
+    jump_ctx.inputs = ai_jump_inputs_get(jump_ctx.network, &input_count);
+    jump_ctx.outputs = ai_jump_outputs_get(jump_ctx.network, &output_count);
+    jump_ctx.ready =
+        (jump_ctx.inputs != NULL) &&
+        (jump_ctx.outputs != NULL) &&
+        (input_count == AI_JUMP_IN_NUM) &&
+        (output_count == AI_JUMP_OUT_NUM);
+
+    return jump_ctx.ready;
+}
 
 /* ============================================================
  * Get context according to model
@@ -203,6 +298,10 @@ NetworkContext_t *RLPolicy_GetContext(
             return &stable_ctx;
 		case RL_POLICY_MODEL_UPSTAIRS:
             return &upstairs_ctx;
+        case RL_POLICY_MODEL_PIN:
+            return &spin_ctx;
+        case RL_POLICY_MODEL_JUMP:
+            return &jump_ctx;
         default:
             return NULL;
     }
@@ -227,6 +326,8 @@ uint8_t RLPolicy_Init(RLPolicy_t *policy)
 {
     uint8_t stable_ok;
 	uint8_t upstairs_ok;
+    uint8_t spin_ok;
+    uint8_t jump_ok;
 
     if (policy == NULL)
     {
@@ -253,8 +354,10 @@ uint8_t RLPolicy_Init(RLPolicy_t *policy)
 
     stable_ok = RLPolicy_InitStable();
 	upstairs_ok = RLPolicy_InitUpstairs();
+	spin_ok = RLPolicy_InitSpin();
+	jump_ok = RLPolicy_InitJump();
 	
-    policy->ready = (stable_ok && upstairs_ok);
+    policy->ready = (stable_ok && upstairs_ok && spin_ok && jump_ok);
 	
     return policy->ready;
 }
@@ -414,6 +517,28 @@ uint8_t RLPolicy_Run(
 			
             break;
 		}
+        case RL_POLICY_MODEL_PIN:
+        {
+            memcpy(obs_input, obs, AI_SPIN_IN_1_SIZE_BYTES);
+            memcpy(obs_history_input, obs_history, AI_SPIN_IN_2_SIZE_BYTES);
+            processed_batches = ai_spin_run(
+                ctx->network,
+                ctx->inputs,
+                ctx->outputs
+            );
+            break;
+        }
+        case RL_POLICY_MODEL_JUMP:
+        {
+            memcpy(obs_input, obs, AI_JUMP_IN_1_SIZE_BYTES);
+            memcpy(obs_history_input, obs_history, AI_JUMP_IN_2_SIZE_BYTES);
+            processed_batches = ai_jump_run(
+                ctx->network,
+                ctx->inputs,
+                ctx->outputs
+            );
+            break;
+        }
         default:
             memset(actions, 0, sizeof(float) * RL_POLICY_ACTION_SIZE);
             return 0U;
@@ -439,6 +564,12 @@ uint8_t RLPolicy_Run(
                 break;
 			case RL_POLICY_MODEL_UPSTAIRS:
                 (void)ai_upstairs_get_error(ctx->network);
+                break;
+            case RL_POLICY_MODEL_PIN:
+                (void)ai_spin_get_error(ctx->network);
+                break;
+            case RL_POLICY_MODEL_JUMP:
+                (void)ai_jump_get_error(ctx->network);
                 break;
             default:
                 break;
@@ -485,6 +616,14 @@ uint8_t RLPolicy_Run(
                 AI_UPSTAIRS_OUT_1_SIZE_BYTES
             );
 
+            break;
+
+        case RL_POLICY_MODEL_PIN:
+            memcpy(actions, actions_output, AI_SPIN_OUT_1_SIZE_BYTES);
+            break;
+
+        case RL_POLICY_MODEL_JUMP:
+            memcpy(actions, actions_output, AI_JUMP_OUT_1_SIZE_BYTES);
             break;
 
         default:
