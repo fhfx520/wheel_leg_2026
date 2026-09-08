@@ -800,56 +800,56 @@
   ],
   "environment": {
     "generated_model": {
-      "generated_time": "2026-09-09T00:05:01+0800",
+      "generated_time": "2026-09-09T00:03:49+0800",
       "model_files": [
         {
-          "name": "spin_data_params.h",
-          "signature": "0xd34f33354198276536d0043f1f14769f"
+          "name": "stable_data_params.h",
+          "signature": "0xca2f32193a2985331f6ce149db055e62"
         },
         {
-          "name": "spin_data_params.c",
-          "signature": "0xa49d90e9a20d033646de67f2b52aa871"
+          "name": "stable_data_params.c",
+          "signature": "0x0dcd4a75059e1c173682f1b46abf0b90"
         },
         {
-          "name": "spin_data.h",
-          "signature": "0x61d94282b9e25e6447af080f641ee0f5"
+          "name": "stable_data.h",
+          "signature": "0x6ce4ad70e5d83d954c361feb9e2fee5d"
         },
         {
-          "name": "spin_data.c",
-          "signature": "0xd3b8a189330dcfd0c26695be1da22392"
+          "name": "stable_data.c",
+          "signature": "0x4478f3bb0bb06ca16a047544b339e38c"
         },
         {
-          "name": "spin_config.h",
-          "signature": "0xe47e916f43a71adc268f18098506a07c"
+          "name": "stable_config.h",
+          "signature": "0x0d74ba75bb601cb66ed815ff73623570"
         },
         {
-          "name": "spin.h",
-          "signature": "0x76e756e0f2257905f0df4ed4bad9fe18"
+          "name": "stable.h",
+          "signature": "0x88c9dadce0deff6898e6eb14591b9fdd"
         },
         {
-          "name": "spin.c",
-          "signature": "0x15d4f420c0f13f5debbf771182204410"
+          "name": "stable.c",
+          "signature": "0x0b35246f71041c58b761549ebd927e03"
         }
       ],
-      "name": "spin"
+      "name": "stable"
     },
-    "network_signature": "0xccd8f70e0466348f",
+    "network_signature": "0x3ad92542e5de13f2",
     "test_name": "",
     "tools": [
       {
-        "arguments": "generate --target stm32h7 --name spin -m D:/RM/XYEGA_RM2026_WheelLeg_Infatry_RLdeploy-main/pseudocode/example/onnx/pin/spin_pos0.23_0.65_p10.0_d1.0_0.1.onnx --compression none --verbosity 1 -O time --workspace C:/Users/25328/AppData/Local/Temp/mxAI_workspace11692941525150009647340115107633462 --output C:/Users/25328/.stm32cubemx/spin_output",
+        "arguments": "generate --target stm32h7 --name stable -m C:/Users/25328/Desktop/longlegs_flat_2800.onnx --compression none --verbosity 1 -O time --workspace C:/Users/25328/AppData/Local/Temp/mxAI_workspace116922231330210017618850152334696637 --output C:/Users/25328/.stm32cubemx/stable_output",
         "environment": [
           "STATS_TYPE=X-CUBE-AI"
         ],
         "input_model": {
           "model_files": [
             {
-              "name": "spin_pos0.23_0.65_p10.0_d1.0_0.1.onnx",
-              "signature": "0xeff1b3f8026220d4a8219cd00e3b501e"
+              "name": "longlegs_flat_2800.onnx",
+              "signature": "0x74e5f12e7949cd7a36b154492bd4674c"
             }
           ],
           "n_params": 38825,
-          "name": "spin_pos0_23_0_65_p10_0_d1_0_0_1",
+          "name": "longlegs_flat_2800",
           "size": 155300,
           "type": "onnx"
         },
@@ -1035,7 +1035,7 @@
         277,
         265
       ],
-      "name": "spin_pos0_23_0_65_p10_0_d1_0_0_1",
+      "name": "longlegs_flat_2800",
       "nodes": [
         {
           "attributes": {
@@ -1498,7 +1498,7 @@
       "virtual": false
     },
     {
-      "address": "s_spin_weights_array_u64",
+      "address": "s_stable_weights_array_u64",
       "alignment": 0,
       "attributes": {
         "latency": "UNDEF",

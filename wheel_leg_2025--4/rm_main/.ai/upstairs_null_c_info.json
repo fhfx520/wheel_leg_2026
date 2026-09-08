@@ -800,56 +800,56 @@
   ],
   "environment": {
     "generated_model": {
-      "generated_time": "2026-09-09T00:05:01+0800",
+      "generated_time": "2026-09-09T00:04:12+0800",
       "model_files": [
         {
-          "name": "spin_data_params.h",
-          "signature": "0xd34f33354198276536d0043f1f14769f"
+          "name": "upstairs_data_params.h",
+          "signature": "0x5f663b8c3aeba4ddc65223f812b9db21"
         },
         {
-          "name": "spin_data_params.c",
-          "signature": "0xa49d90e9a20d033646de67f2b52aa871"
+          "name": "upstairs_data_params.c",
+          "signature": "0x3425eedff94754a42673db6d95ea4070"
         },
         {
-          "name": "spin_data.h",
-          "signature": "0x61d94282b9e25e6447af080f641ee0f5"
+          "name": "upstairs_data.h",
+          "signature": "0x7790282ec92b659d58641c70e90b176d"
         },
         {
-          "name": "spin_data.c",
-          "signature": "0xd3b8a189330dcfd0c26695be1da22392"
+          "name": "upstairs_data.c",
+          "signature": "0x83b838dc6b60dd6a4fe735f0347c1384"
         },
         {
-          "name": "spin_config.h",
-          "signature": "0xe47e916f43a71adc268f18098506a07c"
+          "name": "upstairs_config.h",
+          "signature": "0x51e399bd7eec3861cbf77498be808ee4"
         },
         {
-          "name": "spin.h",
-          "signature": "0x76e756e0f2257905f0df4ed4bad9fe18"
+          "name": "upstairs.h",
+          "signature": "0x092b0b9b581a09163645057e8108d08e"
         },
         {
-          "name": "spin.c",
-          "signature": "0x15d4f420c0f13f5debbf771182204410"
+          "name": "upstairs.c",
+          "signature": "0x1e194312812891a778b99dab13d4e371"
         }
       ],
-      "name": "spin"
+      "name": "upstairs"
     },
-    "network_signature": "0xccd8f70e0466348f",
+    "network_signature": "0xdcffa870f6ddf6a9",
     "test_name": "",
     "tools": [
       {
-        "arguments": "generate --target stm32h7 --name spin -m D:/RM/XYEGA_RM2026_WheelLeg_Infatry_RLdeploy-main/pseudocode/example/onnx/pin/spin_pos0.23_0.65_p10.0_d1.0_0.1.onnx --compression none --verbosity 1 -O time --workspace C:/Users/25328/AppData/Local/Temp/mxAI_workspace11692941525150009647340115107633462 --output C:/Users/25328/.stm32cubemx/spin_output",
+        "arguments": "generate --target stm32h7 --name upstairs -m D:/RM/XYEGA_RM2026_WheelLeg_Infatry_RLdeploy-main/pseudocode/example/onnx/upstairs/upstairs_pos0.23_0.65_p15.0_d1.0_0.1.onnx --compression none --verbosity 1 -O time --workspace C:/Users/25328/AppData/Local/Temp/mxAI_workspace11692448345606009952173249940734379 --output C:/Users/25328/.stm32cubemx/upstairs_output",
         "environment": [
           "STATS_TYPE=X-CUBE-AI"
         ],
         "input_model": {
           "model_files": [
             {
-              "name": "spin_pos0.23_0.65_p10.0_d1.0_0.1.onnx",
-              "signature": "0xeff1b3f8026220d4a8219cd00e3b501e"
+              "name": "upstairs_pos0.23_0.65_p15.0_d1.0_0.1.onnx",
+              "signature": "0x978e5b35fb6cf58afc3cc07988bb3a3a"
             }
           ],
           "n_params": 38825,
-          "name": "spin_pos0_23_0_65_p10_0_d1_0_0_1",
+          "name": "upstairs_pos0_23_0_65_p15_0_d1_0_0_1",
           "size": 155300,
           "type": "onnx"
         },
@@ -1035,7 +1035,7 @@
         277,
         265
       ],
-      "name": "spin_pos0_23_0_65_p10_0_d1_0_0_1",
+      "name": "upstairs_pos0_23_0_65_p15_0_d1_0_0_1",
       "nodes": [
         {
           "attributes": {
@@ -1498,7 +1498,7 @@
       "virtual": false
     },
     {
-      "address": "s_spin_weights_array_u64",
+      "address": "s_upstairs_weights_array_u64",
       "alignment": 0,
       "attributes": {
         "latency": "UNDEF",

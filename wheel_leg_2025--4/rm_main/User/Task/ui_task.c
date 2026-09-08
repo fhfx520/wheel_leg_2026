@@ -22,6 +22,7 @@
 #include "ctype.h"
 #include "prot_tof.h"
 #include "mode_switch_task.h"
+#include "rl_deploy.h"
 us_time_t ui_time;
 
 extern ui_string_frame_t ui_g_4_0;
@@ -383,8 +384,8 @@ void ui_update(void)
 	//ui_group5 update end
 	
 	//ui_group6 update begin
-				
-	if(ui_get_online_data_container.fric_online == 3)
+	//暂时先把这里的摩擦轮在线信息改成RL与LQR的相关ui
+	/*if(ui_get_online_data_container.fric_online == 3)
 	{
 		if(ui_g_6_fric_left_warning->string[0] != 'f')
 		{
@@ -436,6 +437,57 @@ void ui_update(void)
 			_ui_update_fric_r_offline();
 		}
 	}
+	*/
+	if(g_robot_ctx.output.torque_source == CHASSIS_TORQUE_RL)
+	{
+		if(ui_g_6_fric_left_warning->string[0] != 'R')
+		{
+			strcpy(ui_g_6_fric_left_warning->string,"RL_CONTROL ");
+			_ui_update_fric_l_offline();
+		}
+		if(rl_deploy_debug.requested_model == RL_POLICY_MODEL_STABLE)
+		{
+			if(ui_g_6_fric_right_warning->string[0] != 'S')
+			{
+				strcpy(ui_g_6_fric_right_warning->string,"STABLE");
+				_ui_update_fric_r_offline();
+			}
+		}
+		else if(rl_deploy_debug.requested_model == RL_POLICY_MODEL_UPSTAIRS)
+		{
+			if(ui_g_6_fric_right_warning->string[0] != 'U')
+			{
+				strcpy(ui_g_6_fric_right_warning->string,"UPSTAIRS");
+				_ui_update_fric_r_offline();
+			}
+		}
+		else if(rl_deploy_debug.requested_model == RL_POLICY_MODEL_PIN)
+		{
+			if(ui_g_6_fric_right_warning->string[0] != 'P')
+			{
+				strcpy(ui_g_6_fric_right_warning->string,"PIN");
+				_ui_update_fric_r_offline();
+			}
+		}
+		else if(rl_deploy_debug.requested_model == RL_POLICY_MODEL_JUMP)
+		{
+			if(ui_g_6_fric_right_warning->string[0] != 'J')
+			{
+				strcpy(ui_g_6_fric_right_warning->string,"JUMP");
+				_ui_update_fric_r_offline();
+			}
+		}
+	}
+	else if(g_robot_ctx.output.torque_source == CHASSIS_TORQUE_WLR)
+	{
+		if(ui_g_6_fric_left_warning->string[0] != 'L')
+		{
+			strcpy(ui_g_6_fric_left_warning->string,"LQR_CONTROL");
+			_ui_update_fric_l_offline();
+		}
+	}
+	
+	
 
 	if(trigger_motor.online == 0)
 	{

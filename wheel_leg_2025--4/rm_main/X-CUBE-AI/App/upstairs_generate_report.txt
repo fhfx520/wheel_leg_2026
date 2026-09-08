@@ -1,6 +1,6 @@
 ST Edge AI Core v2.2.0-20266 2adc00962
-Created date          : 2026-09-07 20:06:04
-Parameters            : generate --target stm32h7 --name upstairs -m D:/RM/XYEGA_RM2026_WheelLeg_Infatry_RLdeploy-main/pseudocode/example/onnx/upstairs/upstairs_pos0.23_0.65_p15.0_d1.0_0.1.onnx --compression none --verbosity 1 -O time --workspace C:/Users/25328/AppData/Local/Temp/mxAI_workspace106854510275930012618814882463486597 --output C:/Users/25328/.stm32cubemx/upstairs_output
+Created date          : 2026-09-09 00:04:14
+Parameters            : generate --target stm32h7 --name upstairs -m D:/RM/XYEGA_RM2026_WheelLeg_Infatry_RLdeploy-main/pseudocode/example/onnx/upstairs/upstairs_pos0.23_0.65_p15.0_d1.0_0.1.onnx --compression none --verbosity 1 -O time --workspace C:/Users/25328/AppData/Local/Temp/mxAI_workspace11692448345606009952173249940734379 --output C:/Users/25328/.stm32cubemx/upstairs_output
 
 Exec/report summary (generate)
 ------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -11,7 +11,7 @@ compression        :   none
 options            :   allocate-inputs, allocate-outputs                                                                                              
 optimization       :   time                                                                                                                           
 target/series      :   stm32h7                                                                                                                        
-workspace dir      :   C:\Users\25328\AppData\Local\Temp\mxAI_workspace106854510275930012618814882463486597                                           
+workspace dir      :   C:\Users\25328\AppData\Local\Temp\mxAI_workspace11692448345606009952173249940734379                                            
 output dir         :   C:\Users\25328\.stm32cubemx\upstairs_output                                                                                    
 model_fmt          :   float                                                                                                                          
 model_name         :   upstairs_pos0_23_0_65_p15_0_d1_0_0_1                                                                                           
