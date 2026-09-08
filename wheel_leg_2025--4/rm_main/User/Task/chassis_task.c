@@ -260,7 +260,7 @@ static void chassis_init(void)
     memset(&chassis_y_ramp, 0, sizeof(ramp_t));
     wlr_init();
 
-    ramp_init(&chassis_x_ramp, 0.01f, -3.0f, 3.0f);
+    ramp_init(&chassis_x_ramp, 0.01f, -2.0f, 2.0f);
     ramp_init(&chassis_y_ramp, 0.01f, -3.0f, 3.0f);
     ramp_init(&chassis_rotate_ramp, 0.06f, -12.0f, 12.0f);
 
@@ -300,10 +300,13 @@ static void chassis_execute_fsm(void)
     rotate_flag = 0;
 	wlr.energy_flag = 0;
 	wlr.double_flag = 0;
+	if(g_robot_ctx.output.chassis != CHASSIS_STOP)
+		wlr.ctrl_mode = ((g_robot_ctx.output.torque_source == CHASSIS_TORQUE_RL) && (!chassis.recover_flag) ? 1 : 2);
+	else
+		wlr.ctrl_mode = 0; 
     switch (g_robot_ctx.output.chassis) {
         case CHASSIS_STOP:
 		{
-            wlr.ctrl_mode = 0; 
             wlr.high_flag = 0;
             chassis_reset_special_flag();
 			chassis_reset_recovery();
@@ -313,7 +316,6 @@ static void chassis_execute_fsm(void)
 
         case CHASSIS_LOW:
 		{
-            wlr.ctrl_mode = 2; 
             wlr.high_flag = 0; 
             chassis_reset_special_flag();
 			chassis_reset_finish_flag();
@@ -324,7 +326,6 @@ static void chassis_execute_fsm(void)
 
         case CHASSIS_HIGH:
 		{
-            wlr.ctrl_mode = 2;
             wlr.high_flag = 0; 
             chassis_reset_special_flag();
 			chassis_reset_finish_flag();
@@ -333,7 +334,6 @@ static void chassis_execute_fsm(void)
 
         case CHASSIS_LOW_SPIN:
 		{
-            wlr.ctrl_mode = 2;
             wlr.high_flag = 0; 
             rotate_flag = 1;   
 			chassis_reset_special_flag();
@@ -343,7 +343,6 @@ static void chassis_execute_fsm(void)
 
         case CHASSIS_FIGHT:
 		{
-            wlr.ctrl_mode = 2;
             wlr.high_flag = 0;
             chassis_reset_special_flag();
 			chassis_reset_finish_flag();
@@ -352,7 +351,6 @@ static void chassis_execute_fsm(void)
 
         case CHASSIS_TERRAIN_READY:
 		{
-            wlr.ctrl_mode = 2;
             wlr.high_flag = 0;
             wlr.jump_flag = WLR_JUMP_IDLE;
 			wlr.stair_flag = WLR_STAIR_IDLE;
@@ -367,7 +365,6 @@ static void chassis_execute_fsm(void)
 		case CHASSIS_TERRAIN_READY_2:
 		{
 			wlr.double_flag = 1;
-            wlr.ctrl_mode = 2;
             wlr.high_flag = 0;
             wlr.jump_flag = WLR_JUMP_IDLE;
 			wlr.stair_flag = WLR_STAIR_IDLE;
@@ -381,7 +378,6 @@ static void chassis_execute_fsm(void)
 		
 		case CHASSIS_ASCEND:
 		{
-			 wlr.ctrl_mode = 2;
             wlr.high_flag = 0; 
             chassis_reset_special_flag();
 			chassis_reset_finish_flag();
@@ -390,7 +386,6 @@ static void chassis_execute_fsm(void)
 		
 		case CHASSIS_ENERGY:
 		{
-			wlr.ctrl_mode = 2;
 			wlr.high_flag = 0;
 			chassis_reset_special_flag();
 			chassis_reset_finish_flag();
@@ -400,7 +395,6 @@ static void chassis_execute_fsm(void)
 		
 		case CHASSIS_STAIR:
 		{
-			wlr.ctrl_mode = 2;
 			wlr.high_flag = 0;
 			wlr.sky_flag = WLR_SKY_IDLE;
 			wlr.jump_flag = WLR_JUMP_IDLE;
@@ -475,40 +469,40 @@ static void chassis_data_input(void)
         case CHASSIS_HIGH:
         case CHASSIS_TERRAIN_READY:		 // 整合了原版的所有 FOLLOW 和 PRONE
 		case CHASSIS_TERRAIN_READY_2 : {
-//			if((key_scan_clear(KB_CTRL) || check_ch3_trigger()) && gimbal.start_up)
-//				chassis.turn_back_flag = 1;
-//			if(chassis.turn_back_flag && chassis.turn_back_cnt <= 1000)
-//			{
-//				chassis.turn_back_cnt++;//2s超时检测
-//				if(wlr.direction)
-//				{
-//					wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
-//					wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;  
-//					wlr.wz_ref = 0.0f;
-//					wlr.yaw_err = circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
-//					if((wlr.yaw_err < PI / 3 && wlr.yaw_err > 0) || (wlr.yaw_err > - PI / 3 && wlr.yaw_err < 0))
-//					{
-//						wlr.direction = 0;
-//						chassis.turn_back_flag = 0;
-//					}
-//				}
-//				else
-//				{
-//					wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI;
-//					wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;  
-//					wlr.wz_ref = 0.0f;
-//					wlr.yaw_err = circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
-//					if((wlr.yaw_err < PI / 3 && wlr.yaw_err > 0) || (wlr.yaw_err > - PI / 3 && wlr.yaw_err < 0))
-//					{
-//						wlr.direction = 1;
-//						chassis.turn_back_flag = 0;
-//					}
-//				}
-//			}
-//			else
-//			{
-//				chassis.turn_back_flag = 0;
-//				chassis.turn_back_cnt = 0;
+			if((key_scan_clear(KB_CTRL) || check_ch3_trigger()) && gimbal.start_up)
+				chassis.turn_back_flag = 1;
+			if(chassis.turn_back_flag && chassis.turn_back_cnt <= 1000)
+			{
+				chassis.turn_back_cnt++;//2s超时检测
+				if(wlr.direction)
+				{
+					wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
+					wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;  
+					wlr.wz_ref = 0.0f;
+					wlr.yaw_err = circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
+					if((wlr.yaw_err < PI / 3 && wlr.yaw_err > 0) || (wlr.yaw_err > - PI / 3 && wlr.yaw_err < 0))
+					{
+						wlr.direction = 0;
+						chassis.turn_back_flag = 0;
+					}
+				}
+				else
+				{
+					wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI;
+					wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;  
+					wlr.wz_ref = 0.0f;
+					wlr.yaw_err = circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
+					if((wlr.yaw_err < PI / 3 && wlr.yaw_err > 0) || (wlr.yaw_err > - PI / 3 && wlr.yaw_err < 0))
+					{
+						wlr.direction = 1;
+						chassis.turn_back_flag = 0;
+					}
+				}
+			}
+			else
+			{
+				chassis.turn_back_flag = 0;
+				chassis.turn_back_cnt = 0;
 				if (gimbal.start_up)    
 					wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
 				else                    
@@ -518,14 +512,14 @@ static void chassis_data_input(void)
 				wlr.wz_ref = 0.0f;
 				wlr.yaw_err = circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
 				
-//				if (wlr.yaw_err > PI / 2 || wlr.yaw_err < - PI / 2) {
-//					wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI ;
-//					wlr.direction = 1;
-//				}
-//				else if(wlr.yaw_err < PI / 2 || wlr.yaw_err > - PI / 2 ) {
-//					wlr.direction = 0;
-//				}
-//			}
+				if (wlr.yaw_err > PI / 2 || wlr.yaw_err < - PI / 2) {
+					wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI ;
+					wlr.direction = 1;
+				}
+				else if(wlr.yaw_err < PI / 2 || wlr.yaw_err > - PI / 2 ) {
+					wlr.direction = 0;
+				}
+			}
 			chassis_rotate_ramp.out =0;
             break;
         }
@@ -595,7 +589,7 @@ static void chassis_data_input(void)
     }
     else if(rotate_ramp_flag == 0) rotate_flag = 0;   
     
-    if (last_chassis_mode == CHASSIS_LOW_SPIN && (
+    if (last_chassis_mode == CHASSIS_LOW_SPIN && wlr.ctrl_mode == 2 && (
         g_robot_ctx.output.chassis == CHASSIS_LOW || 
         g_robot_ctx.output.chassis == CHASSIS_HIGH ||
         g_robot_ctx.output.chassis == CHASSIS_TERRAIN_READY)) {
@@ -631,6 +625,13 @@ static void chassis_data_input(void)
     }
     
     wlr.v_ref = chassis.output.vx;
+	if(g_robot_ctx.output.torque_source == CHASSIS_TORQUE_RL)
+	{
+		if(g_robot_ctx.output.chassis == CHASSIS_HIGH && rl_deploy_debug.requested_model == 1)
+		{
+			wlr.v_ref = (wlr.v_ref < -2.0f ? -2.0f : wlr.v_ref);
+		}	
+	}
     
     if (g_robot_ctx.output.chassis == CHASSIS_FIGHT){
         wlr.v_ref = chassis.output.vy;
@@ -989,37 +990,29 @@ static void chassis_data_output(void)
         for (int i = 0; i < 4; i++) {
 			dm_motor_set_control_para(&joint_motor[i], 0, 0, 0, 0, 0);
         }
-    }else if (wlr.ctrl_mode == 2) {//力控
-		if(g_robot_ctx.output.torque_source == CHASSIS_TORQUE_RL)
+	}else if(wlr.ctrl_mode == 1){//强化学习
+		if (rl_deploy_debug.policy_ready &&
+			rl_deploy_debug.inference_ok &&
+			rl_deploy_debug.history_initialized &&
+			(!rl_deploy_debug.numeric_fault))
 		{
-			if ((chassis.recover_flag == 1 && chassis.rescue_inter_flag == CHASSIS_RESCUE_RECOVER) &&
-				(fabsf(vmc[0].L_fdb - wlr.recover_length) < 0.1f) &&
-				(fabsf(vmc[1].L_fdb - wlr.recover_length) < 0.1f))
-				 chassis.recover_flag = 0;
-
-			if (rl_deploy_debug.policy_ready &&
-				rl_deploy_debug.inference_ok &&
-				rl_deploy_debug.history_initialized &&
-				(!rl_deploy_debug.numeric_fault))
-			{
-				dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, rl_deploy_debug.tau_motor_shadow[0]);
-				dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, rl_deploy_debug.tau_motor_shadow[1]);
-				dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, rl_deploy_debug.tau_motor_shadow[3]);
-				dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, rl_deploy_debug.tau_motor_shadow[4]);
-				dji_motor_set_torque(&driver_motor[0], rl_deploy_debug.tau_motor_shadow[2]);
-				dji_motor_set_torque(&driver_motor[1], rl_deploy_debug.tau_motor_shadow[5]);
-			}
-			else
-			{
-				dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, 0);
-				dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);
-				dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, 0);
-				dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
-				dji_motor_set_torque(&driver_motor[0], 0);
-				dji_motor_set_torque(&driver_motor[1], 0);
-			}
+			dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, rl_deploy_debug.tau_motor_shadow[0]);
+			dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, rl_deploy_debug.tau_motor_shadow[1]);
+			dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, rl_deploy_debug.tau_motor_shadow[3]);
+			dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, rl_deploy_debug.tau_motor_shadow[4]);
+			dji_motor_set_torque(&driver_motor[0], rl_deploy_debug.tau_motor_shadow[2]);
+			dji_motor_set_torque(&driver_motor[1], rl_deploy_debug.tau_motor_shadow[5]);
 		}
-		else{
+		else
+		{
+			dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, 0);
+			dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);
+			dm_motor_set_control_para(&joint_motor[2], 0, 0, 0, 0, 0);
+			dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
+			dji_motor_set_torque(&driver_motor[0], 0);
+			dji_motor_set_torque(&driver_motor[1], 0);
+		}
+	}else if (wlr.ctrl_mode == 2) {//LQR+PID
         dji_motor_set_torque(&driver_motor[0], -wlr.side[0].Tw);
         dji_motor_set_torque(&driver_motor[1],  wlr.side[1].Tw);
 		if((chassis.recover_flag == 1 || chassis.recover_flag == 2)) 
@@ -1029,10 +1022,6 @@ static void chassis_data_output(void)
 		if(chassis.recover_flag != 1) {
 			if(wlr.joint_all_online){
 				if(wlr.crash_flag) {
-					// dm_motor_set_control_para(&joint_motor[0], 0, -3, 0, 5, 0);
-					// dm_motor_set_control_para(&joint_motor[1], 0, 0, 0, 0, 0);	
-					// dm_motor_set_control_para(&joint_motor[2], 0, 3, 0, 5, 0);
-					// dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);
 					crash_left_T = pid_calc(&crash_pid_L, 1.0f, lqr.X_fdb[4]);
 					crash_right_T = pid_calc(&crash_pid_R, 1.0f, lqr.X_fdb[6]);
 					dm_motor_set_control_para(&joint_motor[0], 0, 0, 0, 0, -crash_left_T);
@@ -1054,7 +1043,6 @@ static void chassis_data_output(void)
 				dm_motor_set_control_para(&joint_motor[3], 0, 0, 0, 0, 0);  
 			}
 		}
-	}
     } else {
         wlr_protest();
         dji_motor_set_torque(&driver_motor[0], 0);
@@ -1091,6 +1079,11 @@ static void chassis_data_output(void)
     power_limit_current();
 }
 
+void chassis_control(void)
+{
+	return (wlr.ctrl_mode == 1 ? RLDeploy_Step500Hz() : wlr_control());
+}
+
 void chassis_set_container(void)
 {
 	chassis_set_imu_data_container.pit = wlr.pit_fdb;
@@ -1117,14 +1110,9 @@ void chassis_task(void const *argu)
         // 3. 期望速度和旋转矩阵计算
         chassis_data_input();
 
-	#ifdef AI_CONTROL
-        // RL deployment: 500 Hz sampling and 100 Hz inference.
-        RLDeploy_Step500Hz();
-	#endif
-        
         // 4. 恢复你本来的执行逻辑结构
-        if(g_robot_ctx.output.chassis != CHASSIS_STOP || 1)
-            wlr_control();
+        if(g_robot_ctx.output.chassis != CHASSIS_STOP)
+            chassis_control();
         else
             chassis_init(); // 恢复你的原有保护调用
 		

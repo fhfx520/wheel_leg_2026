@@ -8,6 +8,7 @@
 #include "drv_dm_motor.h"
 #include "drv_dji_motor.h"
 #include "robot_logic.h"
+#include "math_lib.h"
 
 #define RL_DEPLOY_INFERENCE_DIVIDER       5U
 #define RL_DEPLOY_HISTORY_FRAMES          5U
@@ -600,7 +601,7 @@ static void rl_update_projected_gravity(void)
     rl_deploy_debug.projected_gravity[1] = -sin_roll * cos_pitch;
     rl_deploy_debug.projected_gravity[2] = -cos_roll * cos_pitch;
 }
-float k = 1.0f;
+float k = 5.0f;
 static void rl_build_observation(void)
 {
 	const RLDeployModelParams_t *params = rl_get_model_params();
@@ -614,7 +615,7 @@ static void rl_build_observation(void)
     uint32_t i;
 
     rl_deploy_debug.command[0] =
-        (wlr.v_ref < -2.0f ? -2.0f : wlr.v_ref) * params->command_scale[0];
+	(wlr.v_ref) * params->command_scale[0];
     if (rl_active_model == RL_POLICY_MODEL_PIN)
     {
         rl_deploy_debug.command[1] =
@@ -623,7 +624,7 @@ static void rl_build_observation(void)
     else
     {
         rl_deploy_debug.command[1] =
-            k * wlr.yaw_err * params->command_scale[1];
+            k * circle_error(wlr.yaw_ref,wlr.yaw_fdb,2 * PI) * params->command_scale[1];
     }
 
     if ((rl_keyboard_jump_phase == RL_DEPLOY_JUMP_CROUCH) ||

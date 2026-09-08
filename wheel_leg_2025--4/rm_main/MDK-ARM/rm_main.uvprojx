@@ -646,19 +646,9 @@
               <FilePath>..\User\Model\rl_policy_design.c</FilePath>
             </File>
             <File>
-              <FileName>rl_policy_design.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\User\Model\rl_policy_design.h</FilePath>
-            </File>
-            <File>
               <FileName>rl_deploy.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\Model\rl_deploy.c</FilePath>
-            </File>
-            <File>
-              <FileName>rl_deploy.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\User\Model\rl_deploy.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -909,11 +899,6 @@
               <FileType>1</FileType>
               <FilePath>..\User\Protocol\prot_tof.c</FilePath>
             </File>
-            <File>
-              <FileName>prot_tof.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\User\Protocol\prot_tof.h</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -1013,11 +998,6 @@
               <FileName>dcache_handle.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\Support\dcache_handle.c</FilePath>
-            </File>
-            <File>
-              <FileName>dcache_handle.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\User\Support\dcache_handle.h</FilePath>
             </File>
           </Files>
         </Group>
