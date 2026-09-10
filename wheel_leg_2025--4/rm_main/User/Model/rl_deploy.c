@@ -114,11 +114,11 @@ static const RLDeployModelParams_t rl_model_params[] = {
     },
     /* Upstairs / MiniRecover */
     {
-        {-0.23f, -0.65f, 0.0f, 0.23f, 0.65f, 0.0f},
-        {-0.23f, -0.65f, 0.23f, 0.65f},
-        {15.0f, 15.0f, 0.0f, 15.0f, 15.0f, 0.0f},
-        {1.0f, 1.0f, 0.1f, 1.0f, 1.0f, 0.1f},
-        {3.0f, 0.25f, 5.0f}
+        {0.2f, 0.4f, 0.0f, -0.2f, -0.4f, 0.0f},
+        {0.2f, 0.4f, -0.2f, -0.4f},
+        {20.0f, 20.0f, 0.0f, 20.0f, 20.0f, 0.0f},
+        {1.0f, 1.0f, 0.2f, 1.0f, 1.0f, 0.2f},
+        {2.0f, 0.25f, 5.0f}
     },
     /* Spin (the public enum retains the open-source name Pin). */
     {
