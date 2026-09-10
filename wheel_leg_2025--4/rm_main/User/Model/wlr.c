@@ -67,10 +67,10 @@ const float LegLengthMax = 0.34f, LegLengthMin = 0.11f;
 const float LegLengthHighFly = 0.28f; //长腿腿长腾空 0.28
 const float LegLengthFly 	 = 0.20f; //正常腿长腾空
 const float LegLengthHigh2 	 = 0.34f; //超长腿
-const float LegLengthHigh 	 = 0.16f; //长腿 0.23
+const float LegLengthHigh 	 = 0.21f; //长腿 0.23
 const float LegLengthRotate  = 0.15f; //正常
 const float LegLengthRotateHigh  = 0.28f; //正常
-const float LegLengthNormal  = 0.12f; //正常
+const float LegLengthNormal  = 0.16f; //正常
 const float LegLengthStair   = 0.18f; //磕碰下台阶腿长
 
 const float gas_spring_F = 310.0f;	//气弹簧行程为0时力	N

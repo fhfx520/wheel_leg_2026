@@ -326,7 +326,7 @@ static void chassis_execute_fsm(void)
 
         case CHASSIS_HIGH:
 		{
-            wlr.high_flag = 0; 
+            wlr.high_flag = 1; 
             chassis_reset_special_flag();
 			chassis_reset_finish_flag();
             break;
@@ -627,10 +627,14 @@ static void chassis_data_input(void)
     wlr.v_ref = chassis.output.vx;
 	if(g_robot_ctx.output.torque_source == CHASSIS_TORQUE_RL)
 	{
-		if(g_robot_ctx.output.chassis == CHASSIS_HIGH && rl_deploy_debug.requested_model == 1)
+		if(g_robot_ctx.output.chassis == CHASSIS_ASCEND && rl_deploy_debug.requested_model == 1)
 		{
 			wlr.v_ref = (wlr.v_ref < -2.0f ? -2.0f : wlr.v_ref);
 		}	
+		else
+		{
+			wlr.v_ref = (wlr.v_ref < -2.3f ? -2.3f : wlr.v_ref);
+		}
 	}
     
     if (g_robot_ctx.output.chassis == CHASSIS_FIGHT){

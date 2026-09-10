@@ -164,7 +164,11 @@ static void rl_update_remote_model_selection(void)
     }
     else if (g_robot_ctx.output.chassis == CHASSIS_ASCEND)
     {
-        (void)RLDeploy_SetModel(RL_POLICY_MODEL_JUMP);
+        (void)RLDeploy_SetModel(RL_POLICY_MODEL_UPSTAIRS);
+    }
+	else if (g_robot_ctx.output.chassis == CHASSIS_HIGH)
+    {
+        (void)RLDeploy_SetModel(RL_POLICY_MODEL_STABLE);
     }
     else
     {
@@ -633,14 +637,18 @@ static void rl_build_observation(void)
         rl_deploy_debug.command[2] =
             RL_DEPLOY_JUMP_HEIGHT * params->command_scale[2];
     }
+	else if (g_robot_ctx.output.chassis == CHASSIS_LOW)
+    {
+        rl_deploy_debug.command[2] = 0.12f * params->command_scale[2];
+    }
     else if (g_robot_ctx.output.chassis == CHASSIS_HIGH)
     {
-        rl_deploy_debug.command[2] = 0.26f * params->command_scale[2];
+        rl_deploy_debug.command[2] = 0.18f * params->command_scale[2];
     }
     else if (g_robot_ctx.output.chassis == CHASSIS_ASCEND)
     {
         rl_deploy_debug.command[2] =
-            RL_DEPLOY_NORMAL_HEIGHT * params->command_scale[2];
+            0.26F * params->command_scale[2];
     }
     else
     {
