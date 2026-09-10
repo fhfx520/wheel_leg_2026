@@ -1,6 +1,6 @@
 ST Edge AI Core v2.2.0-20266 2adc00962
-Created date          : 2026-09-07 20:05:36
-Parameters            : generate --target stm32h7 --name stable -m D:/RM/XYEGA_RM2026_WheelLeg_Infatry_RLdeploy-main/pseudocode/example/onnx/stable/stable_pos0.23_0.65_p15.0_d1.0_0.1.onnx --compression none --verbosity 1 -O time --workspace C:/Users/25328/AppData/Local/Temp/mxAI_workspace10685159420206008728165448032278315 --output C:/Users/25328/.stm32cubemx/stable_output
+Created date          : 2026-09-10 23:18:44
+Parameters            : generate --target stm32h7 --name stable -m D:/RM/XYEGA_RM2026_WheelLeg_Infatry_RLdeploy-main/pseudocode/example/onnx/stable/stable_pos0.23_0.65_p15.0_d1.0_0.1.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace797515637967005310096186406490194 --output C:/Users/41077/.stm32cubemx/stable_output
 
 Exec/report summary (generate)
 --------------------------------------------------------------------------------------------------------------------------------------------------
@@ -11,8 +11,8 @@ compression        :   none
 options            :   allocate-inputs, allocate-outputs                                                                                          
 optimization       :   time                                                                                                                       
 target/series      :   stm32h7                                                                                                                    
-workspace dir      :   C:\Users\25328\AppData\Local\Temp\mxAI_workspace10685159420206008728165448032278315                                        
-output dir         :   C:\Users\25328\.stm32cubemx\stable_output                                                                                  
+workspace dir      :   C:\Users\41077\AppData\Local\Temp\mxAI_workspace797515637967005310096186406490194                                          
+output dir         :   C:\Users\41077\.stm32cubemx\stable_output                                                                                  
 model_fmt          :   float                                                                                                                      
 model_name         :   stable_pos0_23_0_65_p15_0_d1_0_0_1                                                                                         
 model_hash         :   0xbb40793d542fa3a8b877ef069ccd02a6                                                                                         
@@ -290,10 +290,10 @@ macc=43,401 weights=155,300 act=1,112 ram_io=0
 
 Generated files (7)
 ---------------------------------------------------------------- 
-C:\Users\25328\.stm32cubemx\stable_output\stable_data_params.h   
-C:\Users\25328\.stm32cubemx\stable_output\stable_data_params.c   
-C:\Users\25328\.stm32cubemx\stable_output\stable_data.h          
-C:\Users\25328\.stm32cubemx\stable_output\stable_data.c          
-C:\Users\25328\.stm32cubemx\stable_output\stable_config.h        
-C:\Users\25328\.stm32cubemx\stable_output\stable.h               
-C:\Users\25328\.stm32cubemx\stable_output\stable.c               
+C:\Users\41077\.stm32cubemx\stable_output\stable_data_params.h   
+C:\Users\41077\.stm32cubemx\stable_output\stable_data_params.c   
+C:\Users\41077\.stm32cubemx\stable_output\stable_data.h          
+C:\Users\41077\.stm32cubemx\stable_output\stable_data.c          
+C:\Users\41077\.stm32cubemx\stable_output\stable_config.h        
+C:\Users\41077\.stm32cubemx\stable_output\stable.h               
+C:\Users\41077\.stm32cubemx\stable_output\stable.c               
