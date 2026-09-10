@@ -1,35 +1,35 @@
 ST Edge AI Core v2.2.0-20266 2adc00962
-Created date          : 2026-09-11 01:18:21
-Parameters            : generate --target stm32h7 --name jump -m D:/RM/XYEGA_RM2026_WheelLeg_Infatry_RLdeploy-main/pseudocode/example/onnx/jump/jump_pos0.2_0.4_p6.0_d0.5_0.2.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace869283969643006376514796091298346 --output C:/Users/41077/.stm32cubemx/jump_output
+Created date          : 2026-09-11 00:41:48
+Parameters            : generate --target stm32h7 --name pin -m D:/RM/XYEGA_RM2026_WheelLeg_Infatry_RLdeploy-main/pseudocode/example/onnx/pin/spin_pos0.23_0.65_p10.0_d1.0_0.1.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace847351172859002039473804784769217 --output C:/Users/41077/.stm32cubemx/pin_output
 
 Exec/report summary (generate)
--------------------------------------------------------------------------------------------------------------------------------------------
-model file         :   D:\RM\XYEGA_RM2026_WheelLeg_Infatry_RLdeploy-main\pseudocode\example\onnx\jump\jump_pos0.2_0.4_p6.0_d0.5_0.2.onnx   
-type               :   onnx                                                                                                                
-c_name             :   jump                                                                                                                
-compression        :   none                                                                                                                
-options            :   allocate-inputs, allocate-outputs                                                                                   
-optimization       :   time                                                                                                                
-target/series      :   stm32h7                                                                                                             
-workspace dir      :   C:\Users\41077\AppData\Local\Temp\mxAI_workspace869283969643006376514796091298346                                   
-output dir         :   C:\Users\41077\.stm32cubemx\jump_output                                                                             
-model_fmt          :   float                                                                                                               
-model_name         :   jump_pos0_2_0_4_p6_0_d0_5_0_2                                                                                       
-model_hash         :   0xd04826a44e0f2dfdd2573f5bc85634cb                                                                                  
-params #           :   38,825 items (151.66 KiB)                                                                                           
--------------------------------------------------------------------------------------------------------------------------------------------
-input 1/2          :   'obs', f32(1x25), 100 Bytes, activations                                                                            
-input 2/2          :   'obs_history', f32(1x125), 500 Bytes, activations                                                                   
-inputs (total)     :   600 Bytes                                                                                                           
-output 1/1         :   'actions', f32(1x6), 24 Bytes, activations                                                                          
-macc               :   43,401                                                                                                              
-weights (ro)       :   155,300 B (151.66 KiB) (1 segment)                                                                                  
-activations (rw)   :   1,112 B (1.09 KiB) (1 segment) *                                                                                    
-ram (total)        :   1,112 B (1.09 KiB) = 1,112 + 0 + 0                                                                                  
--------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------
+model file         :   D:\RM\XYEGA_RM2026_WheelLeg_Infatry_RLdeploy-main\pseudocode\example\onnx\pin\spin_pos0.23_0.65_p10.0_d1.0_0.1.onnx   
+type               :   onnx                                                                                                                  
+c_name             :   pin                                                                                                                   
+compression        :   none                                                                                                                  
+options            :   allocate-inputs, allocate-outputs                                                                                     
+optimization       :   time                                                                                                                  
+target/series      :   stm32h7                                                                                                               
+workspace dir      :   C:\Users\41077\AppData\Local\Temp\mxAI_workspace847351172859002039473804784769217                                     
+output dir         :   C:\Users\41077\.stm32cubemx\pin_output                                                                                
+model_fmt          :   float                                                                                                                 
+model_name         :   spin_pos0_23_0_65_p10_0_d1_0_0_1                                                                                      
+model_hash         :   0xeff1b3f8026220d4a8219cd00e3b501e                                                                                    
+params #           :   38,825 items (151.66 KiB)                                                                                             
+---------------------------------------------------------------------------------------------------------------------------------------------
+input 1/2          :   'obs', f32(1x25), 100 Bytes, activations                                                                              
+input 2/2          :   'obs_history', f32(1x125), 500 Bytes, activations                                                                     
+inputs (total)     :   600 Bytes                                                                                                             
+output 1/1         :   'actions', f32(1x6), 24 Bytes, activations                                                                            
+macc               :   43,401                                                                                                                
+weights (ro)       :   155,300 B (151.66 KiB) (1 segment)                                                                                    
+activations (rw)   :   1,112 B (1.09 KiB) (1 segment) *                                                                                      
+ram (total)        :   1,112 B (1.09 KiB) = 1,112 + 0 + 0                                                                                    
+---------------------------------------------------------------------------------------------------------------------------------------------
 (*) 'input'/'output' buffers are allocated in the activations buffer
 
-Model name - jump_pos0_2_0_4_p6_0_d0_5_0_2
+Model name - spin_pos0_23_0_65_p10_0_d1_0_0_1
 ------ ---------------------------------------------------- --------------- --------------- -------- -------------------------------- --- --------------- ------------------ ------------------- 
 m_id   layer (type,original)                                oshape          param/size          macc                     connected to   | c_size          c_macc             c_type              
 ------ ---------------------------------------------------- --------------- --------------- -------- -------------------------------- --- --------------- ------------------ ------------------- 
@@ -104,8 +104,8 @@ model/c-model: macc=43,817/43,401 -416(-0.9%) weights=155,300/155,300  activatio
 
 Generated C-graph summary
 ------------------------------------------------------------------------------------------------------------------------
-model name            : jump_pos0_2_0_4_p6_0_d0_5_0_2
-c-name                : jump
+model name            : spin_pos0_23_0_65_p10_0_d1_0_0_1
+c-name                : pin
 c-node #              : 13
 c-array #             : 29
 activations size      : 1112 (1 segment)
@@ -262,8 +262,8 @@ macc=43,401 weights=155,300 act=1,112 ram_io=0
  module                            text    rodata    data     bss 
  ------------------------------ ------- --------- ------- ------- 
  NetworkRuntime1020_CM7_GCC.a     8,312         0       0       0 
- jump.o                             832       204   3,604     240 
- jump_data.o                         48        16      88       0 
+ pin.o                              832       204   3,604     240 
+ pin_data.o                          48        16      88       0 
  lib (toolchain)*                   324       328       0       0 
  ------------------------------ ------- --------- ------- ------- 
  RT total**                       9,516       548   3,692     240 
@@ -289,11 +289,11 @@ macc=43,401 weights=155,300 act=1,112 ram_io=0
 
 
 Generated files (7)
------------------------------------------------------------- 
-C:\Users\41077\.stm32cubemx\jump_output\jump_data_params.h   
-C:\Users\41077\.stm32cubemx\jump_output\jump_data_params.c   
-C:\Users\41077\.stm32cubemx\jump_output\jump_data.h          
-C:\Users\41077\.stm32cubemx\jump_output\jump_data.c          
-C:\Users\41077\.stm32cubemx\jump_output\jump_config.h        
-C:\Users\41077\.stm32cubemx\jump_output\jump.h               
-C:\Users\41077\.stm32cubemx\jump_output\jump.c               
+---------------------------------------------------------- 
+C:\Users\41077\.stm32cubemx\pin_output\pin_data_params.h   
+C:\Users\41077\.stm32cubemx\pin_output\pin_data_params.c   
+C:\Users\41077\.stm32cubemx\pin_output\pin_data.h          
+C:\Users\41077\.stm32cubemx\pin_output\pin_data.c          
+C:\Users\41077\.stm32cubemx\pin_output\pin_config.h        
+C:\Users\41077\.stm32cubemx\pin_output\pin.h               
+C:\Users\41077\.stm32cubemx\pin_output\pin.c               

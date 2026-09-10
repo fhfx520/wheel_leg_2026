@@ -37,8 +37,8 @@
 #define RL_DEPLOY_REAL_TORQUE_LIMIT       100.0f
 #define RL_DEPLOY_PARALLEL_TORQUE_LIMIT   35.0f
 #define RL_DEPLOY_WHEEL_TORQUE_LIMIT      5.0f
-#define RL_DEPLOY_LEFT_GAS_SPRING_K       520.1f
-#define RL_DEPLOY_RIGHT_GAS_SPRING_K      520.1f
+#define RL_DEPLOY_LEFT_GAS_SPRING_K       600.1f
+#define RL_DEPLOY_RIGHT_GAS_SPRING_K      600.1f
 
 enum
 {
@@ -116,9 +116,9 @@ static const RLDeployModelParams_t rl_model_params[] = {
     {
         {0.2f, 0.4f, 0.0f, -0.2f, -0.4f, 0.0f},
         {0.2f, 0.4f, -0.2f, -0.4f},
-        {20.0f, 20.0f, 0.0f, 20.0f, 20.0f, 0.0f},
-        {1.0f, 1.0f, 0.2f, 1.0f, 1.0f, 0.2f},
-        {2.0f, 0.25f, 5.0f}
+        {15.0f, 15.0f, 0.0f, 15.0f, 15.0f, 0.0f},
+        {1.0f, 1.0f, 0.1f, 1.0f, 1.0f, 0.1f},
+        {3.0f, 0.25f, 5.0f}
     },
     /* Spin (the public enum retains the open-source name Pin). */
     {
@@ -639,7 +639,7 @@ static void rl_build_observation(void)
     }
 	else if (g_robot_ctx.output.chassis == CHASSIS_LOW)
     {
-        rl_deploy_debug.command[2] = 0.12f * params->command_scale[2];
+        rl_deploy_debug.command[2] = 0.16f * params->command_scale[2];
     }
     else if (g_robot_ctx.output.chassis == CHASSIS_HIGH)
     {
@@ -648,7 +648,7 @@ static void rl_build_observation(void)
     else if (g_robot_ctx.output.chassis == CHASSIS_ASCEND)
     {
         rl_deploy_debug.command[2] =
-            0.26F * params->command_scale[2];
+            0.29F * params->command_scale[2];
     }
     else
     {

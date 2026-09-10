@@ -800,44 +800,44 @@
   ],
   "environment": {
     "generated_model": {
-      "generated_time": "2026-09-10T23:19:45+0800",
+      "generated_time": "2026-09-11T01:18:41+0800",
       "model_files": [
         {
           "name": "spin_data_params.h",
-          "signature": "0xa65d1c81cce7a45cee5c4c67155413e2"
+          "signature": "0x7d750ca47e30fe52059c46b9e2430008"
         },
         {
           "name": "spin_data_params.c",
-          "signature": "0x54364f69cbcc41593f0b6f713f93bcb1"
+          "signature": "0x0bb2199ad84db1f3cf156f294227c820"
         },
         {
           "name": "spin_data.h",
-          "signature": "0xf3cf66164f3d6a58d775e76b12b9ee2d"
+          "signature": "0x4c2a2edd47ca5f1a1a848bb5a1f74fb9"
         },
         {
           "name": "spin_data.c",
-          "signature": "0x3bc09b4cb3c6c380c741de40a24814e8"
+          "signature": "0x2889e9b22e050732d63751c37cde83cf"
         },
         {
           "name": "spin_config.h",
-          "signature": "0x8254bbf2616b57c4a386f27b946edee3"
+          "signature": "0x6758b31e5c78f449d84d8c8e5dfc3a8b"
         },
         {
           "name": "spin.h",
-          "signature": "0xc4ab96153a32fbf8d33f0859f0a74bb3"
+          "signature": "0xfbeda46cbd3c469d3b900f5283ebfb33"
         },
         {
           "name": "spin.c",
-          "signature": "0xbce231316b36d2afa4a4f337f3fcf449"
+          "signature": "0xd96c8ba3a50b9c088c2a2655210ea716"
         }
       ],
       "name": "spin"
     },
-    "network_signature": "0xbfc5dec730af0d5b",
+    "network_signature": "0x59da1d6f91e28ee5",
     "test_name": "",
     "tools": [
       {
-        "arguments": "generate --target stm32h7 --name spin -m D:/RM/XYEGA_RM2026_WheelLeg_Infatry_RLdeploy-main/pseudocode/example/onnx/pin/spin_pos0.23_0.65_p10.0_d1.0_0.1.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace7981387244420012383870133234359739 --output C:/Users/41077/.stm32cubemx/spin_output",
+        "arguments": "generate --target stm32h7 --name spin -m D:/RM/XYEGA_RM2026_WheelLeg_Infatry_RLdeploy-main/pseudocode/example/onnx/pin/spin_pos0.23_0.65_p10.0_d1.0_0.1.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace869502277693006637899962145841927 --output C:/Users/41077/.stm32cubemx/spin_output",
         "environment": [
           "STATS_TYPE=X-CUBE-AI"
         ],

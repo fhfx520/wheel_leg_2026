@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * @file    spin_data_params.c
+  * @file    pin_data_params.c
   * @author  AST Embedded Analytics Research Platform
-  * @date    2026-09-11T01:18:41+0800
+  * @date    2026-09-11T00:41:46+0800
   * @brief   AI Tool Automatic Code Generator for Embedded NN computing
   ******************************************************************************
   * Copyright (c) 2026 STMicroelectronics.
@@ -14,11 +14,11 @@
   ******************************************************************************
   */
 
-#include "spin_data_params.h"
+#include "pin_data_params.h"
 
 
 /**  Activations Section  ****************************************************/
-ai_handle g_spin_activations_table[1 + 2] = {
+ai_handle g_pin_activations_table[1 + 2] = {
   AI_HANDLE_PTR(AI_MAGIC_MARKER),
   AI_HANDLE_PTR(NULL),
   AI_HANDLE_PTR(AI_MAGIC_MARKER),
@@ -29,7 +29,7 @@ ai_handle g_spin_activations_table[1 + 2] = {
 
 /**  Weights Section  ********************************************************/
 AI_ALIGNED(32)
-const ai_u64 s_spin_weights_array_u64[19413] = {
+const ai_u64 s_pin_weights_array_u64[19413] = {
   0x3e83a181be818080U, 0x3f4cbe2b3e8c62d6U, 0x3d01802cbee9fb33U, 0xbe9b9a4bbe84c5afU,
   0x3f467060bbcf4588U, 0xbfc91a1e3e480be3U, 0xbe7d5335bee23676U, 0x3d9c09fc3edbc564U,
   0x3efa0cde3f60c128U, 0x3dc3931fbcd366eeU, 0xbc01f68a3b663fefU, 0x3da2143fbee9a340U,
@@ -4887,9 +4887,9 @@ const ai_u64 s_spin_weights_array_u64[19413] = {
 };
 
 
-ai_handle g_spin_weights_table[1 + 2] = {
+ai_handle g_pin_weights_table[1 + 2] = {
   AI_HANDLE_PTR(AI_MAGIC_MARKER),
-  AI_HANDLE_PTR(s_spin_weights_array_u64),
+  AI_HANDLE_PTR(s_pin_weights_array_u64),
   AI_HANDLE_PTR(AI_MAGIC_MARKER),
 };
 

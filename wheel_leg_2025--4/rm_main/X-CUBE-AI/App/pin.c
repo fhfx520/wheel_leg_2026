@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * @file    upstairs.c
+  * @file    pin.c
   * @author  AST Embedded Analytics Research Platform
-  * @date    2026-09-11T01:17:58+0800
+  * @date    2026-09-11T00:41:46+0800
   * @brief   AI Tool Automatic Code Generator for Embedded NN computing
   ******************************************************************************
   * @attention
@@ -17,8 +17,8 @@
   */
 
 
-#include "upstairs.h"
-#include "upstairs_data.h"
+#include "pin.h"
+#include "pin_data.h"
 
 #include "ai_platform.h"
 #include "ai_platform_interface.h"
@@ -32,26 +32,26 @@
 
 
 #undef AI_NET_OBJ_INSTANCE
-#define AI_NET_OBJ_INSTANCE g_upstairs
+#define AI_NET_OBJ_INSTANCE g_pin
  
-#undef AI_UPSTAIRS_MODEL_SIGNATURE
-#define AI_UPSTAIRS_MODEL_SIGNATURE     "0x3f04782eefa214c8228d50a62d5d29be"
+#undef AI_PIN_MODEL_SIGNATURE
+#define AI_PIN_MODEL_SIGNATURE     "0xeff1b3f8026220d4a8219cd00e3b501e"
 
 #ifndef AI_TOOLS_REVISION_ID
 #define AI_TOOLS_REVISION_ID     ""
 #endif
 
 #undef AI_TOOLS_DATE_TIME
-#define AI_TOOLS_DATE_TIME   "2026-09-11T01:17:58+0800"
+#define AI_TOOLS_DATE_TIME   "2026-09-11T00:41:46+0800"
 
 #undef AI_TOOLS_COMPILE_TIME
 #define AI_TOOLS_COMPILE_TIME    __DATE__ " " __TIME__
 
-#undef AI_UPSTAIRS_N_BATCHES
-#define AI_UPSTAIRS_N_BATCHES         (1)
+#undef AI_PIN_N_BATCHES
+#define AI_PIN_N_BATCHES         (1)
 
-static ai_ptr g_upstairs_activations_map[1] = AI_C_ARRAY_INIT;
-static ai_ptr g_upstairs_weights_map[1] = AI_C_ARRAY_INIT;
+static ai_ptr g_pin_activations_map[1] = AI_C_ARRAY_INIT;
+static ai_ptr g_pin_weights_map[1] = AI_C_ARRAY_INIT;
 
 
 
@@ -660,9 +660,9 @@ AI_NETWORK_OBJ_DECLARE(
   AI_BUFFER_INIT(AI_FLAG_NONE,  AI_BUFFER_FORMAT_U8,
     AI_BUFFER_SHAPE_INIT(AI_SHAPE_BCWH, 4, 1, 1112, 1, 1),
     1112, NULL, NULL),
-  AI_TENSOR_LIST_IO_OBJ_INIT(AI_FLAG_NONE, AI_UPSTAIRS_IN_NUM, &obs_output, &obs_history_output),
-  AI_TENSOR_LIST_IO_OBJ_INIT(AI_FLAG_NONE, AI_UPSTAIRS_OUT_NUM, &actions_output),
-  &_encoder_encoder_0_Gemm_output_0_layer, 0x826d6590, NULL)
+  AI_TENSOR_LIST_IO_OBJ_INIT(AI_FLAG_NONE, AI_PIN_IN_NUM, &obs_output, &obs_history_output),
+  AI_TENSOR_LIST_IO_OBJ_INIT(AI_FLAG_NONE, AI_PIN_OUT_NUM, &actions_output),
+  &_encoder_encoder_0_Gemm_output_0_layer, 0x98cd79a5, NULL)
 
 #else
 
@@ -680,9 +680,9 @@ AI_NETWORK_OBJ_DECLARE(
       AI_BUFFER_SHAPE_INIT(AI_SHAPE_BCWH, 4, 1, 1112, 1, 1),
       1112, NULL, NULL)
   ),
-  AI_TENSOR_LIST_IO_OBJ_INIT(AI_FLAG_NONE, AI_UPSTAIRS_IN_NUM, &obs_output, &obs_history_output),
-  AI_TENSOR_LIST_IO_OBJ_INIT(AI_FLAG_NONE, AI_UPSTAIRS_OUT_NUM, &actions_output),
-  &_encoder_encoder_0_Gemm_output_0_layer, 0x826d6590, NULL)
+  AI_TENSOR_LIST_IO_OBJ_INIT(AI_FLAG_NONE, AI_PIN_IN_NUM, &obs_output, &obs_history_output),
+  AI_TENSOR_LIST_IO_OBJ_INIT(AI_FLAG_NONE, AI_PIN_OUT_NUM, &actions_output),
+  &_encoder_encoder_0_Gemm_output_0_layer, 0x98cd79a5, NULL)
 
 #endif	/*(AI_TOOLS_API_VERSION < AI_TOOLS_API_VERSION_1_5)*/
 
@@ -690,44 +690,44 @@ AI_NETWORK_OBJ_DECLARE(
 
 /******************************************************************************/
 AI_DECLARE_STATIC
-ai_bool upstairs_configure_activations(
+ai_bool pin_configure_activations(
   ai_network* net_ctx, const ai_network_params* params)
 {
   AI_ASSERT(net_ctx)
 
-  if (ai_platform_get_activations_map(g_upstairs_activations_map, 1, params)) {
+  if (ai_platform_get_activations_map(g_pin_activations_map, 1, params)) {
     /* Updating activations (byte) offsets */
     
-    obs_output_array.data = AI_PTR(g_upstairs_activations_map[0] + 0);
-    obs_output_array.data_start = AI_PTR(g_upstairs_activations_map[0] + 0);
-    obs_history_output_array.data = AI_PTR(g_upstairs_activations_map[0] + 100);
-    obs_history_output_array.data_start = AI_PTR(g_upstairs_activations_map[0] + 100);
-    _encoder_encoder_0_Gemm_output_0_output_array.data = AI_PTR(g_upstairs_activations_map[0] + 600);
-    _encoder_encoder_0_Gemm_output_0_output_array.data_start = AI_PTR(g_upstairs_activations_map[0] + 600);
-    _encoder_encoder_1_Elu_output_0_output_array.data = AI_PTR(g_upstairs_activations_map[0] + 600);
-    _encoder_encoder_1_Elu_output_0_output_array.data_start = AI_PTR(g_upstairs_activations_map[0] + 600);
-    _encoder_encoder_2_Gemm_output_0_output_array.data = AI_PTR(g_upstairs_activations_map[0] + 100);
-    _encoder_encoder_2_Gemm_output_0_output_array.data_start = AI_PTR(g_upstairs_activations_map[0] + 100);
-    _encoder_encoder_1_1_Elu_output_0_output_array.data = AI_PTR(g_upstairs_activations_map[0] + 356);
-    _encoder_encoder_1_1_Elu_output_0_output_array.data_start = AI_PTR(g_upstairs_activations_map[0] + 356);
-    _encoder_encoder_4_Gemm_output_0_output_array.data = AI_PTR(g_upstairs_activations_map[0] + 100);
-    _encoder_encoder_4_Gemm_output_0_output_array.data_start = AI_PTR(g_upstairs_activations_map[0] + 100);
-    _Concat_output_0_output_array.data = AI_PTR(g_upstairs_activations_map[0] + 112);
-    _Concat_output_0_output_array.data_start = AI_PTR(g_upstairs_activations_map[0] + 112);
-    _actor_actor_0_Gemm_output_0_output_array.data = AI_PTR(g_upstairs_activations_map[0] + 224);
-    _actor_actor_0_Gemm_output_0_output_array.data_start = AI_PTR(g_upstairs_activations_map[0] + 224);
-    _actor_encoder_1_Elu_output_0_output_array.data = AI_PTR(g_upstairs_activations_map[0] + 224);
-    _actor_encoder_1_Elu_output_0_output_array.data_start = AI_PTR(g_upstairs_activations_map[0] + 224);
-    _actor_actor_2_Gemm_output_0_output_array.data = AI_PTR(g_upstairs_activations_map[0] + 736);
-    _actor_actor_2_Gemm_output_0_output_array.data_start = AI_PTR(g_upstairs_activations_map[0] + 736);
-    _actor_encoder_1_1_Elu_output_0_output_array.data = AI_PTR(g_upstairs_activations_map[0] + 0);
-    _actor_encoder_1_1_Elu_output_0_output_array.data_start = AI_PTR(g_upstairs_activations_map[0] + 0);
-    _actor_actor_4_Gemm_output_0_output_array.data = AI_PTR(g_upstairs_activations_map[0] + 256);
-    _actor_actor_4_Gemm_output_0_output_array.data_start = AI_PTR(g_upstairs_activations_map[0] + 256);
-    _actor_encoder_1_2_Elu_output_0_output_array.data = AI_PTR(g_upstairs_activations_map[0] + 0);
-    _actor_encoder_1_2_Elu_output_0_output_array.data_start = AI_PTR(g_upstairs_activations_map[0] + 0);
-    actions_output_array.data = AI_PTR(g_upstairs_activations_map[0] + 128);
-    actions_output_array.data_start = AI_PTR(g_upstairs_activations_map[0] + 128);
+    obs_output_array.data = AI_PTR(g_pin_activations_map[0] + 0);
+    obs_output_array.data_start = AI_PTR(g_pin_activations_map[0] + 0);
+    obs_history_output_array.data = AI_PTR(g_pin_activations_map[0] + 100);
+    obs_history_output_array.data_start = AI_PTR(g_pin_activations_map[0] + 100);
+    _encoder_encoder_0_Gemm_output_0_output_array.data = AI_PTR(g_pin_activations_map[0] + 600);
+    _encoder_encoder_0_Gemm_output_0_output_array.data_start = AI_PTR(g_pin_activations_map[0] + 600);
+    _encoder_encoder_1_Elu_output_0_output_array.data = AI_PTR(g_pin_activations_map[0] + 600);
+    _encoder_encoder_1_Elu_output_0_output_array.data_start = AI_PTR(g_pin_activations_map[0] + 600);
+    _encoder_encoder_2_Gemm_output_0_output_array.data = AI_PTR(g_pin_activations_map[0] + 100);
+    _encoder_encoder_2_Gemm_output_0_output_array.data_start = AI_PTR(g_pin_activations_map[0] + 100);
+    _encoder_encoder_1_1_Elu_output_0_output_array.data = AI_PTR(g_pin_activations_map[0] + 356);
+    _encoder_encoder_1_1_Elu_output_0_output_array.data_start = AI_PTR(g_pin_activations_map[0] + 356);
+    _encoder_encoder_4_Gemm_output_0_output_array.data = AI_PTR(g_pin_activations_map[0] + 100);
+    _encoder_encoder_4_Gemm_output_0_output_array.data_start = AI_PTR(g_pin_activations_map[0] + 100);
+    _Concat_output_0_output_array.data = AI_PTR(g_pin_activations_map[0] + 112);
+    _Concat_output_0_output_array.data_start = AI_PTR(g_pin_activations_map[0] + 112);
+    _actor_actor_0_Gemm_output_0_output_array.data = AI_PTR(g_pin_activations_map[0] + 224);
+    _actor_actor_0_Gemm_output_0_output_array.data_start = AI_PTR(g_pin_activations_map[0] + 224);
+    _actor_encoder_1_Elu_output_0_output_array.data = AI_PTR(g_pin_activations_map[0] + 224);
+    _actor_encoder_1_Elu_output_0_output_array.data_start = AI_PTR(g_pin_activations_map[0] + 224);
+    _actor_actor_2_Gemm_output_0_output_array.data = AI_PTR(g_pin_activations_map[0] + 736);
+    _actor_actor_2_Gemm_output_0_output_array.data_start = AI_PTR(g_pin_activations_map[0] + 736);
+    _actor_encoder_1_1_Elu_output_0_output_array.data = AI_PTR(g_pin_activations_map[0] + 0);
+    _actor_encoder_1_1_Elu_output_0_output_array.data_start = AI_PTR(g_pin_activations_map[0] + 0);
+    _actor_actor_4_Gemm_output_0_output_array.data = AI_PTR(g_pin_activations_map[0] + 256);
+    _actor_actor_4_Gemm_output_0_output_array.data_start = AI_PTR(g_pin_activations_map[0] + 256);
+    _actor_encoder_1_2_Elu_output_0_output_array.data = AI_PTR(g_pin_activations_map[0] + 0);
+    _actor_encoder_1_2_Elu_output_0_output_array.data_start = AI_PTR(g_pin_activations_map[0] + 0);
+    actions_output_array.data = AI_PTR(g_pin_activations_map[0] + 128);
+    actions_output_array.data_start = AI_PTR(g_pin_activations_map[0] + 128);
     return true;
   }
   AI_ERROR_TRAP(net_ctx, INIT_FAILED, NETWORK_ACTIVATIONS);
@@ -739,56 +739,56 @@ ai_bool upstairs_configure_activations(
 
 /******************************************************************************/
 AI_DECLARE_STATIC
-ai_bool upstairs_configure_weights(
+ai_bool pin_configure_weights(
   ai_network* net_ctx, const ai_network_params* params)
 {
   AI_ASSERT(net_ctx)
 
-  if (ai_platform_get_weights_map(g_upstairs_weights_map, 1, params)) {
+  if (ai_platform_get_weights_map(g_pin_weights_map, 1, params)) {
     /* Updating weights (byte) offsets */
     
     _encoder_encoder_0_Gemm_output_0_weights_array.format |= AI_FMT_FLAG_CONST;
-    _encoder_encoder_0_Gemm_output_0_weights_array.data = AI_PTR(g_upstairs_weights_map[0] + 0);
-    _encoder_encoder_0_Gemm_output_0_weights_array.data_start = AI_PTR(g_upstairs_weights_map[0] + 0);
+    _encoder_encoder_0_Gemm_output_0_weights_array.data = AI_PTR(g_pin_weights_map[0] + 0);
+    _encoder_encoder_0_Gemm_output_0_weights_array.data_start = AI_PTR(g_pin_weights_map[0] + 0);
     _encoder_encoder_0_Gemm_output_0_bias_array.format |= AI_FMT_FLAG_CONST;
-    _encoder_encoder_0_Gemm_output_0_bias_array.data = AI_PTR(g_upstairs_weights_map[0] + 64000);
-    _encoder_encoder_0_Gemm_output_0_bias_array.data_start = AI_PTR(g_upstairs_weights_map[0] + 64000);
+    _encoder_encoder_0_Gemm_output_0_bias_array.data = AI_PTR(g_pin_weights_map[0] + 64000);
+    _encoder_encoder_0_Gemm_output_0_bias_array.data_start = AI_PTR(g_pin_weights_map[0] + 64000);
     _encoder_encoder_2_Gemm_output_0_weights_array.format |= AI_FMT_FLAG_CONST;
-    _encoder_encoder_2_Gemm_output_0_weights_array.data = AI_PTR(g_upstairs_weights_map[0] + 64512);
-    _encoder_encoder_2_Gemm_output_0_weights_array.data_start = AI_PTR(g_upstairs_weights_map[0] + 64512);
+    _encoder_encoder_2_Gemm_output_0_weights_array.data = AI_PTR(g_pin_weights_map[0] + 64512);
+    _encoder_encoder_2_Gemm_output_0_weights_array.data_start = AI_PTR(g_pin_weights_map[0] + 64512);
     _encoder_encoder_2_Gemm_output_0_bias_array.format |= AI_FMT_FLAG_CONST;
-    _encoder_encoder_2_Gemm_output_0_bias_array.data = AI_PTR(g_upstairs_weights_map[0] + 97280);
-    _encoder_encoder_2_Gemm_output_0_bias_array.data_start = AI_PTR(g_upstairs_weights_map[0] + 97280);
+    _encoder_encoder_2_Gemm_output_0_bias_array.data = AI_PTR(g_pin_weights_map[0] + 97280);
+    _encoder_encoder_2_Gemm_output_0_bias_array.data_start = AI_PTR(g_pin_weights_map[0] + 97280);
     _encoder_encoder_4_Gemm_output_0_weights_array.format |= AI_FMT_FLAG_CONST;
-    _encoder_encoder_4_Gemm_output_0_weights_array.data = AI_PTR(g_upstairs_weights_map[0] + 97536);
-    _encoder_encoder_4_Gemm_output_0_weights_array.data_start = AI_PTR(g_upstairs_weights_map[0] + 97536);
+    _encoder_encoder_4_Gemm_output_0_weights_array.data = AI_PTR(g_pin_weights_map[0] + 97536);
+    _encoder_encoder_4_Gemm_output_0_weights_array.data_start = AI_PTR(g_pin_weights_map[0] + 97536);
     _encoder_encoder_4_Gemm_output_0_bias_array.format |= AI_FMT_FLAG_CONST;
-    _encoder_encoder_4_Gemm_output_0_bias_array.data = AI_PTR(g_upstairs_weights_map[0] + 98304);
-    _encoder_encoder_4_Gemm_output_0_bias_array.data_start = AI_PTR(g_upstairs_weights_map[0] + 98304);
+    _encoder_encoder_4_Gemm_output_0_bias_array.data = AI_PTR(g_pin_weights_map[0] + 98304);
+    _encoder_encoder_4_Gemm_output_0_bias_array.data_start = AI_PTR(g_pin_weights_map[0] + 98304);
     _actor_actor_0_Gemm_output_0_weights_array.format |= AI_FMT_FLAG_CONST;
-    _actor_actor_0_Gemm_output_0_weights_array.data = AI_PTR(g_upstairs_weights_map[0] + 98316);
-    _actor_actor_0_Gemm_output_0_weights_array.data_start = AI_PTR(g_upstairs_weights_map[0] + 98316);
+    _actor_actor_0_Gemm_output_0_weights_array.data = AI_PTR(g_pin_weights_map[0] + 98316);
+    _actor_actor_0_Gemm_output_0_weights_array.data_start = AI_PTR(g_pin_weights_map[0] + 98316);
     _actor_actor_0_Gemm_output_0_bias_array.format |= AI_FMT_FLAG_CONST;
-    _actor_actor_0_Gemm_output_0_bias_array.data = AI_PTR(g_upstairs_weights_map[0] + 112652);
-    _actor_actor_0_Gemm_output_0_bias_array.data_start = AI_PTR(g_upstairs_weights_map[0] + 112652);
+    _actor_actor_0_Gemm_output_0_bias_array.data = AI_PTR(g_pin_weights_map[0] + 112652);
+    _actor_actor_0_Gemm_output_0_bias_array.data_start = AI_PTR(g_pin_weights_map[0] + 112652);
     _actor_actor_2_Gemm_output_0_weights_array.format |= AI_FMT_FLAG_CONST;
-    _actor_actor_2_Gemm_output_0_weights_array.data = AI_PTR(g_upstairs_weights_map[0] + 113164);
-    _actor_actor_2_Gemm_output_0_weights_array.data_start = AI_PTR(g_upstairs_weights_map[0] + 113164);
+    _actor_actor_2_Gemm_output_0_weights_array.data = AI_PTR(g_pin_weights_map[0] + 113164);
+    _actor_actor_2_Gemm_output_0_weights_array.data_start = AI_PTR(g_pin_weights_map[0] + 113164);
     _actor_actor_2_Gemm_output_0_bias_array.format |= AI_FMT_FLAG_CONST;
-    _actor_actor_2_Gemm_output_0_bias_array.data = AI_PTR(g_upstairs_weights_map[0] + 145932);
-    _actor_actor_2_Gemm_output_0_bias_array.data_start = AI_PTR(g_upstairs_weights_map[0] + 145932);
+    _actor_actor_2_Gemm_output_0_bias_array.data = AI_PTR(g_pin_weights_map[0] + 145932);
+    _actor_actor_2_Gemm_output_0_bias_array.data_start = AI_PTR(g_pin_weights_map[0] + 145932);
     _actor_actor_4_Gemm_output_0_weights_array.format |= AI_FMT_FLAG_CONST;
-    _actor_actor_4_Gemm_output_0_weights_array.data = AI_PTR(g_upstairs_weights_map[0] + 146188);
-    _actor_actor_4_Gemm_output_0_weights_array.data_start = AI_PTR(g_upstairs_weights_map[0] + 146188);
+    _actor_actor_4_Gemm_output_0_weights_array.data = AI_PTR(g_pin_weights_map[0] + 146188);
+    _actor_actor_4_Gemm_output_0_weights_array.data_start = AI_PTR(g_pin_weights_map[0] + 146188);
     _actor_actor_4_Gemm_output_0_bias_array.format |= AI_FMT_FLAG_CONST;
-    _actor_actor_4_Gemm_output_0_bias_array.data = AI_PTR(g_upstairs_weights_map[0] + 154380);
-    _actor_actor_4_Gemm_output_0_bias_array.data_start = AI_PTR(g_upstairs_weights_map[0] + 154380);
+    _actor_actor_4_Gemm_output_0_bias_array.data = AI_PTR(g_pin_weights_map[0] + 154380);
+    _actor_actor_4_Gemm_output_0_bias_array.data_start = AI_PTR(g_pin_weights_map[0] + 154380);
     actions_weights_array.format |= AI_FMT_FLAG_CONST;
-    actions_weights_array.data = AI_PTR(g_upstairs_weights_map[0] + 154508);
-    actions_weights_array.data_start = AI_PTR(g_upstairs_weights_map[0] + 154508);
+    actions_weights_array.data = AI_PTR(g_pin_weights_map[0] + 154508);
+    actions_weights_array.data_start = AI_PTR(g_pin_weights_map[0] + 154508);
     actions_bias_array.format |= AI_FMT_FLAG_CONST;
-    actions_bias_array.data = AI_PTR(g_upstairs_weights_map[0] + 155276);
-    actions_bias_array.data_start = AI_PTR(g_upstairs_weights_map[0] + 155276);
+    actions_bias_array.data = AI_PTR(g_pin_weights_map[0] + 155276);
+    actions_bias_array.data_start = AI_PTR(g_pin_weights_map[0] + 155276);
     return true;
   }
   AI_ERROR_TRAP(net_ctx, INIT_FAILED, NETWORK_WEIGHTS);
@@ -802,7 +802,7 @@ ai_bool upstairs_configure_weights(
 
 AI_DEPRECATED
 AI_API_ENTRY
-ai_bool ai_upstairs_get_info(
+ai_bool ai_pin_get_info(
   ai_handle network, ai_network_report* report)
 {
   ai_network* net_ctx = AI_NETWORK_ACQUIRE_CTX(network);
@@ -810,8 +810,8 @@ ai_bool ai_upstairs_get_info(
   if (report && net_ctx)
   {
     ai_network_report r = {
-      .model_name        = AI_UPSTAIRS_MODEL_NAME,
-      .model_signature   = AI_UPSTAIRS_MODEL_SIGNATURE,
+      .model_name        = AI_PIN_MODEL_NAME,
+      .model_signature   = AI_PIN_MODEL_SIGNATURE,
       .model_datetime    = AI_TOOLS_DATE_TIME,
       
       .compile_datetime  = AI_TOOLS_COMPILE_TIME,
@@ -835,7 +835,7 @@ ai_bool ai_upstairs_get_info(
       .params            = AI_STRUCT_INIT,
       .activations       = AI_STRUCT_INIT,
       .n_nodes           = 0,
-      .signature         = 0x826d6590,
+      .signature         = 0x98cd79a5,
     };
 
     if (!ai_platform_api_get_network_report(network, &r)) return false;
@@ -849,7 +849,7 @@ ai_bool ai_upstairs_get_info(
 
 
 AI_API_ENTRY
-ai_bool ai_upstairs_get_report(
+ai_bool ai_pin_get_report(
   ai_handle network, ai_network_report* report)
 {
   ai_network* net_ctx = AI_NETWORK_ACQUIRE_CTX(network);
@@ -857,8 +857,8 @@ ai_bool ai_upstairs_get_report(
   if (report && net_ctx)
   {
     ai_network_report r = {
-      .model_name        = AI_UPSTAIRS_MODEL_NAME,
-      .model_signature   = AI_UPSTAIRS_MODEL_SIGNATURE,
+      .model_name        = AI_PIN_MODEL_NAME,
+      .model_signature   = AI_PIN_MODEL_SIGNATURE,
       .model_datetime    = AI_TOOLS_DATE_TIME,
       
       .compile_datetime  = AI_TOOLS_COMPILE_TIME,
@@ -883,7 +883,7 @@ ai_bool ai_upstairs_get_report(
       .map_weights       = AI_STRUCT_INIT,
       .map_activations   = AI_STRUCT_INIT,
       .n_nodes           = 0,
-      .signature         = 0x826d6590,
+      .signature         = 0x98cd79a5,
     };
 
     if (!ai_platform_api_get_network_report(network, &r)) return false;
@@ -896,14 +896,14 @@ ai_bool ai_upstairs_get_report(
 
 
 AI_API_ENTRY
-ai_error ai_upstairs_get_error(ai_handle network)
+ai_error ai_pin_get_error(ai_handle network)
 {
   return ai_platform_network_get_error(network);
 }
 
 
 AI_API_ENTRY
-ai_error ai_upstairs_create(
+ai_error ai_pin_create(
   ai_handle* network, const ai_buffer* network_config)
 {
   return ai_platform_network_create(
@@ -914,42 +914,42 @@ ai_error ai_upstairs_create(
 
 
 AI_API_ENTRY
-ai_error ai_upstairs_create_and_init(
+ai_error ai_pin_create_and_init(
   ai_handle* network, const ai_handle activations[], const ai_handle weights[])
 {
   ai_error err;
   ai_network_params params;
 
-  err = ai_upstairs_create(network, AI_UPSTAIRS_DATA_CONFIG);
+  err = ai_pin_create(network, AI_PIN_DATA_CONFIG);
   if (err.type != AI_ERROR_NONE) {
     return err;
   }
   
-  if (ai_upstairs_data_params_get(&params) != true) {
-    err = ai_upstairs_get_error(*network);
+  if (ai_pin_data_params_get(&params) != true) {
+    err = ai_pin_get_error(*network);
     return err;
   }
-#if defined(AI_UPSTAIRS_DATA_ACTIVATIONS_COUNT)
+#if defined(AI_PIN_DATA_ACTIVATIONS_COUNT)
   /* set the addresses of the activations buffers */
   for (ai_u16 idx=0; activations && idx<params.map_activations.size; idx++) {
     AI_BUFFER_ARRAY_ITEM_SET_ADDRESS(&params.map_activations, idx, activations[idx]);
   }
 #endif
-#if defined(AI_UPSTAIRS_DATA_WEIGHTS_COUNT)
+#if defined(AI_PIN_DATA_WEIGHTS_COUNT)
   /* set the addresses of the weight buffers */
   for (ai_u16 idx=0; weights && idx<params.map_weights.size; idx++) {
     AI_BUFFER_ARRAY_ITEM_SET_ADDRESS(&params.map_weights, idx, weights[idx]);
   }
 #endif
-  if (ai_upstairs_init(*network, &params) != true) {
-    err = ai_upstairs_get_error(*network);
+  if (ai_pin_init(*network, &params) != true) {
+    err = ai_pin_get_error(*network);
   }
   return err;
 }
 
 
 AI_API_ENTRY
-ai_buffer* ai_upstairs_inputs_get(ai_handle network, ai_u16 *n_buffer)
+ai_buffer* ai_pin_inputs_get(ai_handle network, ai_u16 *n_buffer)
 {
   if (network == AI_HANDLE_NULL) {
     network = (ai_handle)&AI_NET_OBJ_INSTANCE;
@@ -960,7 +960,7 @@ ai_buffer* ai_upstairs_inputs_get(ai_handle network, ai_u16 *n_buffer)
 
 
 AI_API_ENTRY
-ai_buffer* ai_upstairs_outputs_get(ai_handle network, ai_u16 *n_buffer)
+ai_buffer* ai_pin_outputs_get(ai_handle network, ai_u16 *n_buffer)
 {
   if (network == AI_HANDLE_NULL) {
     network = (ai_handle)&AI_NET_OBJ_INSTANCE;
@@ -971,22 +971,22 @@ ai_buffer* ai_upstairs_outputs_get(ai_handle network, ai_u16 *n_buffer)
 
 
 AI_API_ENTRY
-ai_handle ai_upstairs_destroy(ai_handle network)
+ai_handle ai_pin_destroy(ai_handle network)
 {
   return ai_platform_network_destroy(network);
 }
 
 
 AI_API_ENTRY
-ai_bool ai_upstairs_init(
+ai_bool ai_pin_init(
   ai_handle network, const ai_network_params* params)
 {
   ai_network* net_ctx = AI_NETWORK_OBJ(ai_platform_network_init(network, params));
   ai_bool ok = true;
 
   if (!net_ctx) return false;
-  ok &= upstairs_configure_weights(net_ctx, params);
-  ok &= upstairs_configure_activations(net_ctx, params);
+  ok &= pin_configure_weights(net_ctx, params);
+  ok &= pin_configure_activations(net_ctx, params);
 
   ok &= ai_platform_network_post_init(network);
 
@@ -995,7 +995,7 @@ ai_bool ai_upstairs_init(
 
 
 AI_API_ENTRY
-ai_i32 ai_upstairs_run(
+ai_i32 ai_pin_run(
   ai_handle network, const ai_buffer* input, ai_buffer* output)
 {
   return ai_platform_network_process(network, input, output);
@@ -1003,14 +1003,14 @@ ai_i32 ai_upstairs_run(
 
 
 AI_API_ENTRY
-ai_i32 ai_upstairs_forward(ai_handle network, const ai_buffer* input)
+ai_i32 ai_pin_forward(ai_handle network, const ai_buffer* input)
 {
   return ai_platform_network_process(network, input, NULL);
 }
 
 
 
-#undef AI_UPSTAIRS_MODEL_SIGNATURE
+#undef AI_PIN_MODEL_SIGNATURE
 #undef AI_NET_OBJ_INSTANCE
 #undef AI_TOOLS_DATE_TIME
 #undef AI_TOOLS_COMPILE_TIME

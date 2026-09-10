@@ -1,6 +1,6 @@
 ST Edge AI Core v2.2.0-20266 2adc00962
-Created date          : 2026-09-10 23:19:46
-Parameters            : generate --target stm32h7 --name spin -m D:/RM/XYEGA_RM2026_WheelLeg_Infatry_RLdeploy-main/pseudocode/example/onnx/pin/spin_pos0.23_0.65_p10.0_d1.0_0.1.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace7981387244420012383870133234359739 --output C:/Users/41077/.stm32cubemx/spin_output
+Created date          : 2026-09-11 01:18:43
+Parameters            : generate --target stm32h7 --name spin -m D:/RM/XYEGA_RM2026_WheelLeg_Infatry_RLdeploy-main/pseudocode/example/onnx/pin/spin_pos0.23_0.65_p10.0_d1.0_0.1.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace869502277693006637899962145841927 --output C:/Users/41077/.stm32cubemx/spin_output
 
 Exec/report summary (generate)
 ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -11,7 +11,7 @@ compression        :   none
 options            :   allocate-inputs, allocate-outputs                                                                                     
 optimization       :   time                                                                                                                  
 target/series      :   stm32h7                                                                                                               
-workspace dir      :   C:\Users\41077\AppData\Local\Temp\mxAI_workspace7981387244420012383870133234359739                                    
+workspace dir      :   C:\Users\41077\AppData\Local\Temp\mxAI_workspace869502277693006637899962145841927                                     
 output dir         :   C:\Users\41077\.stm32cubemx\spin_output                                                                               
 model_fmt          :   float                                                                                                                 
 model_name         :   spin_pos0_23_0_65_p10_0_d1_0_0_1                                                                                      
