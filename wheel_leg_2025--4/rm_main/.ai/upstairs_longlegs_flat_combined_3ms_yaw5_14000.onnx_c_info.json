@@ -800,56 +800,56 @@
   ],
   "environment": {
     "generated_model": {
-      "generated_time": "2026-09-10T23:18:43+0800",
+      "generated_time": "2026-09-10T23:19:03+0800",
       "model_files": [
         {
-          "name": "stable_data_params.h",
-          "signature": "0x9ba866c6ca4cca6f3619f2df78468482"
+          "name": "upstairs_data_params.h",
+          "signature": "0x291010aadf1f71c13d4d4cab9c23c5b9"
         },
         {
-          "name": "stable_data_params.c",
-          "signature": "0x984124469f8b0d8907eeb16dda6cf9c8"
+          "name": "upstairs_data_params.c",
+          "signature": "0xe7900e8f90d8870d976f6cf5cc5dd14b"
         },
         {
-          "name": "stable_data.h",
-          "signature": "0x5472eabad2096580b45018e1a212387c"
+          "name": "upstairs_data.h",
+          "signature": "0x7226deb025e814a53be4815353fc560b"
         },
         {
-          "name": "stable_data.c",
-          "signature": "0xb36d1dc7d7c457fe0587154edf7de254"
+          "name": "upstairs_data.c",
+          "signature": "0xb60b580685d0f24100ced49ca907609f"
         },
         {
-          "name": "stable_config.h",
-          "signature": "0x250e8b3ff054e301a3a3fecb4fd66b6c"
+          "name": "upstairs_config.h",
+          "signature": "0x02bb13bb4a03e306f56d3de64c2522fe"
         },
         {
-          "name": "stable.h",
-          "signature": "0x83df8d70d1d37ddb2660fb93b2377f3d"
+          "name": "upstairs.h",
+          "signature": "0xe84cb2f30041d10c4163609a4c487c2d"
         },
         {
-          "name": "stable.c",
-          "signature": "0x11885e13b3b8715c19b58794c6ce12ff"
+          "name": "upstairs.c",
+          "signature": "0x01f70647659d29ad229c205d628a8d99"
         }
       ],
-      "name": "stable"
+      "name": "upstairs"
     },
-    "network_signature": "0x6757a4cc3662ae69",
+    "network_signature": "0x0fa04e58a23b66b3",
     "test_name": "",
     "tools": [
       {
-        "arguments": "generate --target stm32h7 --name stable -m D:/RM/XYEGA_RM2026_WheelLeg_Infatry_RLdeploy-main/pseudocode/example/onnx/stable/stable_pos0.23_0.65_p15.0_d1.0_0.1.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace797515637967005310096186406490194 --output C:/Users/41077/.stm32cubemx/stable_output",
+        "arguments": "generate --target stm32h7 --name upstairs -m D:/gitprogram/wheel_leg_2026/wheel_leg_2025--4/RL_policy/longlegs_flat_combined_3ms_yaw5_14000.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace797724373574007633737445678476559 --output C:/Users/41077/.stm32cubemx/upstairs_output",
         "environment": [
           "STATS_TYPE=X-CUBE-AI"
         ],
         "input_model": {
           "model_files": [
             {
-              "name": "stable_pos0.23_0.65_p15.0_d1.0_0.1.onnx",
-              "signature": "0xbb40793d542fa3a8b877ef069ccd02a6"
+              "name": "longlegs_flat_combined_3ms_yaw5_14000.onnx",
+              "signature": "0x231516ce16f329adcfdf29cd3a6c1301"
             }
           ],
           "n_params": 38825,
-          "name": "stable_pos0_23_0_65_p15_0_d1_0_0_1",
+          "name": "longlegs_flat_combined_3ms_yaw5_14000",
           "size": 155300,
           "type": "onnx"
         },
@@ -1035,7 +1035,7 @@
         277,
         265
       ],
-      "name": "stable_pos0_23_0_65_p15_0_d1_0_0_1",
+      "name": "longlegs_flat_combined_3ms_yaw5_14000",
       "nodes": [
         {
           "attributes": {
@@ -1498,7 +1498,7 @@
       "virtual": false
     },
     {
-      "address": "s_stable_weights_array_u64",
+      "address": "s_upstairs_weights_array_u64",
       "alignment": 0,
       "attributes": {
         "latency": "UNDEF",
