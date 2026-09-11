@@ -800,56 +800,56 @@
   ],
   "environment": {
     "generated_model": {
-      "generated_time": "2026-09-12T02:02:36+0800",
+      "generated_time": "2026-09-11T17:23:43+0800",
       "model_files": [
         {
-          "name": "jump_data_params.h",
-          "signature": "0x37a6860f11ecefede069aa59f138a6e1"
+          "name": "upstairs_data_params.h",
+          "signature": "0x5bffadd870e39b324f6ce8abc0fdfe2f"
         },
         {
-          "name": "jump_data_params.c",
-          "signature": "0xd90114dc2393c8cb7a85e95c168c7269"
+          "name": "upstairs_data_params.c",
+          "signature": "0x2ae6a3ec88d89d6ad22f781c9e0d2178"
         },
         {
-          "name": "jump_data.h",
-          "signature": "0x7af286a302c9d164ea4a7b19223db1ff"
+          "name": "upstairs_data.h",
+          "signature": "0x628e2e143c16c0b36758a525f5de177c"
         },
         {
-          "name": "jump_data.c",
-          "signature": "0x798bed4cdb4dfa2d8db7078016252c3b"
+          "name": "upstairs_data.c",
+          "signature": "0x099ace3b3cd3c0ac9889f1755c389cc9"
         },
         {
-          "name": "jump_config.h",
-          "signature": "0x8fafdecc30a946aba9160fd1e72e39a3"
+          "name": "upstairs_config.h",
+          "signature": "0x75927dcd1ba6f196eecd2aab332b2953"
         },
         {
-          "name": "jump.h",
-          "signature": "0x9d6c2f2794c30480adb204809b0199df"
+          "name": "upstairs.h",
+          "signature": "0xf42dbed54c29f537b1104612191eef7c"
         },
         {
-          "name": "jump.c",
-          "signature": "0x47625f99cc1f0a4dea3238108889ba18"
+          "name": "upstairs.c",
+          "signature": "0x411920dbcbe2ba2c9039412d1e6d00ab"
         }
       ],
-      "name": "jump"
+      "name": "upstairs"
     },
-    "network_signature": "0x9f53f35c405e286b",
+    "network_signature": "0x6ce60cf85a8705ad",
     "test_name": "",
     "tools": [
       {
-        "arguments": "generate --target stm32h7 --name jump -m D:/RM/XYEGA_RM2026_WheelLeg_Infatry_RLdeploy-main/pseudocode/example/onnx/jump/jump_pos0.2_0.4_p6.0_d0.5_0.2.onnx --compression none --verbosity 1 -O time --workspace C:/Users/25328/AppData/Local/Temp/mxAI_workspace3330133743439913020846891751749498 --output C:/Users/25328/.stm32cubemx/jump_output",
+        "arguments": "generate --target stm32h7 --name upstairs -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/plane_balance_longlegs_model_14000.onnx --compression none --verbosity 1 -O time --workspace C:/Users/25328/AppData/Local/Temp/mxAI_workspace218181961280014217790983095328448 --output C:/Users/25328/.stm32cubemx/upstairs_output",
         "environment": [
           "STATS_TYPE=X-CUBE-AI"
         ],
         "input_model": {
           "model_files": [
             {
-              "name": "jump_pos0.2_0.4_p6.0_d0.5_0.2.onnx",
-              "signature": "0xd04826a44e0f2dfdd2573f5bc85634cb"
+              "name": "plane_balance_longlegs_model_14000.onnx",
+              "signature": "0x0c382aed2ef91fd4bf75e5c242631ffa"
             }
           ],
           "n_params": 38825,
-          "name": "jump_pos0_2_0_4_p6_0_d0_5_0_2",
+          "name": "plane_balance_longlegs_model_14000",
           "size": 155300,
           "type": "onnx"
         },
@@ -1035,7 +1035,7 @@
         277,
         265
       ],
-      "name": "jump_pos0_2_0_4_p6_0_d0_5_0_2",
+      "name": "plane_balance_longlegs_model_14000",
       "nodes": [
         {
           "attributes": {
@@ -1498,7 +1498,7 @@
       "virtual": false
     },
     {
-      "address": "s_jump_weights_array_u64",
+      "address": "s_upstairs_weights_array_u64",
       "alignment": 0,
       "attributes": {
         "latency": "UNDEF",

@@ -22,7 +22,6 @@
 #include "prot_judge.h"
 #include "prot_power.h"
 #include "dwt.h"
-#include "prot_hipnuc.h"
 #include "board_comm.h"
 #include "container.h"
 #include "prot_ms53l0m.h"
@@ -44,6 +43,7 @@ uint8_t rotate_stop_flag;
 ramp_t chassis_x_ramp;
 ramp_t chassis_y_ramp;
 ramp_t chassis_rotate_ramp;
+ramp_t chassis_remote_ramp;
 
 kalman_filter_t kal_3508_vel[2];
 kalman_filter_t kal_wy;
@@ -61,7 +61,7 @@ float spin_limit;
 float spin_zero;
 
 chassis_scale_t chassis_scale = {
-    .remote = 1.0f/660*2.0f,
+    .remote = 1.0f/660*3.0f,
     .keyboard = 3.0f
 };
 
@@ -260,9 +260,10 @@ static void chassis_init(void)
     memset(&chassis_y_ramp, 0, sizeof(ramp_t));
     wlr_init();
 
-    ramp_init(&chassis_x_ramp, 0.01f, -2.0f, 2.0f);
-    ramp_init(&chassis_y_ramp, 0.01f, -3.0f, 3.0f);
+    ramp_init(&chassis_x_ramp, 0.0075f, -2.0f, 2.0f);
+    ramp_init(&chassis_y_ramp, 0.0075f, -3.0f, 3.0f);
     ramp_init(&chassis_rotate_ramp, 0.06f, -12.0f, 12.0f);
+	ramp_init(&chassis_remote_ramp,0.06f,-3.0f,3.0f);
 
 	//基于虚拟杆角度控制
 	pid_init(&crash_pid_L, NONE, 50.0f, 0.0f, 500.0f, 0.0f, 4.0f);//max_err大约为0.6f
@@ -301,7 +302,7 @@ static void chassis_execute_fsm(void)
 	wlr.energy_flag = 0;
 	wlr.double_flag = 0;
 	if(g_robot_ctx.output.chassis != CHASSIS_STOP)
-		wlr.ctrl_mode = ((g_robot_ctx.output.torque_source == CHASSIS_TORQUE_RL) && (!chassis.recover_flag) ? 1 : 2);
+		wlr.ctrl_mode = ((g_robot_ctx.output.torque_source == CHASSIS_TORQUE_RL && !chassis.recover_flag) ? 1 : 2);
 	else
 		wlr.ctrl_mode = 0; 
     switch (g_robot_ctx.output.chassis) {
@@ -417,15 +418,15 @@ static void chassis_execute_fsm(void)
     if (g_robot_ctx.output.chassis == CHASSIS_HIGH) 
        	chassis_scale.keyboard = 2.6f;
     else
-        chassis_scale.keyboard = 2.3f;
+        chassis_scale.keyboard = 2.0f;
 
 	if(g_robot_ctx.output.chassis == CHASSIS_ASCEND)
-		chassis_scale.keyboard = 1.7f;
+		chassis_scale.keyboard = 1.5f;
 
-    if (g_robot_ctx.output.chassis == CHASSIS_HIGH) 
-		chassis_scale.remote = 1.0f / 660 * 2.6f;
-    else 
-		chassis_scale.remote = 1.0f /660 * 2.3f; 
+//    if (g_robot_ctx.output.chassis == CHASSIS_HIGH) 
+//		chassis_scale.remote = 1.0f / 660 * 2.6f;
+//    else 
+		chassis_scale.remote = 1.0f /660 * 1.0f; 
 }
 
 uint8_t rotate_ramp_flag; 
@@ -468,7 +469,8 @@ static void chassis_data_input(void)
 		case CHASSIS_STAIR:
         case CHASSIS_HIGH:
         case CHASSIS_TERRAIN_READY:		 // 整合了原版的所有 FOLLOW 和 PRONE
-		case CHASSIS_TERRAIN_READY_2 : {
+		case CHASSIS_TERRAIN_READY_2 : 
+		case CHASSIS_ASCEND:{
 			if((key_scan_clear(KB_CTRL) || check_ch3_trigger()) && gimbal.start_up)
 				chassis.turn_back_flag = 1;
 			if(chassis.turn_back_flag && chassis.turn_back_cnt <= 1000)
@@ -523,14 +525,14 @@ static void chassis_data_input(void)
 			chassis_rotate_ramp.out =0;
             break;
         }
-       case CHASSIS_ASCEND: {
-			wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
-			wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;  
-			wlr.wz_ref = 0;
-			wlr.yaw_err = circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
-			if(fabsf(wlr.yaw_err) < PI / 8.0f) wlr.direction = 0;
-			break;
-		}
+//       case CHASSIS_ASCEND: {
+//			wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
+//			wlr.yaw_fdb = (float)yaw_motor.ecd / 8192 * 2 * PI;  
+//			wlr.wz_ref = 0;
+//			wlr.yaw_err = circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
+//			if(fabsf(wlr.yaw_err) < PI / 8.0f) wlr.direction = 0;
+//			break;
+//		}
 //	   case CHASSIS_STAIR:
 //		 {
 //			wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI;

@@ -1,6 +1,6 @@
 ST Edge AI Core v2.2.0-20266 2adc00962
-Created date          : 2026-09-11 01:18:43
-Parameters            : generate --target stm32h7 --name spin -m D:/RM/XYEGA_RM2026_WheelLeg_Infatry_RLdeploy-main/pseudocode/example/onnx/pin/spin_pos0.23_0.65_p10.0_d1.0_0.1.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace869502277693006637899962145841927 --output C:/Users/41077/.stm32cubemx/spin_output
+Created date          : 2026-09-12 02:03:20
+Parameters            : generate --target stm32h7 --name spin -m D:/RM/XYEGA_RM2026_WheelLeg_Infatry_RLdeploy-main/pseudocode/example/onnx/pin/spin_pos0.23_0.65_p10.0_d1.0_0.1.onnx --compression none --verbosity 1 -O time --workspace C:/Users/25328/AppData/Local/Temp/mxAI_workspace333422290922999997171832396721728 --output C:/Users/25328/.stm32cubemx/spin_output
 
 Exec/report summary (generate)
 ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -11,8 +11,8 @@ compression        :   none
 options            :   allocate-inputs, allocate-outputs                                                                                     
 optimization       :   time                                                                                                                  
 target/series      :   stm32h7                                                                                                               
-workspace dir      :   C:\Users\41077\AppData\Local\Temp\mxAI_workspace869502277693006637899962145841927                                     
-output dir         :   C:\Users\41077\.stm32cubemx\spin_output                                                                               
+workspace dir      :   C:\Users\25328\AppData\Local\Temp\mxAI_workspace333422290922999997171832396721728                                     
+output dir         :   C:\Users\25328\.stm32cubemx\spin_output                                                                               
 model_fmt          :   float                                                                                                                 
 model_name         :   spin_pos0_23_0_65_p10_0_d1_0_0_1                                                                                      
 model_hash         :   0xeff1b3f8026220d4a8219cd00e3b501e                                                                                    
@@ -290,10 +290,10 @@ macc=43,401 weights=155,300 act=1,112 ram_io=0
 
 Generated files (7)
 ------------------------------------------------------------ 
-C:\Users\41077\.stm32cubemx\spin_output\spin_data_params.h   
-C:\Users\41077\.stm32cubemx\spin_output\spin_data_params.c   
-C:\Users\41077\.stm32cubemx\spin_output\spin_data.h          
-C:\Users\41077\.stm32cubemx\spin_output\spin_data.c          
-C:\Users\41077\.stm32cubemx\spin_output\spin_config.h        
-C:\Users\41077\.stm32cubemx\spin_output\spin.h               
-C:\Users\41077\.stm32cubemx\spin_output\spin.c               
+C:\Users\25328\.stm32cubemx\spin_output\spin_data_params.h   
+C:\Users\25328\.stm32cubemx\spin_output\spin_data_params.c   
+C:\Users\25328\.stm32cubemx\spin_output\spin_data.h          
+C:\Users\25328\.stm32cubemx\spin_output\spin_data.c          
+C:\Users\25328\.stm32cubemx\spin_output\spin_config.h        
+C:\Users\25328\.stm32cubemx\spin_output\spin.h               
+C:\Users\25328\.stm32cubemx\spin_output\spin.c               

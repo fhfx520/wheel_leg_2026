@@ -114,11 +114,11 @@ static const RLDeployModelParams_t rl_model_params[] = {
     },
     /* Upstairs / MiniRecover */
     {
-        {0.2f, 0.4f, 0.0f, -0.2f, -0.4f, 0.0f},
-        {0.2f, 0.4f, -0.2f, -0.4f},
+        {-0.23f, -0.65f, 0.0f, 0.23f, 0.65f, 0.0f},
+        {-0.23f, -0.65f, 0.23f, 0.65f},
         {15.0f, 15.0f, 0.0f, 15.0f, 15.0f, 0.0f},
         {1.0f, 1.0f, 0.1f, 1.0f, 1.0f, 0.1f},
-        {3.0f, 0.25f, 5.0f}
+        {2.0f, 0.25f, 5.0f}
     },
     /* Spin (the public enum retains the open-source name Pin). */
     {
@@ -225,45 +225,46 @@ static void rl_update_keyboard_model_selection(void)
      */
     if (g_robot_ctx.output.chassis == CHASSIS_ASCEND)
     {
-        if (rl_keyboard_jump_phase == RL_DEPLOY_JUMP_IDLE)
-        {
-            rl_keyboard_jump_phase = RL_DEPLOY_JUMP_CROUCH;
-            rl_keyboard_jump_cycles = 0U;
-            g_robot_ctx.jump_finish_flag = 0U;
-            (void)RLDeploy_SetModel(RL_POLICY_MODEL_UPSTAIRS);
-        }
-        else if (rl_keyboard_jump_phase == RL_DEPLOY_JUMP_CROUCH)
-        {
-            ++rl_keyboard_jump_cycles;
-            if (rl_keyboard_jump_cycles >= RL_DEPLOY_JUMP_CROUCH_CYCLES)
-            {
-                rl_keyboard_jump_phase = RL_DEPLOY_JUMP_ACTIVE;
-                rl_keyboard_jump_cycles = 0U;
-                (void)RLDeploy_SetModel(RL_POLICY_MODEL_JUMP);
-            }
-        }
-        else if (rl_keyboard_jump_phase == RL_DEPLOY_JUMP_ACTIVE)
-        {
-            ++rl_keyboard_jump_cycles;
-            if (rl_keyboard_jump_cycles >= RL_DEPLOY_JUMP_ACTIVE_CYCLES)
-            {
-                rl_keyboard_jump_phase = RL_DEPLOY_JUMP_COMPLETE;
-                rl_keyboard_jump_cycles = 0U;
-                rl_keyboard_normal_model = RL_POLICY_MODEL_UPSTAIRS;
-                (void)RLDeploy_SetModel(RL_POLICY_MODEL_UPSTAIRS);
-                g_robot_ctx.jump_finish_flag = 1U;
-            }
-        }
-        else
-        {
-            (void)RLDeploy_SetModel(RL_POLICY_MODEL_UPSTAIRS);
-            g_robot_ctx.jump_finish_flag = 1U;
-        }
+//        if (rl_keyboard_jump_phase == RL_DEPLOY_JUMP_IDLE)
+//        {
+//            rl_keyboard_jump_phase = RL_DEPLOY_JUMP_CROUCH;
+//            rl_keyboard_jump_cycles = 0U;
+//            g_robot_ctx.jump_finish_flag = 0U;
+//            (void)RLDeploy_SetModel(RL_POLICY_MODEL_UPSTAIRS);
+//        }
+//        else if (rl_keyboard_jump_phase == RL_DEPLOY_JUMP_CROUCH)
+//        {
+//            ++rl_keyboard_jump_cycles;
+//            if (rl_keyboard_jump_cycles >= RL_DEPLOY_JUMP_CROUCH_CYCLES)
+//            {
+//                rl_keyboard_jump_phase = RL_DEPLOY_JUMP_ACTIVE;
+//                rl_keyboard_jump_cycles = 0U;
+//                (void)RLDeploy_SetModel(RL_POLICY_MODEL_JUMP);
+//            }
+//        }
+//        else if (rl_keyboard_jump_phase == RL_DEPLOY_JUMP_ACTIVE)
+//        {
+//            ++rl_keyboard_jump_cycles;
+//            if (rl_keyboard_jump_cycles >= RL_DEPLOY_JUMP_ACTIVE_CYCLES)
+//            {
+//                rl_keyboard_jump_phase = RL_DEPLOY_JUMP_COMPLETE;
+//                rl_keyboard_jump_cycles = 0U;
+//                rl_keyboard_normal_model = RL_POLICY_MODEL_UPSTAIRS;
+//                (void)RLDeploy_SetModel(RL_POLICY_MODEL_UPSTAIRS);
+//                g_robot_ctx.jump_finish_flag = 1U;
+//            }
+//        }
+//        else
+//        {
+//            (void)RLDeploy_SetModel(RL_POLICY_MODEL_UPSTAIRS);
+//            g_robot_ctx.jump_finish_flag = 1U;
+//        }
 
-        rl_deploy_debug.keyboard_normal_model = (uint8_t)rl_keyboard_normal_model;
-        rl_deploy_debug.keyboard_jump_phase = (uint8_t)rl_keyboard_jump_phase;
-        rl_deploy_debug.keyboard_jump_cycles = rl_keyboard_jump_cycles;
-        return;
+//        rl_deploy_debug.keyboard_normal_model = (uint8_t)rl_keyboard_normal_model;
+//        rl_deploy_debug.keyboard_jump_phase = (uint8_t)rl_keyboard_jump_phase;
+//        rl_deploy_debug.keyboard_jump_cycles = rl_keyboard_jump_cycles;
+//        return;
+		  (void)RLDeploy_SetModel(RL_POLICY_MODEL_UPSTAIRS);
     }
 
     rl_keyboard_jump_phase = RL_DEPLOY_JUMP_IDLE;
@@ -648,7 +649,7 @@ static void rl_build_observation(void)
     else if (g_robot_ctx.output.chassis == CHASSIS_ASCEND)
     {
         rl_deploy_debug.command[2] =
-            0.29F * params->command_scale[2];
+            0.3F * params->command_scale[2];
     }
     else
     {

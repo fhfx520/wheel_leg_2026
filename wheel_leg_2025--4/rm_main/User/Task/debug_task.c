@@ -36,7 +36,7 @@ float test_hex = 1;
 extern FGT_sin_t FGT_sin_chassis;
 extern  uint16_t quadrant_cnt;
 extern ctrl_mode_e  ctrl_mode;
-extern float x3_balance_zero;
+extern volatile float x3_balance_zero;
 extern float real_vel;
 extern float yw_ddot;
 extern float Fwy;

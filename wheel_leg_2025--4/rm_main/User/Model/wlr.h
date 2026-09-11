@@ -127,7 +127,7 @@ extern pid_t pid_L_test[2];
 extern pid_t pid_leg_length_fly[2];
 extern int32_t double_cnt;
 extern float global_v;
-extern float x3_balance_zero,x5_balance_zero;
+extern volatile float x3_balance_zero,x5_balance_zero;
 extern uint32_t sky_ccc;
 void wlr_init(void);
 void wlr_protest(void);

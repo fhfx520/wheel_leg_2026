@@ -23,7 +23,6 @@
 #include "dma.h"
 #include "fdcan.h"
 #include "iwdg.h"
-#include "memorymap.h"
 #include "rng.h"
 #include "spi.h"
 #include "tim.h"

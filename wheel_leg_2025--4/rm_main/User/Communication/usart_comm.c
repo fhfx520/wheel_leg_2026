@@ -3,10 +3,6 @@
 #include "prot_judge.h"
 #include "string.h"
 #include "data_log.h"
-#include "prot_tfmini.h"
-#include "prot_hipnuc.h"
-#include "prot_ms53l2m.h"
-#include "prot_ms53l0m.h"
 #include "prot_tof.h"
 #include "dcache_handle.h"
 
@@ -20,11 +16,8 @@
 __ALIGNED(DCACHE_LINE_SIZE) uint8_t dr16_dma_rx_buf[ALIGN_UP_32(DR16_DATA_LEN)];
 __ALIGNED(DCACHE_LINE_SIZE) uint8_t judge_data_rx_buf[ALIGN_UP_32(JUDGE_DATA_LEN)];
 __ALIGNED(DCACHE_LINE_SIZE) uint8_t debug_dma_rx_buf[ALIGN_UP_32(DEBUG_DATA_LEN)];
-//uint8_t TFminiPlusBuffArray_Front_Left[TFMINIPLUS_BUFF_SIZE];
-//uint8_t TFminiPlusBuffArray_Front_Right[TFMINIPLUS_BUFF_SIZE];
 __ALIGNED(DCACHE_LINE_SIZE) uint8_t TOFBuffArray_LEFT[ALIGN_UP_32(TOF_BUFF_SIZE)];
 __ALIGNED(DCACHE_LINE_SIZE) uint8_t TOFBuffArray_RIGHT[ALIGN_UP_32(TOF_BUFF_SIZE)];
-//uint8_t Hipnuc_buff[82];
 uint32_t ccnct;
 /*
  * @brief  串口初始化，开启空闲中断并开始DMA接收数据
