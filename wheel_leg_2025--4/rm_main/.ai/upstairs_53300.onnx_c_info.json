@@ -800,56 +800,56 @@
   ],
   "environment": {
     "generated_model": {
-      "generated_time": "2026-09-12T23:35:26+0800",
+      "generated_time": "2026-09-13T01:07:46+0800",
       "model_files": [
         {
           "name": "upstairs_data_params.h",
-          "signature": "0xa5dfbd7b3ad68843a73974e32b3bd39b"
+          "signature": "0x545c4cc108f5c7a980544c0552264516"
         },
         {
           "name": "upstairs_data_params.c",
-          "signature": "0x77e414a94a6c5aa4a8eb5d5be60a5f61"
+          "signature": "0xcf69bcb9486490cfd3549b58b695e0e8"
         },
         {
           "name": "upstairs_data.h",
-          "signature": "0xd1b443eeaed35ac4b1b394cef891fa45"
+          "signature": "0xe645d88228d5e3805a28fadd9ca0555e"
         },
         {
           "name": "upstairs_data.c",
-          "signature": "0x6d0b9802987890f66271b9ee59ca70d6"
+          "signature": "0x1041bba49752f266a6a38e127cd15897"
         },
         {
           "name": "upstairs_config.h",
-          "signature": "0xed9e84d2018cc5f275894ce077c4a5a8"
+          "signature": "0x5a1f79d2adebe4c370ec5f357af8fcb9"
         },
         {
           "name": "upstairs.h",
-          "signature": "0xc7f1d670c84286de50fa7e9895d5dabe"
+          "signature": "0xd262bd9bb4b9a791a1b4ead51e9de620"
         },
         {
           "name": "upstairs.c",
-          "signature": "0x6855282504657d2dfa0d7773d997cd54"
+          "signature": "0x50dba84ec91cb198628bdf3b1cd2991c"
         }
       ],
       "name": "upstairs"
     },
-    "network_signature": "0x5f81a51b6d93c75a",
+    "network_signature": "0xb86f8c954f11bdb4",
     "test_name": "",
     "tools": [
       {
-        "arguments": "generate --target stm32h7 --name upstairs -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/30600.onnx --compression none --verbosity 1 -O time --workspace C:/Users/25328/AppData/Local/Temp/mxAI_workspace1108782855958004948120345224923901 --output C:/Users/25328/.stm32cubemx/upstairs_output",
+        "arguments": "generate --target stm32h7 --name upstairs -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/53300.onnx --compression none --verbosity 1 -O time --workspace C:/Users/25328/AppData/Local/Temp/mxAI_workspace1164240975341007077644957729872472 --output C:/Users/25328/.stm32cubemx/upstairs_output",
         "environment": [
           "STATS_TYPE=X-CUBE-AI"
         ],
         "input_model": {
           "model_files": [
             {
-              "name": "30600.onnx",
-              "signature": "0x5dae0277cb794bd96ba84c1abb6afdf5"
+              "name": "53300.onnx",
+              "signature": "0x42bd4d326ff45e9d1e17b818d35a9b23"
             }
           ],
           "n_params": 38825,
-          "name": "node_30600",
+          "name": "node_53300",
           "size": 155300,
           "type": "onnx"
         },
@@ -1035,7 +1035,7 @@
         277,
         265
       ],
-      "name": "node_30600",
+      "name": "node_53300",
       "nodes": [
         {
           "attributes": {

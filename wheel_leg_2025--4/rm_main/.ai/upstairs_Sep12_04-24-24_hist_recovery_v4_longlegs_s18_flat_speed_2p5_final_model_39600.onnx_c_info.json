@@ -800,44 +800,44 @@
   ],
   "environment": {
     "generated_model": {
-      "generated_time": "2026-09-12T14:07:40+0800",
+      "generated_time": "2026-09-12T23:27:03+0800",
       "model_files": [
         {
           "name": "upstairs_data_params.h",
-          "signature": "0xf23d9270dd7618a3175b50e5d09795cc"
+          "signature": "0xaf6aca765f0a845ca201ce51b7ec49c4"
         },
         {
           "name": "upstairs_data_params.c",
-          "signature": "0x83348975b4152c6800a6e4c0ab89828b"
+          "signature": "0xa4a9246d0fbc73ce3598e9adfd86fa62"
         },
         {
           "name": "upstairs_data.h",
-          "signature": "0xbda1aa0fe7f5a9397c04a92ceea97c75"
+          "signature": "0xab488b8897c4210c14eff77cb976ebc6"
         },
         {
           "name": "upstairs_data.c",
-          "signature": "0x097d32b88951b1aa7c43efb6cfa6dfb8"
+          "signature": "0x65143a7b9e0ed32587fb9e42f0af9ffb"
         },
         {
           "name": "upstairs_config.h",
-          "signature": "0xfb7506b24de14efa4baec781846fd433"
+          "signature": "0x7863efe6c2b2c59eece5c4f8ef77610f"
         },
         {
           "name": "upstairs.h",
-          "signature": "0x8f3f0689bc0c5df8352506d079f10b97"
+          "signature": "0x5c6ee2d7404b339204b862e134c1656a"
         },
         {
           "name": "upstairs.c",
-          "signature": "0x666f8ebc347244413e74e5ac4c198dc3"
+          "signature": "0x76b123289134fe6bfe2c8237e56c9b80"
         }
       ],
       "name": "upstairs"
     },
-    "network_signature": "0xc887d39dd5258ab6",
+    "network_signature": "0x8e45686f8a92d07a",
     "test_name": "",
     "tools": [
       {
-        "arguments": "generate --target stm32h7 --name upstairs -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/Sep12_04-24-24_hist_recovery_v4_longlegs_s18_flat_speed_2p5_final_model_39600.onnx --compression none --verbosity 1 -O time --workspace C:/Users/25328/AppData/Local/Temp/mxAI_workspace7681862361150010523089375755799124 --output C:/Users/25328/.stm32cubemx/upstairs_output",
+        "arguments": "generate --target stm32h7 --name upstairs -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/Sep12_04-24-24_hist_recovery_v4_longlegs_s18_flat_speed_2p5_final_model_39600.onnx --compression none --verbosity 1 -O time --workspace C:/Users/25328/AppData/Local/Temp/mxAI_workspace11037983061830014932725934062648041 --output C:/Users/25328/.stm32cubemx/upstairs_output",
         "environment": [
           "STATS_TYPE=X-CUBE-AI"
         ],

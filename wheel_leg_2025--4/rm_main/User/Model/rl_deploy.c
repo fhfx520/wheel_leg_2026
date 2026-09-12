@@ -37,8 +37,8 @@
 #define RL_DEPLOY_REAL_TORQUE_LIMIT       100.0f
 #define RL_DEPLOY_PARALLEL_TORQUE_LIMIT   35.0f
 #define RL_DEPLOY_WHEEL_TORQUE_LIMIT      5.0f
-#define RL_DEPLOY_LEFT_GAS_SPRING_K       600.1f
-#define RL_DEPLOY_RIGHT_GAS_SPRING_K      600.1f
+#define RL_DEPLOY_LEFT_GAS_SPRING_K       520.1f
+#define RL_DEPLOY_RIGHT_GAS_SPRING_K      520.1f
 
 enum
 {
@@ -770,7 +770,7 @@ static void rl_apply_gas_spring_compensation(const RLDeployLegState_t *leg,
         const float foot_torque =
             (-map->j21 * (*tau_shank) + map->j11 * (*tau_thigh)) / map->det;
 		
-        foot_force += force_sign * gas_spring_k;
+        foot_force += force_sign * gas_spring_k * leg->l0;
         *tau_shank = map->j11 * foot_force + map->j12 * foot_torque;
         *tau_thigh = map->j21 * foot_force + map->j22 * foot_torque;
     }
@@ -792,12 +792,12 @@ static uint8_t rl_calculate_shadow_motor_torques(void)
 
     /* Exact left/right signs used by the released deployment. */
     rl_apply_gas_spring_compensation(&rl_left_leg,
-                                     rl_gas_spring_calcu(0),
+                                     RL_DEPLOY_LEFT_GAS_SPRING_K,
                                      -1.0f,
                                      &left_thigh,
                                      &left_shank);
     rl_apply_gas_spring_compensation(&rl_right_leg,
-                                     rl_gas_spring_calcu(1),
+                                     RL_DEPLOY_RIGHT_GAS_SPRING_K,
                                      1.0f,
                                      &right_thigh,
                                      &right_shank);
