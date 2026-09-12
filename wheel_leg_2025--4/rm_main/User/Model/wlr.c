@@ -1,6 +1,5 @@
 #include "wlr.h"
 #include "chassis_task.h"
-#include "leg_vmc.h"
 #include "wheel_leg_model.h"
 #include "prot_imu.h"
 #include "prot_power.h"
@@ -71,7 +70,7 @@ const float LegLengthRotateHigh  = 0.28f; //正常
 const float LegLengthNormal  = 0.16f; //正常
 const float LegLengthStair   = 0.18f; //磕碰下台阶腿长
 
-const float gas_spring_F = 310.0f;	//气弹簧行程为0时力	N
+const float gas_spring_F = 550.0f;	//气弹簧行程为0时力	N
 const float gas_spring_S = 0.1f;    //气弹簧行程  m 
 const float gas_spring_D = 0.006f;	//气弹簧气缸直径  m
 const float gas_spring_P = 10.6105f;//气弹簧行程为0时压强	Mpa
@@ -305,7 +304,8 @@ static float wlr_fn_calc(float az, float Fy_fdb, float T0_fdb, float L0[3], floa
     return Fwy + mw * GRAVITY + mw * yw_ddot;
 }
 
-static float gas_spring_F_Calc(vmc_t v)
+
+float gas_spring_F_Calc(vmc_t v)
 {
 	//活塞有效面积计算
 	const float A = PI * powf(gas_spring_D,2) / 4.0f;
@@ -318,9 +318,9 @@ static float gas_spring_F_Calc(vmc_t v)
 	theta = atan2f(v.mp_fdb.yd + Hinge_gas_Lengh * arm_sin_f32(v.q_fdb[3]) - v.mp_fdb.ym, 
 			v.mp_fdb.xd + Hinge_gas_Lengh * arm_cos_f32(v.q_fdb[3]) - v.mp_fdb.xm);
 	//这里让气弹簧摆角为定值，减少腿摆角对支持力的影响导致离地检测误判
-	theta = 0.508f;
+	theta = (g_robot_ctx.output.chassis == CHASSIS_LOW ? 0.334189177f : 0.508f);
 	//0.28    0.18
-	//0.51	  0.23
+	//0.51	  0.23 
 	//分解到竖直方向上
 	float Fn_fdb = F_fdb * arm_sin_f32(theta);
 	

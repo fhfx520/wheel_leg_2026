@@ -1,35 +1,35 @@
 ST Edge AI Core v2.2.0-20266 2adc00962
-Created date          : 2026-09-12 02:01:59
-Parameters            : generate --target stm32h7 --name upstairs -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/30600.onnx --compression none --verbosity 1 -O time --workspace C:/Users/25328/AppData/Local/Temp/mxAI_workspace332617918969003240982439492617902 --output C:/Users/25328/.stm32cubemx/upstairs_output
+Created date          : 2026-09-12 16:20:53
+Parameters            : generate --target stm32h7 --name upstairs -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/Sep12_15-30-43_hist_recovery_v4_longlegs_s21_final_consolidation_model_45000.onnx --compression none --verbosity 1 -O time --workspace C:/Users/25328/AppData/Local/Temp/mxAI_workspace848113841985003662626278324561159 --output C:/Users/25328/.stm32cubemx/upstairs_output
 
 Exec/report summary (generate)
------------------------------------------------------------------------------------------------------------
-model file         :   D:\RM\wheel_leg_2026\wheel_leg_2025--4\RL_policy\30600.onnx                         
-type               :   onnx                                                                                
-c_name             :   upstairs                                                                            
-compression        :   none                                                                                
-options            :   allocate-inputs, allocate-outputs                                                   
-optimization       :   time                                                                                
-target/series      :   stm32h7                                                                             
-workspace dir      :   C:\Users\25328\AppData\Local\Temp\mxAI_workspace332617918969003240982439492617902   
-output dir         :   C:\Users\25328\.stm32cubemx\upstairs_output                                         
-model_fmt          :   float                                                                               
-model_name         :   node_30600                                                                          
-model_hash         :   0x5dae0277cb794bd96ba84c1abb6afdf5                                                  
-params #           :   38,825 items (151.66 KiB)                                                           
------------------------------------------------------------------------------------------------------------
-input 1/2          :   'obs', f32(1x25), 100 Bytes, activations                                            
-input 2/2          :   'obs_history', f32(1x125), 500 Bytes, activations                                   
-inputs (total)     :   600 Bytes                                                                           
-output 1/1         :   'actions', f32(1x6), 24 Bytes, activations                                          
-macc               :   43,401                                                                              
-weights (ro)       :   155,300 B (151.66 KiB) (1 segment)                                                  
-activations (rw)   :   1,112 B (1.09 KiB) (1 segment) *                                                    
-ram (total)        :   1,112 B (1.09 KiB) = 1,112 + 0 + 0                                                  
------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+model file         :   D:\RM\wheel_leg_2026\wheel_leg_2025--4\RL_policy\Sep12_15-30-43_hist_recovery_v4_longlegs_s21_final_consolidation_model_45000.onnx   
+type               :   onnx                                                                                                                                 
+c_name             :   upstairs                                                                                                                             
+compression        :   none                                                                                                                                 
+options            :   allocate-inputs, allocate-outputs                                                                                                    
+optimization       :   time                                                                                                                                 
+target/series      :   stm32h7                                                                                                                              
+workspace dir      :   C:\Users\25328\AppData\Local\Temp\mxAI_workspace848113841985003662626278324561159                                                    
+output dir         :   C:\Users\25328\.stm32cubemx\upstairs_output                                                                                          
+model_fmt          :   float                                                                                                                                
+model_name         :   Sep12_153043_hist_recovery_v4_longlegs_s21_final_consolidation_model_45000                                                           
+model_hash         :   0x40170255215206b09e5e996fe7bf15ad                                                                                                   
+params #           :   38,825 items (151.66 KiB)                                                                                                            
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+input 1/2          :   'obs', f32(1x25), 100 Bytes, activations                                                                                             
+input 2/2          :   'obs_history', f32(1x125), 500 Bytes, activations                                                                                    
+inputs (total)     :   600 Bytes                                                                                                                            
+output 1/1         :   'actions', f32(1x6), 24 Bytes, activations                                                                                           
+macc               :   43,401                                                                                                                               
+weights (ro)       :   155,300 B (151.66 KiB) (1 segment)                                                                                                   
+activations (rw)   :   1,112 B (1.09 KiB) (1 segment) *                                                                                                     
+ram (total)        :   1,112 B (1.09 KiB) = 1,112 + 0 + 0                                                                                                   
+------------------------------------------------------------------------------------------------------------------------------------------------------------
 (*) 'input'/'output' buffers are allocated in the activations buffer
 
-Model name - node_30600
+Model name - Sep12_153043_hist_recovery_v4_longlegs_s21_final_consolidation_model_45000
 ------ ---------------------------------------------------- --------------- --------------- -------- -------------------------------- --- --------------- ------------------ ------------------- 
 m_id   layer (type,original)                                oshape          param/size          macc                     connected to   | c_size          c_macc             c_type              
 ------ ---------------------------------------------------- --------------- --------------- -------- -------------------------------- --- --------------- ------------------ ------------------- 
@@ -104,7 +104,7 @@ model/c-model: macc=43,817/43,401 -416(-0.9%) weights=155,300/155,300  activatio
 
 Generated C-graph summary
 ------------------------------------------------------------------------------------------------------------------------
-model name            : node_30600
+model name            : Sep12_153043_hist_recovery_v4_longlegs_s21_final_consolidation_model_45000
 c-name                : upstairs
 c-node #              : 13
 c-array #             : 29

@@ -741,6 +741,20 @@ static uint8_t rl_calculate_shadow_pd(void)
         rl_array_is_finite(rl_deploy_debug.tau_virtual, RL_POLICY_ACTION_SIZE));
 }
 
+static float rl_gas_spring_calcu(uint8_t is_right)
+{
+	uint8_t i = 0;
+	if(is_right)
+		i = 1;
+	else
+		i = 0;
+	
+	vmc_forward_solution_five(&vmc[i], wlr.side[i].q2, wlr.side[i].q1, wlr.side[i].w2,
+							  wlr.side[i].w1, wlr.side[i].t2, wlr.side[i].t1);
+	
+	return gas_spring_F_Calc(vmc[i]);
+}
+
 static void rl_apply_gas_spring_compensation(const RLDeployLegState_t *leg,
                                              float gas_spring_k,
                                              float force_sign,
@@ -755,8 +769,8 @@ static void rl_apply_gas_spring_compensation(const RLDeployLegState_t *leg,
             (map->j22 * (*tau_shank) - map->j12 * (*tau_thigh)) / map->det;
         const float foot_torque =
             (-map->j21 * (*tau_shank) + map->j11 * (*tau_thigh)) / map->det;
-
-        foot_force += force_sign * gas_spring_k * leg->l0;
+		
+        foot_force += force_sign * gas_spring_k;
         *tau_shank = map->j11 * foot_force + map->j12 * foot_torque;
         *tau_thigh = map->j21 * foot_force + map->j22 * foot_torque;
     }
@@ -778,12 +792,12 @@ static uint8_t rl_calculate_shadow_motor_torques(void)
 
     /* Exact left/right signs used by the released deployment. */
     rl_apply_gas_spring_compensation(&rl_left_leg,
-                                     RL_DEPLOY_LEFT_GAS_SPRING_K,
+                                     rl_gas_spring_calcu(0),
                                      -1.0f,
                                      &left_thigh,
                                      &left_shank);
     rl_apply_gas_spring_compensation(&rl_right_leg,
-                                     RL_DEPLOY_RIGHT_GAS_SPRING_K,
+                                     rl_gas_spring_calcu(1),
                                      1.0f,
                                      &right_thigh,
                                      &right_shank);

@@ -4,6 +4,7 @@
 #include "stdint.h"
 #include "pid.h"
 #include "kalman_filter.h"
+#include "leg_vmc.h"
 
 //#define AUTO_JUMP_ENABLE//是否使用自动跳
 
@@ -132,6 +133,7 @@ extern uint32_t sky_ccc;
 void wlr_init(void);
 void wlr_protest(void);
 void wlr_control(void);
+float gas_spring_F_Calc(vmc_t v);
 
 #endif
 
