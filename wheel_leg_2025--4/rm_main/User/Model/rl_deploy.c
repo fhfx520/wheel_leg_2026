@@ -168,7 +168,7 @@ static void rl_update_remote_model_selection(void)
     }
 	else if (g_robot_ctx.output.chassis == CHASSIS_HIGH)
     {
-        (void)RLDeploy_SetModel(RL_POLICY_MODEL_STABLE);
+        (void)RLDeploy_SetModel(RL_POLICY_MODEL_UPSTAIRS);
     }
     else
     {
@@ -644,7 +644,7 @@ static void rl_build_observation(void)
     }
     else if (g_robot_ctx.output.chassis == CHASSIS_HIGH)
     {
-        rl_deploy_debug.command[2] = 0.18f * params->command_scale[2];
+        rl_deploy_debug.command[2] = 0.21f * params->command_scale[2];
     }
     else if (g_robot_ctx.output.chassis == CHASSIS_ASCEND)
     {

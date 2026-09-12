@@ -423,7 +423,7 @@ static void chassis_execute_fsm(void)
 	if(g_robot_ctx.output.chassis == CHASSIS_ASCEND)
 	{
 		chassis_scale.keyboard = 1.8f;
-		chassis_scale.remote = 1.8f;
+		chassis_scale.remote = 1.0f /660 * 1.8f;
 	}
 
 //    if (g_robot_ctx.output.chassis == CHASSIS_HIGH) 
@@ -638,7 +638,7 @@ static void chassis_data_input(void)
 		}	
 		else
 		{
-			wlr.v_ref = (wlr.v_ref < -2.3f ? -2.3f : wlr.v_ref);
+			wlr.v_ref = (wlr.v_ref < -2.5f ? -2.5f : wlr.v_ref);
 		}
 	}
     
