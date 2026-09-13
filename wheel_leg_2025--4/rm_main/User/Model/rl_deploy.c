@@ -108,9 +108,9 @@ static const RLDeployModelParams_t rl_model_params[] = {
     {
         {-0.23f, -0.65f, 0.0f, 0.23f, 0.65f, 0.0f},
         {-0.23f, -0.65f, 0.23f, 0.65f},
-        {15.0f, 15.0f, 0.0f, 15.0f, 15.0f, 0.0f},
+        {20.0f, 20.0f, 0.0f, 20.0f, 20.0f, 0.0f},
         {1.0f, 1.0f, 0.1f, 1.0f, 1.0f, 0.1f},
-        {3.0f, 0.25f, 5.0f}
+        {2.0f, 0.25f, 5.0f}
     },
     /* Upstairs / MiniRecover */
     {
@@ -168,7 +168,7 @@ static void rl_update_remote_model_selection(void)
     }
 	else if (g_robot_ctx.output.chassis == CHASSIS_HIGH)
     {
-        (void)RLDeploy_SetModel(RL_POLICY_MODEL_UPSTAIRS);
+        (void)RLDeploy_SetModel(RL_POLICY_MODEL_STABLE);
     }
     else
     {

@@ -2,7 +2,7 @@
   ******************************************************************************
   * @file    stable.h
   * @author  AST Embedded Analytics Research Platform
-  * @date    2026-09-13T02:21:44+0800
+  * @date    2026-09-13T15:58:41+0800
   * @brief   AI Tool Automatic Code Generator for Embedded NN computing
   ******************************************************************************
   * @attention
@@ -23,7 +23,7 @@
 
 /******************************************************************************/
 #define AI_STABLE_MODEL_NAME          "stable"
-#define AI_STABLE_ORIGIN_MODEL_NAME   "stable_pos0_23_0_65_p15_0_d1_0_0_1"
+#define AI_STABLE_ORIGIN_MODEL_NAME   "node_62500_stable"
 
 /******************************************************************************/
 #define AI_STABLE_ACTIVATIONS_ALIGNMENT   (4)
