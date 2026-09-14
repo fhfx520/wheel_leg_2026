@@ -108,7 +108,7 @@ static const RLDeployModelParams_t rl_model_params[] = {
     {
         {-0.23f, -0.65f, 0.0f, 0.23f, 0.65f, 0.0f},
         {-0.23f, -0.65f, 0.23f, 0.65f},
-        {20.0f, 20.0f, 0.0f, 20.0f, 20.0f, 0.0f},
+        {15.0f, 15.0f, 0.0f, 15.0f, 15.0f, 0.0f},
         {1.0f, 1.0f, 0.1f, 1.0f, 1.0f, 0.1f},
         {2.0f, 0.25f, 5.0f}
     },
@@ -124,7 +124,7 @@ static const RLDeployModelParams_t rl_model_params[] = {
     {
         {-0.23f, -0.65f, 0.0f, 0.23f, 0.65f, 0.0f},
         {-0.23f, -0.65f, 0.23f, 0.65f},
-        {10.0f, 10.0f, 0.0f, 10.0f, 10.0f, 0.0f},
+        {15.0f, 15.0f, 0.0f, 15.0f, 15.0f, 0.0f},
         {1.0f, 1.0f, 0.1f, 1.0f, 1.0f, 0.1f},
         {2.0f, 0.25f, 5.0f}
     },
@@ -624,7 +624,7 @@ static void rl_build_observation(void)
     if (rl_active_model == RL_POLICY_MODEL_PIN)
     {
         rl_deploy_debug.command[1] =
-           9.0f * params->command_scale[1];
+           5.0f * params->command_scale[1];
     }
     else
     {
@@ -642,9 +642,13 @@ static void rl_build_observation(void)
     {
         rl_deploy_debug.command[2] = 0.16f * params->command_scale[2];
     }
+	else if (g_robot_ctx.output.chassis == CHASSIS_LOW_SPIN)
+    {
+        rl_deploy_debug.command[2] = 0.13f * params->command_scale[2];
+    }
     else if (g_robot_ctx.output.chassis == CHASSIS_HIGH)
     {
-        rl_deploy_debug.command[2] = 0.21f * params->command_scale[2];
+        rl_deploy_debug.command[2] = 0.14f * params->command_scale[2];
     }
     else if (g_robot_ctx.output.chassis == CHASSIS_ASCEND)
     {
