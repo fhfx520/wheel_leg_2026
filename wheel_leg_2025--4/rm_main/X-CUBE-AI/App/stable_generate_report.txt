@@ -1,21 +1,21 @@
 ST Edge AI Core v2.2.0-20266 2adc00962
-Created date          : 2026-09-14 15:23:29
-Parameters            : generate --target stm32h7 --name stable -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/77000.onnx --compression none --verbosity 1 -O time --workspace C:/Users/25328/AppData/Local/Temp/mxAI_workspace25417976490810012878465905978525643 --output C:/Users/25328/.stm32cubemx/stable_output
+Created date          : 2026-09-14 18:28:46
+Parameters            : generate --target stm32h7 --name stable -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/stable_76500.onnx --compression none --verbosity 1 -O time --workspace C:/Users/25328/AppData/Local/Temp/mxAI_workspace26529414559909914124824827099843120 --output C:/Users/25328/.stm32cubemx/stable_output
 
 Exec/report summary (generate)
 -------------------------------------------------------------------------------------------------------------
-model file         :   D:\RM\wheel_leg_2026\wheel_leg_2025--4\RL_policy\77000.onnx                           
+model file         :   D:\RM\wheel_leg_2026\wheel_leg_2025--4\RL_policy\stable_76500.onnx                    
 type               :   onnx                                                                                  
 c_name             :   stable                                                                                
 compression        :   none                                                                                  
 options            :   allocate-inputs, allocate-outputs                                                     
 optimization       :   time                                                                                  
 target/series      :   stm32h7                                                                               
-workspace dir      :   C:\Users\25328\AppData\Local\Temp\mxAI_workspace25417976490810012878465905978525643   
+workspace dir      :   C:\Users\25328\AppData\Local\Temp\mxAI_workspace26529414559909914124824827099843120   
 output dir         :   C:\Users\25328\.stm32cubemx\stable_output                                             
 model_fmt          :   float                                                                                 
-model_name         :   node_77000                                                                            
-model_hash         :   0x4d507ccc163c569b5682ec07e1fa5685                                                    
+model_name         :   stable_76500                                                                          
+model_hash         :   0x28947f9898652596e6cc879f5278e335                                                    
 params #           :   38,825 items (151.66 KiB)                                                             
 -------------------------------------------------------------------------------------------------------------
 input 1/2          :   'obs', f32(1x25), 100 Bytes, activations                                              
@@ -29,7 +29,7 @@ ram (total)        :   1,112 B (1.09 KiB) = 1,112 + 0 + 0
 -------------------------------------------------------------------------------------------------------------
 (*) 'input'/'output' buffers are allocated in the activations buffer
 
-Model name - node_77000
+Model name - stable_76500
 ------ ---------------------------------------------------- --------------- --------------- -------- -------------------------------- --- --------------- ------------------ ------------------- 
 m_id   layer (type,original)                                oshape          param/size          macc                     connected to   | c_size          c_macc             c_type              
 ------ ---------------------------------------------------- --------------- --------------- -------- -------------------------------- --- --------------- ------------------ ------------------- 
@@ -104,7 +104,7 @@ model/c-model: macc=43,817/43,401 -416(-0.9%) weights=155,300/155,300  activatio
 
 Generated C-graph summary
 ------------------------------------------------------------------------------------------------------------------------
-model name            : node_77000
+model name            : stable_76500
 c-name                : stable
 c-node #              : 13
 c-array #             : 29
