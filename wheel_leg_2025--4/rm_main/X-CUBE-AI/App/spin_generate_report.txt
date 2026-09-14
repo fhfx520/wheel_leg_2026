@@ -1,6 +1,6 @@
 ST Edge AI Core v2.2.0-20266 2adc00962
-Created date          : 2026-09-14 02:41:28
-Parameters            : generate --target stm32h7 --name spin -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/spin_59400.onnx --compression none --verbosity 1 -O time --workspace C:/Users/25328/AppData/Local/Temp/mxAI_workspace20845708016990013114802335682282760 --output C:/Users/25328/.stm32cubemx/spin_output
+Created date          : 2026-09-14 15:24:53
+Parameters            : generate --target stm32h7 --name spin -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/spin_59400.onnx --compression none --verbosity 1 -O time --workspace C:/Users/25328/AppData/Local/Temp/mxAI_workspace25426391949300010654098779875861953 --output C:/Users/25328/.stm32cubemx/spin_output
 
 Exec/report summary (generate)
 -------------------------------------------------------------------------------------------------------------
@@ -11,7 +11,7 @@ compression        :   none
 options            :   allocate-inputs, allocate-outputs                                                     
 optimization       :   time                                                                                  
 target/series      :   stm32h7                                                                               
-workspace dir      :   C:\Users\25328\AppData\Local\Temp\mxAI_workspace20845708016990013114802335682282760   
+workspace dir      :   C:\Users\25328\AppData\Local\Temp\mxAI_workspace25426391949300010654098779875861953   
 output dir         :   C:\Users\25328\.stm32cubemx\spin_output                                               
 model_fmt          :   float                                                                                 
 model_name         :   spin_59400                                                                            
