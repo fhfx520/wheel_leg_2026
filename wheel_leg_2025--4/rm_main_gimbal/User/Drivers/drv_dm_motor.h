@@ -22,7 +22,7 @@
 #define T_MIN -10.0f    // N*m 18
 #define T_MAX 10.0f
 
-//离线时间间隔
+//离线时间间隔 
 #define DM_MOTOR_OFFLINE_TIMEOUT_MS 100
 
 typedef struct
