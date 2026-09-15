@@ -800,56 +800,56 @@
   ],
   "environment": {
     "generated_model": {
-      "generated_time": "2026-09-16T00:47:05+0800",
+      "generated_time": "2026-09-16T01:27:40+0800",
       "model_files": [
         {
-          "name": "spin_data_params.h",
-          "signature": "0x4e49cadf957abc10e95f6dae1d5168c6"
+          "name": "stable_data_params.h",
+          "signature": "0xbd18b67b19be1a2f32108c3c3ae974b1"
         },
         {
-          "name": "spin_data_params.c",
-          "signature": "0xcbed26828f268fd4c90db5c96f528af8"
+          "name": "stable_data_params.c",
+          "signature": "0xafba2d93a4729b7c6b08b6beabd3b216"
         },
         {
-          "name": "spin_data.h",
-          "signature": "0x23caf77ca5272e1b453caacd5a076bce"
+          "name": "stable_data.h",
+          "signature": "0x794faca53d72245aa781f9d21ce5280c"
         },
         {
-          "name": "spin_data.c",
-          "signature": "0xae30e578639f9c55a6fbb0f4bb251351"
+          "name": "stable_data.c",
+          "signature": "0x8e470a8fc90ec15de561685eec2fb2da"
         },
         {
-          "name": "spin_config.h",
-          "signature": "0x7e7453b36d293b22a1c738aec0a2dae9"
+          "name": "stable_config.h",
+          "signature": "0x6f1bb47b01e33b03bb302d30261621e7"
         },
         {
-          "name": "spin.h",
-          "signature": "0x362a71ae61cab9495177169f8e23568c"
+          "name": "stable.h",
+          "signature": "0x7d3369dde30695b2202e2ad2a65475bb"
         },
         {
-          "name": "spin.c",
-          "signature": "0x0b38acbc704e72ccee4c1e9c8c9ac5a5"
+          "name": "stable.c",
+          "signature": "0xf99f51f9130a90c4f6a2307fcc997349"
         }
       ],
-      "name": "spin"
+      "name": "stable"
     },
-    "network_signature": "0x0dca755e76bc448d",
+    "network_signature": "0x844ad06fef22b799",
     "test_name": "",
     "tools": [
       {
-        "arguments": "generate --target stm32h7 --name spin -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/spin_59400.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace1532458755489005828564993855148513 --output C:/Users/41077/.stm32cubemx/spin_output",
+        "arguments": "generate --target stm32h7 --name stable -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/xiataijie.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace1556822015228006225829552860798882 --output C:/Users/41077/.stm32cubemx/stable_output",
         "environment": [
           "STATS_TYPE=X-CUBE-AI"
         ],
         "input_model": {
           "model_files": [
             {
-              "name": "spin_59400.onnx",
-              "signature": "0x641f4e0aed0252f2f1eac2e63506f068"
+              "name": "xiataijie.onnx",
+              "signature": "0x2da8f3c9929e76c8b0a60672e9067bca"
             }
           ],
           "n_params": 38825,
-          "name": "spin_59400",
+          "name": "xiataijie",
           "size": 155300,
           "type": "onnx"
         },
@@ -1035,7 +1035,7 @@
         277,
         265
       ],
-      "name": "spin_59400",
+      "name": "xiataijie",
       "nodes": [
         {
           "attributes": {
@@ -1498,7 +1498,7 @@
       "virtual": false
     },
     {
-      "address": "s_spin_weights_array_u64",
+      "address": "s_stable_weights_array_u64",
       "alignment": 0,
       "attributes": {
         "latency": "UNDEF",

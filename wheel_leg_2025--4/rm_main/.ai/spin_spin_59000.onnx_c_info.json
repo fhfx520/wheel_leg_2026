@@ -800,56 +800,56 @@
   ],
   "environment": {
     "generated_model": {
-      "generated_time": "2026-09-16T00:47:05+0800",
+      "generated_time": "2026-09-16T01:28:44+0800",
       "model_files": [
         {
           "name": "spin_data_params.h",
-          "signature": "0x4e49cadf957abc10e95f6dae1d5168c6"
+          "signature": "0xb97a8b49e2c298434fd200dc1c1da7c4"
         },
         {
           "name": "spin_data_params.c",
-          "signature": "0xcbed26828f268fd4c90db5c96f528af8"
+          "signature": "0xe3c2b57dce9fb29ac47953a33abc79de"
         },
         {
           "name": "spin_data.h",
-          "signature": "0x23caf77ca5272e1b453caacd5a076bce"
+          "signature": "0x485c7b2df2c5dcce72a7e050a36604b2"
         },
         {
           "name": "spin_data.c",
-          "signature": "0xae30e578639f9c55a6fbb0f4bb251351"
+          "signature": "0x222651e51b76b275653b4c83a5fcfef7"
         },
         {
           "name": "spin_config.h",
-          "signature": "0x7e7453b36d293b22a1c738aec0a2dae9"
+          "signature": "0x5bafc29a9e6669be400e07583608db26"
         },
         {
           "name": "spin.h",
-          "signature": "0x362a71ae61cab9495177169f8e23568c"
+          "signature": "0x73148993ec39dbba360384bd602036d7"
         },
         {
           "name": "spin.c",
-          "signature": "0x0b38acbc704e72ccee4c1e9c8c9ac5a5"
+          "signature": "0x8f32b452ba01fd1b7e86380f47567eb6"
         }
       ],
       "name": "spin"
     },
-    "network_signature": "0x0dca755e76bc448d",
+    "network_signature": "0x4a8570a75a4a499c",
     "test_name": "",
     "tools": [
       {
-        "arguments": "generate --target stm32h7 --name spin -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/spin_59400.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace1532458755489005828564993855148513 --output C:/Users/41077/.stm32cubemx/spin_output",
+        "arguments": "generate --target stm32h7 --name spin -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/spin_59000.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace1557467212930001843275655100773798 --output C:/Users/41077/.stm32cubemx/spin_output",
         "environment": [
           "STATS_TYPE=X-CUBE-AI"
         ],
         "input_model": {
           "model_files": [
             {
-              "name": "spin_59400.onnx",
-              "signature": "0x641f4e0aed0252f2f1eac2e63506f068"
+              "name": "spin_59000.onnx",
+              "signature": "0x423ab0b53f0f9463f20119ea66037135"
             }
           ],
           "n_params": 38825,
-          "name": "spin_59400",
+          "name": "spin_59000",
           "size": 155300,
           "type": "onnx"
         },
@@ -1035,7 +1035,7 @@
         277,
         265
       ],
-      "name": "spin_59400",
+      "name": "spin_59000",
       "nodes": [
         {
           "attributes": {

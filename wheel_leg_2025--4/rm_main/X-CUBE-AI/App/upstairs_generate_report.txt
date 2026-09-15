@@ -1,32 +1,32 @@
 ST Edge AI Core v2.2.0-20266 2adc00962
-Created date          : 2026-09-15 01:34:29
-Parameters            : generate --target stm32h7 --name upstairs -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/56500.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace696909690376997703703439801941350 --output C:/Users/41077/.stm32cubemx/upstairs_output
+Created date          : 2026-09-16 01:28:08
+Parameters            : generate --target stm32h7 --name upstairs -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/56500.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace1557093517887006458207488915146742 --output C:/Users/41077/.stm32cubemx/upstairs_output
 
 Exec/report summary (generate)
------------------------------------------------------------------------------------------------------------
-model file         :   D:\RM\wheel_leg_2026\wheel_leg_2025--4\RL_policy\56500.onnx                         
-type               :   onnx                                                                                
-c_name             :   upstairs                                                                            
-compression        :   none                                                                                
-options            :   allocate-inputs, allocate-outputs                                                   
-optimization       :   time                                                                                
-target/series      :   stm32h7                                                                             
-workspace dir      :   C:\Users\41077\AppData\Local\Temp\mxAI_workspace696909690376997703703439801941350   
-output dir         :   C:\Users\41077\.stm32cubemx\upstairs_output                                         
-model_fmt          :   float                                                                               
-model_name         :   node_56500                                                                          
-model_hash         :   0x86a9ab6f55e09d2c399dcc29465f9722                                                  
-params #           :   38,825 items (151.66 KiB)                                                           
------------------------------------------------------------------------------------------------------------
-input 1/2          :   'obs', f32(1x25), 100 Bytes, activations                                            
-input 2/2          :   'obs_history', f32(1x125), 500 Bytes, activations                                   
-inputs (total)     :   600 Bytes                                                                           
-output 1/1         :   'actions', f32(1x6), 24 Bytes, activations                                          
-macc               :   43,401                                                                              
-weights (ro)       :   155,300 B (151.66 KiB) (1 segment)                                                  
-activations (rw)   :   1,112 B (1.09 KiB) (1 segment) *                                                    
-ram (total)        :   1,112 B (1.09 KiB) = 1,112 + 0 + 0                                                  
------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------
+model file         :   D:\RM\wheel_leg_2026\wheel_leg_2025--4\RL_policy\56500.onnx                          
+type               :   onnx                                                                                 
+c_name             :   upstairs                                                                             
+compression        :   none                                                                                 
+options            :   allocate-inputs, allocate-outputs                                                    
+optimization       :   time                                                                                 
+target/series      :   stm32h7                                                                              
+workspace dir      :   C:\Users\41077\AppData\Local\Temp\mxAI_workspace1557093517887006458207488915146742   
+output dir         :   C:\Users\41077\.stm32cubemx\upstairs_output                                          
+model_fmt          :   float                                                                                
+model_name         :   node_56500                                                                           
+model_hash         :   0x86a9ab6f55e09d2c399dcc29465f9722                                                   
+params #           :   38,825 items (151.66 KiB)                                                            
+------------------------------------------------------------------------------------------------------------
+input 1/2          :   'obs', f32(1x25), 100 Bytes, activations                                             
+input 2/2          :   'obs_history', f32(1x125), 500 Bytes, activations                                    
+inputs (total)     :   600 Bytes                                                                            
+output 1/1         :   'actions', f32(1x6), 24 Bytes, activations                                           
+macc               :   43,401                                                                               
+weights (ro)       :   155,300 B (151.66 KiB) (1 segment)                                                   
+activations (rw)   :   1,112 B (1.09 KiB) (1 segment) *                                                     
+ram (total)        :   1,112 B (1.09 KiB) = 1,112 + 0 + 0                                                   
+------------------------------------------------------------------------------------------------------------
 (*) 'input'/'output' buffers are allocated in the activations buffer
 
 Model name - node_56500

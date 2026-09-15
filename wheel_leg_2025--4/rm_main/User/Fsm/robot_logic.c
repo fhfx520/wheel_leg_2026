@@ -164,7 +164,7 @@ static void rem_ter_ready_execute(void) {
         g_robot_ctx.output.chassis = CHASSIS_STOP; 
     }
 	else {
-        g_robot_ctx.output.shoot   = SHOOT_SINGLE;  
+        g_robot_ctx.output.shoot   = SHOOT_SINGLE;   
     }
     
     if (g_robot_ctx.input.sw2 == RC_SW_UP) { fsm_change(&fsm_remote_sub, &state_rem_low); return; }

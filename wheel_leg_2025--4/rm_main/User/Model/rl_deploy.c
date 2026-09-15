@@ -522,7 +522,7 @@ static void rl_update_joint_state(void)
     const float left_thigh =
         rl_wrap_to_pi(joint_motor[0].position - 2.35201263f - RL_DEPLOY_THIGH_OFFSET);
     const float left_shank =
-        rl_wrap_to_pi(joint_motor[1].position - 0.542654037f + RL_DEPLOY_SHANK_OFFSET);
+        rl_wrap_to_pi(joint_motor[1].position - 2.07675409f + RL_DEPLOY_SHANK_OFFSET);
     const float right_thigh =
         rl_wrap_to_pi(joint_motor[2].position - 4.65292311f + RL_DEPLOY_THIGH_OFFSET);
     const float right_shank =
