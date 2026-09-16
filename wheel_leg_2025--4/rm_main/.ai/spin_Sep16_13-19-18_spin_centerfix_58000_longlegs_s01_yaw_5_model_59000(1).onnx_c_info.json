@@ -800,56 +800,56 @@
   ],
   "environment": {
     "generated_model": {
-      "generated_time": "2026-09-16T18:19:06+0800",
+      "generated_time": "2026-09-16T18:19:43+0800",
       "model_files": [
         {
-          "name": "upstairs_data_params.h",
-          "signature": "0x19b839551ce23c364d84225094effa8b"
+          "name": "spin_data_params.h",
+          "signature": "0xbb2299977157cda7eee08275bb7c7f30"
         },
         {
-          "name": "upstairs_data_params.c",
-          "signature": "0x3c7c68d35741c0b5fdfb50813f96f05d"
+          "name": "spin_data_params.c",
+          "signature": "0xb42de80e7d96f312aaf7bd84a70c0e4b"
         },
         {
-          "name": "upstairs_data.h",
-          "signature": "0x2a46d322ca111231170f59e6c92716ea"
+          "name": "spin_data.h",
+          "signature": "0x8b44cf95ff493fef10d5b9bc9cd8cd59"
         },
         {
-          "name": "upstairs_data.c",
-          "signature": "0x39af75fdc3205edcc8783ee073f4726e"
+          "name": "spin_data.c",
+          "signature": "0xa57f22bc21f845d25f7f0ba0d79d7bcf"
         },
         {
-          "name": "upstairs_config.h",
-          "signature": "0xcae88bcc413fcea2f5d3dd5d1854ec31"
+          "name": "spin_config.h",
+          "signature": "0x1c407295c22df2194f9f26b35bd7801e"
         },
         {
-          "name": "upstairs.h",
-          "signature": "0x03bcb93643b446e19e4ecfa34de69120"
+          "name": "spin.h",
+          "signature": "0x9c3b7b1465c2bbde7b82a51038d1d5fe"
         },
         {
-          "name": "upstairs.c",
-          "signature": "0x2d3c13a0221b1f9b09d2ffc5d7b6c7b9"
+          "name": "spin.c",
+          "signature": "0x174d48a863ff6519ea0c4a65001336ab"
         }
       ],
-      "name": "upstairs"
+      "name": "spin"
     },
-    "network_signature": "0x62281dbd971a7def",
+    "network_signature": "0xffc3f11ea6978fbd",
     "test_name": "",
     "tools": [
       {
-        "arguments": "generate --target stm32h7 --name upstairs -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/56500.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace21636646536280011283740412011946215 --output C:/Users/41077/.stm32cubemx/upstairs_output",
+        "arguments": "generate --target stm32h7 --name spin -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/Sep16_13-19-18_spin_centerfix_58000_longlegs_s01_yaw_5_model_59000(1).onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace21640419309420012145232686540378359 --output C:/Users/41077/.stm32cubemx/spin_output",
         "environment": [
           "STATS_TYPE=X-CUBE-AI"
         ],
         "input_model": {
           "model_files": [
             {
-              "name": "56500.onnx",
-              "signature": "0x86a9ab6f55e09d2c399dcc29465f9722"
+              "name": "Sep16_13-19-18_spin_centerfix_58000_longlegs_s01_yaw_5_model_59000(1).onnx",
+              "signature": "0x1a000145eb28b00097a40867fb8e8ecd"
             }
           ],
           "n_params": 38825,
-          "name": "node_56500",
+          "name": "Sep16_131918_spin_centerfix_58000_longlegs_s01_yaw_5_model_590001",
           "size": 155300,
           "type": "onnx"
         },
@@ -1035,7 +1035,7 @@
         277,
         265
       ],
-      "name": "node_56500",
+      "name": "Sep16_131918_spin_centerfix_58000_longlegs_s01_yaw_5_model_590001",
       "nodes": [
         {
           "attributes": {
@@ -1498,7 +1498,7 @@
       "virtual": false
     },
     {
-      "address": "s_upstairs_weights_array_u64",
+      "address": "s_spin_weights_array_u64",
       "alignment": 0,
       "attributes": {
         "latency": "UNDEF",
