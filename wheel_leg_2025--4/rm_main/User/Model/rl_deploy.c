@@ -624,7 +624,7 @@ static void rl_build_observation(void)
     if (rl_active_model == RL_POLICY_MODEL_PIN)
     {
         rl_deploy_debug.command[1] =
-           10.0f * params->command_scale[1];
+           7.0f * params->command_scale[1];
     }
     else
     {

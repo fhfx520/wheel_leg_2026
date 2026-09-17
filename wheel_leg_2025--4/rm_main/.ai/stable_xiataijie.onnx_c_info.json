@@ -800,44 +800,44 @@
   ],
   "environment": {
     "generated_model": {
-      "generated_time": "2026-09-17T22:01:14+0800",
+      "generated_time": "2026-09-18T01:42:57+0800",
       "model_files": [
         {
           "name": "stable_data_params.h",
-          "signature": "0x17cb5f68845c54d718086c708610e142"
+          "signature": "0x53a11217527d5b1f41d741c28e076920"
         },
         {
           "name": "stable_data_params.c",
-          "signature": "0xf8c235fb2ad3dd7595ae02223678c738"
+          "signature": "0x9dc7cc4036f4e4043532abce601876e1"
         },
         {
           "name": "stable_data.h",
-          "signature": "0x920c428afe950f32c7ff0b4ec704764e"
+          "signature": "0xb5a7013b9f3429c3d16236523f72e0ca"
         },
         {
           "name": "stable_data.c",
-          "signature": "0x1b8511637cbf80999771e58a5e5d6156"
+          "signature": "0x99f01e45f7427184a31e9a5f75ffb11b"
         },
         {
           "name": "stable_config.h",
-          "signature": "0xded4def59133f5a7a460d4baf7237f0e"
+          "signature": "0x721a3105832994711baf03c9dc3bef08"
         },
         {
           "name": "stable.h",
-          "signature": "0x397001fe03e40a25d25cbb26f1c04eef"
+          "signature": "0x03777d44eec4a71c04c5c83a1daa4c71"
         },
         {
           "name": "stable.c",
-          "signature": "0x753ed904954176afa1a8ac4fa2b6a745"
+          "signature": "0xb5f70326ad98fd024413703b490924ed"
         }
       ],
       "name": "stable"
     },
-    "network_signature": "0x5b196ca5bb3001a2",
+    "network_signature": "0xa6340bd1bcc813df",
     "test_name": "",
     "tools": [
       {
-        "arguments": "generate --target stm32h7 --name stable -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/xiataijie.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace31609032909950013238940286891331528 --output C:/Users/41077/.stm32cubemx/stable_output",
+        "arguments": "generate --target stm32h7 --name stable -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/xiataijie.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace3293967457410003007294393420607550 --output C:/Users/41077/.stm32cubemx/stable_output",
         "environment": [
           "STATS_TYPE=X-CUBE-AI"
         ],
