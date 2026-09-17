@@ -735,7 +735,7 @@ STMicroelectronics.X-CUBE-AI.10.2.0.ModelCompression-65ba9167f52b88024247316d1f8
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelCompression-728c2d5fc3ce25cac54fbe2375b43bbcdcf6ffec282071a1ca5378816daf5c24=None
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelCompression-91ca434cf1890ccab4522071cc7f3c3d10baea07c75846aa988cbbd1c61a4ff6=None
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelCompression-de366b8e2171cedd93639f054f50b89032c0165d6df4e9647bc5acc9507e1015=None
-STMicroelectronics.X-CUBE-AI.10.2.0.ModelFlashOccupation-64706f96dec20948cb642580b09693530ea044d643ccbe2f3298f4c035f2d293=0
+STMicroelectronics.X-CUBE-AI.10.2.0.ModelFlashOccupation-64706f96dec20948cb642580b09693530ea044d643ccbe2f3298f4c035f2d293=169708
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelFlashOccupation-65ba9167f52b88024247316d1f8d2e08e495c090d91ae9748d6f74e10628f11b=169708
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelFlashOccupation-728c2d5fc3ce25cac54fbe2375b43bbcdcf6ffec282071a1ca5378816daf5c24=169708
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelFlashOccupation-91ca434cf1890ccab4522071cc7f3c3d10baea07c75846aa988cbbd1c61a4ff6=169708
@@ -746,7 +746,7 @@ STMicroelectronics.X-CUBE-AI.10.2.0.ModelKind-65ba9167f52b88024247316d1f8d2e08e4
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelKind-728c2d5fc3ce25cac54fbe2375b43bbcdcf6ffec282071a1ca5378816daf5c24=ONNX
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelKind-91ca434cf1890ccab4522071cc7f3c3d10baea07c75846aa988cbbd1c61a4ff6=ONNX
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelKind-de366b8e2171cedd93639f054f50b89032c0165d6df4e9647bc5acc9507e1015=ONNX
-STMicroelectronics.X-CUBE-AI.10.2.0.ModelMacc-64706f96dec20948cb642580b09693530ea044d643ccbe2f3298f4c035f2d293=0
+STMicroelectronics.X-CUBE-AI.10.2.0.ModelMacc-64706f96dec20948cb642580b09693530ea044d643ccbe2f3298f4c035f2d293=43401
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelMacc-65ba9167f52b88024247316d1f8d2e08e495c090d91ae9748d6f74e10628f11b=43401
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelMacc-728c2d5fc3ce25cac54fbe2375b43bbcdcf6ffec282071a1ca5378816daf5c24=43401
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelMacc-91ca434cf1890ccab4522071cc7f3c3d10baea07c75846aa988cbbd1c61a4ff6=43401
@@ -757,14 +757,14 @@ STMicroelectronics.X-CUBE-AI.10.2.0.ModelName-728c2d5fc3ce25cac54fbe2375b43bbcdc
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelName-91ca434cf1890ccab4522071cc7f3c3d10baea07c75846aa988cbbd1c61a4ff6=spin
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelName-de366b8e2171cedd93639f054f50b89032c0165d6df4e9647bc5acc9507e1015=upstairs
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelNameList=stable,upstairs,jump,spin
-STMicroelectronics.X-CUBE-AI.10.2.0.ModelRamOccupation-64706f96dec20948cb642580b09693530ea044d643ccbe2f3298f4c035f2d293=0
+STMicroelectronics.X-CUBE-AI.10.2.0.ModelRamOccupation-64706f96dec20948cb642580b09693530ea044d643ccbe2f3298f4c035f2d293=5044
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelRamOccupation-65ba9167f52b88024247316d1f8d2e08e495c090d91ae9748d6f74e10628f11b=5044
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelRamOccupation-728c2d5fc3ce25cac54fbe2375b43bbcdcf6ffec282071a1ca5378816daf5c24=5044
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelRamOccupation-91ca434cf1890ccab4522071cc7f3c3d10baea07c75846aa988cbbd1c61a4ff6=5044
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelRamOccupation-de366b8e2171cedd93639f054f50b89032c0165d6df4e9647bc5acc9507e1015=5044
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelStructureFile-64706f96dec20948cb642580b09693530ea044d643ccbe2f3298f4c035f2d293=D\:\\RM\\wheel_leg_2026\\wheel_leg_2025--4\\RL_policy\\xiataijie.onnx
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelStructureFile-65ba9167f52b88024247316d1f8d2e08e495c090d91ae9748d6f74e10628f11b=D\:\\RM\\XYEGA_RM2026_WheelLeg_Infatry_RLdeploy-main\\pseudocode\\example\\onnx\\jump\\jump_pos0.2_0.4_p6.0_d0.5_0.2.onnx
-STMicroelectronics.X-CUBE-AI.10.2.0.ModelStructureFile-728c2d5fc3ce25cac54fbe2375b43bbcdcf6ffec282071a1ca5378816daf5c24=D\:\\RM\\wheel_leg_2026\\wheel_leg_2025--4\\RL_policy\\Sep16_13-19-18_spin_centerfix_58000_longlegs_s01_yaw_5_model_59000(1).onnx
+STMicroelectronics.X-CUBE-AI.10.2.0.ModelStructureFile-728c2d5fc3ce25cac54fbe2375b43bbcdcf6ffec282071a1ca5378816daf5c24=D\:\\RM\\wheel_leg_2026\\wheel_leg_2025--4\\RL_policy\\Sep17_03-28-29_spin_yawrecover_59000_longlegs_s08_yaw_13_model_63500(1).onnx
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelStructureFile-91ca434cf1890ccab4522071cc7f3c3d10baea07c75846aa988cbbd1c61a4ff6=D\:\\RM\\XYEGA_RM2026_WheelLeg_Infatry_RLdeploy-main\\pseudocode\\example\\onnx\\pin\\spin_pos0.23_0.65_p10.0_d1.0_0.1.onnx
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelStructureFile-de366b8e2171cedd93639f054f50b89032c0165d6df4e9647bc5acc9507e1015=D\:\\RM\\wheel_leg_2026\\wheel_leg_2025--4\\RL_policy\\56500.onnx
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelType-64706f96dec20948cb642580b09693530ea044d643ccbe2f3298f4c035f2d293=STM32Cube.AI MCU runtime

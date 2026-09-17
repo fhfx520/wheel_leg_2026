@@ -379,12 +379,12 @@ static void chassis_execute_fsm(void)
 		
 		case CHASSIS_ASCEND:
 		{
-            wlr.high_flag = 2; 
+            wlr.high_flag = 0; 
             chassis_reset_special_flag();
 			chassis_reset_finish_flag();
 			break;
 		}
-		
+		  
 		case CHASSIS_ENERGY:
 		{
 			wlr.high_flag = 0;
