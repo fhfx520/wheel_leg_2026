@@ -800,56 +800,56 @@
   ],
   "environment": {
     "generated_model": {
-      "generated_time": "2026-09-19T23:34:40+0800",
+      "generated_time": "2026-09-19T15:35:52+0800",
       "model_files": [
         {
-          "name": "jump_data_params.h",
-          "signature": "0xab672bc58ae778eaa2eef29dddbe1437"
+          "name": "spin_data_params.h",
+          "signature": "0x335e6189e82ebdbb3382df7cd6e8913e"
         },
         {
-          "name": "jump_data_params.c",
-          "signature": "0x0cef54e8b99c841749652369c3c4e1b3"
+          "name": "spin_data_params.c",
+          "signature": "0x80faf30ab1d07e11eca8fa51faebd719"
         },
         {
-          "name": "jump_data.h",
-          "signature": "0xbb5001b9ffdd843c77b73ac04b4e98dd"
+          "name": "spin_data.h",
+          "signature": "0xc86a955d5153a9f4e31778e8c4e8c22f"
         },
         {
-          "name": "jump_data.c",
-          "signature": "0x02423ad81832a578033723c8236defe6"
+          "name": "spin_data.c",
+          "signature": "0x672dd5b6b76387752afb62ee39ec15bb"
         },
         {
-          "name": "jump_config.h",
-          "signature": "0x1e62e080cebcdf6e646098571636c376"
+          "name": "spin_config.h",
+          "signature": "0x9b43334333ffe2bc492d8fd205a4627b"
         },
         {
-          "name": "jump.h",
-          "signature": "0x9186d03bafc72b149372b47a6010dca4"
+          "name": "spin.h",
+          "signature": "0xba0d9254d8fbe6563a1d59d2cae3100c"
         },
         {
-          "name": "jump.c",
-          "signature": "0xeb4a06f456e477865e9900feab9b2aa9"
+          "name": "spin.c",
+          "signature": "0xe5f09f7b2029a1823a00799ce0596c5b"
         }
       ],
-      "name": "jump"
+      "name": "spin"
     },
-    "network_signature": "0x184c916d18c21506",
+    "network_signature": "0x8ff9c14f2169f8d9",
     "test_name": "",
     "tools": [
       {
-        "arguments": "generate --target stm32h7 --name jump -m D:/RM/XYEGA_RM2026_WheelLeg_Infatry_RLdeploy-main/pseudocode/example/onnx/jump/jump_pos0.2_0.4_p6.0_d0.5_0.2.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace15186584150110017276920945387021923 --output C:/Users/41077/.stm32cubemx/jump_output",
+        "arguments": "generate --target stm32h7 --name spin -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/spin_yaw_7_62000(1).onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace1231368771754007591703876085086612 --output C:/Users/41077/.stm32cubemx/spin_output",
         "environment": [
           "STATS_TYPE=X-CUBE-AI"
         ],
         "input_model": {
           "model_files": [
             {
-              "name": "jump_pos0.2_0.4_p6.0_d0.5_0.2.onnx",
-              "signature": "0xd04826a44e0f2dfdd2573f5bc85634cb"
+              "name": "spin_yaw_7_62000(1).onnx",
+              "signature": "0x1db986d4d7f56d1fbbd7fe52d2c78542"
             }
           ],
           "n_params": 38825,
-          "name": "jump_pos0_2_0_4_p6_0_d0_5_0_2",
+          "name": "spin_yaw_7_620001",
           "size": 155300,
           "type": "onnx"
         },
@@ -1035,7 +1035,7 @@
         277,
         265
       ],
-      "name": "jump_pos0_2_0_4_p6_0_d0_5_0_2",
+      "name": "spin_yaw_7_620001",
       "nodes": [
         {
           "attributes": {
@@ -1498,7 +1498,7 @@
       "virtual": false
     },
     {
-      "address": "s_jump_weights_array_u64",
+      "address": "s_spin_weights_array_u64",
       "alignment": 0,
       "attributes": {
         "latency": "UNDEF",

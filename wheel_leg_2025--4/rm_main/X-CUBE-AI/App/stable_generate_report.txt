@@ -1,32 +1,32 @@
 ST Edge AI Core v2.2.0-20266 2adc00962
-Created date          : 2026-09-18 01:42:58
-Parameters            : generate --target stm32h7 --name stable -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/xiataijie.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace3293967457410003007294393420607550 --output C:/Users/41077/.stm32cubemx/stable_output
+Created date          : 2026-09-19 23:33:50
+Parameters            : generate --target stm32h7 --name stable -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/xiataijie.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace15181429109450013889448247347521886 --output C:/Users/41077/.stm32cubemx/stable_output
 
 Exec/report summary (generate)
-------------------------------------------------------------------------------------------------------------
-model file         :   D:\RM\wheel_leg_2026\wheel_leg_2025--4\RL_policy\xiataijie.onnx                      
-type               :   onnx                                                                                 
-c_name             :   stable                                                                               
-compression        :   none                                                                                 
-options            :   allocate-inputs, allocate-outputs                                                    
-optimization       :   time                                                                                 
-target/series      :   stm32h7                                                                              
-workspace dir      :   C:\Users\41077\AppData\Local\Temp\mxAI_workspace3293967457410003007294393420607550   
-output dir         :   C:\Users\41077\.stm32cubemx\stable_output                                            
-model_fmt          :   float                                                                                
-model_name         :   xiataijie                                                                            
-model_hash         :   0x2da8f3c9929e76c8b0a60672e9067bca                                                   
-params #           :   38,825 items (151.66 KiB)                                                            
-------------------------------------------------------------------------------------------------------------
-input 1/2          :   'obs', f32(1x25), 100 Bytes, activations                                             
-input 2/2          :   'obs_history', f32(1x125), 500 Bytes, activations                                    
-inputs (total)     :   600 Bytes                                                                            
-output 1/1         :   'actions', f32(1x6), 24 Bytes, activations                                           
-macc               :   43,401                                                                               
-weights (ro)       :   155,300 B (151.66 KiB) (1 segment)                                                   
-activations (rw)   :   1,112 B (1.09 KiB) (1 segment) *                                                     
-ram (total)        :   1,112 B (1.09 KiB) = 1,112 + 0 + 0                                                   
-------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------
+model file         :   D:\RM\wheel_leg_2026\wheel_leg_2025--4\RL_policy\xiataijie.onnx                       
+type               :   onnx                                                                                  
+c_name             :   stable                                                                                
+compression        :   none                                                                                  
+options            :   allocate-inputs, allocate-outputs                                                     
+optimization       :   time                                                                                  
+target/series      :   stm32h7                                                                               
+workspace dir      :   C:\Users\41077\AppData\Local\Temp\mxAI_workspace15181429109450013889448247347521886   
+output dir         :   C:\Users\41077\.stm32cubemx\stable_output                                             
+model_fmt          :   float                                                                                 
+model_name         :   xiataijie                                                                             
+model_hash         :   0x2da8f3c9929e76c8b0a60672e9067bca                                                    
+params #           :   38,825 items (151.66 KiB)                                                             
+-------------------------------------------------------------------------------------------------------------
+input 1/2          :   'obs', f32(1x25), 100 Bytes, activations                                              
+input 2/2          :   'obs_history', f32(1x125), 500 Bytes, activations                                     
+inputs (total)     :   600 Bytes                                                                             
+output 1/1         :   'actions', f32(1x6), 24 Bytes, activations                                            
+macc               :   43,401                                                                                
+weights (ro)       :   155,300 B (151.66 KiB) (1 segment)                                                    
+activations (rw)   :   1,112 B (1.09 KiB) (1 segment) *                                                      
+ram (total)        :   1,112 B (1.09 KiB) = 1,112 + 0 + 0                                                    
+-------------------------------------------------------------------------------------------------------------
 (*) 'input'/'output' buffers are allocated in the activations buffer
 
 Model name - xiataijie

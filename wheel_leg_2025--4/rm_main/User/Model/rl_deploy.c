@@ -10,6 +10,7 @@
 #include "robot_logic.h"
 #include "math_lib.h"
 #include "control_def.h"
+#include "chassis_task.h"
 
 #define RL_DEPLOY_INFERENCE_DIVIDER       5U
 #define RL_DEPLOY_HISTORY_FRAMES          5U
@@ -18,11 +19,6 @@
 #define RL_DEPLOY_JUMP_ACTIVE_CYCLES       240U
 #define RL_DEPLOY_JUMP_HEIGHT              0.05f
 #define RL_DEPLOY_NORMAL_HEIGHT            0.16f
-
-#define RL_SPIN_DECEL_START_RATE         9.0f   /* rad/s, match spin command */
-#define RL_SPIN_DECEL_END_RATE           5.0f   /* rad/s, ramp target */
-#define RL_SPIN_DECEL_RAMP_TIME_S        0.7f
-#define RL_SPIN_DECEL_YAW_DONE_RAD       0.76f  /* 120 deg heading band */
 
 #define RL_DEPLOY_PI                      3.14159265358979323846f
 #define RL_DEPLOY_TWO_PI                  (2.0f * RL_DEPLOY_PI)
@@ -112,6 +108,9 @@ static ChassisState_e rl_prev_chassis = CHASSIS_STOP;
 RLDeployLegState_t rl_left_leg;
 RLDeployLegState_t rl_right_leg;
 
+extern uint8_t rotate_ramp_flag;
+extern uint8_t rotate_stop_flag;
+
 static const RLDeployModelParams_t rl_model_params[] = {
     /* Stable */
     {
@@ -167,7 +166,10 @@ static void rl_update_remote_model_selection(void)
     }
 
     /* Follow the existing remote-control chassis FSM automatically. */
-    if (g_robot_ctx.output.chassis == CHASSIS_LOW_SPIN)
+	
+	//符合才切换模型和wlr切换矩阵一样
+    if ((rotate_flag == 1 || rotate_ramp_flag == 1))
+//	if (g_robot_ctx.output.chassis == CHASSIS_LOW_SPIN)
     {
         (void)RLDeploy_SetModel(RL_POLICY_MODEL_PIN);
     }
@@ -301,62 +303,6 @@ static void rl_update_keyboard_model_selection(void)
     rl_deploy_debug.keyboard_normal_model = (uint8_t)rl_keyboard_normal_model;
     rl_deploy_debug.keyboard_jump_phase = (uint8_t)rl_keyboard_jump_phase;
     rl_deploy_debug.keyboard_jump_cycles = rl_keyboard_jump_cycles;
-}
-
-
-static void rl_spin_decel_start(void)
-{
-    const float frame_period =
-        (RL_SPIN_DECEL_START_RATE - RL_SPIN_DECEL_END_RATE) /
-        (RL_SPIN_DECEL_RAMP_TIME_S * 500.0f);
-
-    ramp_init(&rl_spin_decel_ramp, frame_period,
-              RL_SPIN_DECEL_END_RATE, RL_SPIN_DECEL_START_RATE);
-    rl_spin_decel_ramp.out = RL_SPIN_DECEL_START_RATE;
-    rl_spin_decel_ramp.target = RL_SPIN_DECEL_START_RATE;
-}
-
-static void rl_update_spin_deceleration(void)
-{
-    const uint8_t was_spin = (rl_prev_chassis == CHASSIS_LOW_SPIN);
-    const uint8_t is_spin  = (g_robot_ctx.output.chassis == CHASSIS_LOW_SPIN);
-
-    if (g_robot_ctx.output.torque_source != CHASSIS_TORQUE_RL)
-    {
-        rl_spin_decel_active = 0U;
-        rl_prev_chassis = g_robot_ctx.output.chassis;
-        return;
-    }
-
-    if (is_spin)
-    {
-        rl_spin_decel_active = 0U;
-    }
-    else if (was_spin)
-    {
-        rl_spin_decel_start();
-        rl_spin_decel_active = 1U;
-    }
-
-    if (rl_spin_decel_active)
-    {
-        const float yaw_fdb = (float)yaw_motor.ecd / 8192.0f * 2.0f * PI;
-        const float yaw_fwd = (float)(CHASSIS_YAW_OFFSET) / 8192.0f * 2.0f * PI;
-        const float err_fwd = fabsf(circle_error(yaw_fwd, yaw_fdb, 2.0f * PI));
-        const float err_bwd = fabsf(circle_error(yaw_fwd - PI, yaw_fdb, 2.0f * PI));
-        const uint8_t heading_ok =
-            (err_fwd < RL_SPIN_DECEL_YAW_DONE_RAD) ||
-            (err_bwd < RL_SPIN_DECEL_YAW_DONE_RAD);
-
-        (void)ramp_calc(&rl_spin_decel_ramp, RL_SPIN_DECEL_END_RATE);
-        if ((rl_spin_decel_ramp.out <= RL_SPIN_DECEL_END_RATE + 0.5f) &&
-            heading_ok)
-        {
-            rl_spin_decel_active = 0U;
-        }
-    }
-
-    rl_prev_chassis = g_robot_ctx.output.chassis;
 }
 
 static uint8_t rl_array_is_finite(const float *data, uint32_t size)
@@ -671,7 +617,7 @@ static void rl_update_projected_gravity(void)
     rl_deploy_debug.projected_gravity[1] = -sin_roll * cos_pitch;
     rl_deploy_debug.projected_gravity[2] = -cos_roll * cos_pitch;
 }
-float k = 5.0f;
+float yaw_k = 5.0f;
 static void rl_build_observation(void)
 {
 	const RLDeployModelParams_t *params = rl_get_model_params();
@@ -686,21 +632,16 @@ static void rl_build_observation(void)
 
     rl_deploy_debug.command[0] =
 	(wlr.v_ref) * params->command_scale[0];
-    if (rl_spin_decel_active)
-    {
-        rl_deploy_debug.command[0] = 0.0f;
-        rl_deploy_debug.command[1] =
-            rl_spin_decel_ramp.out * params->command_scale[1];
-    }
-    else if (rl_active_model == RL_POLICY_MODEL_PIN)
+
+	if (rl_active_model == RL_POLICY_MODEL_PIN)
     {
         rl_deploy_debug.command[1] =
-           9.0f * params->command_scale[1];
+           wlr.wz_ref * params->command_scale[1];
     }
     else
     {
         rl_deploy_debug.command[1] =
-            k * circle_error(wlr.yaw_ref,wlr.yaw_fdb,2 * PI) * params->command_scale[1];
+            yaw_k * circle_error(wlr.yaw_ref,wlr.yaw_fdb,2 * PI) * params->command_scale[1];
     }
 
     if ((rl_keyboard_jump_phase == RL_DEPLOY_JUMP_CROUCH) ||
@@ -1008,8 +949,6 @@ void RLDeploy_Step500Hz(void)
         ++rl_deploy_debug.model_switch_count;
         rl_clear_policy_runtime();
     }
-
-    rl_update_spin_deceleration();
 
     ++rl_deploy_debug.sample_count;
     rl_update_joint_state();

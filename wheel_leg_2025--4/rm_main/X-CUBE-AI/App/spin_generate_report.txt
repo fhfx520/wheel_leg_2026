@@ -1,35 +1,35 @@
 ST Edge AI Core v2.2.0-20266 2adc00962
-Created date          : 2026-09-18 01:44:17
-Parameters            : generate --target stm32h7 --name spin -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/spin_62000.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace3294746796029001807605851478181551 --output C:/Users/41077/.stm32cubemx/spin_output
+Created date          : 2026-09-19 23:35:02
+Parameters            : generate --target stm32h7 --name spin -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/spin_70000.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace15188667635850013154045075084556430 --output C:/Users/41077/.stm32cubemx/spin_output
 
 Exec/report summary (generate)
-------------------------------------------------------------------------------------------------------------
-model file         :   D:\RM\wheel_leg_2026\wheel_leg_2025--4\RL_policy\spin_62000.onnx                     
-type               :   onnx                                                                                 
-c_name             :   spin                                                                                 
-compression        :   none                                                                                 
-options            :   allocate-inputs, allocate-outputs                                                    
-optimization       :   time                                                                                 
-target/series      :   stm32h7                                                                              
-workspace dir      :   C:\Users\41077\AppData\Local\Temp\mxAI_workspace3294746796029001807605851478181551   
-output dir         :   C:\Users\41077\.stm32cubemx\spin_output                                              
-model_fmt          :   float                                                                                
-model_name         :   spin_62000                                                                           
-model_hash         :   0x83f6416f09557ec66b7579660cedac7b                                                   
-params #           :   38,825 items (151.66 KiB)                                                            
-------------------------------------------------------------------------------------------------------------
-input 1/2          :   'obs', f32(1x25), 100 Bytes, activations                                             
-input 2/2          :   'obs_history', f32(1x125), 500 Bytes, activations                                    
-inputs (total)     :   600 Bytes                                                                            
-output 1/1         :   'actions', f32(1x6), 24 Bytes, activations                                           
-macc               :   43,401                                                                               
-weights (ro)       :   155,300 B (151.66 KiB) (1 segment)                                                   
-activations (rw)   :   1,112 B (1.09 KiB) (1 segment) *                                                     
-ram (total)        :   1,112 B (1.09 KiB) = 1,112 + 0 + 0                                                   
-------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------
+model file         :   D:\RM\wheel_leg_2026\wheel_leg_2025--4\RL_policy\spin_70000.onnx                      
+type               :   onnx                                                                                  
+c_name             :   spin                                                                                  
+compression        :   none                                                                                  
+options            :   allocate-inputs, allocate-outputs                                                     
+optimization       :   time                                                                                  
+target/series      :   stm32h7                                                                               
+workspace dir      :   C:\Users\41077\AppData\Local\Temp\mxAI_workspace15188667635850013154045075084556430   
+output dir         :   C:\Users\41077\.stm32cubemx\spin_output                                               
+model_fmt          :   float                                                                                 
+model_name         :   spin_70000                                                                            
+model_hash         :   0xe70cbb1d98347d67b2beeb7c8b1f8590                                                    
+params #           :   38,825 items (151.66 KiB)                                                             
+-------------------------------------------------------------------------------------------------------------
+input 1/2          :   'obs', f32(1x25), 100 Bytes, activations                                              
+input 2/2          :   'obs_history', f32(1x125), 500 Bytes, activations                                     
+inputs (total)     :   600 Bytes                                                                             
+output 1/1         :   'actions', f32(1x6), 24 Bytes, activations                                            
+macc               :   43,401                                                                                
+weights (ro)       :   155,300 B (151.66 KiB) (1 segment)                                                    
+activations (rw)   :   1,112 B (1.09 KiB) (1 segment) *                                                      
+ram (total)        :   1,112 B (1.09 KiB) = 1,112 + 0 + 0                                                    
+-------------------------------------------------------------------------------------------------------------
 (*) 'input'/'output' buffers are allocated in the activations buffer
 
-Model name - spin_62000
+Model name - spin_70000
 ------ ---------------------------------------------------- --------------- --------------- -------- -------------------------------- --- --------------- ------------------ ------------------- 
 m_id   layer (type,original)                                oshape          param/size          macc                     connected to   | c_size          c_macc             c_type              
 ------ ---------------------------------------------------- --------------- --------------- -------- -------------------------------- --- --------------- ------------------ ------------------- 
@@ -104,7 +104,7 @@ model/c-model: macc=43,817/43,401 -416(-0.9%) weights=155,300/155,300  activatio
 
 Generated C-graph summary
 ------------------------------------------------------------------------------------------------------------------------
-model name            : spin_62000
+model name            : spin_70000
 c-name                : spin
 c-node #              : 13
 c-array #             : 29

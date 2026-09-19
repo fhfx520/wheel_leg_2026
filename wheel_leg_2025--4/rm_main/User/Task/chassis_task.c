@@ -36,7 +36,7 @@ static imu_data_t chassis_set_imu_data_container;
 extern pid_t pid_leg_recover[2];
 extern float real_vel;
 extern ramp_t jump_ramp;
-
+	
 uint8_t rotate_flag;
 uint8_t rotate_stop_flag;
 
@@ -262,7 +262,7 @@ static void chassis_init(void)
 
     ramp_init(&chassis_x_ramp, 0.0075f, -2.0f, 2.0f);
     ramp_init(&chassis_y_ramp, 0.0075f, -3.0f, 3.0f);
-    ramp_init(&chassis_rotate_ramp, 0.06f, -12.0f, 12.0f);
+    ramp_init(&chassis_rotate_ramp, 0.03f, -12.0f, 12.0f);
 	ramp_init(&chassis_remote_ramp,0.06f,-3.0f,3.0f);
 
 	//基于虚拟杆角度控制
@@ -563,7 +563,7 @@ static void chassis_data_input(void)
                 chassis_rotate_ramp.min = -(CHASSIS_ROTATE_SPEED);
             else
                 chassis_rotate_ramp.min = -CHASSIS_ROTATE_SPEED;
-           
+           //后面这里需要进行整合
 			wlr.wz_ref = ramp_calc(&chassis_rotate_ramp , -CHASSIS_ROTATE_SPEED);
             break;
         }
@@ -594,7 +594,7 @@ static void chassis_data_input(void)
     }
     else if(rotate_ramp_flag == 0) rotate_flag = 0;   
     
-    if (last_chassis_mode == CHASSIS_LOW_SPIN && wlr.ctrl_mode == 2 && (
+    if (last_chassis_mode == CHASSIS_LOW_SPIN && (
         g_robot_ctx.output.chassis == CHASSIS_LOW || 
         g_robot_ctx.output.chassis == CHASSIS_HIGH ||
         g_robot_ctx.output.chassis == CHASSIS_TERRAIN_READY)) {
@@ -609,27 +609,50 @@ static void chassis_data_input(void)
     if(rotate_ramp_flag) {
         if(spin_zero == 0) spin_zero = spin_limit;
         rotate_state_cnt++;
-        if(fabs(spin_zero) < PI / 2.0f  ) {                 
-            if( circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, wlr.yaw_fdb, 2 * PI) < 1.25f 
-				&& circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, wlr.yaw_fdb, 2 * PI) > 0.0f && rotate_state_cnt > 50){
-                rotate_ramp_flag = 0; spin_zero = 0; rotate_state_cnt = 0; rotate_chassis_mode = CHASSIS_STOP;        
-            }
-        }else{
-            if(circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI, wlr.yaw_fdb, 2 * PI) < 1.25f 
-				&& circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI, wlr.yaw_fdb, 2 * PI) > 0.0f && rotate_state_cnt > 50){
-                rotate_ramp_flag = 0; spin_zero = 0; rotate_state_cnt = 0;
-            }
-        }       
+        
+		if(wlr.ctrl_mode == 2){
+			if(fabs(spin_zero) < PI / 2.0f  ) { 
+                
+				if( circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, wlr.yaw_fdb, 2 * PI) < 1.25f 
+					&& circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, wlr.yaw_fdb, 2 * PI) > 0.0f && rotate_state_cnt > 50){
+					rotate_ramp_flag = 0; spin_zero = 0; rotate_state_cnt = 0; rotate_chassis_mode = CHASSIS_STOP;        
+				}
+			}else{
+				if(circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI, wlr.yaw_fdb, 2 * PI) < 1.25f 
+						&& circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI, wlr.yaw_fdb, 2 * PI) > 0.0f && rotate_state_cnt > 50){
+					rotate_ramp_flag = 0; spin_zero = 0; rotate_state_cnt = 0;
+				}
+			}
+        }else if(wlr.ctrl_mode == 1){
+			if(fabs(spin_zero) < PI / 2.0f  ) {     
+				if( circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, wlr.yaw_fdb, 2 * PI) > -1.25f 
+					&& circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, wlr.yaw_fdb, 2 * PI) < 0.0f && rotate_state_cnt > 50){
+					rotate_ramp_flag = 0; spin_zero = 0; rotate_state_cnt = 0; rotate_chassis_mode = CHASSIS_STOP;        
+				}
+			}else{
+				if(circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI, wlr.yaw_fdb, 2 * PI) > -1.25f 
+						&& circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI, wlr.yaw_fdb, 2 * PI) < 0.0f && rotate_state_cnt > 50){
+					rotate_ramp_flag = 0; spin_zero = 0; rotate_state_cnt = 0;
+				}
+			}				
+		
+		}
         if (last_chassis_mode == CHASSIS_LOW_SPIN) 
             rotate_chassis_mode = last_chassis_mode;
             
         if(rotate_chassis_mode == CHASSIS_LOW_SPIN)
-            wlr.wz_ref = -12.0f/1.5f;  
+		{
+			if(wlr.ctrl_mode == 2)
+				wlr.wz_ref = -12.0f/1.5f;  
+			else if(wlr.ctrl_mode == 1)
+				wlr.wz_ref = -5.0f;
+		}
             
         wlr.yaw_ref = wlr.yaw_fdb;
     }
     
     wlr.v_ref = chassis.output.vx;
+	//rl限速
 	if(g_robot_ctx.output.torque_source == CHASSIS_TORQUE_RL)
 	{
 		if(g_robot_ctx.output.chassis == CHASSIS_ASCEND && rl_deploy_debug.requested_model == 1)
