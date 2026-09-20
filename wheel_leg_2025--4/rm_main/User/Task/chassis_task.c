@@ -380,8 +380,15 @@ static void chassis_execute_fsm(void)
 		case CHASSIS_ASCEND:
 		{
             wlr.high_flag = 0; 
-            chassis_reset_special_flag();
-			chassis_reset_finish_flag();
+//            chassis_reset_special_flag();
+//			chassis_reset_finish_flag();
+			wlr.sky_flag = WLR_SKY_IDLE;
+			wlr.stair_flag = WLR_STAIR_IDLE;
+			if(wlr.jump_flag == WLR_JUMP_IDLE && wlr.direction == 0) 
+				wlr.jump_flag = WLR_JUMP_ASCEND; 
+			if(wlr.jump_flag == WLR_JUMP_RECOVER_LONG && !g_robot_ctx.jump_finish_flag)
+				g_robot_ctx.jump_finish_flag = 1;
+			
 			break;
 		}
 		  

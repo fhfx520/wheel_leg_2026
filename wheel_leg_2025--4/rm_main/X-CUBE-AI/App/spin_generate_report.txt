@@ -1,21 +1,21 @@
 ST Edge AI Core v2.2.0-20266 2adc00962
-Created date          : 2026-09-19 23:35:02
-Parameters            : generate --target stm32h7 --name spin -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/spin_70000.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace15188667635850013154045075084556430 --output C:/Users/41077/.stm32cubemx/spin_output
+Created date          : 2026-09-20 09:51:35
+Parameters            : generate --target stm32h7 --name spin -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/10_spin_65000.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace18887920934770016468288396842326505 --output C:/Users/41077/.stm32cubemx/spin_output
 
 Exec/report summary (generate)
 -------------------------------------------------------------------------------------------------------------
-model file         :   D:\RM\wheel_leg_2026\wheel_leg_2025--4\RL_policy\spin_70000.onnx                      
+model file         :   D:\RM\wheel_leg_2026\wheel_leg_2025--4\RL_policy\10_spin_65000.onnx                   
 type               :   onnx                                                                                  
 c_name             :   spin                                                                                  
 compression        :   none                                                                                  
 options            :   allocate-inputs, allocate-outputs                                                     
 optimization       :   time                                                                                  
 target/series      :   stm32h7                                                                               
-workspace dir      :   C:\Users\41077\AppData\Local\Temp\mxAI_workspace15188667635850013154045075084556430   
+workspace dir      :   C:\Users\41077\AppData\Local\Temp\mxAI_workspace18887920934770016468288396842326505   
 output dir         :   C:\Users\41077\.stm32cubemx\spin_output                                               
 model_fmt          :   float                                                                                 
-model_name         :   spin_70000                                                                            
-model_hash         :   0xe70cbb1d98347d67b2beeb7c8b1f8590                                                    
+model_name         :   node_10_spin_65000                                                                    
+model_hash         :   0x5970450ff555d1084add7fa5d8185ce7                                                    
 params #           :   38,825 items (151.66 KiB)                                                             
 -------------------------------------------------------------------------------------------------------------
 input 1/2          :   'obs', f32(1x25), 100 Bytes, activations                                              
@@ -29,7 +29,7 @@ ram (total)        :   1,112 B (1.09 KiB) = 1,112 + 0 + 0
 -------------------------------------------------------------------------------------------------------------
 (*) 'input'/'output' buffers are allocated in the activations buffer
 
-Model name - spin_70000
+Model name - node_10_spin_65000
 ------ ---------------------------------------------------- --------------- --------------- -------- -------------------------------- --- --------------- ------------------ ------------------- 
 m_id   layer (type,original)                                oshape          param/size          macc                     connected to   | c_size          c_macc             c_type              
 ------ ---------------------------------------------------- --------------- --------------- -------- -------------------------------- --- --------------- ------------------ ------------------- 
@@ -104,7 +104,7 @@ model/c-model: macc=43,817/43,401 -416(-0.9%) weights=155,300/155,300  activatio
 
 Generated C-graph summary
 ------------------------------------------------------------------------------------------------------------------------
-model name            : spin_70000
+model name            : node_10_spin_65000
 c-name                : spin
 c-node #              : 13
 c-array #             : 29
