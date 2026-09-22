@@ -1,6 +1,6 @@
 ST Edge AI Core v2.2.0-20266 2adc00962
-Created date          : 2026-09-20 09:51:12
-Parameters            : generate --target stm32h7 --name jump -m D:/RM/XYEGA_RM2026_WheelLeg_Infatry_RLdeploy-main/pseudocode/example/onnx/jump/jump_pos0.2_0.4_p6.0_d0.5_0.2.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace18885551627170016855576162073067641 --output C:/Users/41077/.stm32cubemx/jump_output
+Created date          : 2026-09-23 03:14:42
+Parameters            : generate --target stm32h7 --name jump -m D:/RM/XYEGA_RM2026_WheelLeg_Infatry_RLdeploy-main/pseudocode/example/onnx/jump/jump_pos0.2_0.4_p6.0_d0.5_0.2.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace9581267398190018409116715199554470 --output C:/Users/41077/.stm32cubemx/jump_output
 
 Exec/report summary (generate)
 -------------------------------------------------------------------------------------------------------------------------------------------
@@ -11,7 +11,7 @@ compression        :   none
 options            :   allocate-inputs, allocate-outputs                                                                                   
 optimization       :   time                                                                                                                
 target/series      :   stm32h7                                                                                                             
-workspace dir      :   C:\Users\41077\AppData\Local\Temp\mxAI_workspace18885551627170016855576162073067641                                 
+workspace dir      :   C:\Users\41077\AppData\Local\Temp\mxAI_workspace9581267398190018409116715199554470                                  
 output dir         :   C:\Users\41077\.stm32cubemx\jump_output                                                                             
 model_fmt          :   float                                                                                                               
 model_name         :   jump_pos0_2_0_4_p6_0_d0_5_0_2                                                                                       

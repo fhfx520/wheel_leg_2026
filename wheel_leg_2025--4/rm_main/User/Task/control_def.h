@@ -10,7 +10,7 @@
 #define KEY_CHASSIS_ROTATE      KB_R
 
 #define KEY_VISION     			KB_X
-
+ 
 #define KEY_CHASSIS_POWER       KB_SHIFT
 
 #define KEY_GIMBAL_TURN_R       KB_E
@@ -24,7 +24,7 @@
 //拨盘频率
 #define TRIGGER_PERIOD      250//ms 90->11Hz 40->25Hz 33->30Hz
 //#define TRIGGER_PERIOD2     40//40 55->18Hz     
-#define TRIGGER_PERIOD2     250//40 55->18Hz 
+#define TRIGGER_PERIOD2     250//40 55->18Hz  
 
 /*-----------------------------chassis---------------------------*/
 
