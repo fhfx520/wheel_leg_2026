@@ -6,7 +6,7 @@
 #include "kalman_filter.h"
 #include "leg_vmc.h"
 
-//#define AUTO_JUMP_ENABLE//是否使用自动跳
+#define AUTO_JUMP_ENABLE//是否使用自动跳
 
 
 typedef enum {

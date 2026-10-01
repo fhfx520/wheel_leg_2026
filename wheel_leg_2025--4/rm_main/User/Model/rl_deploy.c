@@ -531,13 +531,13 @@ static void rl_update_joint_state(void)
 {
 	// 使left_thigh是RL_DEPLOY_THIGH_OFFSET
     const float left_thigh =
-        rl_wrap_to_pi(joint_motor[0].position - 2.35201263f - RL_DEPLOY_THIGH_OFFSET);
+        rl_wrap_to_pi(joint_motor[0].position - 2.32516670f - RL_DEPLOY_THIGH_OFFSET);
     const float left_shank =
-        rl_wrap_to_pi(joint_motor[1].position - 2.07675409f + RL_DEPLOY_SHANK_OFFSET);
+        rl_wrap_to_pi(joint_motor[1].position - 0.81340599f + RL_DEPLOY_SHANK_OFFSET);
     const float right_thigh =
-        rl_wrap_to_pi(joint_motor[2].position - 4.65292311f + RL_DEPLOY_THIGH_OFFSET);
+        rl_wrap_to_pi(joint_motor[2].position - 4.35992765f + RL_DEPLOY_THIGH_OFFSET);
     const float right_shank =
-        rl_wrap_to_pi(joint_motor[3].position - 1.28655005f - RL_DEPLOY_SHANK_OFFSET);
+        rl_wrap_to_pi(joint_motor[3].position - 1.30351830f - RL_DEPLOY_SHANK_OFFSET);
 
     const float left_thigh_velocity = joint_motor[0].velocity;
     const float left_shank_velocity = joint_motor[1].velocity;
@@ -636,7 +636,7 @@ static void rl_build_observation(void)
 	if (rl_active_model == RL_POLICY_MODEL_PIN)
     {
         rl_deploy_debug.command[1] =
-           wlr.wz_ref * params->command_scale[1];
+           -wlr.wz_ref * params->command_scale[1];
     }
     else
     {

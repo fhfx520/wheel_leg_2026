@@ -515,23 +515,23 @@ static void handle_sky_state(void)
 	static uint16_t target_cnt = 0;
 	static float v_ref;
 	static float sky_dis = 0.0f;
-//	wlr.double_flag = 1;
+	wlr.double_flag = 1;
     if (wlr.sky_flag == WLR_SKY_FOLDING) {
         pid_leg_sky_jump[0].i_out = pid_leg_sky_jump[1].i_out = \
 	    pid_leg_sky_cover[0].i_out = pid_leg_sky_cover[1].i_out = \
 	    Fy_ramp[0].out = Fy_ramp[1].out= 0;
-		sky_ramp[0].out = sky_ramp[1].out= 0;
+		sky_ramp[0].out = sky_ramp[1].out= 0; 
 
         sky_leg_length = 0.11f;
         
-        x5_balance_zero = 0.0f;
+        x5_balance_zero = -0.08f; 
         wlr.high_set = ramp_calc(&sky_height_ramp, sky_leg_length);
 		sky_dis = (wlr.double_flag ? 0.8f : 1.15f);
         sky_ccc++;
 		#ifdef AUTO_JUMP_ENABLE
 		if(wlr.double_flag)
 		{
-			x3_balance_zero = x3_balance_zero_normal;
+			x3_balance_zero = x3_balance_zero_normal - 0.03f;
 //            wlr.v_ref = ramp_calc(&jump_ramp, -2.0f); 
 			wlr.v_ref = -2.3f; 
 		}
@@ -566,9 +566,9 @@ static void handle_sky_state(void)
         jump_ramp.out = 0.0f; 
         wlr.v_ref = v_ref; 
 		if(wlr.double_flag)
-			x3_balance_zero = x3_balance_zero_normal + 0.1f;
+			x3_balance_zero = x3_balance_zero_normal + 0.2F;
 		else
-			x3_balance_zero = x3_balance_zero_normal + 0.4F;
+			x3_balance_zero = x3_balance_zero_normal + 0.2F;
         x5_balance_zero = 0.0f; 
 
         if (vmc[0].L_fdb > 0.32f && vmc[1].L_fdb > 0.32f) {
@@ -584,7 +584,7 @@ static void handle_sky_state(void)
         x3_balance_zero = 0.0f;
         x5_balance_zero = 0.0f;
         wlr.sky_cnt++;
-        target_cnt = (wlr.double_flag ? 220 : 150);
+        target_cnt = (wlr.double_flag ? 220 : 190);
 		
         if (wlr.sky_cnt > target_cnt) {
             wlr.sky_cnt = 0;
@@ -617,7 +617,7 @@ static void handle_sky_state(void)
 //		else
 			sky_leg_length = 0.16f;
 		wlr.high_set = ramp_calc(&sky_height_ramp, sky_leg_length);
-		target_cnt = (wlr.double_flag ? 600 : 600);
+		target_cnt = (wlr.double_flag ? 400 : 400);
 		DO_LAST(!wlr.sky_cnt,target_cnt){
 			wlr.sky_cnt++;
 			data_limit(&wlr.v_ref,-2.0f,2.0f);
@@ -978,7 +978,7 @@ static void map_virtual_force(uint8_t index)
     } 
 	else if (wlr.sky_flag == WLR_SKY_EXTENDING) {//蹬腿跳
 //		Fy_temp = pid_calc(&pid_leg_sky_jump[index], tlm.l_ref[index], vmc[index].L_fdb);
-		Fy_temp = 400.0f;
+		Fy_temp = 600.0f;
 		wlr.side[index].Fy = ramp_calc(&sky_ramp[index], Fy_temp);
     } 
 	else if (wlr.sky_flag == WLR_SKY_AIR_FOLDING) {//空中收腿
@@ -1019,7 +1019,7 @@ static void apply_output_limits(void)
     for (int i = 0; i < WLR_SIDE_COUNT; i++) {
 
         data_limit(&lqr.U_ref[i], -4.0f, 4.0f);
-        
+         
         if (wlr.crash_flag || wlr.energy_flag || (wlr.jump_flag == WLR_JUMP_RECOVER_SHORT) || wlr_both_legs_flying()) {
             lqr.U_ref[i] *= 0.0f;
         } else if (chassis.recover_flag >= 1  || wlr.sky_flag == WLR_SKY_AIR_FOLDING) {
@@ -1027,8 +1027,8 @@ static void apply_output_limits(void)
         }
 		else if(wlr.sky_flag == WLR_SKY_EXTENDING)
 		{
-			if(wlr.double_flag)
-				lqr.U_ref[i] *= 0.05f;
+//			if(wlr.double_flag)
+//				lqr.U_ref[i] *= 0.05f;
 		}
 		
         wlr.side[i].T1 = vmc[i].T_ref.e.T2_ref;
@@ -1052,10 +1052,10 @@ void wlr_init(void)
 	ramp_init(&rotate_length_ramp,0.0005f,LegLengthMin,LegLengthMax);
 	ramp_init(&stair_ramp, 0.05f, -2.0f, 2.0f);
 	ramp_init(&wz_ramp, 0.05f,  0,  3.0f);									//小陀螺加速K矩阵wz项斜坡
-	ramp_init(&sky_ramp[0], 10.0f, -450.0f,  450.0f);						//伸腿支持力斜坡
-	ramp_init(&sky_ramp[1], 10.0f, -450.0f,  450.0f);						//伸腿支持力斜坡
-	ramp_init(&Fy_ramp[0], 4.0f, -600.0f,  600.0f);							//收腿支持力斜坡
-	ramp_init(&Fy_ramp[1], 4.0f, -600.0f,  600.0f);							//收腿支持力斜坡
+	ramp_init(&sky_ramp[0], 100.0f, -600.0f,  600.0f);						//伸腿支持力斜坡
+	ramp_init(&sky_ramp[1], 100.0f, -600.0f,  600.0f);		  				//伸腿支持力斜坡
+	ramp_init(&Fy_ramp[0], 8.0f, -600.0f,  600.0f);							//收腿支持力斜坡
+	ramp_init(&Fy_ramp[1], 8.0f, -600.0f,  600.0f);							//收腿支持力斜坡
 	
     for (int i = 0; i < WLR_SIDE_COUNT; i++) 
 	{
