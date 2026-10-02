@@ -12,6 +12,8 @@
 #include "control_def.h"
 #include "chassis_task.h"
 
+//extern void update_rotate_state();
+
 #define RL_DEPLOY_INFERENCE_DIVIDER       5U
 #define RL_DEPLOY_HISTORY_FRAMES          5U
 #define RL_DEPLOY_FAULT_RECOVERY_RUNS     3U
@@ -603,6 +605,7 @@ static uint8_t rl_imu_state_is_valid(void)
         rl_array_is_finite(rl_deploy_debug.projected_gravity, 3U));
 }
 
+
 static void rl_update_projected_gravity(void)
 {
     const float roll = chassis_imu.rol;
@@ -636,7 +639,7 @@ static void rl_build_observation(void)
 	if (rl_active_model == RL_POLICY_MODEL_PIN)
     {
         rl_deploy_debug.command[1] =
-           -wlr.wz_ref * params->command_scale[1];
+           wlr.wz_ref * params->command_scale[1];
     }
     else
     {
@@ -656,7 +659,13 @@ static void rl_build_observation(void)
     }
 	else if (g_robot_ctx.output.chassis == CHASSIS_LOW_SPIN)
     {
-        rl_deploy_debug.command[2] = 0.16f * params->command_scale[2];
+//		update_rotate_state();	
+//		if(wlr.high_set < 0.18f)
+//			wlr.high_set = 0.18f;
+//		else if(wlr.high_set > 0.30f)
+//			wlr.high_set = 0.30f;
+
+        rl_deploy_debug.command[2] = 0.22f * params->command_scale[2];
     }
     else if (g_robot_ctx.output.chassis == CHASSIS_HIGH)
     {
