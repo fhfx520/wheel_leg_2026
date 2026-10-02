@@ -515,7 +515,7 @@ static void handle_sky_state(void)
 	static uint16_t target_cnt = 0;
 	static float v_ref;
 	static float sky_dis = 0.0f;
-//	wlr.double_flag = 1;
+	wlr.double_flag = 1;
     if (wlr.sky_flag == WLR_SKY_FOLDING) {
         pid_leg_sky_jump[0].i_out = pid_leg_sky_jump[1].i_out = \
 	    pid_leg_sky_cover[0].i_out = pid_leg_sky_cover[1].i_out = \
@@ -531,7 +531,7 @@ static void handle_sky_state(void)
 		#ifdef AUTO_JUMP_ENABLE
 		if(wlr.double_flag)
 		{
-			x3_balance_zero = x3_balance_zero_normal - 0.03f;
+			x3_balance_zero = x3_balance_zero_normal - 0.015f;
 //            wlr.v_ref = ramp_calc(&jump_ramp, -2.0f); 
 			wlr.v_ref = -2.3f; 
 		}
@@ -566,7 +566,7 @@ static void handle_sky_state(void)
         jump_ramp.out = 0.0f; 
         wlr.v_ref = v_ref; 
 		if(wlr.double_flag)
-			x3_balance_zero = x3_balance_zero_normal ;
+			x3_balance_zero = x3_balance_zero_normal + 0.3F;
 		else
 			x3_balance_zero = x3_balance_zero_normal + 0.2F;
         x5_balance_zero = 0.0f; 
@@ -588,7 +588,7 @@ static void handle_sky_state(void)
 		
         if (wlr.sky_cnt > target_cnt) {
             wlr.sky_cnt = 0;
-            wlr.sky_flag = WLR_SKY_STAND;
+            wlr.sky_flag = WLR_SKY_STAND; 
         }
 	}
 //    } else if (wlr.sky_flag == WLR_SKY_LANDING) {
