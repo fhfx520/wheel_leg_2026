@@ -12,7 +12,7 @@
 #include "control_def.h"
 #include "chassis_task.h"
 
-//extern void update_rotate_state();
+extern void update_rotate_state();
 
 #define RL_DEPLOY_INFERENCE_DIVIDER       5U
 #define RL_DEPLOY_HISTORY_FRAMES          5U
@@ -659,13 +659,13 @@ static void rl_build_observation(void)
     }
 	else if (g_robot_ctx.output.chassis == CHASSIS_LOW_SPIN)
     {
-//		update_rotate_state();	
-//		if(wlr.high_set < 0.18f)
-//			wlr.high_set = 0.18f;
-//		else if(wlr.high_set > 0.30f)
-//			wlr.high_set = 0.30f;
+		update_rotate_state();	
+		if(wlr.high_set < 0.18f)
+			wlr.high_set = 0.18f;
+		else if(wlr.high_set > 0.30f)
+			wlr.high_set = 0.30f;
 
-        rl_deploy_debug.command[2] = 0.22f * params->command_scale[2];
+        rl_deploy_debug.command[2] = wlr.high_set * params->command_scale[2];
     }
     else if (g_robot_ctx.output.chassis == CHASSIS_HIGH)
     {

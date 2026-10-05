@@ -533,7 +533,7 @@ static void handle_sky_state(void)
 		{
 			x3_balance_zero = x3_balance_zero_normal - 0.015f;
 //            wlr.v_ref = ramp_calc(&jump_ramp, -2.0f); 
-			wlr.v_ref = -2.3f; 
+			wlr.v_ref = -2.5f; 
 		}
         else
 		{
@@ -771,7 +771,7 @@ static void handle_stair_state(void)
 	}
 }
 
-static void update_rotate_state(void)
+void update_rotate_state(void)
 {
     if (rotate_flag) {
 		if(g_robot_ctx.input.kb.bit.SHIFT || g_robot_ctx.input.ch2 > 600)
