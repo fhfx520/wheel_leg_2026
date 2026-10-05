@@ -104,6 +104,8 @@ static RLPolicyModel_t rl_active_model = RL_POLICY_MODEL_UPSTAIRS;
 static RLPolicyModel_t rl_keyboard_normal_model = RL_POLICY_MODEL_UPSTAIRS;
 static RLDeployJumpPhase_t rl_keyboard_jump_phase = RL_DEPLOY_JUMP_IDLE;
 static uint16_t rl_keyboard_jump_cycles = 0U;
+static RLDeployJumpPhase_t rl_remote_jump_phase = RL_DEPLOY_JUMP_IDLE;
+static uint16_t rl_remote_jump_cycles = 0U;
 static uint8_t  rl_spin_decel_active  = 0U;
 static ramp_t   rl_spin_decel_ramp;
 static ChassisState_e rl_prev_chassis = CHASSIS_STOP;
@@ -162,8 +164,11 @@ static const RLDeployModelParams_t *rl_get_model_params(void)
 static void rl_update_remote_model_selection(void)
 {
     if ((!g_robot_ctx.is_online) ||
-        (g_robot_ctx.output.top_mode != TOP_MODE_REMOTE))
+        (g_robot_ctx.output.top_mode != TOP_MODE_REMOTE) ||
+        (g_robot_ctx.output.torque_source != CHASSIS_TORQUE_RL))
     {
+        rl_remote_jump_phase = RL_DEPLOY_JUMP_IDLE;
+        rl_remote_jump_cycles = 0U;
         return;
     }
 
@@ -173,18 +178,64 @@ static void rl_update_remote_model_selection(void)
     if ((rotate_flag == 1 || rotate_ramp_flag == 1))
 //	if (g_robot_ctx.output.chassis == CHASSIS_LOW_SPIN)
     {
+        rl_remote_jump_phase = RL_DEPLOY_JUMP_IDLE;
+        rl_remote_jump_cycles = 0U;
         (void)RLDeploy_SetModel(RL_POLICY_MODEL_PIN);
     }
     else if (g_robot_ctx.output.chassis == CHASSIS_ASCEND)
     {
-        (void)RLDeploy_SetModel(RL_POLICY_MODEL_UPSTAIRS);
+        /*
+         * SW2-down enters CHASSIS_ASCEND.  In RL mode this is a one-shot
+         * sequence held by the switch: crouch with Upstairs, run Jump, then
+         * stay on Upstairs until SW2 is released.  Keeping the sequence here
+         * separate from the keyboard state machine prevents the two inputs
+         * from sharing stale phase/cycle counters.
+         */
+        if (rl_remote_jump_phase == RL_DEPLOY_JUMP_IDLE)
+        {
+            rl_remote_jump_phase = RL_DEPLOY_JUMP_CROUCH;
+            rl_remote_jump_cycles = 0U;
+            g_robot_ctx.jump_finish_flag = 0U;
+            (void)RLDeploy_SetModel(RL_POLICY_MODEL_UPSTAIRS);
+        }
+        else if (rl_remote_jump_phase == RL_DEPLOY_JUMP_CROUCH)
+        {
+            (void)RLDeploy_SetModel(RL_POLICY_MODEL_UPSTAIRS);
+            ++rl_remote_jump_cycles;
+            if (rl_remote_jump_cycles >= RL_DEPLOY_JUMP_CROUCH_CYCLES)
+            {
+                rl_remote_jump_phase = RL_DEPLOY_JUMP_ACTIVE;
+                rl_remote_jump_cycles = 0U;
+                (void)RLDeploy_SetModel(RL_POLICY_MODEL_JUMP);
+            }
+        }
+        else if (rl_remote_jump_phase == RL_DEPLOY_JUMP_ACTIVE)
+        {
+            (void)RLDeploy_SetModel(RL_POLICY_MODEL_JUMP);
+            ++rl_remote_jump_cycles;
+            if (rl_remote_jump_cycles >= RL_DEPLOY_JUMP_ACTIVE_CYCLES)
+            {
+                rl_remote_jump_phase = RL_DEPLOY_JUMP_COMPLETE;
+                rl_remote_jump_cycles = 0U;
+                (void)RLDeploy_SetModel(RL_POLICY_MODEL_UPSTAIRS);
+                g_robot_ctx.jump_finish_flag = 1U;
+            }
+        }
+        else
+        {
+            (void)RLDeploy_SetModel(RL_POLICY_MODEL_UPSTAIRS);
+        }
     }
 	else if (g_robot_ctx.output.chassis == CHASSIS_HIGH)
     {
+        rl_remote_jump_phase = RL_DEPLOY_JUMP_IDLE;
+        rl_remote_jump_cycles = 0U;
         (void)RLDeploy_SetModel(RL_POLICY_MODEL_STABLE);
     }
     else
     {
+        rl_remote_jump_phase = RL_DEPLOY_JUMP_IDLE;
+        rl_remote_jump_cycles = 0U;
         (void)RLDeploy_SetModel(RL_POLICY_MODEL_UPSTAIRS);
     }
 }
@@ -233,7 +284,8 @@ static void rl_update_keyboard_model_selection(void)
 
     /*
      * Z is interpreted by the existing FSM as CHASSIS_ASCEND.  First crouch
-     * for 300 ms with Upstairs, run Jump for 480 ms, then return to Upstairs
+     * for RL_DEPLOY_JUMP_CROUCH_CYCLES, run Jump for
+     * RL_DEPLOY_JUMP_ACTIVE_CYCLES, then return to Upstairs
      * and notify the FSM that the automatic sequence has finished.
      */
     if (g_robot_ctx.output.chassis == CHASSIS_ASCEND)
@@ -648,7 +700,9 @@ static void rl_build_observation(void)
     }
 
     if ((rl_keyboard_jump_phase == RL_DEPLOY_JUMP_CROUCH) ||
-        (rl_keyboard_jump_phase == RL_DEPLOY_JUMP_ACTIVE))
+        (rl_keyboard_jump_phase == RL_DEPLOY_JUMP_ACTIVE) ||
+        (rl_remote_jump_phase == RL_DEPLOY_JUMP_CROUCH) ||
+        (rl_remote_jump_phase == RL_DEPLOY_JUMP_ACTIVE))
     {
         rl_deploy_debug.command[2] =
             RL_DEPLOY_JUMP_HEIGHT * params->command_scale[2];
@@ -674,7 +728,7 @@ static void rl_build_observation(void)
     else if (g_robot_ctx.output.chassis == CHASSIS_ASCEND)
     {
         rl_deploy_debug.command[2] =
-            0.3F * params->command_scale[2];
+            0.3f * params->command_scale[2];
     }
     else
     {

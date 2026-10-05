@@ -384,8 +384,15 @@ static void chassis_execute_fsm(void)
 //			chassis_reset_finish_flag();
 			wlr.sky_flag = WLR_SKY_IDLE;
 			wlr.stair_flag = WLR_STAIR_IDLE;
-			if(wlr.jump_flag == WLR_JUMP_IDLE && wlr.direction == 0) 
+			if(g_robot_ctx.output.torque_source == CHASSIS_TORQUE_RL)
+			{
+				/* RLDeploy owns the jump sequence; do not run WLR in parallel. */
+				wlr.jump_flag = WLR_JUMP_IDLE;
+			}
+			else if(wlr.jump_flag == WLR_JUMP_IDLE && wlr.direction == 0)
+			{
 				wlr.jump_flag = WLR_JUMP_ASCEND; 
+			}
 			if(wlr.jump_flag == WLR_JUMP_RECOVER_LONG && !g_robot_ctx.jump_finish_flag)
 				g_robot_ctx.jump_finish_flag = 1;
 			
