@@ -19,7 +19,7 @@ extern void update_rotate_state();
 #define RL_DEPLOY_FAULT_RECOVERY_RUNS     3U
 #define RL_DEPLOY_JUMP_CROUCH_CYCLES       750U
 #define RL_DEPLOY_JUMP_ACTIVE_CYCLES       240U
-#define RL_DEPLOY_JUMP_HEIGHT              0.05f
+#define RL_DEPLOY_JUMP_HEIGHT              0.16f
 #define RL_DEPLOY_NORMAL_HEIGHT            0.16f
 
 #define RL_DEPLOY_PI                      3.14159265358979323846f
@@ -39,7 +39,7 @@ extern void update_rotate_state();
 #define RL_DEPLOY_VELOCITY_ACTION_SCALE   10.0f
 #define RL_DEPLOY_VIRTUAL_TORQUE_LIMIT    1000.0f
 #define RL_DEPLOY_REAL_TORQUE_LIMIT       100.0f
-#define RL_DEPLOY_PARALLEL_TORQUE_LIMIT   35.0f
+#define RL_DEPLOY_PARALLEL_TORQUE_LIMIT   50.0f
 #define RL_DEPLOY_WHEEL_TORQUE_LIMIT      5.0f
 #define RL_DEPLOY_LEFT_GAS_SPRING_K       520.1f
 #define RL_DEPLOY_RIGHT_GAS_SPRING_K      520.1f
@@ -728,7 +728,7 @@ static void rl_build_observation(void)
     else if (g_robot_ctx.output.chassis == CHASSIS_ASCEND)
     {
         rl_deploy_debug.command[2] =
-            0.3f * params->command_scale[2];
+            0.22f * params->command_scale[2];
     }
     else
     {

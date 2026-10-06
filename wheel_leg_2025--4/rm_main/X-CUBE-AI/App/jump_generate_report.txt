@@ -1,35 +1,35 @@
 ST Edge AI Core v2.2.0-20266 2adc00962
-Created date          : 2026-10-05 23:15:03
-Parameters            : generate --target stm32h7 --name jump -m D:/RM/XYEGA_RM2026_WheelLeg_Infatry_RLdeploy-main/pseudocode/example/onnx/jump/jump_pos0.2_0.4_p6.0_d0.5_0.2.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace249820807638800847001385778378468 --output C:/Users/41077/.stm32cubemx/jump_output
+Created date          : 2026-10-06 16:45:22
+Parameters            : generate --target stm32h7 --name jump -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/longlegs_jump_5500.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace3128406071686001139767291458568333 --output C:/Users/41077/.stm32cubemx/jump_output
 
 Exec/report summary (generate)
--------------------------------------------------------------------------------------------------------------------------------------------
-model file         :   D:\RM\XYEGA_RM2026_WheelLeg_Infatry_RLdeploy-main\pseudocode\example\onnx\jump\jump_pos0.2_0.4_p6.0_d0.5_0.2.onnx   
-type               :   onnx                                                                                                                
-c_name             :   jump                                                                                                                
-compression        :   none                                                                                                                
-options            :   allocate-inputs, allocate-outputs                                                                                   
-optimization       :   time                                                                                                                
-target/series      :   stm32h7                                                                                                             
-workspace dir      :   C:\Users\41077\AppData\Local\Temp\mxAI_workspace249820807638800847001385778378468                                   
-output dir         :   C:\Users\41077\.stm32cubemx\jump_output                                                                             
-model_fmt          :   float                                                                                                               
-model_name         :   jump_pos0_2_0_4_p6_0_d0_5_0_2                                                                                       
-model_hash         :   0xd04826a44e0f2dfdd2573f5bc85634cb                                                                                  
-params #           :   38,825 items (151.66 KiB)                                                                                           
--------------------------------------------------------------------------------------------------------------------------------------------
-input 1/2          :   'obs', f32(1x25), 100 Bytes, activations                                                                            
-input 2/2          :   'obs_history', f32(1x125), 500 Bytes, activations                                                                   
-inputs (total)     :   600 Bytes                                                                                                           
-output 1/1         :   'actions', f32(1x6), 24 Bytes, activations                                                                          
-macc               :   43,401                                                                                                              
-weights (ro)       :   155,300 B (151.66 KiB) (1 segment)                                                                                  
-activations (rw)   :   1,112 B (1.09 KiB) (1 segment) *                                                                                    
-ram (total)        :   1,112 B (1.09 KiB) = 1,112 + 0 + 0                                                                                  
--------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------
+model file         :   D:\RM\wheel_leg_2026\wheel_leg_2025--4\RL_policy\longlegs_jump_5500.onnx             
+type               :   onnx                                                                                 
+c_name             :   jump                                                                                 
+compression        :   none                                                                                 
+options            :   allocate-inputs, allocate-outputs                                                    
+optimization       :   time                                                                                 
+target/series      :   stm32h7                                                                              
+workspace dir      :   C:\Users\41077\AppData\Local\Temp\mxAI_workspace3128406071686001139767291458568333   
+output dir         :   C:\Users\41077\.stm32cubemx\jump_output                                              
+model_fmt          :   float                                                                                
+model_name         :   longlegs_jump_5500                                                                   
+model_hash         :   0xf450b16251c3058aa600c9a35d13cf02                                                   
+params #           :   38,825 items (151.66 KiB)                                                            
+------------------------------------------------------------------------------------------------------------
+input 1/2          :   'obs', f32(1x25), 100 Bytes, activations                                             
+input 2/2          :   'obs_history', f32(1x125), 500 Bytes, activations                                    
+inputs (total)     :   600 Bytes                                                                            
+output 1/1         :   'actions', f32(1x6), 24 Bytes, activations                                           
+macc               :   43,401                                                                               
+weights (ro)       :   155,300 B (151.66 KiB) (1 segment)                                                   
+activations (rw)   :   1,112 B (1.09 KiB) (1 segment) *                                                     
+ram (total)        :   1,112 B (1.09 KiB) = 1,112 + 0 + 0                                                   
+------------------------------------------------------------------------------------------------------------
 (*) 'input'/'output' buffers are allocated in the activations buffer
 
-Model name - jump_pos0_2_0_4_p6_0_d0_5_0_2
+Model name - longlegs_jump_5500
 ------ ---------------------------------------------------- --------------- --------------- -------- -------------------------------- --- --------------- ------------------ ------------------- 
 m_id   layer (type,original)                                oshape          param/size          macc                     connected to   | c_size          c_macc             c_type              
 ------ ---------------------------------------------------- --------------- --------------- -------- -------------------------------- --- --------------- ------------------ ------------------- 
@@ -104,7 +104,7 @@ model/c-model: macc=43,817/43,401 -416(-0.9%) weights=155,300/155,300  activatio
 
 Generated C-graph summary
 ------------------------------------------------------------------------------------------------------------------------
-model name            : jump_pos0_2_0_4_p6_0_d0_5_0_2
+model name            : longlegs_jump_5500
 c-name                : jump
 c-node #              : 13
 c-array #             : 29
