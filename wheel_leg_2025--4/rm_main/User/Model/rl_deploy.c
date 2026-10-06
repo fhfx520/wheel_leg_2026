@@ -43,8 +43,11 @@ extern void update_rotate_state();
 #define RL_DEPLOY_REAL_TORQUE_LIMIT       100.0f
 #define RL_DEPLOY_PARALLEL_TORQUE_LIMIT   50.0f
 #define RL_DEPLOY_WHEEL_TORQUE_LIMIT      5.0f
-#define RL_DEPLOY_LEFT_GAS_SPRING_K       520.1f
-#define RL_DEPLOY_RIGHT_GAS_SPRING_K      520.1f
+//#define RL_DEPLOY_LEFT_GAS_SPRING_K       520.1f
+//#define RL_DEPLOY_RIGHT_GAS_SPRING_K      520.1f
+float rl_deploy_left_gas_limit = 520.1f;
+float rl_deploy_right_gas_limit = 520.1f;
+
 
 enum
 {
@@ -164,7 +167,7 @@ static const RLDeployModelParams_t *rl_get_model_params(void)
 }
 
 static void rl_update_remote_model_selection(void)
-{
+{	
     if ((!g_robot_ctx.is_online) ||
         (g_robot_ctx.output.top_mode != TOP_MODE_REMOTE) ||
         (g_robot_ctx.output.torque_source != CHASSIS_TORQUE_RL))
@@ -175,6 +178,9 @@ static void rl_update_remote_model_selection(void)
     }
 
     /* Follow the existing remote-control chassis FSM automatically. */
+	//选择气弹簧的力
+	rl_deploy_left_gas_limit = 1000.0f;
+	rl_deploy_right_gas_limit = 1000.0f;
 	
 	//符合才切换模型和wlr切换矩阵一样
     if ((rotate_flag == 1 || rotate_ramp_flag == 1))
@@ -215,6 +221,10 @@ static void rl_update_remote_model_selection(void)
         {
             (void)RLDeploy_SetModel(RL_POLICY_MODEL_JUMP);
             ++rl_remote_jump_cycles;
+			
+			rl_deploy_left_gas_limit = 0.0f;
+			rl_deploy_right_gas_limit = 0.0f;
+			
             if (rl_remote_jump_cycles >= RL_DEPLOY_JUMP_ACTIVE_CYCLES)
             {
                 rl_remote_jump_phase = RL_DEPLOY_JUMP_COMPLETE;
@@ -879,12 +889,12 @@ static uint8_t rl_calculate_shadow_motor_torques(void)
 
     /* Exact left/right signs used by the released deployment. */
     rl_apply_gas_spring_compensation(&rl_left_leg,
-                                     RL_DEPLOY_LEFT_GAS_SPRING_K,
+                                     rl_deploy_left_gas_limit,
                                      -1.0f,
                                      &left_thigh,
                                      &left_shank);
     rl_apply_gas_spring_compensation(&rl_right_leg,
-                                     RL_DEPLOY_RIGHT_GAS_SPRING_K,
+                                     rl_deploy_right_gas_limit,
                                      1.0f,
                                      &right_thigh,
                                      &right_shank);
