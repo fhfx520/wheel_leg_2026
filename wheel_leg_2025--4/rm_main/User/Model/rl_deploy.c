@@ -28,6 +28,22 @@ extern void update_rotate_state();
 #define RL_DEPLOY_JUMP_RECOVERY_HEIGHT     0.26f
 #define RL_DEPLOY_NORMAL_HEIGHT            0.16f
 
+/*
+ * RL jump input mode.
+ *
+ * 0: the existing manual mode is used.  SW2/CHASSIS_ASCEND starts the
+ *    sequence and command[0] follows the normal remote speed reference.
+ * 1: CHASSIS_TERRAIN_READY starts the sequence.  The crouch is held until
+ *    the front ToF distance is below the configured threshold (or the
+ *    crouch timeout is reached), matching the old AUTO_JUMP_ENABLE path.
+ */
+#define RL_DEPLOY_AUTO_JUMP_ENABLE         0U
+#define RL_DEPLOY_AUTO_JUMP_SPEED_ENABLE   0U
+#define RL_DEPLOY_AUTO_JUMP_SPEED         (-2.5f)
+#define RL_DEPLOY_AUTO_JUMP_TOF_ENABLE     1U
+#define RL_DEPLOY_AUTO_JUMP_TOF_DISTANCE   0.80f
+#define RL_DEPLOY_AUTO_JUMP_TOF_MIN_CYCLES 400U
+
 #define RL_DEPLOY_PI                      3.14159265358979323846f
 #define RL_DEPLOY_TWO_PI                  (2.0f * RL_DEPLOY_PI)
 #define RL_DEPLOY_MIN_SIN                 1.0e-4f
@@ -220,6 +236,8 @@ static void rl_set_remote_gas_spring_compensation(RLDeployJumpPhase_t phase)
 
 static void rl_update_remote_model_selection(void)
 {
+    uint8_t jump_request = 0U;
+
     if ((!g_robot_ctx.is_online) ||
         (g_robot_ctx.output.top_mode != TOP_MODE_REMOTE) ||
         (g_robot_ctx.output.torque_source != CHASSIS_TORQUE_RL))
@@ -230,6 +248,23 @@ static void rl_update_remote_model_selection(void)
 		rl_remote_jump_complete_finished = 0U;
         rl_set_remote_gas_spring_compensation(RL_DEPLOY_JUMP_IDLE);
         return;
+    }
+
+    /*
+     * Manual mode follows CHASSIS_ASCEND (the current SW2 path).  Automatic
+     * mode additionally accepts TERRAIN_READY, which is the old
+     * AUTO_JUMP_ENABLE entry point.  The WLR sky FSM is disabled for RL in
+     * chassis_task.c, so only this state machine can command the jump.
+     */
+#if RL_DEPLOY_AUTO_JUMP_ENABLE
+    if ((g_robot_ctx.output.chassis == CHASSIS_ASCEND) ||
+        (g_robot_ctx.output.chassis == CHASSIS_TERRAIN_READY) ||
+        (g_robot_ctx.output.chassis == CHASSIS_TERRAIN_READY_2))
+#else
+    if (g_robot_ctx.output.chassis == CHASSIS_ASCEND)
+#endif
+    {
+        jump_request = 1U;
     }
 
     /* Follow the existing remote-control chassis FSM automatically. */
@@ -244,7 +279,7 @@ static void rl_update_remote_model_selection(void)
 		rl_remote_jump_complete_finished = 0U;
         (void)RLDeploy_SetModel(RL_POLICY_MODEL_PIN);
     }
-    else if (g_robot_ctx.output.chassis == CHASSIS_ASCEND)
+    else if (jump_request)
     {
         /*
          * SW2-down enters CHASSIS_ASCEND.  In RL mode this is a one-shot
@@ -268,7 +303,13 @@ static void rl_update_remote_model_selection(void)
             rl_set_remote_gas_spring_compensation(rl_remote_jump_phase);
             (void)RLDeploy_SetModel(RL_POLICY_MODEL_UPSTAIRS);
             ++rl_remote_jump_cycles;
-            if (rl_remote_jump_cycles >= RL_DEPLOY_JUMP_CROUCH_CYCLES)
+            if ((rl_remote_jump_cycles >= RL_DEPLOY_JUMP_CROUCH_CYCLES)
+#if RL_DEPLOY_AUTO_JUMP_ENABLE && RL_DEPLOY_AUTO_JUMP_TOF_ENABLE
+                || ((rl_remote_jump_cycles >= RL_DEPLOY_AUTO_JUMP_TOF_MIN_CYCLES) &&
+                    (((wlr.side[0].Front_dis_fdb + wlr.side[1].Front_dis_fdb) * 0.5f) <
+                     RL_DEPLOY_AUTO_JUMP_TOF_DISTANCE))
+#endif
+               )
             {
                 rl_remote_jump_phase = RL_DEPLOY_JUMP_ACTIVE;
                 rl_remote_jump_cycles = 0U;
@@ -795,6 +836,16 @@ static void rl_build_observation(void)
 
     rl_deploy_debug.command[0] =
 	(wlr.v_ref) * params->command_scale[0];
+
+#if RL_DEPLOY_AUTO_JUMP_SPEED_ENABLE
+    /* In automatic mode use the same forward speed used by the released
+     * AUTO_JUMP_ENABLE implementation while the RL jump is in progress. */
+    if (rl_remote_jump_phase != RL_DEPLOY_JUMP_IDLE)
+    {
+        rl_deploy_debug.command[0] =
+            RL_DEPLOY_AUTO_JUMP_SPEED * params->command_scale[0];
+    }
+#endif
 
 	if (rl_active_model == RL_POLICY_MODEL_PIN)
     {

@@ -356,7 +356,12 @@ static void chassis_execute_fsm(void)
             wlr.jump_flag = WLR_JUMP_IDLE;
 			wlr.stair_flag = WLR_STAIR_IDLE;
 //			chassis_reset_finish_flag();
-			if(wlr.sky_flag == WLR_SKY_IDLE)
+			if(g_robot_ctx.output.torque_source == CHASSIS_TORQUE_RL)
+			{
+				/* RLDeploy owns the automatic jump sequence. */
+				wlr.sky_flag = WLR_SKY_IDLE;
+			}
+			else if(wlr.sky_flag == WLR_SKY_IDLE)
 				wlr.sky_flag = WLR_SKY_FOLDING; 
 			else if(wlr.sky_flag == WLR_SKY_STAND && wlr.sky_over == 1)
 				g_robot_ctx.sky_finish_flag = 1;
@@ -370,7 +375,12 @@ static void chassis_execute_fsm(void)
             wlr.jump_flag = WLR_JUMP_IDLE;
 			wlr.stair_flag = WLR_STAIR_IDLE;
 //			chassis_reset_finish_flag();
-			if(wlr.sky_flag == WLR_SKY_IDLE)
+			if(g_robot_ctx.output.torque_source == CHASSIS_TORQUE_RL)
+			{
+				/* RLDeploy owns the automatic jump sequence. */
+				wlr.sky_flag = WLR_SKY_IDLE;
+			}
+			else if(wlr.sky_flag == WLR_SKY_IDLE)
 				wlr.sky_flag = WLR_SKY_FOLDING; 
 			else if(wlr.sky_flag == WLR_SKY_STAND && wlr.sky_over == 1)
 				g_robot_ctx.sky_finish_flag = 1;
