@@ -25,7 +25,7 @@ extern void update_rotate_state();
 #define RL_DEPLOY_JUMP_CROUCH_HEIGHT       0.12f
 #define RL_DEPLOY_JUMP_ACTIVE_HEIGHT       0.16f
 #define RL_DEPLOY_JUMP_COMPLETE_HEIGHT     0.24f
-#define RL_DEPLOY_JUMP_RECOVERY_HEIGHT     0.32f
+#define RL_DEPLOY_JUMP_RECOVERY_HEIGHT     0.26f
 #define RL_DEPLOY_NORMAL_HEIGHT            0.16f
 
 #define RL_DEPLOY_PI                      3.14159265358979323846f
@@ -50,12 +50,12 @@ extern void update_rotate_state();
 //#define RL_DEPLOY_LEFT_GAS_SPRING_K       520.1f
 //#define RL_DEPLOY_RIGHT_GAS_SPRING_K      520.1f
 /* These are compensation coefficients (approximately N/m), not raw force. */
-#define RL_DEPLOY_GAS_NORMAL_LEFT_K        300.1f
-#define RL_DEPLOY_GAS_NORMAL_RIGHT_K       300.1f
+#define RL_DEPLOY_GAS_NORMAL_LEFT_K        1000.1f
+#define RL_DEPLOY_GAS_NORMAL_RIGHT_K       1000.1f
 #define RL_DEPLOY_GAS_CROUCH_LEFT_K        1000.0f
 #define RL_DEPLOY_GAS_CROUCH_RIGHT_K       1000.0f
-#define RL_DEPLOY_GAS_JUMP_LEFT_K          500.0f
-#define RL_DEPLOY_GAS_JUMP_RIGHT_K         500.0f
+#define RL_DEPLOY_GAS_JUMP_LEFT_K          -1000.0f
+#define RL_DEPLOY_GAS_JUMP_RIGHT_K         -1000.0f
 #define RL_DEPLOY_GAS_COMPLETE_LEFT_K     1500.0f
 #define RL_DEPLOY_GAS_COMPLETE_RIGHT_K    1500.0f 
 /* Compensation used after switching back to Upstairs. */
@@ -810,6 +810,7 @@ static void rl_build_observation(void)
     if ((rl_keyboard_jump_phase == RL_DEPLOY_JUMP_ACTIVE) ||
         (rl_remote_jump_phase == RL_DEPLOY_JUMP_ACTIVE))
     {
+//		rl_deploy_debug.command[0] = 0;
         rl_deploy_debug.command[2] =
             RL_DEPLOY_JUMP_ACTIVE_HEIGHT * params->command_scale[2];
     }
@@ -849,7 +850,7 @@ static void rl_build_observation(void)
     }
     else if (g_robot_ctx.output.chassis == CHASSIS_HIGH)
     {
-        rl_deploy_debug.command[2] = 0.14f * params->command_scale[2];
+        rl_deploy_debug.command[2] = 0.20f * params->command_scale[2];
     }
     else
     {

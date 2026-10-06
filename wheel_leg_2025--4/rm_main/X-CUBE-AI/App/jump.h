@@ -2,7 +2,7 @@
   ******************************************************************************
   * @file    jump.h
   * @author  AST Embedded Analytics Research Platform
-  * @date    2026-10-06T23:31:34+0800
+  * @date    2026-10-07T02:19:17+0800
   * @brief   AI Tool Automatic Code Generator for Embedded NN computing
   ******************************************************************************
   * @attention
@@ -23,7 +23,7 @@
 
 /******************************************************************************/
 #define AI_JUMP_MODEL_NAME          "jump"
-#define AI_JUMP_ORIGIN_MODEL_NAME   "longlegs_jump_moving_landing_6500"
+#define AI_JUMP_ORIGIN_MODEL_NAME   "moving_jump_7500"
 
 /******************************************************************************/
 #define AI_JUMP_ACTIVATIONS_ALIGNMENT   (4)

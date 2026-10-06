@@ -3,7 +3,7 @@
   ******************************************************************************
   * @file    jump_config.h
   * @author  AST Embedded Analytics Research Platform
-  * @date    2026-10-06T23:31:34+0800
+  * @date    2026-10-07T02:19:17+0800
   * @brief   AI Tool Automatic Code Generator for Custom Layers Implementation
   ******************************************************************************
   * @attention
