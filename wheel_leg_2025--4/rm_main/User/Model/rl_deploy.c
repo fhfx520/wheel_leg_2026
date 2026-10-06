@@ -19,6 +19,8 @@ extern void update_rotate_state();
 #define RL_DEPLOY_FAULT_RECOVERY_RUNS     3U
 #define RL_DEPLOY_JUMP_CROUCH_CYCLES       750U
 #define RL_DEPLOY_JUMP_ACTIVE_CYCLES       240U
+#define RL_DEPLOY_JUMP_COMPLETE_CYCLES     200U /* 400 ms at 500 Hz */
+#define RL_DEPLOY_JUMP_COMPLETE_LEG_LENGTH 0.32f
 #define RL_DEPLOY_JUMP_CROUCH_HEIGHT       0.12f
 #define RL_DEPLOY_JUMP_ACTIVE_HEIGHT       0.16f
 #define RL_DEPLOY_JUMP_COMPLETE_HEIGHT     0.16f
@@ -45,8 +47,18 @@ extern void update_rotate_state();
 #define RL_DEPLOY_WHEEL_TORQUE_LIMIT      5.0f
 //#define RL_DEPLOY_LEFT_GAS_SPRING_K       520.1f
 //#define RL_DEPLOY_RIGHT_GAS_SPRING_K      520.1f
-static float rl_deploy_left_gas_limit = 520.1f;
-static float rl_deploy_right_gas_limit = 520.1f;
+/* These are compensation coefficients (approximately N/m), not raw force. */
+#define RL_DEPLOY_GAS_NORMAL_LEFT_K        520.1f
+#define RL_DEPLOY_GAS_NORMAL_RIGHT_K       520.1f
+#define RL_DEPLOY_GAS_CROUCH_LEFT_K        1000.0f
+#define RL_DEPLOY_GAS_CROUCH_RIGHT_K       1000.0f
+#define RL_DEPLOY_GAS_JUMP_LEFT_K          0.0f
+#define RL_DEPLOY_GAS_JUMP_RIGHT_K         0.0f
+#define RL_DEPLOY_GAS_COMPLETE_LEFT_K     0.0f
+#define RL_DEPLOY_GAS_COMPLETE_RIGHT_K    0.0f
+
+static float rl_deploy_left_gas_limit = RL_DEPLOY_GAS_NORMAL_LEFT_K;
+static float rl_deploy_right_gas_limit = RL_DEPLOY_GAS_NORMAL_RIGHT_K;
 
 
 enum
@@ -166,28 +178,53 @@ static const RLDeployModelParams_t *rl_get_model_params(void)
     return &rl_model_params[(uint32_t)rl_active_model];
 }
 
+static void rl_set_remote_gas_spring_compensation(RLDeployJumpPhase_t phase)
+{
+    switch (phase)
+    {
+        case RL_DEPLOY_JUMP_CROUCH:
+            rl_deploy_left_gas_limit = RL_DEPLOY_GAS_CROUCH_LEFT_K;
+            rl_deploy_right_gas_limit = RL_DEPLOY_GAS_CROUCH_RIGHT_K;
+            break;
+
+        case RL_DEPLOY_JUMP_ACTIVE:
+            rl_deploy_left_gas_limit = RL_DEPLOY_GAS_JUMP_LEFT_K;
+            rl_deploy_right_gas_limit = RL_DEPLOY_GAS_JUMP_RIGHT_K;
+            break;
+
+        case RL_DEPLOY_JUMP_COMPLETE:
+            rl_deploy_left_gas_limit = RL_DEPLOY_GAS_COMPLETE_LEFT_K;
+            rl_deploy_right_gas_limit = RL_DEPLOY_GAS_COMPLETE_RIGHT_K;
+            break;
+
+        case RL_DEPLOY_JUMP_IDLE:
+        default:
+            rl_deploy_left_gas_limit = RL_DEPLOY_GAS_NORMAL_LEFT_K;
+            rl_deploy_right_gas_limit = RL_DEPLOY_GAS_NORMAL_RIGHT_K;
+            break;
+    }
+}
+
 static void rl_update_remote_model_selection(void)
-{	
+{
     if ((!g_robot_ctx.is_online) ||
         (g_robot_ctx.output.top_mode != TOP_MODE_REMOTE) ||
         (g_robot_ctx.output.torque_source != CHASSIS_TORQUE_RL))
     {
         rl_remote_jump_phase = RL_DEPLOY_JUMP_IDLE;
         rl_remote_jump_cycles = 0U;
+        rl_set_remote_gas_spring_compensation(RL_DEPLOY_JUMP_IDLE);
         return;
     }
 
     /* Follow the existing remote-control chassis FSM automatically. */
-	//选择气弹簧的力
-	rl_deploy_left_gas_limit = 1000.0f;
-	rl_deploy_right_gas_limit = 1000.0f;
-	
 	//符合才切换模型和wlr切换矩阵一样
     if ((rotate_flag == 1 || rotate_ramp_flag == 1))
 //	if (g_robot_ctx.output.chassis == CHASSIS_LOW_SPIN)
     {
         rl_remote_jump_phase = RL_DEPLOY_JUMP_IDLE;
         rl_remote_jump_cycles = 0U;
+        rl_set_remote_gas_spring_compensation(RL_DEPLOY_JUMP_IDLE);
         (void)RLDeploy_SetModel(RL_POLICY_MODEL_PIN);
     }
     else if (g_robot_ctx.output.chassis == CHASSIS_ASCEND)
@@ -204,10 +241,12 @@ static void rl_update_remote_model_selection(void)
             rl_remote_jump_phase = RL_DEPLOY_JUMP_CROUCH;
             rl_remote_jump_cycles = 0U;
             g_robot_ctx.jump_finish_flag = 0U;
+            rl_set_remote_gas_spring_compensation(rl_remote_jump_phase);
             (void)RLDeploy_SetModel(RL_POLICY_MODEL_UPSTAIRS);
         }
         else if (rl_remote_jump_phase == RL_DEPLOY_JUMP_CROUCH)
         {
+            rl_set_remote_gas_spring_compensation(rl_remote_jump_phase);
             (void)RLDeploy_SetModel(RL_POLICY_MODEL_UPSTAIRS);
             ++rl_remote_jump_cycles;
             if (rl_remote_jump_cycles >= RL_DEPLOY_JUMP_CROUCH_CYCLES)
@@ -219,35 +258,52 @@ static void rl_update_remote_model_selection(void)
         }
         else if (rl_remote_jump_phase == RL_DEPLOY_JUMP_ACTIVE)
         {
+            rl_set_remote_gas_spring_compensation(rl_remote_jump_phase);
             (void)RLDeploy_SetModel(RL_POLICY_MODEL_JUMP);
             ++rl_remote_jump_cycles;
-			
-			rl_deploy_left_gas_limit = 0.0f;
-			rl_deploy_right_gas_limit = 0.0f;
-			
-            if (rl_remote_jump_cycles >= RL_DEPLOY_JUMP_ACTIVE_CYCLES)
+
+            /*
+             * Use the measured left virtual leg length as the primary event.
+             * The old active-cycle limit remains as a safety timeout so a bad
+             * sensor/geometry value cannot leave Jump active indefinitely.
+             */
+            if ((rl_left_leg.l0 > RL_DEPLOY_JUMP_COMPLETE_LEG_LENGTH) ||
+                (rl_remote_jump_cycles >= RL_DEPLOY_JUMP_ACTIVE_CYCLES))
             {
                 rl_remote_jump_phase = RL_DEPLOY_JUMP_COMPLETE;
                 rl_remote_jump_cycles = 0U;
-                (void)RLDeploy_SetModel(RL_POLICY_MODEL_UPSTAIRS);
-                g_robot_ctx.jump_finish_flag = 1U;
+                rl_set_remote_gas_spring_compensation(rl_remote_jump_phase);
             }
         }
         else
         {
-            (void)RLDeploy_SetModel(RL_POLICY_MODEL_UPSTAIRS);
+            /* Keep Jump for the complete phase, then recover on Upstairs. */
+            if (rl_remote_jump_cycles < RL_DEPLOY_JUMP_COMPLETE_CYCLES)
+            {
+                rl_set_remote_gas_spring_compensation(RL_DEPLOY_JUMP_COMPLETE);
+                (void)RLDeploy_SetModel(RL_POLICY_MODEL_JUMP);
+                ++rl_remote_jump_cycles;
+            }
+            else
+            {
+                rl_set_remote_gas_spring_compensation(RL_DEPLOY_JUMP_IDLE);
+                (void)RLDeploy_SetModel(RL_POLICY_MODEL_UPSTAIRS);
+                g_robot_ctx.jump_finish_flag = 1U;
+            }
         }
     }
 	else if (g_robot_ctx.output.chassis == CHASSIS_HIGH)
     {
         rl_remote_jump_phase = RL_DEPLOY_JUMP_IDLE;
         rl_remote_jump_cycles = 0U;
+        rl_set_remote_gas_spring_compensation(RL_DEPLOY_JUMP_IDLE);
         (void)RLDeploy_SetModel(RL_POLICY_MODEL_STABLE);
     }
     else
     {
         rl_remote_jump_phase = RL_DEPLOY_JUMP_IDLE;
         rl_remote_jump_cycles = 0U;
+        rl_set_remote_gas_spring_compensation(RL_DEPLOY_JUMP_IDLE);
         (void)RLDeploy_SetModel(RL_POLICY_MODEL_UPSTAIRS);
     }
 }
