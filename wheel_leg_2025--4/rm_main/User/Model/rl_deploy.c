@@ -45,8 +45,8 @@ extern void update_rotate_state();
 #define RL_DEPLOY_WHEEL_TORQUE_LIMIT      5.0f
 //#define RL_DEPLOY_LEFT_GAS_SPRING_K       520.1f
 //#define RL_DEPLOY_RIGHT_GAS_SPRING_K      520.1f
-float rl_deploy_left_gas_limit = 520.1f;
-float rl_deploy_right_gas_limit = 520.1f;
+static float rl_deploy_left_gas_limit = 520.1f;
+static float rl_deploy_right_gas_limit = 520.1f;
 
 
 enum
