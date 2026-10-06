@@ -20,6 +20,7 @@ extern void update_rotate_state();
 #define RL_DEPLOY_JUMP_CROUCH_CYCLES       750U
 #define RL_DEPLOY_JUMP_ACTIVE_CYCLES       240U
 #define RL_DEPLOY_JUMP_COMPLETE_CYCLES     200U /* 400 ms at 500 Hz */
+#define RL_DEPLOY_JUMP_RECOVERY_CYCLES     250U /* 500 ms at 500 Hz */
 #define RL_DEPLOY_JUMP_COMPLETE_LEG_LENGTH 0.32f
 #define RL_DEPLOY_JUMP_CROUCH_HEIGHT       0.12f
 #define RL_DEPLOY_JUMP_ACTIVE_HEIGHT       0.16f
@@ -57,6 +58,9 @@ extern void update_rotate_state();
 #define RL_DEPLOY_GAS_JUMP_RIGHT_K         500.0f
 #define RL_DEPLOY_GAS_COMPLETE_LEFT_K     1500.0f
 #define RL_DEPLOY_GAS_COMPLETE_RIGHT_K    1500.0f 
+/* Compensation used after switching back to Upstairs. */
+#define RL_DEPLOY_GAS_RECOVERY_LEFT_K     500.0f
+#define RL_DEPLOY_GAS_RECOVERY_RIGHT_K    500.0f
 
 static float rl_deploy_left_gas_limit = RL_DEPLOY_GAS_NORMAL_LEFT_K;
 static float rl_deploy_right_gas_limit = RL_DEPLOY_GAS_NORMAL_RIGHT_K;
@@ -109,7 +113,8 @@ typedef enum
     RL_DEPLOY_JUMP_IDLE = 0,
     RL_DEPLOY_JUMP_CROUCH,
     RL_DEPLOY_JUMP_ACTIVE,
-    RL_DEPLOY_JUMP_COMPLETE
+    RL_DEPLOY_JUMP_COMPLETE,
+    RL_DEPLOY_JUMP_RECOVERY
 } RLDeployJumpPhase_t;
 
 RLDeployDebug_t rl_deploy_debug;
@@ -124,6 +129,7 @@ static RLDeployJumpPhase_t rl_keyboard_jump_phase = RL_DEPLOY_JUMP_IDLE;
 static uint16_t rl_keyboard_jump_cycles = 0U;
 static RLDeployJumpPhase_t rl_remote_jump_phase = RL_DEPLOY_JUMP_IDLE;
 static uint16_t rl_remote_jump_cycles = 0U;
+static uint16_t rl_remote_jump_recovery_cycles = 0U;
 static uint8_t rl_remote_jump_complete_finished = 0U;
 static uint8_t  rl_spin_decel_active  = 0U;
 static ramp_t   rl_spin_decel_ramp;
@@ -199,6 +205,11 @@ static void rl_set_remote_gas_spring_compensation(RLDeployJumpPhase_t phase)
             rl_deploy_right_gas_limit = RL_DEPLOY_GAS_COMPLETE_RIGHT_K;
             break;
 
+        case RL_DEPLOY_JUMP_RECOVERY:
+            rl_deploy_left_gas_limit = RL_DEPLOY_GAS_RECOVERY_LEFT_K;
+            rl_deploy_right_gas_limit = RL_DEPLOY_GAS_RECOVERY_RIGHT_K;
+            break;
+
         case RL_DEPLOY_JUMP_IDLE:
         default:
             rl_deploy_left_gas_limit = RL_DEPLOY_GAS_NORMAL_LEFT_K;
@@ -215,6 +226,7 @@ static void rl_update_remote_model_selection(void)
     {
         rl_remote_jump_phase = RL_DEPLOY_JUMP_IDLE;
         rl_remote_jump_cycles = 0U;
+		rl_remote_jump_recovery_cycles = 0U;
 		rl_remote_jump_complete_finished = 0U;
         rl_set_remote_gas_spring_compensation(RL_DEPLOY_JUMP_IDLE);
         return;
@@ -227,6 +239,7 @@ static void rl_update_remote_model_selection(void)
     {
         rl_remote_jump_phase = RL_DEPLOY_JUMP_IDLE;
         rl_remote_jump_cycles = 0U;
+		rl_remote_jump_recovery_cycles = 0U;
         rl_set_remote_gas_spring_compensation(RL_DEPLOY_JUMP_IDLE);
 		rl_remote_jump_complete_finished = 0U;
         (void)RLDeploy_SetModel(RL_POLICY_MODEL_PIN);
@@ -244,6 +257,7 @@ static void rl_update_remote_model_selection(void)
         {
             rl_remote_jump_phase = RL_DEPLOY_JUMP_CROUCH;
             rl_remote_jump_cycles = 0U;
+			rl_remote_jump_recovery_cycles = 0U;
 			rl_remote_jump_complete_finished = 0U;
             g_robot_ctx.jump_finish_flag = 0U;
             rl_set_remote_gas_spring_compensation(rl_remote_jump_phase);
@@ -293,17 +307,32 @@ static void rl_update_remote_model_selection(void)
             }
             else
             {
-				rl_remote_jump_complete_finished = 1U;
-                rl_set_remote_gas_spring_compensation(RL_DEPLOY_JUMP_IDLE);
-                (void)RLDeploy_SetModel(RL_POLICY_MODEL_STABLE);
-                g_robot_ctx.jump_finish_flag = 1U;
-            }
+				if (!rl_remote_jump_complete_finished)
+				{
+					rl_remote_jump_complete_finished = 1U;
+					rl_remote_jump_recovery_cycles = 0U;
+					g_robot_ctx.jump_finish_flag = 1U;
+				}
+
+				/* Keep Upstairs and the recovery gas setting for 500 ms. */
+				(void)RLDeploy_SetModel(RL_POLICY_MODEL_UPSTAIRS);
+				if (rl_remote_jump_recovery_cycles < RL_DEPLOY_JUMP_RECOVERY_CYCLES)
+				{
+					rl_set_remote_gas_spring_compensation(RL_DEPLOY_JUMP_RECOVERY);
+					++rl_remote_jump_recovery_cycles;
+				}
+				else
+				{
+					rl_set_remote_gas_spring_compensation(RL_DEPLOY_JUMP_IDLE);
+				}
+			}
         }
     }
 	else if (g_robot_ctx.output.chassis == CHASSIS_HIGH)
     {
         rl_remote_jump_phase = RL_DEPLOY_JUMP_IDLE;
         rl_remote_jump_cycles = 0U;
+		rl_remote_jump_recovery_cycles = 0U;
 		rl_remote_jump_complete_finished = 0U;
         rl_set_remote_gas_spring_compensation(RL_DEPLOY_JUMP_IDLE);
         (void)RLDeploy_SetModel(RL_POLICY_MODEL_STABLE);
@@ -312,6 +341,7 @@ static void rl_update_remote_model_selection(void)
     {
         rl_remote_jump_phase = RL_DEPLOY_JUMP_IDLE;
         rl_remote_jump_cycles = 0U;
+		rl_remote_jump_recovery_cycles = 0U;
 		rl_remote_jump_complete_finished = 0U;
         rl_set_remote_gas_spring_compensation(RL_DEPLOY_JUMP_IDLE);
         (void)RLDeploy_SetModel(RL_POLICY_MODEL_UPSTAIRS);
