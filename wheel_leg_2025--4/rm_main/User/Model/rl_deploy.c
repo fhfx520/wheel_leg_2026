@@ -23,7 +23,7 @@ extern void update_rotate_state();
 #define RL_DEPLOY_JUMP_COMPLETE_LEG_LENGTH 0.32f
 #define RL_DEPLOY_JUMP_CROUCH_HEIGHT       0.12f
 #define RL_DEPLOY_JUMP_ACTIVE_HEIGHT       0.16f
-#define RL_DEPLOY_JUMP_COMPLETE_HEIGHT     0.16f
+#define RL_DEPLOY_JUMP_COMPLETE_HEIGHT     0.24f
 #define RL_DEPLOY_NORMAL_HEIGHT            0.16f
 
 #define RL_DEPLOY_PI                      3.14159265358979323846f
@@ -48,14 +48,14 @@ extern void update_rotate_state();
 //#define RL_DEPLOY_LEFT_GAS_SPRING_K       520.1f
 //#define RL_DEPLOY_RIGHT_GAS_SPRING_K      520.1f
 /* These are compensation coefficients (approximately N/m), not raw force. */
-#define RL_DEPLOY_GAS_NORMAL_LEFT_K        520.1f
-#define RL_DEPLOY_GAS_NORMAL_RIGHT_K       520.1f
+#define RL_DEPLOY_GAS_NORMAL_LEFT_K        1000.1f
+#define RL_DEPLOY_GAS_NORMAL_RIGHT_K       1000.1f
 #define RL_DEPLOY_GAS_CROUCH_LEFT_K        1000.0f
 #define RL_DEPLOY_GAS_CROUCH_RIGHT_K       1000.0f
 #define RL_DEPLOY_GAS_JUMP_LEFT_K          0.0f
 #define RL_DEPLOY_GAS_JUMP_RIGHT_K         0.0f
-#define RL_DEPLOY_GAS_COMPLETE_LEFT_K     0.0f
-#define RL_DEPLOY_GAS_COMPLETE_RIGHT_K    0.0f
+#define RL_DEPLOY_GAS_COMPLETE_LEFT_K     1000.0f
+#define RL_DEPLOY_GAS_COMPLETE_RIGHT_K    1000.0f
 
 static float rl_deploy_left_gas_limit = RL_DEPLOY_GAS_NORMAL_LEFT_K;
 static float rl_deploy_right_gas_limit = RL_DEPLOY_GAS_NORMAL_RIGHT_K;

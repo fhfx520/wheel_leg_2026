@@ -800,56 +800,56 @@
   ],
   "environment": {
     "generated_model": {
-      "generated_time": "2026-10-06T20:33:56+0800",
+      "generated_time": "2026-10-06T20:34:43+0800",
       "model_files": [
         {
-          "name": "stable_data_params.h",
-          "signature": "0x0da56ba05d062f4201c30c0cd98c9ef3"
+          "name": "jump_data_params.h",
+          "signature": "0x07d5902c661347d45f426dbce08a891e"
         },
         {
-          "name": "stable_data_params.c",
-          "signature": "0x31956bf79163052323a0a885bf0add1b"
+          "name": "jump_data_params.c",
+          "signature": "0x174310ab4c5a75a1dc0d35bf443cc521"
         },
         {
-          "name": "stable_data.h",
-          "signature": "0x1f3fc643630ad5f41620a3132d031e01"
+          "name": "jump_data.h",
+          "signature": "0x91b2d0afaa414efd9fe6c3818886bf9f"
         },
         {
-          "name": "stable_data.c",
-          "signature": "0x3d98564fc6fd345d7da1a30ea780841f"
+          "name": "jump_data.c",
+          "signature": "0x19ab2bcbd997cfcdbd15354456e911c3"
         },
         {
-          "name": "stable_config.h",
-          "signature": "0xb9d45a2faf49e26b0b7efeb881ac92e9"
+          "name": "jump_config.h",
+          "signature": "0x675e0441790f2bdb032e3257508fd351"
         },
         {
-          "name": "stable.h",
-          "signature": "0x7a48e4922923de9d513b431a8f0aa6af"
+          "name": "jump.h",
+          "signature": "0xc5f894b3b024a8cdc67ffa766b8402ae"
         },
         {
-          "name": "stable.c",
-          "signature": "0x4a00576e41d22a64e621bd2b9a93ea28"
+          "name": "jump.c",
+          "signature": "0xc41ca040fc89c0f968e3e3bc78a0ae13"
         }
       ],
-      "name": "stable"
+      "name": "jump"
     },
-    "network_signature": "0xd13217b651dc7ec2",
+    "network_signature": "0x14959c4175720a6e",
     "test_name": "",
     "tools": [
       {
-        "arguments": "generate --target stm32h7 --name stable -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/xiataijie.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace32655541388250012036431432836760038 --output C:/Users/41077/.stm32cubemx/stable_output",
+        "arguments": "generate --target stm32h7 --name jump -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/longlegs_jump_moving_landing_6500.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace32660259926060014643514752429072090 --output C:/Users/41077/.stm32cubemx/jump_output",
         "environment": [
           "STATS_TYPE=X-CUBE-AI"
         ],
         "input_model": {
           "model_files": [
             {
-              "name": "xiataijie.onnx",
-              "signature": "0x2da8f3c9929e76c8b0a60672e9067bca"
+              "name": "longlegs_jump_moving_landing_6500.onnx",
+              "signature": "0x2592679825c557f50a2b23c426ac2592"
             }
           ],
           "n_params": 38825,
-          "name": "xiataijie",
+          "name": "longlegs_jump_moving_landing_6500",
           "size": 155300,
           "type": "onnx"
         },
@@ -1035,7 +1035,7 @@
         277,
         265
       ],
-      "name": "xiataijie",
+      "name": "longlegs_jump_moving_landing_6500",
       "nodes": [
         {
           "attributes": {
@@ -1498,7 +1498,7 @@
       "virtual": false
     },
     {
-      "address": "s_stable_weights_array_u64",
+      "address": "s_jump_weights_array_u64",
       "alignment": 0,
       "attributes": {
         "latency": "UNDEF",
