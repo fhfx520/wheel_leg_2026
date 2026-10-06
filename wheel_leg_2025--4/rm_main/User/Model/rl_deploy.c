@@ -19,7 +19,9 @@ extern void update_rotate_state();
 #define RL_DEPLOY_FAULT_RECOVERY_RUNS     3U
 #define RL_DEPLOY_JUMP_CROUCH_CYCLES       750U
 #define RL_DEPLOY_JUMP_ACTIVE_CYCLES       240U
-#define RL_DEPLOY_JUMP_HEIGHT              0.16f
+#define RL_DEPLOY_JUMP_CROUCH_HEIGHT       0.12f
+#define RL_DEPLOY_JUMP_ACTIVE_HEIGHT       0.16f
+#define RL_DEPLOY_JUMP_COMPLETE_HEIGHT     0.16f
 #define RL_DEPLOY_NORMAL_HEIGHT            0.16f
 
 #define RL_DEPLOY_PI                      3.14159265358979323846f
@@ -699,13 +701,24 @@ static void rl_build_observation(void)
             yaw_k * circle_error(wlr.yaw_ref,wlr.yaw_fdb,2 * PI) * params->command_scale[1];
     }
 
-    if ((rl_keyboard_jump_phase == RL_DEPLOY_JUMP_CROUCH) ||
-        (rl_keyboard_jump_phase == RL_DEPLOY_JUMP_ACTIVE) ||
-        (rl_remote_jump_phase == RL_DEPLOY_JUMP_CROUCH) ||
+    if ((rl_keyboard_jump_phase == RL_DEPLOY_JUMP_ACTIVE) ||
         (rl_remote_jump_phase == RL_DEPLOY_JUMP_ACTIVE))
     {
         rl_deploy_debug.command[2] =
-            RL_DEPLOY_JUMP_HEIGHT * params->command_scale[2];
+            RL_DEPLOY_JUMP_ACTIVE_HEIGHT * params->command_scale[2];
+    }
+    else if ((rl_keyboard_jump_phase == RL_DEPLOY_JUMP_CROUCH) ||
+             (rl_remote_jump_phase == RL_DEPLOY_JUMP_CROUCH) ||
+             (g_robot_ctx.output.chassis == CHASSIS_ASCEND))
+    {
+        rl_deploy_debug.command[2] =
+            RL_DEPLOY_JUMP_CROUCH_HEIGHT * params->command_scale[2];
+    }
+    else if ((rl_keyboard_jump_phase == RL_DEPLOY_JUMP_COMPLETE) ||
+             (rl_remote_jump_phase == RL_DEPLOY_JUMP_COMPLETE))
+    {
+        rl_deploy_debug.command[2] =
+            RL_DEPLOY_JUMP_COMPLETE_HEIGHT * params->command_scale[2];
     }
 	else if (g_robot_ctx.output.chassis == CHASSIS_LOW)
     {
@@ -724,11 +737,6 @@ static void rl_build_observation(void)
     else if (g_robot_ctx.output.chassis == CHASSIS_HIGH)
     {
         rl_deploy_debug.command[2] = 0.14f * params->command_scale[2];
-    }
-    else if (g_robot_ctx.output.chassis == CHASSIS_ASCEND)
-    {
-        rl_deploy_debug.command[2] =
-            0.22f * params->command_scale[2];
     }
     else
     {
