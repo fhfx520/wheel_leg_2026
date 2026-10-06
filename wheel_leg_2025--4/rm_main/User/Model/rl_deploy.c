@@ -4,6 +4,8 @@
 #include <string.h>
 
 #include "prot_imu.h"
+#include "prot_tof.h"
+#include "kalman_filter.h"
 #include "wlr.h"
 #include "drv_dm_motor.h"
 #include "drv_dji_motor.h"
@@ -13,6 +15,9 @@
 #include "chassis_task.h"
 
 extern void update_rotate_state();
+/* The filters are created by wlr_init(); RL must update them because the
+ * normal wlr_control() path is bypassed while the torque source is RL. */
+extern kalman_filter_t tfmini_fn[2];
 
 #define RL_DEPLOY_INFERENCE_DIVIDER       5U
 #define RL_DEPLOY_HISTORY_FRAMES          5U
@@ -231,6 +236,45 @@ static void rl_set_remote_gas_spring_compensation(RLDeployJumpPhase_t phase)
             rl_deploy_left_gas_limit = RL_DEPLOY_GAS_NORMAL_LEFT_K;
             rl_deploy_right_gas_limit = RL_DEPLOY_GAS_NORMAL_RIGHT_K;
             break;
+    }
+}
+
+static void rl_update_front_tof(void)
+{
+    uint32_t i;
+
+    /* Mirror the released WLR sensor policy: if only one sensor is online,
+     * copy it to the other side; invalid readings are treated as 2 m. */
+    if (tof[0].online && !tof[1].online)
+    {
+        tof[1].dis = tof[0].dis;
+        tof[1].confidence = tof[0].confidence;
+    }
+    else if (!tof[0].online && tof[1].online)
+    {
+        tof[0].dis = tof[1].dis;
+        tof[0].confidence = tof[1].confidence;
+    }
+    else if (!tof[0].online && !tof[1].online)
+    {
+        tof[0].confidence = 0U;
+        tof[1].confidence = 0U;
+    }
+
+    for (i = 0U; i < 2U; ++i)
+    {
+        if ((tof[i].dis > 2000U) || (tof[i].confidence <= 50U))
+        {
+            wlr.side[i].Front_dis_fdb = 2.0f;
+        }
+        else
+        {
+            wlr.side[i].Front_dis_fdb = (float)tof[i].dis * 0.001f;
+        }
+
+        tfmini_fn[i].measured_vector[0] = wlr.side[i].Front_dis_fdb;
+        (void)kalman_filter_update(&tfmini_fn[i]);
+        wlr.side[i].Front_dis_kal = tfmini_fn[i].filter_vector[0];
     }
 }
 
@@ -1173,6 +1217,9 @@ void RLDeploy_Step500Hz(void)
         RLDeploy_Init();
     }
 
+    /* RL bypasses wlr_control(), so keep the front-distance feedback alive
+     * here for automatic jump triggering and any future terrain features. */
+    rl_update_front_tof();
     rl_update_remote_model_selection();
     rl_update_keyboard_model_selection();
     requested_model = rl_deploy_model_select;
