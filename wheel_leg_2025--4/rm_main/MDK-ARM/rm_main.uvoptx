@@ -280,6 +280,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>rol_offset</ItemText>
         </Ww>
+        <Ww>
+          <count>25</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>rl_model_params</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>

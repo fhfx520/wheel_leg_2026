@@ -1,32 +1,32 @@
 ST Edge AI Core v2.2.0-20266 2adc00962
-Created date          : 2026-10-07 16:41:18
-Parameters            : generate --target stm32h7 --name jump -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/moving_jump_7500.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace39899500360860010359200370838460639 --output C:/Users/41077/.stm32cubemx/jump_output
+Created date          : 2026-10-07 22:34:41
+Parameters            : generate --target stm32h7 --name jump -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/moving_jump_7500.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace4201981033188004384633235551573458 --output C:/Users/41077/.stm32cubemx/jump_output
 
 Exec/report summary (generate)
--------------------------------------------------------------------------------------------------------------
-model file         :   D:\RM\wheel_leg_2026\wheel_leg_2025--4\RL_policy\moving_jump_7500.onnx                
-type               :   onnx                                                                                  
-c_name             :   jump                                                                                  
-compression        :   none                                                                                  
-options            :   allocate-inputs, allocate-outputs                                                     
-optimization       :   time                                                                                  
-target/series      :   stm32h7                                                                               
-workspace dir      :   C:\Users\41077\AppData\Local\Temp\mxAI_workspace39899500360860010359200370838460639   
-output dir         :   C:\Users\41077\.stm32cubemx\jump_output                                               
-model_fmt          :   float                                                                                 
-model_name         :   moving_jump_7500                                                                      
-model_hash         :   0x70ea6a5ad2dc82bac7e9a4958ffb9994                                                    
-params #           :   38,825 items (151.66 KiB)                                                             
--------------------------------------------------------------------------------------------------------------
-input 1/2          :   'obs', f32(1x25), 100 Bytes, activations                                              
-input 2/2          :   'obs_history', f32(1x125), 500 Bytes, activations                                     
-inputs (total)     :   600 Bytes                                                                             
-output 1/1         :   'actions', f32(1x6), 24 Bytes, activations                                            
-macc               :   43,401                                                                                
-weights (ro)       :   155,300 B (151.66 KiB) (1 segment)                                                    
-activations (rw)   :   1,112 B (1.09 KiB) (1 segment) *                                                      
-ram (total)        :   1,112 B (1.09 KiB) = 1,112 + 0 + 0                                                    
--------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------
+model file         :   D:\RM\wheel_leg_2026\wheel_leg_2025--4\RL_policy\moving_jump_7500.onnx               
+type               :   onnx                                                                                 
+c_name             :   jump                                                                                 
+compression        :   none                                                                                 
+options            :   allocate-inputs, allocate-outputs                                                    
+optimization       :   time                                                                                 
+target/series      :   stm32h7                                                                              
+workspace dir      :   C:\Users\41077\AppData\Local\Temp\mxAI_workspace4201981033188004384633235551573458   
+output dir         :   C:\Users\41077\.stm32cubemx\jump_output                                              
+model_fmt          :   float                                                                                
+model_name         :   moving_jump_7500                                                                     
+model_hash         :   0x70ea6a5ad2dc82bac7e9a4958ffb9994                                                   
+params #           :   38,825 items (151.66 KiB)                                                            
+------------------------------------------------------------------------------------------------------------
+input 1/2          :   'obs', f32(1x25), 100 Bytes, activations                                             
+input 2/2          :   'obs_history', f32(1x125), 500 Bytes, activations                                    
+inputs (total)     :   600 Bytes                                                                            
+output 1/1         :   'actions', f32(1x6), 24 Bytes, activations                                           
+macc               :   43,401                                                                               
+weights (ro)       :   155,300 B (151.66 KiB) (1 segment)                                                   
+activations (rw)   :   1,112 B (1.09 KiB) (1 segment) *                                                     
+ram (total)        :   1,112 B (1.09 KiB) = 1,112 + 0 + 0                                                   
+------------------------------------------------------------------------------------------------------------
 (*) 'input'/'output' buffers are allocated in the activations buffer
 
 Model name - moving_jump_7500
