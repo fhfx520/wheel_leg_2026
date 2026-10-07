@@ -42,9 +42,9 @@ extern kalman_filter_t tfmini_fn[2];
  *    the front ToF distance is below the configured threshold (or the
  *    crouch timeout is reached), matching the old AUTO_JUMP_ENABLE path.
  */
-#define RL_DEPLOY_AUTO_JUMP_ENABLE         0U
+#define RL_DEPLOY_AUTO_JUMP_ENABLE         1U
 #define RL_DEPLOY_AUTO_JUMP_SPEED_ENABLE   0U
-#define RL_DEPLOY_AUTO_JUMP_SPEED         (-2.5f)
+#define RL_DEPLOY_AUTO_JUMP_SPEED         (-2.0f)
 #define RL_DEPLOY_AUTO_JUMP_TOF_ENABLE     1U
 #define RL_DEPLOY_AUTO_JUMP_TOF_DISTANCE   0.80f
 #define RL_DEPLOY_AUTO_JUMP_TOF_MIN_CYCLES 400U
@@ -75,10 +75,10 @@ extern kalman_filter_t tfmini_fn[2];
 #define RL_DEPLOY_GAS_NORMAL_RIGHT_K       1000.1f
 #define RL_DEPLOY_GAS_CROUCH_LEFT_K        1000.0f
 #define RL_DEPLOY_GAS_CROUCH_RIGHT_K       1000.0f
-#define RL_DEPLOY_GAS_JUMP_LEFT_K          -1000.0f
-#define RL_DEPLOY_GAS_JUMP_RIGHT_K         -1000.0f
-#define RL_DEPLOY_GAS_COMPLETE_LEFT_K     1500.0f
-#define RL_DEPLOY_GAS_COMPLETE_RIGHT_K    1500.0f 
+#define RL_DEPLOY_GAS_JUMP_LEFT_K          -4000.0f
+#define RL_DEPLOY_GAS_JUMP_RIGHT_K         -4000.0f
+#define RL_DEPLOY_GAS_COMPLETE_LEFT_K     2000.0f
+#define RL_DEPLOY_GAS_COMPLETE_RIGHT_K    2000.0f 
 /* Compensation used after switching back to Upstairs. */
 #define RL_DEPLOY_GAS_RECOVERY_LEFT_K     500.0f
 #define RL_DEPLOY_GAS_RECOVERY_RIGHT_K    500.0f
@@ -349,7 +349,7 @@ static void rl_update_remote_model_selection(void)
             ++rl_remote_jump_cycles;
             if ((rl_remote_jump_cycles >= RL_DEPLOY_JUMP_CROUCH_CYCLES)
 #if RL_DEPLOY_AUTO_JUMP_ENABLE && RL_DEPLOY_AUTO_JUMP_TOF_ENABLE
-                || ((rl_remote_jump_cycles >= RL_DEPLOY_AUTO_JUMP_TOF_MIN_CYCLES) &&
+               ||((rl_remote_jump_cycles >= RL_DEPLOY_AUTO_JUMP_TOF_MIN_CYCLES) &&
                     (((wlr.side[0].Front_dis_fdb + wlr.side[1].Front_dis_fdb) * 0.5f) <
                      RL_DEPLOY_AUTO_JUMP_TOF_DISTANCE))
 #endif
@@ -383,7 +383,6 @@ static void rl_update_remote_model_selection(void)
         {
             /* Keep Jump for the complete phase, then recover on Upstairs. */
             if ((!rl_remote_jump_complete_finished) &&
-                (rl_left_leg.l0 >= 0.15f) &&
                 (rl_remote_jump_cycles < RL_DEPLOY_JUMP_COMPLETE_CYCLES))
             {
                 rl_set_remote_gas_spring_compensation(RL_DEPLOY_JUMP_COMPLETE);
@@ -884,7 +883,7 @@ static void rl_build_observation(void)
 #if RL_DEPLOY_AUTO_JUMP_SPEED_ENABLE
     /* In automatic mode use the same forward speed used by the released
      * AUTO_JUMP_ENABLE implementation while the RL jump is in progress. */
-    if (rl_remote_jump_phase != RL_DEPLOY_JUMP_IDLE)
+    if (rl_remote_jump_phase == RL_DEPLOY_JUMP_CROUCH || rl_remote_jump_phase == RL_DEPLOY_JUMP_ACTIVE)
     {
         rl_deploy_debug.command[0] =
             RL_DEPLOY_AUTO_JUMP_SPEED * params->command_scale[0];

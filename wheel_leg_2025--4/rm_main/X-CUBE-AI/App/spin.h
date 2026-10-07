@@ -2,7 +2,7 @@
   ******************************************************************************
   * @file    spin.h
   * @author  AST Embedded Analytics Research Platform
-  * @date    2026-10-07T02:19:37+0800
+  * @date    2026-10-07T05:05:46+0800
   * @brief   AI Tool Automatic Code Generator for Embedded NN computing
   ******************************************************************************
   * @attention
