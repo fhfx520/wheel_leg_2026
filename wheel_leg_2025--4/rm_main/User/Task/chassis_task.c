@@ -681,7 +681,7 @@ static void chassis_data_input(void)
 	{
 		if(g_robot_ctx.output.chassis == CHASSIS_ASCEND && rl_deploy_debug.requested_model == 1)
 		{
-			wlr.v_ref = (wlr.v_ref < -2.0f ? -2.0f : wlr.v_ref);
+			wlr.v_ref = (wlr.v_ref < -2.5f ? -2.5f : wlr.v_ref);
 		}	
 		else
 		{

@@ -73,12 +73,12 @@ extern kalman_filter_t tfmini_fn[2];
 /* These are compensation coefficients (approximately N/m), not raw force. */
 #define RL_DEPLOY_GAS_NORMAL_LEFT_K        800.1f
 #define RL_DEPLOY_GAS_NORMAL_RIGHT_K       800.1f
-#define RL_DEPLOY_GAS_CROUCH_LEFT_K        600.0f
-#define RL_DEPLOY_GAS_CROUCH_RIGHT_K       600.0f
+#define RL_DEPLOY_GAS_CROUCH_LEFT_K        1000.0f
+#define RL_DEPLOY_GAS_CROUCH_RIGHT_K       1000.0f
 
 //active和complete的过程的气弹簧力（T）和其他不同（T*L）
-#define RL_DEPLOY_GAS_JUMP_LEFT_K          -700.0f
-#define RL_DEPLOY_GAS_JUMP_RIGHT_K         -700.0f
+#define RL_DEPLOY_GAS_JUMP_LEFT_K          -1000.0f
+#define RL_DEPLOY_GAS_JUMP_RIGHT_K         -1000.0f
 
 #define RL_DEPLOY_GAS_COMPLETE_LEFT_K     500.0f
 #define RL_DEPLOY_GAS_COMPLETE_RIGHT_K    500.0f 
@@ -882,7 +882,6 @@ static void rl_build_observation(void)
     uint32_t index = 0U;
     uint32_t i;
 	
-	data_limit(&wlr.v_ref,-2.0f,2.0f);
     rl_deploy_debug.command[0] =
 	(wlr.v_ref) * params->command_scale[0];
 
