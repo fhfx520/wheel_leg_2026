@@ -22,14 +22,14 @@ extern kalman_filter_t tfmini_fn[2];
 #define RL_DEPLOY_INFERENCE_DIVIDER       5U
 #define RL_DEPLOY_HISTORY_FRAMES          5U
 #define RL_DEPLOY_FAULT_RECOVERY_RUNS     3U
-#define RL_DEPLOY_JUMP_CROUCH_CYCLES       750U
+#define RL_DEPLOY_JUMP_CROUCH_CYCLES       2500U
 #define RL_DEPLOY_JUMP_ACTIVE_CYCLES       240U
-#define RL_DEPLOY_JUMP_COMPLETE_CYCLES     200U /* 400 ms at 500 Hz */
+#define RL_DEPLOY_JUMP_COMPLETE_CYCLES     100U /* 400 ms at 500 Hz */
 #define RL_DEPLOY_JUMP_RECOVERY_CYCLES     250U /* 500 ms at 500 Hz */
 #define RL_DEPLOY_JUMP_COMPLETE_LEG_LENGTH 0.32f
 #define RL_DEPLOY_JUMP_CROUCH_HEIGHT       0.12f
 #define RL_DEPLOY_JUMP_ACTIVE_HEIGHT       0.16f
-#define RL_DEPLOY_JUMP_COMPLETE_HEIGHT     0.24f
+#define RL_DEPLOY_JUMP_COMPLETE_HEIGHT     0.20f
 #define RL_DEPLOY_JUMP_RECOVERY_HEIGHT     0.26f
 #define RL_DEPLOY_NORMAL_HEIGHT            0.16f
 
@@ -46,7 +46,7 @@ extern kalman_filter_t tfmini_fn[2];
 #define RL_DEPLOY_AUTO_JUMP_SPEED_ENABLE   0U
 #define RL_DEPLOY_AUTO_JUMP_SPEED         (-2.0f)
 #define RL_DEPLOY_AUTO_JUMP_TOF_ENABLE     1U
-#define RL_DEPLOY_AUTO_JUMP_TOF_DISTANCE   0.80f
+#define RL_DEPLOY_AUTO_JUMP_TOF_DISTANCE   0.70f
 #define RL_DEPLOY_AUTO_JUMP_TOF_MIN_CYCLES 400U
 
 #define RL_DEPLOY_PI                      3.14159265358979323846f
@@ -68,17 +68,20 @@ extern kalman_filter_t tfmini_fn[2];
 #define RL_DEPLOY_REAL_TORQUE_LIMIT       100.0f
 #define RL_DEPLOY_PARALLEL_TORQUE_LIMIT   50.0f
 #define RL_DEPLOY_WHEEL_TORQUE_LIMIT      5.0f
-//#define RL_DEPLOY_LEFT_GAS_SPRING_K       520.1f
+//#define RL_DEPLOY_LEFT_GAS_SPRING_K       520.1f 
 //#define RL_DEPLOY_RIGHT_GAS_SPRING_K      520.1f
 /* These are compensation coefficients (approximately N/m), not raw force. */
-#define RL_DEPLOY_GAS_NORMAL_LEFT_K        1000.1f
-#define RL_DEPLOY_GAS_NORMAL_RIGHT_K       1000.1f
+#define RL_DEPLOY_GAS_NORMAL_LEFT_K        520.1f
+#define RL_DEPLOY_GAS_NORMAL_RIGHT_K       520.1f
 #define RL_DEPLOY_GAS_CROUCH_LEFT_K        1000.0f
 #define RL_DEPLOY_GAS_CROUCH_RIGHT_K       1000.0f
-#define RL_DEPLOY_GAS_JUMP_LEFT_K          -4000.0f
-#define RL_DEPLOY_GAS_JUMP_RIGHT_K         -4000.0f
-#define RL_DEPLOY_GAS_COMPLETE_LEFT_K     2000.0f
-#define RL_DEPLOY_GAS_COMPLETE_RIGHT_K    2000.0f 
+
+//active的过程的气弹簧力（T）和其他不同（T*L）
+#define RL_DEPLOY_GAS_JUMP_LEFT_K          -600.0f
+#define RL_DEPLOY_GAS_JUMP_RIGHT_K         -600.0f
+
+#define RL_DEPLOY_GAS_COMPLETE_LEFT_K     400.0f
+#define RL_DEPLOY_GAS_COMPLETE_RIGHT_K    400.0f 
 /* Compensation used after switching back to Upstairs. */
 #define RL_DEPLOY_GAS_RECOVERY_LEFT_K     500.0f
 #define RL_DEPLOY_GAS_RECOVERY_RIGHT_K    500.0f
@@ -210,6 +213,7 @@ static const RLDeployModelParams_t *rl_get_model_params(void)
 static void rl_set_remote_gas_spring_compensation(RLDeployJumpPhase_t phase)
 {
     switch (phase)
+		
     {
         case RL_DEPLOY_JUMP_CROUCH:
             rl_deploy_left_gas_limit = RL_DEPLOY_GAS_CROUCH_LEFT_K;
@@ -876,7 +880,8 @@ static void rl_build_observation(void)
     };
     uint32_t index = 0U;
     uint32_t i;
-
+	
+	data_limit(&wlr.v_ref,-2.0f,2.0f);
     rl_deploy_debug.command[0] =
 	(wlr.v_ref) * params->command_scale[0];
 
@@ -1065,7 +1070,11 @@ static void rl_apply_gas_spring_compensation(const RLDeployLegState_t *leg,
         const float foot_torque =
             (-map->j21 * (*tau_shank) + map->j11 * (*tau_thigh)) / map->det;
 		
-        foot_force += force_sign * gas_spring_k * leg->l0;
+		if (rl_remote_jump_phase == RL_DEPLOY_JUMP_ACTIVE || (rl_remote_jump_phase == RL_DEPLOY_JUMP_COMPLETE && rl_remote_jump_complete_finished == 0))
+			foot_force += force_sign * gas_spring_k;
+		else
+			foot_force += force_sign * gas_spring_k * leg->l0;
+		
         *tau_shank = map->j11 * foot_force + map->j12 * foot_torque;
         *tau_thigh = map->j21 * foot_force + map->j22 * foot_torque;
     }
