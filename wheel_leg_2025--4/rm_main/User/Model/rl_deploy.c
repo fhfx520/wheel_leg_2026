@@ -87,27 +87,8 @@ extern kalman_filter_t tfmini_fn[2];
 #define RL_DEPLOY_GAS_RECOVERY_LEFT_K     500.0f
 #define RL_DEPLOY_GAS_RECOVERY_RIGHT_K    500.0f
 
-/*
- * Deployment-only leg-length damping.
- *
- * The RL policy does not model the physical gas spring.  Keep the existing
- * feed-forward compensation, but add a small velocity-dependent term so a
- * rapidly compressing leg receives extra support and a rapidly extending leg
- * does not rebound.  The term is filtered because l0 is reconstructed from
- * joint encoders and its numerical derivative is noisy.
- */
-#define RL_DEPLOY_GAS_DAMPING_C            25.0f  /* N s/m */
-#define RL_DEPLOY_GAS_DAMPING_LIMIT        35.0f  /* N */
-#define RL_DEPLOY_GAS_DOT_ALPHA            0.10f
-#define RL_DEPLOY_GAS_DOT_LIMIT            2.0f   /* m/s */
-#define RL_DEPLOY_CONTROL_DT               0.002f /* 500 Hz */
-
 static float rl_deploy_left_gas_limit = RL_DEPLOY_GAS_NORMAL_LEFT_K;
 static float rl_deploy_right_gas_limit = RL_DEPLOY_GAS_NORMAL_RIGHT_K;
-
-static float rl_gas_prev_l0[2] = {0.0f, 0.0f};
-static float rl_gas_l0_dot[2] = {0.0f, 0.0f};
-static uint8_t rl_gas_l0_dot_initialized[2] = {0U, 0U};
 
 
 enum
@@ -1074,39 +1055,9 @@ static float rl_gas_spring_calcu(uint8_t is_right)
 	return gas_spring_F_Calc(vmc[i]);
 }
 
-static float rl_update_gas_leg_length_dot(float l0, uint8_t leg_index)
-{
-    float raw_dot;
-
-    if (leg_index >= 2U)
-    {
-        return 0.0f;
-    }
-
-    if (!rl_gas_l0_dot_initialized[leg_index])
-    {
-        rl_gas_prev_l0[leg_index] = l0;
-        rl_gas_l0_dot[leg_index] = 0.0f;
-        rl_gas_l0_dot_initialized[leg_index] = 1U;
-        return 0.0f;
-    }
-
-    raw_dot = (l0 - rl_gas_prev_l0[leg_index]) /
-              RL_DEPLOY_CONTROL_DT;
-    rl_gas_prev_l0[leg_index] = l0;
-
-    rl_gas_l0_dot[leg_index] +=
-        RL_DEPLOY_GAS_DOT_ALPHA *
-        (raw_dot - rl_gas_l0_dot[leg_index]);
-
-    return rl_clip(rl_gas_l0_dot[leg_index],
-                   RL_DEPLOY_GAS_DOT_LIMIT);
-}
-
 static void rl_apply_gas_spring_compensation(const RLDeployLegState_t *leg,
                                              float gas_spring_k,
                                              float force_sign,
-                                             float leg_length_dot,
                                              float *tau_thigh,
                                              float *tau_shank)
 {
@@ -1119,36 +1070,10 @@ static void rl_apply_gas_spring_compensation(const RLDeployLegState_t *leg,
         const float foot_torque =
             (-map->j21 * (*tau_shank) + map->j11 * (*tau_thigh)) / map->det;
 
-		float gas_force;
-		float damping_force;
-		
 		if (rl_remote_jump_phase == RL_DEPLOY_JUMP_ACTIVE || (rl_remote_jump_phase == RL_DEPLOY_JUMP_COMPLETE && rl_remote_jump_complete_finished == 0))
-			gas_force = gas_spring_k;
+			foot_force += force_sign * gas_spring_k;
 		else
-			gas_force = gas_spring_k * leg->l0;
-
-		/*
-		 * Passive damping in the leg-length direction:
-		 *   l0_dot < 0: compression/retraction, add support;
-		 *   l0_dot > 0: extension, remove support and suppress rebound.
-		 */
-		damping_force = rl_clip(
-			-RL_DEPLOY_GAS_DAMPING_C * leg_length_dot,
-			RL_DEPLOY_GAS_DAMPING_LIMIT);
-
-		/*
-		 * Normal/Idle and Crouch receive the new damping term.
-		 * Active, Complete and Recovery retain their original force exactly.
-		 */
-		if ((rl_remote_jump_phase == RL_DEPLOY_JUMP_IDLE) ||
-		    (rl_remote_jump_phase == RL_DEPLOY_JUMP_CROUCH))
-		{
-			foot_force += force_sign * (gas_force + damping_force);
-		}
-		else
-		{
-			foot_force += force_sign * gas_force;
-		}
+			foot_force += force_sign * gas_spring_k * leg->l0;
 		
         *tau_shank = map->j11 * foot_force + map->j12 * foot_torque;
         *tau_thigh = map->j21 * foot_force + map->j22 * foot_torque;
@@ -1167,23 +1092,17 @@ static uint8_t rl_calculate_shadow_motor_torques(void)
         rl_deploy_debug.tau_virtual[RL_DOF_RF1] * rl_right_leg.jacobian_thigh;
     float right_shank =
         rl_deploy_debug.tau_virtual[RL_DOF_RF1] * rl_right_leg.jacobian_shank;
-    const float left_l0_dot =
-        rl_update_gas_leg_length_dot(rl_left_leg.l0, 0U);
-    const float right_l0_dot =
-        rl_update_gas_leg_length_dot(rl_right_leg.l0, 1U);
     uint32_t i;
 
     /* Exact left/right signs used by the released deployment. */
     rl_apply_gas_spring_compensation(&rl_left_leg,
                                      rl_deploy_left_gas_limit,
                                      -1.0f,
-                                     left_l0_dot,
                                      &left_thigh,
                                      &left_shank);
     rl_apply_gas_spring_compensation(&rl_right_leg,
                                      rl_deploy_right_gas_limit,
                                      1.0f,
-                                     right_l0_dot,
                                      &right_thigh,
                                      &right_shank);
 
