@@ -1,6 +1,6 @@
 ST Edge AI Core v2.2.0-20266 2adc00962
-Created date          : 2026-10-07 22:33:41
-Parameters            : generate --target stm32h7 --name stable -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/xiataijie.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace42013637172280015347861238204671677 --output C:/Users/41077/.stm32cubemx/stable_output
+Created date          : 2026-10-08 01:09:29
+Parameters            : generate --target stm32h7 --name stable -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/xiataijie.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace42948479884580012248346373698396834 --output C:/Users/41077/.stm32cubemx/stable_output
 
 Exec/report summary (generate)
 -------------------------------------------------------------------------------------------------------------
@@ -11,7 +11,7 @@ compression        :   none
 options            :   allocate-inputs, allocate-outputs                                                     
 optimization       :   time                                                                                  
 target/series      :   stm32h7                                                                               
-workspace dir      :   C:\Users\41077\AppData\Local\Temp\mxAI_workspace42013637172280015347861238204671677   
+workspace dir      :   C:\Users\41077\AppData\Local\Temp\mxAI_workspace42948479884580012248346373698396834   
 output dir         :   C:\Users\41077\.stm32cubemx\stable_output                                             
 model_fmt          :   float                                                                                 
 model_name         :   xiataijie                                                                             

@@ -800,44 +800,44 @@
   ],
   "environment": {
     "generated_model": {
-      "generated_time": "2026-10-07T22:35:10+0800",
+      "generated_time": "2026-10-08T01:10:29+0800",
       "model_files": [
         {
           "name": "spin_data_params.h",
-          "signature": "0x8d902e5f85bd802827274860413aa6cd"
+          "signature": "0x434e5dbe2d2035717105332d85252f35"
         },
         {
           "name": "spin_data_params.c",
-          "signature": "0x5aa36235bff27dc723ac2f4de210730c"
+          "signature": "0x2bc42c32a3d5920dea2c28313d3af574"
         },
         {
           "name": "spin_data.h",
-          "signature": "0xe0765307e13a786e02537bd9203c1a5c"
+          "signature": "0xa59568172ffcd324a97bc11f7f83c324"
         },
         {
           "name": "spin_data.c",
-          "signature": "0xd4c56977d05daa7887c8aed4e340e366"
+          "signature": "0x33e10711c33e772b9e1a3694d09c57ad"
         },
         {
           "name": "spin_config.h",
-          "signature": "0xa41d52d25d1fea18b46a834f211d9566"
+          "signature": "0x44fe82e8e390b4de1be72fdcfd844dd0"
         },
         {
           "name": "spin.h",
-          "signature": "0x2a3107a1ddf06df0d6f7d5820932077d"
+          "signature": "0xdb145543e3747958eddc65b9dfb1601e"
         },
         {
           "name": "spin.c",
-          "signature": "0xbc1ac917b7064fd06afc63ccdf946479"
+          "signature": "0x42ec110b924f024d09ee67eceb6f3199"
         }
       ],
       "name": "spin"
     },
-    "network_signature": "0x7e4b4d5db31584a6",
+    "network_signature": "0xb7a9286668bd0ac8",
     "test_name": "",
     "tools": [
       {
-        "arguments": "generate --target stm32h7 --name spin -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/Oct05_23-01-50_spin_negative_fixed13_true14_height016to030_from_64900_model_65050.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace4202280244279002529382261348397193 --output C:/Users/41077/.stm32cubemx/spin_output",
+        "arguments": "generate --target stm32h7 --name spin -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/Oct05_23-01-50_spin_negative_fixed13_true14_height016to030_from_64900_model_65050.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace4295469058048004304761664166252587 --output C:/Users/41077/.stm32cubemx/spin_output",
         "environment": [
           "STATS_TYPE=X-CUBE-AI"
         ],

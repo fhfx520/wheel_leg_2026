@@ -800,56 +800,56 @@
   ],
   "environment": {
     "generated_model": {
-      "generated_time": "2026-10-08T01:10:08+0800",
+      "generated_time": "2026-10-08T01:09:50+0800",
       "model_files": [
         {
-          "name": "jump_data_params.h",
-          "signature": "0xa60fd9368645a40611ffa03636c702e0"
+          "name": "upstairs_data_params.h",
+          "signature": "0x8c4296191aeca6b20687cfe1cb1fb11e"
         },
         {
-          "name": "jump_data_params.c",
-          "signature": "0xeb6e180dbaf6b9d23af587a66476092a"
+          "name": "upstairs_data_params.c",
+          "signature": "0xfc780cb771e25cb2015ef6d69d4ed020"
         },
         {
-          "name": "jump_data.h",
-          "signature": "0x8b186bb299c4a9e343c90145453136f3"
+          "name": "upstairs_data.h",
+          "signature": "0x06fd6ddeeb1eba09c43796f001c42bfb"
         },
         {
-          "name": "jump_data.c",
-          "signature": "0x876f7eb6dda8c21576962931aa30664d"
+          "name": "upstairs_data.c",
+          "signature": "0x2c855f4fd2a5dfc13a36572c5e12b880"
         },
         {
-          "name": "jump_config.h",
-          "signature": "0xa8f4e94f67fc4ba3871a3a4426406f1b"
+          "name": "upstairs_config.h",
+          "signature": "0x1405ad7c2db00d2137fde287e75a5263"
         },
         {
-          "name": "jump.h",
-          "signature": "0x2c9f71ee97d7bdf7f1b2cf31d2bf27b1"
+          "name": "upstairs.h",
+          "signature": "0x01affc8eee542db97059994baf852405"
         },
         {
-          "name": "jump.c",
-          "signature": "0x4065e2c2aac79c8c92f5c069ae099b16"
+          "name": "upstairs.c",
+          "signature": "0x5fe2d06c7ec3480ac322b59af514cd5f"
         }
       ],
-      "name": "jump"
+      "name": "upstairs"
     },
-    "network_signature": "0x39e00fabb1e944e8",
+    "network_signature": "0xf6f9e0c54241fbd3",
     "test_name": "",
     "tools": [
       {
-        "arguments": "generate --target stm32h7 --name jump -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/moving_jump_7500.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace42952650906160013444740871395460648 --output C:/Users/41077/.stm32cubemx/jump_output",
+        "arguments": "generate --target stm32h7 --name upstairs -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/47000.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace42950717648020013223933151799952831 --output C:/Users/41077/.stm32cubemx/upstairs_output",
         "environment": [
           "STATS_TYPE=X-CUBE-AI"
         ],
         "input_model": {
           "model_files": [
             {
-              "name": "moving_jump_7500.onnx",
-              "signature": "0x70ea6a5ad2dc82bac7e9a4958ffb9994"
+              "name": "47000.onnx",
+              "signature": "0xee6b93910e4283b032ab3bc7083c8579"
             }
           ],
           "n_params": 38825,
-          "name": "moving_jump_7500",
+          "name": "node_47000",
           "size": 155300,
           "type": "onnx"
         },
@@ -1035,7 +1035,7 @@
         277,
         265
       ],
-      "name": "moving_jump_7500",
+      "name": "node_47000",
       "nodes": [
         {
           "attributes": {
@@ -1498,7 +1498,7 @@
       "virtual": false
     },
     {
-      "address": "s_jump_weights_array_u64",
+      "address": "s_upstairs_weights_array_u64",
       "alignment": 0,
       "attributes": {
         "latency": "UNDEF",

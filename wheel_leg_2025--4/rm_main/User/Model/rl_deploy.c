@@ -71,8 +71,8 @@ extern kalman_filter_t tfmini_fn[2];
 //#define RL_DEPLOY_LEFT_GAS_SPRING_K       520.1f 
 //#define RL_DEPLOY_RIGHT_GAS_SPRING_K      520.1f
 /* These are compensation coefficients (approximately N/m), not raw force. */
-#define RL_DEPLOY_GAS_NORMAL_LEFT_K        800.1f
-#define RL_DEPLOY_GAS_NORMAL_RIGHT_K       800.1f
+#define RL_DEPLOY_GAS_NORMAL_LEFT_K        555.1f
+#define RL_DEPLOY_GAS_NORMAL_RIGHT_K       555.1f
 #define RL_DEPLOY_GAS_CROUCH_LEFT_K        1000.0f
 #define RL_DEPLOY_GAS_CROUCH_RIGHT_K       1000.0f
 
@@ -350,7 +350,7 @@ static void rl_update_remote_model_selection(void)
         else if (rl_remote_jump_phase == RL_DEPLOY_JUMP_CROUCH)
         {
             rl_set_remote_gas_spring_compensation(rl_remote_jump_phase);
-            (void)RLDeploy_SetModel(RL_POLICY_MODEL_UPSTAIRS);
+            (void)RLDeploy_SetModel(RL_POLICY_MODEL_STABLE);
             ++rl_remote_jump_cycles;
             if ((rl_remote_jump_cycles >= RL_DEPLOY_JUMP_CROUCH_CYCLES)
 #if RL_DEPLOY_AUTO_JUMP_ENABLE && RL_DEPLOY_AUTO_JUMP_TOF_ENABLE
@@ -404,7 +404,7 @@ static void rl_update_remote_model_selection(void)
 				}
 
 				/* Keep Upstairs and the recovery gas setting for 500 ms. */
-				(void)RLDeploy_SetModel(RL_POLICY_MODEL_UPSTAIRS);
+				(void)RLDeploy_SetModel(RL_POLICY_MODEL_STABLE);
 				if (rl_remote_jump_recovery_cycles < RL_DEPLOY_JUMP_RECOVERY_CYCLES)
 				{
 					rl_set_remote_gas_spring_compensation(RL_DEPLOY_JUMP_RECOVERY);
@@ -433,7 +433,7 @@ static void rl_update_remote_model_selection(void)
 		rl_remote_jump_recovery_cycles = 0U;
 		rl_remote_jump_complete_finished = 0U;
         rl_set_remote_gas_spring_compensation(RL_DEPLOY_JUMP_IDLE);
-        (void)RLDeploy_SetModel(RL_POLICY_MODEL_UPSTAIRS);
+        (void)RLDeploy_SetModel(RL_POLICY_MODEL_STABLE);
     }
 }
 
