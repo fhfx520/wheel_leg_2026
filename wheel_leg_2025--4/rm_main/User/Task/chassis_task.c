@@ -302,7 +302,8 @@ static void chassis_execute_fsm(void)
 	wlr.energy_flag = 0;
 	wlr.double_flag = 0;
 	if(g_robot_ctx.output.chassis != CHASSIS_STOP)
-		wlr.ctrl_mode = ((g_robot_ctx.output.torque_source == CHASSIS_TORQUE_RL && !chassis.recover_flag) ? 1 : 2);
+//		wlr.ctrl_mode = ((g_robot_ctx.output.torque_source == CHASSIS_TORQUE_RL && !chassis.recover_flag) ? 1 : 2);
+		wlr.ctrl_mode = ((g_robot_ctx.output.torque_source == CHASSIS_TORQUE_RL) ? 1 : 2);
 	else
 		wlr.ctrl_mode = 0; 
     switch (g_robot_ctx.output.chassis) {

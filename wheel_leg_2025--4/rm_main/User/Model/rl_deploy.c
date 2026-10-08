@@ -71,8 +71,8 @@ extern kalman_filter_t tfmini_fn[2];
 //#define RL_DEPLOY_LEFT_GAS_SPRING_K       520.1f 
 //#define RL_DEPLOY_RIGHT_GAS_SPRING_K      520.1f
 /* These are compensation coefficients (approximately N/m), not raw force. */
-#define RL_DEPLOY_GAS_NORMAL_LEFT_K        555.1f
-#define RL_DEPLOY_GAS_NORMAL_RIGHT_K       555.1f
+#define RL_DEPLOY_GAS_NORMAL_LEFT_K        0.0f
+#define RL_DEPLOY_GAS_NORMAL_RIGHT_K       0.0f
 #define RL_DEPLOY_GAS_CROUCH_LEFT_K        1000.0f
 #define RL_DEPLOY_GAS_CROUCH_RIGHT_K       1000.0f
 
@@ -433,7 +433,7 @@ static void rl_update_remote_model_selection(void)
 		rl_remote_jump_recovery_cycles = 0U;
 		rl_remote_jump_complete_finished = 0U;
         rl_set_remote_gas_spring_compensation(RL_DEPLOY_JUMP_IDLE);
-        (void)RLDeploy_SetModel(RL_POLICY_MODEL_STABLE);
+        (void)RLDeploy_SetModel(RL_POLICY_MODEL_UPSTAIRS);
     }
 }
 

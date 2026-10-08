@@ -22,7 +22,6 @@
 #include "cmsis_os.h"
 #include "dma.h"
 #include "fdcan.h"
-#include "memorymap.h"
 #include "rng.h"
 #include "spi.h"
 #include "tim.h"

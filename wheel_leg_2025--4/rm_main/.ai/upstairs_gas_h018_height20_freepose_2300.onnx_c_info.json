@@ -800,56 +800,56 @@
   ],
   "environment": {
     "generated_model": {
-      "generated_time": "2026-10-09T02:05:07+0800",
+      "generated_time": "2026-10-09T02:05:39+0800",
       "model_files": [
         {
-          "name": "stable_data_params.h",
-          "signature": "0x693a6cb269b8debf67c28bfd656604d6"
+          "name": "upstairs_data_params.h",
+          "signature": "0x4f427bf144ac1209e76555e8fb6e75a4"
         },
         {
-          "name": "stable_data_params.c",
-          "signature": "0x9f388994260cb65727b9b011b8d84655"
+          "name": "upstairs_data_params.c",
+          "signature": "0xb2c1ff86371323f3cb4caa67d43008e2"
         },
         {
-          "name": "stable_data.h",
-          "signature": "0x7204b4aaf13ad11789348d9ad79ad11e"
+          "name": "upstairs_data.h",
+          "signature": "0x4e34778e6406300a9b3884e3747b2f63"
         },
         {
-          "name": "stable_data.c",
-          "signature": "0x8bfa5f1c7886968f13a05e83989dd243"
+          "name": "upstairs_data.c",
+          "signature": "0x06ed87c73d6758d55b8e5b5987d12683"
         },
         {
-          "name": "stable_config.h",
-          "signature": "0x967c08c1f0ef37af28467b9df2e9ddc1"
+          "name": "upstairs_config.h",
+          "signature": "0xef207e55b2b56215b7d38909e43c8628"
         },
         {
-          "name": "stable.h",
-          "signature": "0xd3a873601b70e9ec4755488c9fbd3c04"
+          "name": "upstairs.h",
+          "signature": "0x0157ad6eeb6732662e7f4be24f547c94"
         },
         {
-          "name": "stable.c",
-          "signature": "0xc10bad5c821a2cc884e6012aa296664f"
+          "name": "upstairs.c",
+          "signature": "0x6efabfbd03d35528a86996797ff79469"
         }
       ],
-      "name": "stable"
+      "name": "upstairs"
     },
-    "network_signature": "0x2d4339454160824e",
+    "network_signature": "0xd44fcd52716fb2f0",
     "test_name": "",
     "tools": [
       {
-        "arguments": "generate --target stm32h7 --name stable -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/xiataijie.onnx --compression none --verbosity 1 -O time --workspace C:/Users/25328/AppData/Local/Temp/mxAI_workspace36820906397540011981456845814253893 --output C:/Users/25328/.stm32cubemx/stable_output",
+        "arguments": "generate --target stm32h7 --name upstairs -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/gas_h018_height20_freepose_2300.onnx --compression none --verbosity 1 -O time --workspace C:/Users/25328/AppData/Local/Temp/mxAI_workspace3682415022142009848628788920115484 --output C:/Users/25328/.stm32cubemx/upstairs_output",
         "environment": [
           "STATS_TYPE=X-CUBE-AI"
         ],
         "input_model": {
           "model_files": [
             {
-              "name": "xiataijie.onnx",
-              "signature": "0x2da8f3c9929e76c8b0a60672e9067bca"
+              "name": "gas_h018_height20_freepose_2300.onnx",
+              "signature": "0xbfac30e1f14357328c7606f829c69149"
             }
           ],
           "n_params": 38825,
-          "name": "xiataijie",
+          "name": "gas_h018_height20_freepose_2300",
           "size": 155300,
           "type": "onnx"
         },
@@ -1035,7 +1035,7 @@
         277,
         265
       ],
-      "name": "xiataijie",
+      "name": "gas_h018_height20_freepose_2300",
       "nodes": [
         {
           "attributes": {
@@ -1498,7 +1498,7 @@
       "virtual": false
     },
     {
-      "address": "s_stable_weights_array_u64",
+      "address": "s_upstairs_weights_array_u64",
       "alignment": 0,
       "attributes": {
         "latency": "UNDEF",

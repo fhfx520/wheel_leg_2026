@@ -2,7 +2,7 @@
   ******************************************************************************
   * @file    pin.h
   * @author  AST Embedded Analytics Research Platform
-  * @date    2026-09-11T00:41:46+0800
+  * @date    2026-10-09T02:02:52+0800
   * @brief   AI Tool Automatic Code Generator for Embedded NN computing
   ******************************************************************************
   * @attention
@@ -23,7 +23,7 @@
 
 /******************************************************************************/
 #define AI_PIN_MODEL_NAME          "pin"
-#define AI_PIN_ORIGIN_MODEL_NAME   "spin_pos0_23_0_65_p10_0_d1_0_0_1"
+#define AI_PIN_ORIGIN_MODEL_NAME   "oct05_230150_spin_negative_fixed13_true14_height016to030_from_64900_model_65050"
 
 /******************************************************************************/
 #define AI_PIN_ACTIVATIONS_ALIGNMENT   (4)
