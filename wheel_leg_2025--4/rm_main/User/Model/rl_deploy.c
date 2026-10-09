@@ -935,7 +935,7 @@ static void rl_build_observation(void)
     }
 	else if (g_robot_ctx.output.chassis == CHASSIS_LOW) 
     {
-        rl_deploy_debug.command[2] = 0.12f * params->command_scale[2];
+        rl_deploy_debug.command[2] = 0.16f * params->command_scale[2];
     }
 	else if (g_robot_ctx.output.chassis == CHASSIS_LOW_SPIN)
     {
