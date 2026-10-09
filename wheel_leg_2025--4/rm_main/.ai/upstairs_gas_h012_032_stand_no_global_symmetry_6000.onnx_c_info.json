@@ -800,56 +800,56 @@
   ],
   "environment": {
     "generated_model": {
-      "generated_time": "2026-10-09T23:58:48+0800",
+      "generated_time": "2026-10-09T23:58:24+0800",
       "model_files": [
         {
-          "name": "jump_data_params.h",
-          "signature": "0x710e7873ccdfc7ffb23be36dfd257177"
+          "name": "upstairs_data_params.h",
+          "signature": "0xd55faa4fe1d02624a23d27719cee4f32"
         },
         {
-          "name": "jump_data_params.c",
-          "signature": "0x899ef3c9e706aafeb711ae81d1575605"
+          "name": "upstairs_data_params.c",
+          "signature": "0x3b810d12ab872e600a4830d112e276a8"
         },
         {
-          "name": "jump_data.h",
-          "signature": "0x7e7f9817ab77de7ec63b244d8f716d0c"
+          "name": "upstairs_data.h",
+          "signature": "0x14db44f2e21216cacd0128ba51090f8b"
         },
         {
-          "name": "jump_data.c",
-          "signature": "0xc429fabd7a9e1cba2fd6c887ddcd7bab"
+          "name": "upstairs_data.c",
+          "signature": "0x419b0c3fb41895397c87fb6a6d90f0be"
         },
         {
-          "name": "jump_config.h",
-          "signature": "0x79daf3e46ea19b7a79106052ab83cb42"
+          "name": "upstairs_config.h",
+          "signature": "0xe475d9d76208b5f93b8ffa8ad9b84215"
         },
         {
-          "name": "jump.h",
-          "signature": "0x66a20aee891026cd47bc435a6784c4ba"
+          "name": "upstairs.h",
+          "signature": "0xcc9fe1d632d05582820aaa36ef3a21e9"
         },
         {
-          "name": "jump.c",
-          "signature": "0x4aff9a79726fec2a3f5066c5106944f3"
+          "name": "upstairs.c",
+          "signature": "0x8467dcdd954b68ef79bbe55ce06b9770"
         }
       ],
-      "name": "jump"
+      "name": "upstairs"
     },
-    "network_signature": "0xca8b95770088b9e0",
+    "network_signature": "0xdce3098af8c0e75b",
     "test_name": "",
     "tools": [
       {
-        "arguments": "generate --target stm32h7 --name jump -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/moving_jump_7500.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace46130728431001913030599343172679 --output C:/Users/41077/.stm32cubemx/jump_output",
+        "arguments": "generate --target stm32h7 --name upstairs -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/gas_h012_032_stand_no_global_symmetry_6000.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace458901987130014134583103930521183 --output C:/Users/41077/.stm32cubemx/upstairs_output",
         "environment": [
           "STATS_TYPE=X-CUBE-AI"
         ],
         "input_model": {
           "model_files": [
             {
-              "name": "moving_jump_7500.onnx",
-              "signature": "0x70ea6a5ad2dc82bac7e9a4958ffb9994"
+              "name": "gas_h012_032_stand_no_global_symmetry_6000.onnx",
+              "signature": "0x84626d7e41f07d758a3aa75b9531af3e"
             }
           ],
           "n_params": 38825,
-          "name": "moving_jump_7500",
+          "name": "gas_h012_032_stand_no_global_symmetry_6000",
           "size": 155300,
           "type": "onnx"
         },
@@ -1035,7 +1035,7 @@
         277,
         265
       ],
-      "name": "moving_jump_7500",
+      "name": "gas_h012_032_stand_no_global_symmetry_6000",
       "nodes": [
         {
           "attributes": {
@@ -1498,7 +1498,7 @@
       "virtual": false
     },
     {
-      "address": "s_jump_weights_array_u64",
+      "address": "s_upstairs_weights_array_u64",
       "alignment": 0,
       "attributes": {
         "latency": "UNDEF",

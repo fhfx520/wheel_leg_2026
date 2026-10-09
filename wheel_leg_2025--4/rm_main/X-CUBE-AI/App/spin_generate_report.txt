@@ -1,6 +1,6 @@
 ST Edge AI Core v2.2.0-20266 2adc00962
-Created date          : 2026-10-09 02:06:46
-Parameters            : generate --target stm32h7 --name spin -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/Oct05_23-01-50_spin_negative_fixed13_true14_height016to030_from_64900_model_65050.onnx --compression none --verbosity 1 -O time --workspace C:/Users/25328/AppData/Local/Temp/mxAI_workspace36830584096460012907076565141385023 --output C:/Users/25328/.stm32cubemx/spin_output
+Created date          : 2026-10-09 23:59:14
+Parameters            : generate --target stm32h7 --name spin -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/Oct05_23-01-50_spin_negative_fixed13_true14_height016to030_from_64900_model_65050.onnx --compression none --verbosity 1 --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace46369734245008175022172054082352 --output C:/Users/41077/.stm32cubemx/spin_output
 
 Exec/report summary (generate)
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -9,10 +9,10 @@ type               :   onnx
 c_name             :   spin                                                                                                                                      
 compression        :   none                                                                                                                                      
 options            :   allocate-inputs, allocate-outputs                                                                                                         
-optimization       :   time                                                                                                                                      
+optimization       :   balanced                                                                                                                                  
 target/series      :   stm32h7                                                                                                                                   
-workspace dir      :   C:\Users\25328\AppData\Local\Temp\mxAI_workspace36830584096460012907076565141385023                                                       
-output dir         :   C:\Users\25328\.stm32cubemx\spin_output                                                                                                   
+workspace dir      :   C:\Users\41077\AppData\Local\Temp\mxAI_workspace46369734245008175022172054082352                                                          
+output dir         :   C:\Users\41077\.stm32cubemx\spin_output                                                                                                   
 model_fmt          :   float                                                                                                                                     
 model_name         :   Oct05_230150_spin_negative_fixed13_true14_height016to030_from_64900_model_65050                                                           
 model_hash         :   0xb83b1307129e27ea1f01a7623b688869                                                                                                        
@@ -290,10 +290,10 @@ macc=43,401 weights=155,300 act=1,112 ram_io=0
 
 Generated files (7)
 ------------------------------------------------------------ 
-C:\Users\25328\.stm32cubemx\spin_output\spin_data_params.h   
-C:\Users\25328\.stm32cubemx\spin_output\spin_data_params.c   
-C:\Users\25328\.stm32cubemx\spin_output\spin_data.h          
-C:\Users\25328\.stm32cubemx\spin_output\spin_data.c          
-C:\Users\25328\.stm32cubemx\spin_output\spin_config.h        
-C:\Users\25328\.stm32cubemx\spin_output\spin.h               
-C:\Users\25328\.stm32cubemx\spin_output\spin.c               
+C:\Users\41077\.stm32cubemx\spin_output\spin_data_params.h   
+C:\Users\41077\.stm32cubemx\spin_output\spin_data_params.c   
+C:\Users\41077\.stm32cubemx\spin_output\spin_data.h          
+C:\Users\41077\.stm32cubemx\spin_output\spin_data.c          
+C:\Users\41077\.stm32cubemx\spin_output\spin_config.h        
+C:\Users\41077\.stm32cubemx\spin_output\spin.h               
+C:\Users\41077\.stm32cubemx\spin_output\spin.c               

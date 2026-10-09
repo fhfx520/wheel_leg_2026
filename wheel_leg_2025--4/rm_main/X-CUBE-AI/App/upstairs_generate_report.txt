@@ -1,35 +1,35 @@
 ST Edge AI Core v2.2.0-20266 2adc00962
-Created date          : 2026-10-09 02:05:41
-Parameters            : generate --target stm32h7 --name upstairs -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/gas_h018_height20_freepose_2300.onnx --compression none --verbosity 1 -O time --workspace C:/Users/25328/AppData/Local/Temp/mxAI_workspace3682415022142009848628788920115484 --output C:/Users/25328/.stm32cubemx/upstairs_output
+Created date          : 2026-10-09 23:58:25
+Parameters            : generate --target stm32h7 --name upstairs -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/gas_h012_032_stand_no_global_symmetry_6000.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace458901987130014134583103930521183 --output C:/Users/41077/.stm32cubemx/upstairs_output
 
 Exec/report summary (generate)
----------------------------------------------------------------------------------------------------------------
-model file         :   D:\RM\wheel_leg_2026\wheel_leg_2025--4\RL_policy\gas_h018_height20_freepose_2300.onnx   
-type               :   onnx                                                                                    
-c_name             :   upstairs                                                                                
-compression        :   none                                                                                    
-options            :   allocate-inputs, allocate-outputs                                                       
-optimization       :   time                                                                                    
-target/series      :   stm32h7                                                                                 
-workspace dir      :   C:\Users\25328\AppData\Local\Temp\mxAI_workspace3682415022142009848628788920115484      
-output dir         :   C:\Users\25328\.stm32cubemx\upstairs_output                                             
-model_fmt          :   float                                                                                   
-model_name         :   gas_h018_height20_freepose_2300                                                         
-model_hash         :   0xbfac30e1f14357328c7606f829c69149                                                      
-params #           :   38,825 items (151.66 KiB)                                                               
----------------------------------------------------------------------------------------------------------------
-input 1/2          :   'obs', f32(1x25), 100 Bytes, activations                                                
-input 2/2          :   'obs_history', f32(1x125), 500 Bytes, activations                                       
-inputs (total)     :   600 Bytes                                                                               
-output 1/1         :   'actions', f32(1x6), 24 Bytes, activations                                              
-macc               :   43,401                                                                                  
-weights (ro)       :   155,300 B (151.66 KiB) (1 segment)                                                      
-activations (rw)   :   1,112 B (1.09 KiB) (1 segment) *                                                        
-ram (total)        :   1,112 B (1.09 KiB) = 1,112 + 0 + 0                                                      
----------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
+model file         :   D:\RM\wheel_leg_2026\wheel_leg_2025--4\RL_policy\gas_h012_032_stand_no_global_symmetry_6000.onnx   
+type               :   onnx                                                                                               
+c_name             :   upstairs                                                                                           
+compression        :   none                                                                                               
+options            :   allocate-inputs, allocate-outputs                                                                  
+optimization       :   time                                                                                               
+target/series      :   stm32h7                                                                                            
+workspace dir      :   C:\Users\41077\AppData\Local\Temp\mxAI_workspace458901987130014134583103930521183                  
+output dir         :   C:\Users\41077\.stm32cubemx\upstairs_output                                                        
+model_fmt          :   float                                                                                              
+model_name         :   gas_h012_032_stand_no_global_symmetry_6000                                                         
+model_hash         :   0x84626d7e41f07d758a3aa75b9531af3e                                                                 
+params #           :   38,825 items (151.66 KiB)                                                                          
+--------------------------------------------------------------------------------------------------------------------------
+input 1/2          :   'obs', f32(1x25), 100 Bytes, activations                                                           
+input 2/2          :   'obs_history', f32(1x125), 500 Bytes, activations                                                  
+inputs (total)     :   600 Bytes                                                                                          
+output 1/1         :   'actions', f32(1x6), 24 Bytes, activations                                                         
+macc               :   43,401                                                                                             
+weights (ro)       :   155,300 B (151.66 KiB) (1 segment)                                                                 
+activations (rw)   :   1,112 B (1.09 KiB) (1 segment) *                                                                   
+ram (total)        :   1,112 B (1.09 KiB) = 1,112 + 0 + 0                                                                 
+--------------------------------------------------------------------------------------------------------------------------
 (*) 'input'/'output' buffers are allocated in the activations buffer
 
-Model name - gas_h018_height20_freepose_2300
+Model name - gas_h012_032_stand_no_global_symmetry_6000
 ------ ---------------------------------------------------- --------------- --------------- -------- -------------------------------- --- --------------- ------------------ ------------------- 
 m_id   layer (type,original)                                oshape          param/size          macc                     connected to   | c_size          c_macc             c_type              
 ------ ---------------------------------------------------- --------------- --------------- -------- -------------------------------- --- --------------- ------------------ ------------------- 
@@ -104,7 +104,7 @@ model/c-model: macc=43,817/43,401 -416(-0.9%) weights=155,300/155,300  activatio
 
 Generated C-graph summary
 ------------------------------------------------------------------------------------------------------------------------
-model name            : gas_h018_height20_freepose_2300
+model name            : gas_h012_032_stand_no_global_symmetry_6000
 c-name                : upstairs
 c-node #              : 13
 c-array #             : 29
@@ -290,10 +290,10 @@ macc=43,401 weights=155,300 act=1,112 ram_io=0
 
 Generated files (7)
 -------------------------------------------------------------------- 
-C:\Users\25328\.stm32cubemx\upstairs_output\upstairs_data_params.h   
-C:\Users\25328\.stm32cubemx\upstairs_output\upstairs_data_params.c   
-C:\Users\25328\.stm32cubemx\upstairs_output\upstairs_data.h          
-C:\Users\25328\.stm32cubemx\upstairs_output\upstairs_data.c          
-C:\Users\25328\.stm32cubemx\upstairs_output\upstairs_config.h        
-C:\Users\25328\.stm32cubemx\upstairs_output\upstairs.h               
-C:\Users\25328\.stm32cubemx\upstairs_output\upstairs.c               
+C:\Users\41077\.stm32cubemx\upstairs_output\upstairs_data_params.h   
+C:\Users\41077\.stm32cubemx\upstairs_output\upstairs_data_params.c   
+C:\Users\41077\.stm32cubemx\upstairs_output\upstairs_data.h          
+C:\Users\41077\.stm32cubemx\upstairs_output\upstairs_data.c          
+C:\Users\41077\.stm32cubemx\upstairs_output\upstairs_config.h        
+C:\Users\41077\.stm32cubemx\upstairs_output\upstairs.h               
+C:\Users\41077\.stm32cubemx\upstairs_output\upstairs.c               
