@@ -420,11 +420,11 @@ static void rl_update_remote_model_selection(void)
 	else if (g_robot_ctx.output.chassis == CHASSIS_HIGH)
     {
         rl_remote_jump_phase = RL_DEPLOY_JUMP_IDLE;
-        rl_remote_jump_cycles = 0U;
+        rl_remote_jump_cycles = 0U; 
 		rl_remote_jump_recovery_cycles = 0U;
 		rl_remote_jump_complete_finished = 0U;
         rl_set_remote_gas_spring_compensation(RL_DEPLOY_JUMP_IDLE);
-        (void)RLDeploy_SetModel(RL_POLICY_MODEL_STABLE);
+        (void)RLDeploy_SetModel(RL_POLICY_MODEL_UPSTAIRS);
     }
     else
     {
@@ -949,7 +949,7 @@ static void rl_build_observation(void)
     }
     else if (g_robot_ctx.output.chassis == CHASSIS_HIGH)
     {
-        rl_deploy_debug.command[2] = 0.20f * params->command_scale[2];
+        rl_deploy_debug.command[2] = 0.30f * params->command_scale[2];
     }
     else
     {
