@@ -9,8 +9,6 @@
 /* ============================================================
  * CubeAI generated model headers
  * ============================================================ */
-#include "stable.h"
-#include "stable_data.h"
 #include "upstairs.h"
 #include "upstairs_data.h"
 #include "spin.h"
@@ -37,13 +35,6 @@ typedef struct
 /* ============================================================
  * Network contexts
  * ============================================================ */
-
-NetworkContext_t stable_ctx = {
-    AI_HANDLE_NULL,
-    NULL,
-    NULL,
-    0
-};
 
 static NetworkContext_t upstairs_ctx = {
     AI_HANDLE_NULL,
@@ -87,7 +78,6 @@ static uint8_t rl_policy_array_is_finite(const float *data, uint32_t size)
  * CubeAI requires these buffers to be aligned.
  * ============================================================ */
 
-AI_ALIGNED(4) static ai_u8 stable_activations[AI_STABLE_DATA_ACTIVATION_1_SIZE];
 AI_ALIGNED(4) static ai_u8 upstairs_activations[AI_UPSTAIRS_DATA_ACTIVATION_1_SIZE];
 AI_ALIGNED(4) static ai_u8 spin_activations[AI_SPIN_DATA_ACTIVATION_1_SIZE];
 AI_ALIGNED(4) static ai_u8 jump_activations[AI_JUMP_DATA_ACTIVATION_1_SIZE];
@@ -100,57 +90,6 @@ RLPolicy_t rl_policy = {
     0,
     0
 };
-
-
-/* ============================================================
- * Initialize Stable network
- * ============================================================ */
-
-static uint8_t RLPolicy_InitStable(void)
-{
-    const ai_handle activation_buffers[] = {
-        AI_HANDLE_PTR(stable_activations)
-    };
-
-    ai_error create_error;
-    ai_u16 input_count = 0;
-    ai_u16 output_count = 0;
-
-    if (stable_ctx.ready)
-    {
-        return 1U;
-    }
-
-    create_error = ai_stable_create_and_init(
-        &stable_ctx.network,
-        activation_buffers,
-        NULL
-    );
-
-    if (create_error.type != AI_ERROR_NONE)
-    {
-        stable_ctx.ready = 0U;
-        return 0U;
-    }
-
-    stable_ctx.inputs = ai_stable_inputs_get(
-        stable_ctx.network,
-        &input_count
-    );
-
-    stable_ctx.outputs = ai_stable_outputs_get(
-        stable_ctx.network,
-        &output_count
-    );
-
-    stable_ctx.ready =
-        (stable_ctx.inputs != NULL) &&
-        (stable_ctx.outputs != NULL) &&
-        (input_count == AI_STABLE_IN_NUM) &&
-        (output_count == AI_STABLE_OUT_NUM);
-
-    return stable_ctx.ready;
-}
 
 
 /* ============================================================
@@ -294,8 +233,6 @@ NetworkContext_t *RLPolicy_GetContext(
 {
     switch (model)
     {
-        case RL_POLICY_MODEL_STABLE:
-            return &stable_ctx;
 		case RL_POLICY_MODEL_UPSTAIRS:
             return &upstairs_ctx;
         case RL_POLICY_MODEL_PIN:
@@ -324,7 +261,6 @@ RLPolicy_t *RLPolicy_GetInstance(void)
 
 uint8_t RLPolicy_Init(RLPolicy_t *policy)
 {
-    uint8_t stable_ok;
 	uint8_t upstairs_ok;
     uint8_t spin_ok;
     uint8_t jump_ok;
@@ -342,22 +278,12 @@ uint8_t RLPolicy_Init(RLPolicy_t *policy)
     /* CubeAI runtime requires the CRC peripheral clock on STM32H7. */
     __HAL_RCC_CRC_CLK_ENABLE();
 
-    /*
-     * Do not use:
-     *
-     * stable_ok && upstairs_ok && pin_ok && jump_ok
-     *
-     * directly here, because && has short-circuit evaluation.
-     *
-     * We want all four models to be initialized.
-     */
-
-    stable_ok = RLPolicy_InitStable();
+    /* Initialize every remaining network and evaluate all results. */
 	upstairs_ok = RLPolicy_InitUpstairs();
 	spin_ok = RLPolicy_InitSpin();
 	jump_ok = RLPolicy_InitJump();
 	
-    policy->ready = (stable_ok && upstairs_ok && spin_ok && jump_ok);
+    policy->ready = (upstairs_ok && spin_ok && jump_ok);
 	
     return policy->ready;
 }
@@ -473,29 +399,7 @@ uint8_t RLPolicy_Run(
 
     switch (model)
     {
-        case RL_POLICY_MODEL_STABLE:
-		{
-            memcpy(
-                obs_input,
-                obs,
-                AI_STABLE_IN_1_SIZE_BYTES
-            );
-
-            memcpy(
-                obs_history_input,
-                obs_history,
-                AI_STABLE_IN_2_SIZE_BYTES
-            );
-
-            processed_batches = ai_stable_run(
-                ctx->network,
-                ctx->inputs,
-                ctx->outputs
-            );
-
-            break;
-		}
-		case RL_POLICY_MODEL_UPSTAIRS:
+        case RL_POLICY_MODEL_UPSTAIRS:
 		{
             memcpy(
                 obs_input,
@@ -559,9 +463,6 @@ uint8_t RLPolicy_Run(
          */
         switch (model)
         {
-            case RL_POLICY_MODEL_STABLE:
-                (void)ai_stable_get_error(ctx->network);
-                break;
 			case RL_POLICY_MODEL_UPSTAIRS:
                 (void)ai_upstairs_get_error(ctx->network);
                 break;
@@ -598,17 +499,7 @@ uint8_t RLPolicy_Run(
 
     switch (model)
     {
-        case RL_POLICY_MODEL_STABLE:
-
-            memcpy(
-                actions,
-                actions_output,
-                AI_STABLE_OUT_1_SIZE_BYTES
-            );
-
-            break;
-		
-		case RL_POLICY_MODEL_UPSTAIRS:
+        case RL_POLICY_MODEL_UPSTAIRS:
 
             memcpy(
                 actions,

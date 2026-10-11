@@ -75,13 +75,13 @@ extern RLDeployDebug_t rl_deploy_debug;
 
 /*
  * Keil Watch can write this variable directly:
- * 0=Stable, 1=Upstairs, 2=Spin, 3=Jump.
+ * 0=Reserved, 1=Upstairs, 2=Pin/Spin, 3=Jump.
  * The new selection is applied safely in the next 500 Hz step.
  * Remote control follows the chassis FSM automatically: LOW_SPIN selects
  * Spin, ASCEND selects Jump, and every other remote state selects Upstairs.
  * Keyboard control follows the existing chassis FSM: R/LOW_SPIN selects Spin;
  * Z/ASCEND automatically runs Upstairs crouch -> Jump -> Upstairs; otherwise
- * wheel up selects Upstairs and wheel down selects Stable.
+ * The keyboard wheel selects the Upstairs normal policy.
  */
 extern volatile RLPolicyModel_t rl_deploy_model_select;
 

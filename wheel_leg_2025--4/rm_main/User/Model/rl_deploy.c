@@ -55,7 +55,7 @@ extern kalman_filter_t tfmini_fn[2];
 #define RL_DEPLOY_MIN_LEG_LENGTH          1.0e-2f
 #define RL_DEPLOY_MIN_FORCE_MAP_DET       1.0e-6f
 
-/* Constants retained from the released Stable policy deployment. */
+/* Constants retained from the released policy deployment. */
 #define RL_DEPLOY_SOURCE_L1               0.21f
 #define RL_DEPLOY_SOURCE_L2               0.25f
 #define RL_DEPLOY_THIGH_OFFSET            0.506f
@@ -166,14 +166,6 @@ extern uint8_t rotate_ramp_flag;
 extern uint8_t rotate_stop_flag;
 
 static const RLDeployModelParams_t rl_model_params[] = {
-    /* Stable */
-    {
-        {-0.23f, -0.65f, 0.0f, 0.23f, 0.65f, 0.0f},
-        {-0.23f, -0.65f, 0.23f, 0.65f},
-        {15.0f, 15.0f, 0.0f, 15.0f, 15.0f, 0.0f},
-        {1.0f, 1.0f, 0.1f, 1.0f, 1.0f, 0.1f},
-        {2.0f, 0.25f, 5.0f}
-    },
     /* Upstairs / MiniRecover */
     {
         {-0.23f, -0.65f, 0.0f, 0.23f, 0.65f, 0.0f},
@@ -202,13 +194,14 @@ static const RLDeployModelParams_t rl_model_params[] = {
 
 static uint8_t rl_model_is_valid(RLPolicyModel_t model)
 {
-    return (uint8_t)((model >= RL_POLICY_MODEL_STABLE) &&
+    return (uint8_t)((model >= RL_POLICY_MODEL_UPSTAIRS) &&
                      (model <= RL_POLICY_MODEL_JUMP));
 }
 
 static const RLDeployModelParams_t *rl_get_model_params(void)
 {
-    return &rl_model_params[(uint32_t)rl_active_model];
+    return &rl_model_params[(uint32_t)rl_active_model -
+                            (uint32_t)RL_POLICY_MODEL_UPSTAIRS];
 }
 
 static void rl_set_remote_gas_spring_compensation(RLDeployJumpPhase_t phase)
@@ -350,7 +343,7 @@ static void rl_update_remote_model_selection(void)
         else if (rl_remote_jump_phase == RL_DEPLOY_JUMP_CROUCH)
         {
             rl_set_remote_gas_spring_compensation(rl_remote_jump_phase);
-            (void)RLDeploy_SetModel(RL_POLICY_MODEL_STABLE);
+            (void)RLDeploy_SetModel(RL_POLICY_MODEL_UPSTAIRS);
             ++rl_remote_jump_cycles;
             if ((rl_remote_jump_cycles >= RL_DEPLOY_JUMP_CROUCH_CYCLES)
 #if RL_DEPLOY_AUTO_JUMP_ENABLE && RL_DEPLOY_AUTO_JUMP_TOF_ENABLE
@@ -404,7 +397,7 @@ static void rl_update_remote_model_selection(void)
 				}
 
 				/* Keep Upstairs and the recovery gas setting for 500 ms. */
-				(void)RLDeploy_SetModel(RL_POLICY_MODEL_STABLE);
+				(void)RLDeploy_SetModel(RL_POLICY_MODEL_UPSTAIRS);
 				if (rl_remote_jump_recovery_cycles < RL_DEPLOY_JUMP_RECOVERY_CYCLES)
 				{
 					rl_set_remote_gas_spring_compensation(RL_DEPLOY_JUMP_RECOVERY);
@@ -532,8 +525,7 @@ static void rl_update_keyboard_model_selection(void)
     rl_keyboard_jump_phase = RL_DEPLOY_JUMP_IDLE;
     rl_keyboard_jump_cycles = 0U;
 
-    if ((rl_deploy_model_select == RL_POLICY_MODEL_STABLE) ||
-        (rl_deploy_model_select == RL_POLICY_MODEL_UPSTAIRS))
+    if (rl_deploy_model_select == RL_POLICY_MODEL_UPSTAIRS)
     {
         rl_keyboard_normal_model = rl_deploy_model_select;
     }
@@ -544,9 +536,8 @@ static void rl_update_keyboard_model_selection(void)
     }
     else if (rl_model_keyboard_armed)
     {
-        /* Wheel up selects Upstairs; wheel down selects Stable. */
-        rl_keyboard_normal_model =
-            (wheel > 0) ? RL_POLICY_MODEL_UPSTAIRS : RL_POLICY_MODEL_STABLE;
+        /* Wheel selects the normal Upstairs policy. */
+        rl_keyboard_normal_model = RL_POLICY_MODEL_UPSTAIRS;
         rl_model_keyboard_armed = 0U;
     }
 
@@ -1202,8 +1193,8 @@ void RLDeploy_Init(void)
     }
     else
     {
-        rl_deploy_model_select = RL_POLICY_MODEL_STABLE;
-        rl_active_model = RL_POLICY_MODEL_STABLE;
+        rl_deploy_model_select = RL_POLICY_MODEL_UPSTAIRS;
+        rl_active_model = RL_POLICY_MODEL_UPSTAIRS;
     }
     rl_deploy_debug.requested_model = (uint8_t)rl_deploy_model_select;
     rl_deploy_debug.active_model = (uint8_t)rl_active_model;
