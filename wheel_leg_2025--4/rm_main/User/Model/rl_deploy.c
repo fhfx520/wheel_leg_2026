@@ -949,7 +949,7 @@ static void rl_build_observation(void)
     }
     else if (g_robot_ctx.output.chassis == CHASSIS_HIGH)
     {
-        rl_deploy_debug.command[2] = 0.30f * params->command_scale[2];
+        rl_deploy_debug.command[2] = 0.28f * params->command_scale[2];
     }
     else
     {

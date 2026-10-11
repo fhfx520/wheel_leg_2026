@@ -686,7 +686,7 @@ static void chassis_data_input(void)
 		}	
 		else
 		{ 
-			wlr.v_ref = (wlr.v_ref < -2.0f ? -2.0f : wlr.v_ref);
+			wlr.v_ref = (wlr.v_ref < -2.5f ? -2.5f : wlr.v_ref);
 		}
 	}
     
