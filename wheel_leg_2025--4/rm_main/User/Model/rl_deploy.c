@@ -162,11 +162,6 @@ static ChassisState_e rl_prev_chassis = CHASSIS_STOP;
 RLDeployLegState_t rl_left_leg;
 RLDeployLegState_t rl_right_leg;
 
-/* RL owns its wheel-speed filters.  Do not rely on the traditional wlr
- * feedback path being executed while RL control is active. */
-static kalman_filter_t rl_wheel_velocity_filter[2];
-static float rl_wheel_velocity_filtered[2];
-
 extern uint8_t rotate_ramp_flag;
 extern uint8_t rotate_stop_flag;
 
@@ -183,8 +178,8 @@ static const RLDeployModelParams_t rl_model_params[] = {
     {
         {-0.23f, -0.65f, 0.0f, 0.23f, 0.65f, 0.0f},
         {-0.23f, -0.65f, 0.23f, 0.65f},
-        {20.0f, 20.0f, 0.0f, 20.0f, 20.0f, 0.0f},
-        {1.0f, 1.0f, 0.2f, 1.0f, 1.0f, 0.2f},
+        {15.0f, 15.0f, 0.0f, 15.0f, 15.0f, 0.0f},
+        {1.0f, 1.0f, 0.1f, 1.0f, 1.0f, 0.1f},
         {2.0f, 0.25f, 5.0f}
     },
     /* Jump */
@@ -613,22 +608,6 @@ static void rl_clear_policy_runtime(void)
     rl_inference_divider = 0U;
 }
 
-static void rl_init_wheel_velocity_filters(void)
-{
-    uint32_t i;
-
-    for (i = 0U; i < 2U; ++i)
-    {
-        rl_wheel_velocity_filtered[i] = 0.0f;
-        kalman_filter_init(&rl_wheel_velocity_filter[i], 1, 0, 1);
-        rl_wheel_velocity_filter[i].A_data[0] = 1.0f;
-        rl_wheel_velocity_filter[i].H_data[0] = 1.0f;
-        rl_wheel_velocity_filter[i].Q_data[0] = 1.0f;
-        /* Match wlr's kal_3508_vel[] filter. */
-        rl_wheel_velocity_filter[i].R_data[0] = 200.0f;
-    }
-}
-
 static void rl_enter_numeric_fault(RLDeployNumericFaultStage_t stage)
 {
     if (!rl_deploy_debug.numeric_fault)
@@ -829,22 +808,10 @@ static void rl_update_joint_state(void)
 
     rl_deploy_debug.qd[RL_DOF_LF0] = left_thigh_velocity;
     rl_deploy_debug.qd[RL_DOF_LF1] = rl_left_leg.relative_phi3_dot;
-    /* Keep raw wheel speeds in qd[] so the policy observation remains
-     * unchanged.  The filtered copies are used only by the wheel PD below. */
     rl_deploy_debug.qd[RL_DOF_LW] = -driver_motor[0].velocity;
-    rl_wheel_velocity_filter[0].measured_vector[0] =
-        rl_deploy_debug.qd[RL_DOF_LW];
-    (void)kalman_filter_update(&rl_wheel_velocity_filter[0]);
-    rl_wheel_velocity_filtered[0] =
-        rl_wheel_velocity_filter[0].filter_vector[0];
     rl_deploy_debug.qd[RL_DOF_RF0] = right_thigh_velocity;
     rl_deploy_debug.qd[RL_DOF_RF1] = rl_right_leg.relative_phi3_dot;
-    rl_deploy_debug.qd[RL_DOF_RW] = -driver_motor[1].velocity;
-    rl_wheel_velocity_filter[1].measured_vector[0] =
-        rl_deploy_debug.qd[RL_DOF_RW];
-    (void)kalman_filter_update(&rl_wheel_velocity_filter[1]);
-    rl_wheel_velocity_filtered[1] =
-        rl_wheel_velocity_filter[1].filter_vector[0];
+    rl_deploy_debug.qd[RL_DOF_RW] = -driver_motor[1].velocity;;
 
     rl_deploy_debug.leg_jacobian[0] = rl_left_leg.jacobian_shank;
     rl_deploy_debug.leg_jacobian[1] = rl_left_leg.jacobian_thigh;
@@ -1027,7 +994,6 @@ static uint8_t rl_calculate_shadow_pd(void)
         const float action = rl_clip(rl_deploy_debug.actions[i], RL_DEPLOY_ACTION_CLIP);
         float position_offset = 0.0f;
         float velocity_target = 0.0f;
-        float velocity_feedback = rl_deploy_debug.qd[i];
         float torque;
 
         if ((i == RL_DOF_LF0) || (i == RL_DOF_LF1) ||
@@ -1038,15 +1004,6 @@ static uint8_t rl_calculate_shadow_pd(void)
         else
         {
             velocity_target = action * RL_DEPLOY_VELOCITY_ACTION_SCALE;
-
-            if (i == RL_DOF_LW)
-            {
-                velocity_feedback = rl_wheel_velocity_filtered[0];
-            }
-            else if (i == RL_DOF_RW)
-            {
-                velocity_feedback = rl_wheel_velocity_filtered[1];
-            }
         }
 
         rl_deploy_debug.action_clipped[i] = action;
@@ -1057,7 +1014,7 @@ static uint8_t rl_calculate_shadow_pd(void)
             params->p_gains[i] *
                 (rl_deploy_debug.target_q[i] - rl_deploy_debug.q[i]) +
             params->d_gains[i] *
-                (rl_deploy_debug.target_qd[i] - velocity_feedback);
+                (rl_deploy_debug.target_qd[i] - rl_deploy_debug.qd[i]);
 
         if (!isfinite(torque))
         {
@@ -1230,7 +1187,6 @@ void RLDeploy_Init(void)
     }
 
     memset(&rl_deploy_debug, 0, sizeof(rl_deploy_debug));
-    rl_init_wheel_velocity_filters();
     if (rl_model_is_valid(rl_deploy_model_select))
     {
         rl_active_model = rl_deploy_model_select;
