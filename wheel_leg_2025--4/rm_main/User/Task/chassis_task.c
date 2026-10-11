@@ -302,12 +302,12 @@ static void chassis_execute_fsm(void)
 	wlr.energy_flag = 0;
 	wlr.double_flag = 0;
 	if(g_robot_ctx.output.chassis != CHASSIS_STOP)
-//		wlr.ctrl_mode = ((g_robot_ctx.output.torque_source == CHASSIS_TORQUE_RL && !chassis.recover_flag) ? 1 : 2);
-		wlr.ctrl_mode = ((g_robot_ctx.output.torque_source == CHASSIS_TORQUE_RL) ? 1 : 2);
+		wlr.ctrl_mode = ((g_robot_ctx.output.torque_source == CHASSIS_TORQUE_RL && !chassis.recover_flag) ? 1 : 2);
+//		wlr.ctrl_mode = ((g_robot_ctx.output.torque_source == CHASSIS_TORQUE_RL) ? 1 : 2);
 	else
 		wlr.ctrl_mode = 0; 
     switch (g_robot_ctx.output.chassis) {
-        case CHASSIS_STOP:
+        case CHASSIS_STOP: 
 		{
             wlr.high_flag = 0;
             chassis_reset_special_flag();
@@ -686,7 +686,7 @@ static void chassis_data_input(void)
 		}	
 		else
 		{ 
-			wlr.v_ref = (wlr.v_ref < -1.5f ? -1.5f : wlr.v_ref);
+			wlr.v_ref = (wlr.v_ref < -2.0f ? -2.0f : wlr.v_ref);
 		}
 	}
     
