@@ -800,44 +800,44 @@
   ],
   "environment": {
     "generated_model": {
-      "generated_time": "2026-10-11T21:11:01+0800",
+      "generated_time": "2026-10-12T01:50:03+0800",
       "model_files": [
         {
           "name": "upstairs_data_params.h",
-          "signature": "0x75b3a1dfb0ebdc5f815c38ad65ef9e18"
+          "signature": "0x92633e983b6742e403ee7ce754387f46"
         },
         {
           "name": "upstairs_data_params.c",
-          "signature": "0x95f52eee3db4d16e5cca570d46791af6"
+          "signature": "0x77547d60848a0a51f0a10fd39470d9cd"
         },
         {
           "name": "upstairs_data.h",
-          "signature": "0xb7fc7df33c2abb526fe8d31110dc21a4"
+          "signature": "0xc16198d48f24a29d9e80366a0bd6e3c5"
         },
         {
           "name": "upstairs_data.c",
-          "signature": "0xcf8f49e88e29e58097e0fd543473eb13"
+          "signature": "0xf5c231c55296e42bd67b52ede171bd69"
         },
         {
           "name": "upstairs_config.h",
-          "signature": "0xe08e357ba82a17325979c5ecc878946f"
+          "signature": "0x064d8cb07aef60f26c68a771cb165072"
         },
         {
           "name": "upstairs.h",
-          "signature": "0x4721867b5d9d373bc6c9ef5745fad749"
+          "signature": "0xb04f38641bf7cfa30eabaf4f67963d23"
         },
         {
           "name": "upstairs.c",
-          "signature": "0xe8e318c53e8b7385dd1abcb327ea9163"
+          "signature": "0xc0e8e106ed8c470c6f9d91a151822f58"
         }
       ],
       "name": "upstairs"
     },
-    "network_signature": "0xd9bcaf9321e7c213",
+    "network_signature": "0x613669c669c8ddc5",
     "test_name": "",
     "tools": [
       {
-        "arguments": "generate --target stm32h7 --name upstairs -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/gas600_flat_accel_model_28200.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace16734321558450014079279079992153026 --output C:/Users/41077/.stm32cubemx/upstairs_output",
+        "arguments": "generate --target stm32h7 --name upstairs -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/gas600_flat_accel_model_28200.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace1840843762873006201076935203342779 --output C:/Users/41077/.stm32cubemx/upstairs_output",
         "environment": [
           "STATS_TYPE=X-CUBE-AI"
         ],
