@@ -688,9 +688,9 @@ void log_scope_data_pkg(void)
 	}
 	case 14: /* RL numeric fault diagnostics */
 	{
-		log_scope_get_data((float)rl_deploy_debug.numeric_fault);
-		log_scope_get_data((float)rl_deploy_debug.numeric_fault_stage);
-		log_scope_get_data((float)rl_deploy_debug.numeric_fault_count);
+		log_scope_get_data((float)rl_deploy_debug.command[0]);
+		log_scope_get_data((float)rl_deploy_debug.command[1]);
+		log_scope_get_data((float)rl_deploy_debug.command[2]);
 		log_scope_get_data((float)rl_deploy_debug.numeric_valid_streak);
 		log_scope_get_data((float)rl_deploy_debug.inference_ok);
 		log_scope_get_data((float)rl_deploy_debug.policy_ready);

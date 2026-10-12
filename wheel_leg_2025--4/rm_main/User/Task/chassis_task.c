@@ -546,11 +546,11 @@ static void chassis_data_input(void)
 					wlr.yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI ;
 					wlr.direction = 1;
 				}
-				else if(wlr.yaw_err < PI / 2 || wlr.yaw_err > - PI / 2 ) {
+				else {
 					wlr.direction = 0;
 				}
 			}
-			chassis_rotate_ramp.out =0;
+			chassis_rotate_ramp.out =0; 
             break;
         }
 //       case CHASSIS_ASCEND: {
@@ -607,7 +607,7 @@ static void chassis_data_input(void)
     if (wlr.yaw_ref < 0) wlr.yaw_ref += 2 * PI;
     else if (wlr.yaw_ref > 2 * PI) wlr.yaw_ref -= 2 * PI;
     
-    wlr.yaw_err = circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, (float)yaw_motor.ecd / 8192 * 2 * PI, 2 * PI);
+    wlr.yaw_err = circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, (float)yaw_motor.ecd / 8192 * 2 * PI, 2 * PI); 
     if (g_robot_ctx.output.chassis == CHASSIS_FIGHT)
         wlr.yaw_err = circle_error((float)CHASSIS_YAW_FIGHT / 8192 * 2 * PI, (float)yaw_motor.ecd / 8192 * 2 * PI, 2 * PI);
                 
@@ -682,11 +682,11 @@ static void chassis_data_input(void)
 	{
 		if(g_robot_ctx.output.chassis == CHASSIS_ASCEND && rl_deploy_debug.requested_model == 1)
 		{
-			wlr.v_ref = (wlr.v_ref < -2.0f ? -2.0f : wlr.v_ref);
+			data_limit(&wlr.v_ref, -2.0f , 2.0f );
 		}	
 		else
 		{ 
-			wlr.v_ref = (wlr.v_ref < -2.5f ? -2.5f : wlr.v_ref);
+			data_limit(&wlr.v_ref, -1.5f , 1.5f );
 		}
 	}
     

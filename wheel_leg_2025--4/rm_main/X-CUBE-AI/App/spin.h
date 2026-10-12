@@ -2,7 +2,7 @@
   ******************************************************************************
   * @file    spin.h
   * @author  AST Embedded Analytics Research Platform
-  * @date    2026-10-12T21:30:47+0800
+  * @date    2026-10-13T02:03:51+0800
   * @brief   AI Tool Automatic Code Generator for Embedded NN computing
   ******************************************************************************
   * @attention
@@ -23,7 +23,7 @@
 
 /******************************************************************************/
 #define AI_SPIN_MODEL_NAME          "spin"
-#define AI_SPIN_ORIGIN_MODEL_NAME   "oct12_030824_gas600_spin_ang13_from30200_model_30700"
+#define AI_SPIN_ORIGIN_MODEL_NAME   "model_30200"
 
 /******************************************************************************/
 #define AI_SPIN_ACTIVATIONS_ALIGNMENT   (4)
