@@ -68,6 +68,7 @@ extern kalman_filter_t tfmini_fn[2];
 #define RL_DEPLOY_REAL_TORQUE_LIMIT       100.0f
 #define RL_DEPLOY_PARALLEL_TORQUE_LIMIT   50.0f
 #define RL_DEPLOY_WHEEL_TORQUE_LIMIT      5.0f
+#define RL_DEPLOY_YAW_COMMAND_LPF_ALPHA   0.20f
 //#define RL_DEPLOY_LEFT_GAS_SPRING_K       520.1f 
 //#define RL_DEPLOY_RIGHT_GAS_SPRING_K      520.1f
 /* These are compensation coefficients (approximately N/m), not raw force. */
@@ -159,6 +160,7 @@ static uint8_t rl_remote_jump_complete_finished = 0U;
 static uint8_t  rl_spin_decel_active  = 0U;
 static ramp_t   rl_spin_decel_ramp;
 static ChassisState_e rl_prev_chassis = CHASSIS_STOP;
+static float rl_yaw_command_filtered = 0.0f;
 RLDeployLegState_t rl_left_leg;
 RLDeployLegState_t rl_right_leg;
 
@@ -606,6 +608,7 @@ static void rl_clear_policy_runtime(void)
     rl_zero_torque_outputs();
     rl_deploy_debug.history_initialized = 0U;
     rl_inference_divider = 0U;
+    rl_yaw_command_filtered = 0.0f;
 }
 
 static void rl_enter_numeric_fault(RLDeployNumericFaultStage_t stage)
@@ -864,6 +867,7 @@ float yaw_k = 5.0f;
 static void rl_build_observation(void)
 {
 	const RLDeployModelParams_t *params = rl_get_model_params();
+	float yaw_command_raw;
 	//roll pit yaw
     const float gyro[3] = {
         chassis_imu.wx,
@@ -888,14 +892,20 @@ static void rl_build_observation(void)
 
 	if (rl_active_model == RL_POLICY_MODEL_PIN)
     {
-        rl_deploy_debug.command[1] =
-           wlr.wz_ref * params->command_scale[1];
+        yaw_command_raw = wlr.wz_ref;
     }
     else
     {
-        rl_deploy_debug.command[1] =
-            yaw_k * circle_error(wlr.yaw_ref,wlr.yaw_fdb,2 * PI) * params->command_scale[1];
+        yaw_command_raw =
+            yaw_k * circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
     }
+
+    /* Filter only the existing yaw command.  This does not introduce an
+     * additional yaw-rate feedback loop. */
+    rl_yaw_command_filtered += RL_DEPLOY_YAW_COMMAND_LPF_ALPHA *
+        (yaw_command_raw - rl_yaw_command_filtered);
+    rl_deploy_debug.command[1] =
+        rl_yaw_command_filtered * params->command_scale[1];
 
     if ((rl_keyboard_jump_phase == RL_DEPLOY_JUMP_ACTIVE) ||
         (rl_remote_jump_phase == RL_DEPLOY_JUMP_ACTIVE))
