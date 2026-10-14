@@ -691,8 +691,8 @@ void log_scope_data_pkg(void)
 		log_scope_get_data((float)rl_deploy_debug.command[0]);
 		log_scope_get_data((float)rl_deploy_debug.command[1]);
 		log_scope_get_data((float)rl_deploy_debug.command[2]);
-		log_scope_get_data((float)rl_deploy_debug.numeric_valid_streak);
-		log_scope_get_data((float)rl_deploy_debug.inference_ok);
+		log_scope_get_data((float)wlr.high_set);
+		log_scope_get_data((float)wlr.wz_fdb);
 		log_scope_get_data((float)rl_deploy_debug.policy_ready);
 		log_scope_get_data((float)rl_deploy_debug.inference_fail_count);
 		log_scope_get_data((float)rl_deploy_debug.last_inference_us);

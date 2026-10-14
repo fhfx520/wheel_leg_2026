@@ -940,9 +940,9 @@ static void rl_build_observation(void)
     }
 	else if (g_robot_ctx.output.chassis == CHASSIS_LOW_SPIN)
     {
-		update_rotate_state();	
-		if(wlr.high_set < 0.18f)
-			wlr.high_set = 0.18f;
+		//模型加入气弹簧之后感觉这个可以改掉
+		if(wlr.high_set < 0.12f)
+			wlr.high_set = 0.12f;
 		else if(wlr.high_set > 0.30f)
 			wlr.high_set = 0.30f;
 
@@ -1231,6 +1231,14 @@ void RLDeploy_Step500Hz(void)
     rl_update_front_tof();
     rl_update_remote_model_selection();
     rl_update_keyboard_model_selection();
+	
+	 /* The legacy spin-height ramp was designed to advance at the 500 Hz
+     * chassis rate.  Keep it outside the inference divider; otherwise it
+     * advances only when a new policy observation is built (100 Hz). */
+	if (g_robot_ctx.output.chassis == CHASSIS_LOW_SPIN)
+	{
+		update_rotate_state();
+	}
     requested_model = rl_deploy_model_select;
     rl_deploy_debug.requested_model = (uint8_t)requested_model;
     if (rl_model_is_valid(requested_model) &&
