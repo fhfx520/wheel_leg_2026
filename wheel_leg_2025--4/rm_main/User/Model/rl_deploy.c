@@ -91,7 +91,6 @@ extern kalman_filter_t tfmini_fn[2];
 static float rl_deploy_left_gas_limit = RL_DEPLOY_GAS_NORMAL_LEFT_K;
 static float rl_deploy_right_gas_limit = RL_DEPLOY_GAS_NORMAL_RIGHT_K;
 
-
 enum
 {
     RL_DOF_LF0 = 0,
@@ -891,7 +890,7 @@ static void rl_build_observation(void)
 #endif 
 
 	if (rl_active_model == RL_POLICY_MODEL_PIN)
-    {
+	{
         yaw_command_raw = wlr.wz_ref;
     }
     else

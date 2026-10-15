@@ -262,7 +262,7 @@ static void chassis_init(void)
 
     ramp_init(&chassis_x_ramp, 0.0075f, -2.0f, 2.0f);
     ramp_init(&chassis_y_ramp, 0.0075f, -3.0f, 3.0f);
-    ramp_init(&chassis_rotate_ramp, 0.03f, -12.0f, 12.0f);
+    ramp_init(&chassis_rotate_ramp, 0.03f, -CHASSIS_ROTATE_SPEED, CHASSIS_ROTATE_SPEED);
 	ramp_init(&chassis_remote_ramp,0.06f,-3.0f,3.0f);
 
 	//基于虚拟杆角度控制
@@ -589,7 +589,7 @@ static void chassis_data_input(void)
             else
                 chassis_rotate_ramp.min = -CHASSIS_ROTATE_SPEED;
            //后面这里需要进行整合
-			wlr.wz_ref = ramp_calc(&chassis_rotate_ramp , -CHASSIS_ROTATE_SPEED);
+			wlr.wz_ref = ramp_calc(&chassis_rotate_ramp , (CHASSIS_ROTATE_DIRECTION * CHASSIS_ROTATE_SPEED));
             break;
         }
 		case CHASSIS_ENERGY:
@@ -635,7 +635,7 @@ static void chassis_data_input(void)
         if(spin_zero == 0) spin_zero = spin_limit;
         rotate_state_cnt++;
         
-		if(wlr.ctrl_mode == 2){
+		if(wlr.ctrl_mode == 2 ? (CHASSIS_ROTATE_DIRECTION * CHASSIS_WLR_ROTATE_DIRECTION) == -1 : (CHASSIS_ROTATE_DIRECTION * CHASSIS_RL_ROTATE_DIRECTION) == -1){
 			if(fabs(spin_zero) < PI / 2.0f  ) { 
                 
 				if( circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, wlr.yaw_fdb, 2 * PI) < 1.25f 
@@ -648,7 +648,7 @@ static void chassis_data_input(void)
 					rotate_ramp_flag = 0; spin_zero = 0; rotate_state_cnt = 0;
 				}
 			}
-        }else if(wlr.ctrl_mode == 1){
+        }else if(wlr.ctrl_mode == 2 ? (CHASSIS_ROTATE_DIRECTION * CHASSIS_WLR_ROTATE_DIRECTION) == 1 : (CHASSIS_ROTATE_DIRECTION * CHASSIS_RL_ROTATE_DIRECTION) == 1){
 			if(fabs(spin_zero) < PI / 2.0f  ) {     
 				if( circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, wlr.yaw_fdb, 2 * PI) > -1.25f 
 					&& circle_error((float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI, wlr.yaw_fdb, 2 * PI) < 0.0f && rotate_state_cnt > 50){
@@ -668,9 +668,9 @@ static void chassis_data_input(void)
         if(rotate_chassis_mode == CHASSIS_LOW_SPIN)
 		{
 			if(wlr.ctrl_mode == 2)
-				wlr.wz_ref = -12.0f/1.5f;  
+				wlr.wz_ref = CHASSIS_ROTATE_DIRECTION * 8.0f;  
 			else if(wlr.ctrl_mode == 1)
-				wlr.wz_ref = -5.0f;
+				wlr.wz_ref = CHASSIS_ROTATE_DIRECTION * 5.0f;
 		}
             
         wlr.yaw_ref = wlr.yaw_fdb;
