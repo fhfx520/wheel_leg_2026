@@ -69,6 +69,7 @@ extern kalman_filter_t tfmini_fn[2];
 #define RL_DEPLOY_PARALLEL_TORQUE_LIMIT   50.0f
 #define RL_DEPLOY_WHEEL_TORQUE_LIMIT      10.0f
 #define RL_DEPLOY_YAW_COMMAND_LPF_ALPHA   0.20f
+#define RL_DEPLOY_HEADING_SWITCH_LIMIT    0.80f
 //#define RL_DEPLOY_LEFT_GAS_SPRING_K       520.1f 
 //#define RL_DEPLOY_RIGHT_GAS_SPRING_K      520.1f
 /* These are compensation coefficients (approximately N/m), not raw force. */
@@ -160,6 +161,8 @@ static uint8_t  rl_spin_decel_active  = 0U;
 static ramp_t   rl_spin_decel_ramp;
 static ChassisState_e rl_prev_chassis = CHASSIS_STOP;
 static float rl_yaw_command_filtered = 0.0f;
+static float rl_heading_yaw_error_500hz = 0.0f;
+static uint8_t rl_heading_switch_active_500hz = 0U;
 RLDeployLegState_t rl_left_leg;
 RLDeployLegState_t rl_right_leg;
 
@@ -863,6 +866,32 @@ static void rl_update_projected_gravity(void)
     rl_deploy_debug.projected_gravity[2] = -cos_roll * cos_pitch;
 }
 float yaw_k = 5.0f;
+
+static void rl_update_heading_switch_500hz(void)
+{
+	rl_heading_switch_active_500hz =
+		(rl_active_model != RL_POLICY_MODEL_PIN) &&
+		(chassis.turn_back_flag ||
+		 ((g_robot_ctx.output.chassis == CHASSIS_ASCEND) && (wlr.direction == 1)) ||
+		 chassis.turn_fight_flag);
+
+	if (rl_active_model == RL_POLICY_MODEL_PIN)
+	{
+		/* PIN continues to use wlr.wz_ref in rl_build_observation(). */
+		rl_heading_yaw_error_500hz = 0.0f;
+		return;
+	}
+
+	rl_heading_yaw_error_500hz =
+		circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
+	if (rl_heading_switch_active_500hz)
+	{
+		data_limit(&rl_heading_yaw_error_500hz,
+			-RL_DEPLOY_HEADING_SWITCH_LIMIT,
+			 RL_DEPLOY_HEADING_SWITCH_LIMIT);
+	}
+}
+
 static void rl_build_observation(void)
 {
 	const RLDeployModelParams_t *params = rl_get_model_params();
@@ -889,14 +918,19 @@ static void rl_build_observation(void)
     }
 #endif 
 
+	/* WLR clears its displacement and velocity errors while changing heading. */
+	if (rl_heading_switch_active_500hz)
+	{
+		rl_deploy_debug.command[0] = 0.0f;
+	}
+
 	if (rl_active_model == RL_POLICY_MODEL_PIN)
 	{
         yaw_command_raw = wlr.wz_ref;
     }
     else
     {
-        yaw_command_raw =
-            yaw_k * circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
+		yaw_command_raw = yaw_k * rl_heading_yaw_error_500hz;
     }
 
     /* Filter only the existing yaw command.  This does not introduce an
@@ -1248,6 +1282,9 @@ void RLDeploy_Step500Hz(void)
         ++rl_deploy_debug.model_switch_count;
         rl_clear_policy_runtime();
     }
+
+	/* Keep heading-transition detection and yaw-error limiting at 500 Hz. */
+	rl_update_heading_switch_500hz();
 
     ++rl_deploy_debug.sample_count;
     rl_update_joint_state();
