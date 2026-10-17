@@ -13,6 +13,7 @@
 #include "math_lib.h"
 #include "control_def.h"
 #include "chassis_task.h"
+#include "prot_dr16.h"
 
 extern void update_rotate_state();
 /* The filters are created by wlr_init(); RL must update them because the
@@ -91,6 +92,7 @@ extern kalman_filter_t tfmini_fn[2];
 
 static float rl_deploy_left_gas_limit = RL_DEPLOY_GAS_NORMAL_LEFT_K;
 static float rl_deploy_right_gas_limit = RL_DEPLOY_GAS_NORMAL_RIGHT_K;
+float rl_yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
 
 enum
 {
@@ -195,6 +197,21 @@ static const RLDeployModelParams_t rl_model_params[] = {
         {3.0f, 0.25f, 5.0f}
     }
 };
+
+static uint8_t check_ch3_trigger(void)
+{
+	static int16_t last_ch3 = 0;
+	if(rc.ch3 <= -600 && last_ch3 > -600)
+	{
+		last_ch3 = rc.ch3;
+		return 1;
+	}
+	else
+	{
+		last_ch3 = rc.ch3;
+		return 0;
+	}
+}
 
 static uint8_t rl_model_is_valid(RLPolicyModel_t model)
 {
@@ -422,7 +439,7 @@ static void rl_update_remote_model_selection(void)
 		rl_remote_jump_complete_finished = 0U;
         rl_set_remote_gas_spring_compensation(RL_DEPLOY_JUMP_IDLE);
         (void)RLDeploy_SetModel(RL_POLICY_MODEL_UPSTAIRS);
-    }
+    }  
     else
     {
         rl_remote_jump_phase = RL_DEPLOY_JUMP_IDLE;
@@ -865,31 +882,41 @@ static void rl_update_projected_gravity(void)
     rl_deploy_debug.projected_gravity[1] = -sin_roll * cos_pitch;
     rl_deploy_debug.projected_gravity[2] = -cos_roll * cos_pitch;
 }
-float yaw_k = 5.0f;
+float yaw_k = 10.0f;
 
 static void rl_update_heading_switch_500hz(void)
 {
-	rl_heading_switch_active_500hz =
-		(rl_active_model != RL_POLICY_MODEL_PIN) &&
-		(chassis.turn_back_flag ||
-		 ((g_robot_ctx.output.chassis == CHASSIS_ASCEND) && (wlr.direction == 1)) ||
-		 chassis.turn_fight_flag);
+//	rl_heading_switch_active_500hz =
+//		(rl_active_model != RL_POLICY_MODEL_PIN) &&
+//		(chassis.turn_back_flag || ((g_robot_ctx.output.chassis == CHASSIS_ASCEND) && (wlr.direction == 1)) || chassis.turn_fight_flag);
 
-	if (rl_active_model == RL_POLICY_MODEL_PIN)
-	{
-		/* PIN continues to use wlr.wz_ref in rl_build_observation(). */
-		rl_heading_yaw_error_500hz = 0.0f;
-		return;
+		
+	
+	if( check_ch3_trigger() ){
+	rl_yaw_ref = ( (fabs(rl_yaw_ref - (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI  )< 1.0f) ? (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI - PI : (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI);
 	}
+	
+//	if (rl_active_model == RL_POLICY_MODEL_PIN)
+//	{
+//		/* PIN continues to use wlr.wz_ref in rl_build_observation(). */
+//		rl_heading_yaw_error_500hz = 0.0f;
+//		return;
+//	}
 
+//	rl_heading_yaw_error_500hz =
+//		circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
+	
 	rl_heading_yaw_error_500hz =
-		circle_error(wlr.yaw_ref, wlr.yaw_fdb, 2 * PI);
-	if (rl_heading_switch_active_500hz)
-	{
-		data_limit(&rl_heading_yaw_error_500hz,
-			-RL_DEPLOY_HEADING_SWITCH_LIMIT,
-			 RL_DEPLOY_HEADING_SWITCH_LIMIT);
-	}
+		circle_error(rl_yaw_ref, (float)yaw_motor.ecd / 8192 * 2 * PI, 2 * PI);	
+	
+	
+	
+//	if (rl_heading_switch_active_500hz)
+//	{
+//		data_limit(&rl_heading_yaw_error_500hz,
+//			-RL_DEPLOY_HEADING_SWITCH_LIMIT,
+//			 RL_DEPLOY_HEADING_SWITCH_LIMIT);
+//	}
 }
 
 static void rl_build_observation(void)
@@ -924,7 +951,7 @@ static void rl_build_observation(void)
 		rl_deploy_debug.command[0] = 0.0f;
 	}
 
-	if (rl_active_model == RL_POLICY_MODEL_PIN)
+	if ((rotate_flag == 1 || rotate_ramp_flag == 1))
 	{
         yaw_command_raw = wlr.wz_ref;
     }
@@ -935,8 +962,14 @@ static void rl_build_observation(void)
 
     /* Filter only the existing yaw command.  This does not introduce an
      * additional yaw-rate feedback loop. */
+	
+
     rl_yaw_command_filtered += RL_DEPLOY_YAW_COMMAND_LPF_ALPHA *
         (yaw_command_raw - rl_yaw_command_filtered);
+	
+	data_limit(&rl_yaw_command_filtered,-3.0f,3.0f);//限制旋转速度输入，避免超量程
+	
+	    
     rl_deploy_debug.command[1] =
         rl_yaw_command_filtered * params->command_scale[1];
 
@@ -983,7 +1016,7 @@ static void rl_build_observation(void)
     }
     else if (g_robot_ctx.output.chassis == CHASSIS_HIGH)
     {
-        rl_deploy_debug.command[2] = 0.28f * params->command_scale[2];
+        rl_deploy_debug.command[2] = 0.32f * params->command_scale[2];
     }
     else
     {
@@ -1062,7 +1095,7 @@ static uint8_t rl_calculate_shadow_pd(void)
         if (!isfinite(torque))
         {
             return 0U;
-        }
+        } 
 
         rl_deploy_debug.tau_virtual[i] =
             rl_clip(torque, RL_DEPLOY_VIRTUAL_TORQUE_LIMIT);
@@ -1142,15 +1175,13 @@ static uint8_t rl_calculate_shadow_motor_torques(void)
 
     rl_deploy_debug.tau_motor_raw[RL_DOF_LF0] = left_thigh;
     rl_deploy_debug.tau_motor_raw[RL_DOF_LF1] = left_shank;
-    rl_deploy_debug.tau_motor_raw[RL_DOF_LW] =
-        -rl_deploy_debug.tau_virtual[RL_DOF_LW];
+    rl_deploy_debug.tau_motor_raw[RL_DOF_LW] = -rl_deploy_debug.tau_virtual[RL_DOF_LW];
     rl_deploy_debug.tau_motor_raw[RL_DOF_RF0] = right_thigh;
     rl_deploy_debug.tau_motor_raw[RL_DOF_RF1] = right_shank;
-    rl_deploy_debug.tau_motor_raw[RL_DOF_RW] =
-        -rl_deploy_debug.tau_virtual[RL_DOF_RW];
+    rl_deploy_debug.tau_motor_raw[RL_DOF_RW] = -rl_deploy_debug.tau_virtual[RL_DOF_RW];
 
     for (i = 0U; i < RL_POLICY_ACTION_SIZE; ++i)
-    {
+    { 
         const float output_torque =
             rl_clip(rl_deploy_debug.tau_motor_raw[i], RL_DEPLOY_REAL_TORQUE_LIMIT);
         rl_deploy_debug.tau_motor_shadow[i] =
