@@ -7,6 +7,11 @@
 
 void CleanDCacheForDmaTx(const void *addr, uint32_t len)
 {
+    /* No cache maintenance is needed while D-Cache is disabled. */
+    if (addr == 0 || len == 0U || (SCB->CCR & SCB_CCR_DC_Msk) == 0U) {
+        return;
+    }
+
     uintptr_t start = (uintptr_t)addr;
     uintptr_t end   = start + len;
 	
@@ -22,6 +27,11 @@ void CleanDCacheForDmaTx(const void *addr, uint32_t len)
 
 void InvalidateDCacheForDmaRx(void *address, uint32_t length)
 {
+    /* No cache maintenance is needed while D-Cache is disabled. */
+    if (address == 0 || length == 0U || (SCB->CCR & SCB_CCR_DC_Msk) == 0U) {
+        return;
+    }
+
     uintptr_t start;
     uintptr_t end;
     uintptr_t start_aligned;

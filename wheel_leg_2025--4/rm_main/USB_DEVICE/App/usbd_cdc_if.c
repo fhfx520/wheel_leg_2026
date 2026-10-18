@@ -31,6 +31,9 @@
 /* Private macro -------------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+/* Preserve DMA alignment without editing CubeMX's generated definitions. */
+extern uint8_t UserRxBufferHS[APP_RX_DATA_SIZE] __attribute__((aligned(32)));
+extern uint8_t UserTxBufferHS[APP_TX_DATA_SIZE] __attribute__((aligned(32)));
 volatile uint8_t g_log_link_ready;
 volatile log_link_diag_t g_log_link_diag;
 static volatile uint8_t log_link_ack_needed;

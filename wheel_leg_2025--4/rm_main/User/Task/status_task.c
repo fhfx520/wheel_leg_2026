@@ -22,7 +22,7 @@ status_t status;
 
 void status_task(void const* argument)
 {
-//	MX_IWDG1_Init();
+	MX_IWDG1_Init();
     for(;;)
     {
         if (status.task.comm == 1 &&
@@ -34,7 +34,10 @@ void status_task(void const* argument)
             status.task.chassis = 0;
             status.task.shoot = 0;
             status.task.mode_switch = 0;
-            HAL_IWDG_Refresh(&hiwdg1);
+            /* The watchdog may be disabled during debugging. */
+            if (hiwdg1.Instance == IWDG1) {
+                HAL_IWDG_Refresh(&hiwdg1);
+            }
         }
 
         rc_fsm_init(rc.online);
