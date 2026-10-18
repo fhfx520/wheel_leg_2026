@@ -1,6 +1,6 @@
 ST Edge AI Core v2.2.0-20266 2adc00962
-Created date          : 2026-10-18 22:06:19
-Parameters            : generate --target stm32h7 --name jump -m D:/gitprogram/wheel_leg_2026/wheel_leg_2025--4/RL_policy/moving_jump_7500.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace252346317601008442914215395338955 --output C:/Users/41077/.stm32cubemx/jump_output
+Created date          : 2026-10-19 02:03:26
+Parameters            : generate --target stm32h7 --name jump -m D:/gitprogram/wheel_leg_2026/wheel_leg_2025--4/RL_policy/moving_jump_7500.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace394625920383003306254673647206762 --output C:/Users/41077/.stm32cubemx/jump_output
 
 Exec/report summary (generate)
 -----------------------------------------------------------------------------------------------------------
@@ -11,7 +11,7 @@ compression        :   none
 options            :   allocate-inputs, allocate-outputs                                                   
 optimization       :   time                                                                                
 target/series      :   stm32h7                                                                             
-workspace dir      :   C:\Users\41077\AppData\Local\Temp\mxAI_workspace252346317601008442914215395338955   
+workspace dir      :   C:\Users\41077\AppData\Local\Temp\mxAI_workspace394625920383003306254673647206762   
 output dir         :   C:\Users\41077\.stm32cubemx\jump_output                                             
 model_fmt          :   float                                                                               
 model_name         :   moving_jump_7500                                                                    
