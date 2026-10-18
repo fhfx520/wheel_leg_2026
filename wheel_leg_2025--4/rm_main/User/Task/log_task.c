@@ -12,6 +12,7 @@
 #include "prot_imu.h"
 #include "usbd_cdc_if.h"
 #include <string.h>
+#include "drv_lk_motor.h"
 
 extern osThreadId CommTaskHandle;
 extern osThreadId ModeSwitchTaskHandle;
@@ -344,22 +345,24 @@ static void log_snapshot(uint8_t channel, uint32_t *w)
         w[5] = (uint32_t)(driver_motor[0].tx_current);
         w[6] = (uint32_t)(driver_motor[0].send_cnt);
         w[7] = (uint32_t)(driver_motor[0].receive_cnt);
-        w[8] = (uint32_t)(fric_motor[0].online);
-        w[9] = (uint32_t)(fric_motor[0].state);
-        w[10] = (uint32_t)(fric_motor[0].ecd);
-        w[11] = (uint32_t)(fric_motor[0].speed_rpm);
-        w[12] = (uint32_t)(fric_motor[0].rx_current);
-        w[13] = (uint32_t)(fric_motor[0].tx_current);
-        w[14] = (uint32_t)(fric_motor[0].send_cnt);
-        w[15] = (uint32_t)(fric_motor[0].receive_cnt);
-        w[16] = (uint32_t)(fric_motor[1].online);
-        w[17] = (uint32_t)(fric_motor[1].state);
-        w[18] = (uint32_t)(fric_motor[1].ecd);
-        w[19] = (uint32_t)(fric_motor[1].speed_rpm);
-        w[20] = (uint32_t)(fric_motor[1].rx_current);
-        w[21] = (uint32_t)(fric_motor[1].tx_current);
-        w[22] = (uint32_t)(fric_motor[1].send_cnt);
-        w[23] = (uint32_t)(fric_motor[1].receive_cnt);
+        w[8] = (uint32_t)(driver_motor[1].online);
+        w[9] = (uint32_t)(driver_motor[1].state);
+        w[10] = (uint32_t)(driver_motor[1].ecd);
+        w[11] = (uint32_t)(driver_motor[1].speed_rpm);
+        w[12] = (uint32_t)(driver_motor[1].rx_current);
+        w[13] = (uint32_t)(driver_motor[1].tx_current);
+        w[14] = (uint32_t)(driver_motor[1].send_cnt);
+        w[15] = (uint32_t)(driver_motor[1].receive_cnt);
+	
+	    w[16] = (uint32_t)(trigger_motor.online);
+        w[17] = (uint32_t)(trigger_motor.err_code);
+        w[18] = (uint32_t)(trigger_motor.ecd);
+        w[19] = (uint32_t)(trigger_motor.speed_rpm);
+        w[20] = (uint32_t)(trigger_motor.rx_current);
+        w[21] = (uint32_t)(trigger_motor.tx_current);
+        w[22] = (uint32_t)(trigger_motor.send_cnt);
+        w[23] = (uint32_t)(trigger_motor.receive_cnt);
+		
         w[24] = (uint32_t)(yaw_motor.online);
         w[25] = (uint32_t)(yaw_motor.state);
         w[26] = (uint32_t)(yaw_motor.ecd);
@@ -370,38 +373,17 @@ static void log_snapshot(uint8_t channel, uint32_t *w)
         w[31] = (uint32_t)(yaw_motor.receive_cnt);
         break;
     case 8U: /* dm：索引定义见压力测试说明。 */
-        w[0] = (uint32_t)(pit_motor.online);
-//        w[1] = (uint32_t)(pit_motor.err_state);
-        w[2] = (uint32_t)(pit_motor.send_cnt);
-        w[3] = (uint32_t)(pit_motor.receive_cnt);
-        w[4] = (uint32_t)(pit_motor.last_rx_tick);
-//        w[5] = (uint32_t)(log_float_bits(pit_motor.p));
-//        w[6] = (uint32_t)(log_float_bits(pit_motor.v));
-//        w[7] = (uint32_t)(log_float_bits(pit_motor.kp));
-//        w[8] = (uint32_t)(log_float_bits(pit_motor.kd));
-        w[9] = (uint32_t)(log_float_bits(pit_motor.t));
-        w[10] = (uint32_t)(log_float_bits(pit_motor.position));
-        w[11] = (uint32_t)(log_float_bits(pit_motor.velocity));
-        w[12] = (uint32_t)(log_float_bits(pit_motor.torque));
-//        w[13] = (uint32_t)(trigger_motor_2325.online);
-//        w[14] = (uint32_t)(trigger_motor_2325.err_state);
-//        w[15] = (uint32_t)(trigger_motor_2325.send_cnt);
-//        w[16] = (uint32_t)(trigger_motor_2325.receive_cnt);
-//        w[17] = (uint32_t)(trigger_motor_2325.last_rx_tick);
-//        w[18] = (uint32_t)(log_float_bits(trigger_motor_2325.p));
-//        w[19] = (uint32_t)(log_float_bits(trigger_motor_2325.v));
-//        w[20] = (uint32_t)(log_float_bits(trigger_motor_2325.kp));
-//        w[21] = (uint32_t)(log_float_bits(trigger_motor_2325.kd));
-//        w[22] = (uint32_t)(log_float_bits(trigger_motor_2325.t));
-//        w[23] = (uint32_t)(log_float_bits(trigger_motor_2325.position));
-//        w[24] = (uint32_t)(log_float_bits(trigger_motor_2325.velocity));
-//        w[25] = (uint32_t)(log_float_bits(trigger_motor_2325.torque));
-        w[26] = (uint32_t)(log_float_bits(gimbal.yaw_angle.ref));
-        w[27] = (uint32_t)(log_float_bits(gimbal.yaw_angle.fdb));
-        w[28] = (uint32_t)(log_float_bits(gimbal.pit_angle.ref));
-        w[29] = (uint32_t)(log_float_bits(gimbal.pit_angle.fdb));
-        w[30] = (uint32_t)(log_float_bits(gimbal.yaw_output));
-        w[31] = (uint32_t)(log_float_bits(gimbal.pit_output));
+		for(uint8_t i = 0;i < 4;i++)
+		{
+			w[i*8+0] = (uint32_t)(log_float_bits(joint_motor[i].position));
+			w[i*8+1] = (uint32_t)(log_float_bits(joint_motor[i].velocity));
+			w[i*8+2] = (uint32_t)(log_float_bits(joint_motor[i].torque));
+			w[i*8+3] = (uint32_t)(joint_motor[i].send_cnt);
+			w[i*8+4] = (uint32_t)(joint_motor[i].receive_cnt);
+			w[i*8+5] = (uint32_t)(joint_motor[i].t);
+			w[i*8+6] = (uint32_t)(joint_motor[i].state);
+			w[i*8+7] = (uint32_t)(joint_motor[i].err_state);
+		}
         break;
     case 9U: /* imu：索引定义见压力测试说明。 */
         w[0] = (uint32_t)(log_float_bits(gimbal_imu.pit));
