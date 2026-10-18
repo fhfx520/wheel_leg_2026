@@ -2,7 +2,7 @@
   ******************************************************************************
   * @file    upstairs.h
   * @author  AST Embedded Analytics Research Platform
-  * @date    2026-10-16T02:00:36+0800
+  * @date    2026-10-18T18:40:56+0800
   * @brief   AI Tool Automatic Code Generator for Embedded NN computing
   ******************************************************************************
   * @attention
@@ -23,7 +23,7 @@
 
 /******************************************************************************/
 #define AI_UPSTAIRS_MODEL_NAME          "upstairs"
-#define AI_UPSTAIRS_ORIGIN_MODEL_NAME   "gas600_flat_accel_model_28200"
+#define AI_UPSTAIRS_ORIGIN_MODEL_NAME   "oct18_180550_gas600_flat_accel_yaw8_from27200_model_28200"
 
 /******************************************************************************/
 #define AI_UPSTAIRS_ACTIVATIONS_ALIGNMENT   (4)

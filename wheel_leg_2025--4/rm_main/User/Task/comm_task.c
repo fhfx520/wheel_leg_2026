@@ -33,8 +33,8 @@ void comm_task(void const* argument)
         osDelayUntil(&thread_wake_time, 1);		
         
         taskENTER_CRITICAL();
-//        lk_set_current(&trigger_motor);
-		dji_motor_output_data();
+        lk_set_current(&trigger_motor);
+//		dji_motor_output_data();
 		
          for (int i = 1; i < 4; i += 2){
             if( joint_motor[i].state == 0){
