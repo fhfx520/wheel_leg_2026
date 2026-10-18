@@ -28,6 +28,7 @@ LR_IROM1 0x08000000 0x00100000  {    ; load region size_region
     shoot_task.o (+RO)
     ui_task.o (+RO)
     container_task.o (+RO)
+    log_task.o (+RO)
    .ANY (+RW +ZI)
   }
 }

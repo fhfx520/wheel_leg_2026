@@ -30,6 +30,7 @@
 "rm_main\shoot_task.o"
 "rm_main\ui_task.o"
 "rm_main\container_task.o"
+"rm_main\log_task.o"
 "rm_main\can_comm.o"
 "rm_main\board_comm.o"
 "rm_main\usart_comm.o"
@@ -60,6 +61,9 @@
 "rm_main\func_generator.o"
 "rm_main\us_time.o"
 "rm_main\dcache_handle.o"
+"rm_main\fault_log.o"
+"rm_main\fault_log_port.o"
+"rm_main\log.o"
 "rm_main\system_stm32h7xx.o"
 "rm_main\stm32h7xx_hal_tim.o"
 "rm_main\stm32h7xx_hal_tim_ex.o"
@@ -148,7 +152,7 @@
 "rm_main\transformfunctions.o"
 "rm_main\transformfunctionsf16.o"
 "rm_main\windowfunctions.o"
---library_type=microlib --strict --scatter "rm_main\rm_main.sct"
+--library_type=microlib --strict --scatter "..\User\Log\fault_noinit.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
 --list ".\rm_main\rm_main.map" -o rm_main\rm_main.axf

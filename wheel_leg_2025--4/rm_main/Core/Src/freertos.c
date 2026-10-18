@@ -37,6 +37,8 @@
 #include "tim.h"
 #include "board_comm_task.h"
 #include "container_task.h"
+#include "log_task.h"
+#include "log.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -66,6 +68,7 @@ osThreadId UITaskHandle;
 osThreadId DebugTaskHandle;
 osThreadId BoardCommTaskHandle;
 osThreadId ContainerTaskHandle;
+osThreadId LogTaskHandle;
 /* USER CODE END Variables */
 osThreadId StartTaskHandle;
 
@@ -118,7 +121,7 @@ void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer, Stack
   */
 void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
-
+  LogEvent_Init();
   /* USER CODE END Init */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -173,6 +176,9 @@ void MX_FREERTOS_Init(void) {
   
   osThreadDef(ContainerTask, container_task, osPriorityLow, 0, 256);
   ContainerTaskHandle = osThreadCreate(osThread(ContainerTask), NULL);
+  
+  osThreadDef(LogTask, log_task, osPriorityLow, 0, 1024);
+  LogTaskHandle = osThreadCreate(osThread(LogTask), NULL);
   /* USER CODE END RTOS_THREADS */
 
 }

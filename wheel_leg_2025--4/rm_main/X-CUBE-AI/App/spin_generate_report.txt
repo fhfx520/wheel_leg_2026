@@ -1,6 +1,6 @@
 ST Edge AI Core v2.2.0-20266 2adc00962
-Created date          : 2026-10-16 02:01:20
-Parameters            : generate --target stm32h7 --name spin -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/gas600_spin_heightwave75_posture_model_33700.onnx --compression none --verbosity 1 --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace2710066453980005468030126002130997 --output C:/Users/41077/.stm32cubemx/spin_output
+Created date          : 2026-10-18 16:48:13
+Parameters            : generate --target stm32h7 --name spin -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/gas600_spin_heightwave75_posture_model_33700.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace615188445330016975799169036950559 --output C:/Users/41077/.stm32cubemx/spin_output
 
 Exec/report summary (generate)
 ----------------------------------------------------------------------------------------------------------------------------
@@ -9,9 +9,9 @@ type               :   onnx
 c_name             :   spin                                                                                                 
 compression        :   none                                                                                                 
 options            :   allocate-inputs, allocate-outputs                                                                    
-optimization       :   balanced                                                                                             
+optimization       :   time                                                                                                 
 target/series      :   stm32h7                                                                                              
-workspace dir      :   C:\Users\41077\AppData\Local\Temp\mxAI_workspace2710066453980005468030126002130997                   
+workspace dir      :   C:\Users\41077\AppData\Local\Temp\mxAI_workspace615188445330016975799169036950559                    
 output dir         :   C:\Users\41077\.stm32cubemx\spin_output                                                              
 model_fmt          :   float                                                                                                
 model_name         :   gas600_spin_heightwave75_posture_model_33700                                                         

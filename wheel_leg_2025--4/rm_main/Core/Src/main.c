@@ -37,6 +37,7 @@
 #include "can_comm.h"
 #include "usart_comm.h"
 #include "container.h"
+#include "fault_log.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -80,7 +81,7 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-
+  FaultLog_BootInit(); /* 早于 HAL_Init、清复位标志和其他保留区访问 */
   /* USER CODE END 1 */
 
   /* Enable the CPU Cache */

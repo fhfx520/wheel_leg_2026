@@ -24,6 +24,11 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "usart_comm.h"
+
+#define HardFault_Handler FaultLog_GeneratedHardFault_Handler
+#define MemManage_Handler FaultLog_GeneratedMemManage_Handler
+#define BusFault_Handler FaultLog_GeneratedBusFault_Handler
+#define UsageFault_Handler FaultLog_GeneratedUsageFault_Handler
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
