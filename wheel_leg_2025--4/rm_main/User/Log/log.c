@@ -111,9 +111,9 @@ uint8_t LogEvent_Post(const log_event_t *event)
 void LogEvent_Service(void)
 {
     static const char *const names[LOG_MODULE_COUNT] = {
-        "vision", "vtm", "gimbal_imu", "board",
-        "fric_right", "fric_left", "driver_0", "driver_1", "yaw", "dji_trigger",
-        "joint_0", "joint_1", "joint_2", "joint_3", "dm_trigger", "pit"
+        "judge", "remote", "chassis_imu", "board",
+        "supercap", "fric_left", "driver_0", "driver_1", "yaw", "dji_trigger",
+        "joint_0", "joint_1", "joint_2", "joint_3", "trigger", "pit"
     };
     log_event_t event;
     uint8_t result;

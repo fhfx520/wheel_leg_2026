@@ -1060,6 +1060,11 @@
               <FileType>1</FileType>
               <FilePath>..\User\Log\log.c</FilePath>
             </File>
+            <File>
+              <FileName>status_log.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Log\status_log.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
