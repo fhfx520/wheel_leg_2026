@@ -150,7 +150,7 @@ typedef enum
 } RLDeployJumpPhase_t;
 
 RLDeployDebug_t rl_deploy_debug;
-float rl_position_hold_kp = 0.8f;
+float rl_position_hold_kp = 0.0f;
 volatile RLPolicyModel_t rl_deploy_model_select = RL_POLICY_MODEL_UPSTAIRS;
 
 static uint8_t rl_deploy_initialized = 0U;
@@ -1063,7 +1063,7 @@ static void rl_build_observation(void)
     }
 	else if (g_robot_ctx.output.chassis == CHASSIS_LOW) 
     {
-        rl_deploy_debug.command[2] = 0.20f * params->command_scale[2];
+        rl_deploy_debug.command[2] = 0.14 f * params->command_scale[2];
     }
 	else if (g_robot_ctx.output.chassis == CHASSIS_LOW_SPIN)
     {
