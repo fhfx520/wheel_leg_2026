@@ -69,9 +69,17 @@ typedef struct
        right_thigh, right_shank, right_wheel]. */
     float tau_motor_raw[RL_POLICY_ACTION_SIZE];
     float tau_motor_shadow[RL_POLICY_ACTION_SIZE];
+
+    /* Wheel-odometry position hold; values are before command scaling. */
+    float position_hold_ref;       /* m */
+    float position_hold_fdb;       /* m */
+    float position_hold_error;     /* m */
+    float position_hold_velocity;  /* m/s */
+    uint8_t position_hold_active;
 } RLDeployDebug_t;
 
 extern RLDeployDebug_t rl_deploy_debug;
+extern float rl_position_hold_kp;
 
 /*
  * Keil Watch can write this variable directly:
@@ -88,6 +96,7 @@ extern volatile RLPolicyModel_t rl_deploy_model_select;
 void RLDeploy_Init(void);
 void RLDeploy_Step500Hz(void);
 void RLDeploy_ResetHistory(void);
+void RLDeploy_ResetPositionHold(void);
 uint8_t RLDeploy_SetModel(RLPolicyModel_t model);
 RLPolicyModel_t RLDeploy_GetModel(void);
 
