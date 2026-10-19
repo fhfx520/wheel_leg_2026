@@ -171,6 +171,9 @@ RLDeployLegState_t rl_right_leg;
 extern uint8_t rotate_ramp_flag;
 extern uint8_t rotate_stop_flag;
 
+//铝管歪难以维修，增加imu pitch偏置
+float pit_imu_offset = 0.0126602622f; 
+
 static const RLDeployModelParams_t rl_model_params[] = {
     /* Upstairs / MiniRecover */
     {
@@ -795,13 +798,13 @@ static void rl_update_joint_state(void)
 {
 	// 使left_thigh是RL_DEPLOY_THIGH_OFFSET
     const float left_thigh =
-        rl_wrap_to_pi(joint_motor[0].position - 2.32516670f - RL_DEPLOY_THIGH_OFFSET);
+        rl_wrap_to_pi(joint_motor[0].position - 2.35527134f - RL_DEPLOY_THIGH_OFFSET);
     const float left_shank =
-        rl_wrap_to_pi(joint_motor[1].position - 0.81340599f + RL_DEPLOY_SHANK_OFFSET);
+        rl_wrap_to_pi(joint_motor[1].position - 0.840439796f + RL_DEPLOY_SHANK_OFFSET);
     const float right_thigh =
-        rl_wrap_to_pi(joint_motor[2].position - 4.35992765f + RL_DEPLOY_THIGH_OFFSET);
+        rl_wrap_to_pi(joint_motor[2].position - 4.34823179f + RL_DEPLOY_THIGH_OFFSET);
     const float right_shank =
-        rl_wrap_to_pi(joint_motor[3].position - 1.30351830f - RL_DEPLOY_SHANK_OFFSET);
+        rl_wrap_to_pi(joint_motor[3].position - 1.32480526f - RL_DEPLOY_SHANK_OFFSET);
 
     const float left_thigh_velocity = joint_motor[0].velocity;
     const float left_shank_velocity = joint_motor[1].velocity;
@@ -871,7 +874,7 @@ static uint8_t rl_imu_state_is_valid(void)
 static void rl_update_projected_gravity(void)
 {
     const float roll = chassis_imu.rol;
-    const float pitch = -chassis_imu.pit;
+    const float pitch = -(chassis_imu.pit + pit_imu_offset);
     const float sin_roll = sinf(roll);
     const float cos_roll = cosf(roll);
     const float sin_pitch = sinf(pitch);
