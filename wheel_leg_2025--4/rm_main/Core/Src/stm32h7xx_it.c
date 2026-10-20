@@ -25,6 +25,7 @@
 /* USER CODE BEGIN Includes */
 #include "usart_comm.h"
 
+#define NMI_Handler FaultLog_GeneratedNMI_Handler
 #define HardFault_Handler FaultLog_GeneratedHardFault_Handler
 #define MemManage_Handler FaultLog_GeneratedMemManage_Handler
 #define BusFault_Handler FaultLog_GeneratedBusFault_Handler
