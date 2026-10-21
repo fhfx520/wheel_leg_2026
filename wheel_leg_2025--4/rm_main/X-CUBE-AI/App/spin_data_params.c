@@ -2,7 +2,7 @@
   ******************************************************************************
   * @file    spin_data_params.c
   * @author  AST Embedded Analytics Research Platform
-  * @date    2026-10-21T01:19:06+0800
+  * @date    2026-10-22T01:28:48+0800
   * @brief   AI Tool Automatic Code Generator for Embedded NN computing
   ******************************************************************************
   * Copyright (c) 2026 STMicroelectronics.

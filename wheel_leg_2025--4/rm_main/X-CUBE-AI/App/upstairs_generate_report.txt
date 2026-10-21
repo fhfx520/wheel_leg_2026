@@ -1,35 +1,35 @@
 ST Edge AI Core v2.2.0-20266 2adc00962
-Created date          : 2026-10-21 01:18:06
-Parameters            : generate --target stm32h7 --name upstairs -m D:/gitprogram/wheel_leg_2026/wheel_leg_2025--4/RL_policy/gas600_mix303040_v25_model_31000.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace20954267204490011596363307781675007 --output C:/Users/41077/.stm32cubemx/upstairs_output
+Created date          : 2026-10-22 01:28:07
+Parameters            : generate --target stm32h7 --name upstairs -m D:/gitprogram/wheel_leg_2026/wheel_leg_2025--4/RL_policy/gas600_posyaw5_v25_v3terrain500_model_29750.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace829930372694009238389814447005721 --output C:/Users/41077/.stm32cubemx/upstairs_output
 
 Exec/report summary (generate)
-------------------------------------------------------------------------------------------------------------------------
-model file         :   D:\gitprogram\wheel_leg_2026\wheel_leg_2025--4\RL_policy\gas600_mix303040_v25_model_31000.onnx   
-type               :   onnx                                                                                             
-c_name             :   upstairs                                                                                         
-compression        :   none                                                                                             
-options            :   allocate-inputs, allocate-outputs                                                                
-optimization       :   time                                                                                             
-target/series      :   stm32h7                                                                                          
-workspace dir      :   C:\Users\41077\AppData\Local\Temp\mxAI_workspace20954267204490011596363307781675007              
-output dir         :   C:\Users\41077\.stm32cubemx\upstairs_output                                                      
-model_fmt          :   float                                                                                            
-model_name         :   gas600_mix303040_v25_model_31000                                                                 
-model_hash         :   0x45ae7c66ebf74d9509207c40ac0d4b0e                                                               
-params #           :   38,825 items (151.66 KiB)                                                                        
-------------------------------------------------------------------------------------------------------------------------
-input 1/2          :   'obs', f32(1x25), 100 Bytes, activations                                                         
-input 2/2          :   'obs_history', f32(1x125), 500 Bytes, activations                                                
-inputs (total)     :   600 Bytes                                                                                        
-output 1/1         :   'actions', f32(1x6), 24 Bytes, activations                                                       
-macc               :   43,401                                                                                           
-weights (ro)       :   155,300 B (151.66 KiB) (1 segment)                                                               
-activations (rw)   :   1,112 B (1.09 KiB) (1 segment) *                                                                 
-ram (total)        :   1,112 B (1.09 KiB) = 1,112 + 0 + 0                                                               
-------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------
+model file         :   D:\gitprogram\wheel_leg_2026\wheel_leg_2025--4\RL_policy\gas600_posyaw5_v25_v3terrain500_model_29750.onnx   
+type               :   onnx                                                                                                        
+c_name             :   upstairs                                                                                                    
+compression        :   none                                                                                                        
+options            :   allocate-inputs, allocate-outputs                                                                           
+optimization       :   time                                                                                                        
+target/series      :   stm32h7                                                                                                     
+workspace dir      :   C:\Users\41077\AppData\Local\Temp\mxAI_workspace829930372694009238389814447005721                           
+output dir         :   C:\Users\41077\.stm32cubemx\upstairs_output                                                                 
+model_fmt          :   float                                                                                                       
+model_name         :   gas600_posyaw5_v25_v3terrain500_model_29750                                                                 
+model_hash         :   0x12daa757bbb7863c06774d848327693b                                                                          
+params #           :   38,825 items (151.66 KiB)                                                                                   
+-----------------------------------------------------------------------------------------------------------------------------------
+input 1/2          :   'obs', f32(1x25), 100 Bytes, activations                                                                    
+input 2/2          :   'obs_history', f32(1x125), 500 Bytes, activations                                                           
+inputs (total)     :   600 Bytes                                                                                                   
+output 1/1         :   'actions', f32(1x6), 24 Bytes, activations                                                                  
+macc               :   43,401                                                                                                      
+weights (ro)       :   155,300 B (151.66 KiB) (1 segment)                                                                          
+activations (rw)   :   1,112 B (1.09 KiB) (1 segment) *                                                                            
+ram (total)        :   1,112 B (1.09 KiB) = 1,112 + 0 + 0                                                                          
+-----------------------------------------------------------------------------------------------------------------------------------
 (*) 'input'/'output' buffers are allocated in the activations buffer
 
-Model name - gas600_mix303040_v25_model_31000
+Model name - gas600_posyaw5_v25_v3terrain500_model_29750
 ------ ---------------------------------------------------- --------------- --------------- -------- -------------------------------- --- --------------- ------------------ ------------------- 
 m_id   layer (type,original)                                oshape          param/size          macc                     connected to   | c_size          c_macc             c_type              
 ------ ---------------------------------------------------- --------------- --------------- -------- -------------------------------- --- --------------- ------------------ ------------------- 
@@ -104,7 +104,7 @@ model/c-model: macc=43,817/43,401 -416(-0.9%) weights=155,300/155,300  activatio
 
 Generated C-graph summary
 ------------------------------------------------------------------------------------------------------------------------
-model name            : gas600_mix303040_v25_model_31000
+model name            : gas600_posyaw5_v25_v3terrain500_model_29750
 c-name                : upstairs
 c-node #              : 13
 c-array #             : 29

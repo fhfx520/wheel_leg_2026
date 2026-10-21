@@ -687,7 +687,7 @@ static void chassis_data_input(void)
 		}	
 		else
 		{ 
-			data_limit(&wlr.v_ref, -2.5f , 2.5f );
+			data_limit(&wlr.v_ref, -2.0f , 2.0f );
 		}
 	}
     
