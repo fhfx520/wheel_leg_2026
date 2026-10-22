@@ -892,7 +892,7 @@ static void rl_update_projected_gravity(void)
     rl_deploy_debug.projected_gravity[1] = -sin_roll * cos_pitch;
     rl_deploy_debug.projected_gravity[2] = -cos_roll * cos_pitch;
 }
-float yaw_k = 10.0f;
+float yaw_k = 7.0f;
 
 static void rl_update_heading_switch_500hz(void)
 {
@@ -1028,7 +1028,7 @@ static void rl_build_observation(void)
     rl_yaw_command_filtered += RL_DEPLOY_YAW_COMMAND_LPF_ALPHA *
         (yaw_command_raw - rl_yaw_command_filtered);
 	
-	data_limit(&rl_yaw_command_filtered,-3.0f,3.0f);//限制旋转速度输入，避免超量程
+	data_limit(&rl_yaw_command_filtered,-6.0f,6.0f);//限制旋转速度输入，避免超量程
 	
 	    
     rl_deploy_debug.command[1] =
