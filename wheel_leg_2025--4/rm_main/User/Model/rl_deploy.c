@@ -25,13 +25,13 @@ extern kalman_filter_t tfmini_fn[2];
 #define RL_DEPLOY_FAULT_RECOVERY_RUNS     3U
 #define RL_DEPLOY_JUMP_CROUCH_CYCLES       2500U
 #define RL_DEPLOY_JUMP_ACTIVE_CYCLES       240U
-#define RL_DEPLOY_JUMP_COMPLETE_CYCLES     390U /* 400 ms at 500 Hz */
+#define RL_DEPLOY_JUMP_COMPLETE_CYCLES     150U /* 400 ms at 500 Hz */
 #define RL_DEPLOY_JUMP_RECOVERY_CYCLES     250U /* 500 ms at 500 Hz */
 #define RL_DEPLOY_JUMP_COMPLETE_LEG_LENGTH 0.32f
 #define RL_DEPLOY_JUMP_CROUCH_HEIGHT       0.14f
 #define RL_DEPLOY_JUMP_ACTIVE_HEIGHT       0.16f
 #define RL_DEPLOY_JUMP_COMPLETE_HEIGHT     0.18f
-#define RL_DEPLOY_JUMP_RECOVERY_HEIGHT     0.26f
+#define RL_DEPLOY_JUMP_RECOVERY_HEIGHT     0.24f
 #define RL_DEPLOY_NORMAL_HEIGHT            0.16f
 
 /*
@@ -80,19 +80,19 @@ extern kalman_filter_t tfmini_fn[2];
 /* These are compensation coefficients (approximately N/m), not raw force. */
 #define RL_DEPLOY_GAS_NORMAL_LEFT_K        0.0f
 #define RL_DEPLOY_GAS_NORMAL_RIGHT_K       0.0f
-#define RL_DEPLOY_GAS_CROUCH_LEFT_K        1000.0f
-#define RL_DEPLOY_GAS_CROUCH_RIGHT_K       1000.0f
+#define RL_DEPLOY_GAS_CROUCH_LEFT_K        0.0f
+#define RL_DEPLOY_GAS_CROUCH_RIGHT_K       0.0f
 
 //active和complete的过程的气弹簧力（T）和其他不同（T*L）
-#define RL_DEPLOY_GAS_JUMP_LEFT_K          -1000.0f
-#define RL_DEPLOY_GAS_JUMP_RIGHT_K         -1000.0f
+#define RL_DEPLOY_GAS_JUMP_LEFT_K          -400.0f
+#define RL_DEPLOY_GAS_JUMP_RIGHT_K         -400.0f
 
-#define RL_DEPLOY_GAS_COMPLETE_LEFT_K     500.0f
-#define RL_DEPLOY_GAS_COMPLETE_RIGHT_K    500.0f 
+#define RL_DEPLOY_GAS_COMPLETE_LEFT_K     0.0f
+#define RL_DEPLOY_GAS_COMPLETE_RIGHT_K    0.0f 
 
 /* Compensation used after switching back to Upstairs. */
-#define RL_DEPLOY_GAS_RECOVERY_LEFT_K     500.0f
-#define RL_DEPLOY_GAS_RECOVERY_RIGHT_K    500.0f
+#define RL_DEPLOY_GAS_RECOVERY_LEFT_K     0.0f
+#define RL_DEPLOY_GAS_RECOVERY_RIGHT_K    0.0f
 
 static float rl_deploy_left_gas_limit = RL_DEPLOY_GAS_NORMAL_LEFT_K;
 static float rl_deploy_right_gas_limit = RL_DEPLOY_GAS_NORMAL_RIGHT_K;
@@ -201,8 +201,8 @@ static const RLDeployModelParams_t rl_model_params[] = {
     {
         {0.2f, 0.4f, 0.0f, -0.2f, -0.4f, 0.0f},
         {0.2f, 0.4f, -0.2f, -0.4f},
-        {6.0f, 6.0f, 0.0f, 6.0f, 6.0f, 0.0f},
-        {0.5f, 0.5f, 0.2f, 0.5f, 0.5f, 0.2f},
+        {40.0f, 40.0f, 0.0f, 40.0f, 40.0f, 0.0f},
+        {1.5f, 1.5f, 0.2f, 1.5f, 1.5f, 0.2f},
         {3.0f, 0.25f, 5.0f}
     }
 };
