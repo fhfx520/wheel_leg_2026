@@ -28,7 +28,7 @@ extern kalman_filter_t tfmini_fn[2];
 #define RL_DEPLOY_JUMP_COMPLETE_CYCLES     150U /* 400 ms at 500 Hz */
 #define RL_DEPLOY_JUMP_RECOVERY_CYCLES     250U /* 500 ms at 500 Hz */
 #define RL_DEPLOY_JUMP_COMPLETE_LEG_LENGTH 0.32f
-#define RL_DEPLOY_JUMP_CROUCH_HEIGHT       0.14f
+#define RL_DEPLOY_JUMP_CROUCH_HEIGHT       0.12f
 #define RL_DEPLOY_JUMP_ACTIVE_HEIGHT       0.16f
 #define RL_DEPLOY_JUMP_COMPLETE_HEIGHT     0.18f
 #define RL_DEPLOY_JUMP_RECOVERY_HEIGHT     0.24f
@@ -80,8 +80,8 @@ extern kalman_filter_t tfmini_fn[2];
 /* These are compensation coefficients (approximately N/m), not raw force. */
 #define RL_DEPLOY_GAS_NORMAL_LEFT_K        0.0f
 #define RL_DEPLOY_GAS_NORMAL_RIGHT_K       0.0f
-#define RL_DEPLOY_GAS_CROUCH_LEFT_K        0.0f
-#define RL_DEPLOY_GAS_CROUCH_RIGHT_K       0.0f
+#define RL_DEPLOY_GAS_CROUCH_LEFT_K        200.0f
+#define RL_DEPLOY_GAS_CROUCH_RIGHT_K       200.0f
 
 //active和complete的过程的气弹簧力（T）和其他不同（T*L）
 #define RL_DEPLOY_GAS_JUMP_LEFT_K         -2500.0f 
