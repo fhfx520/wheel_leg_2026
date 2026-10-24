@@ -440,21 +440,21 @@ static void chassis_execute_fsm(void)
 		}
     }
 
-    if (g_robot_ctx.output.chassis == CHASSIS_HIGH) 
-       	chassis_scale.keyboard = 2.6f;
-    else
-        chassis_scale.keyboard = 2.0f;
-
-	if(g_robot_ctx.output.chassis == CHASSIS_ASCEND)
-	{
-		chassis_scale.keyboard = 1.8f;
-		chassis_scale.remote = 1.0f /660 * 2.0f;
-	}
-
 //    if (g_robot_ctx.output.chassis == CHASSIS_HIGH) 
-//		chassis_scale.remote = 1.0f / 660 * 2.6f;
-    else 
-		chassis_scale.remote = 1.0f /660 * 2.0f; 
+//       	chassis_scale.keyboard = 2.6f;
+//    else
+//        chassis_scale.keyboard = 2.0f;
+
+//	if(g_robot_ctx.output.chassis == CHASSIS_ASCEND)
+//	{
+//		chassis_scale.keyboard = 1.8f;
+//		chassis_scale.remote = 1.0f /660 * 2.0f;
+//	}
+
+////    if (g_robot_ctx.output.chassis == CHASSIS_HIGH) 
+////		chassis_scale.remote = 1.0f / 660 * 2.6f;
+//    else 
+//		chassis_scale.remote = 1.0f /660 * 2.0f; 
 }
 
 uint8_t rotate_ramp_flag; 
@@ -682,11 +682,11 @@ static void chassis_data_input(void)
 	{
 		if(g_robot_ctx.output.chassis == CHASSIS_ASCEND && rl_deploy_debug.requested_model == 1)
 		{
-			data_limit(&wlr.v_ref, -2.0f , 2.0f );
+			data_limit(&wlr.v_ref, -2.3f , 2.3f );
 		}	
 		else
 		{ 
-			data_limit(&wlr.v_ref, -2.5f , 2.5f );
+			data_limit(&wlr.v_ref, -2.3f , 2.3f );
 		}
 	}
     
