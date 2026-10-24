@@ -1,6 +1,6 @@
 ST Edge AI Core v2.2.0-20266 2adc00962
-Created date          : 2026-10-24 01:57:22
-Parameters            : generate --target stm32h7 --name spin -m D:/gitprogram/wheel_leg_2026/wheel_leg_2025--4/RL_policy/gas600_spin_heightwave75_posture_model_33700.onnx --compression none --verbosity 1 --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace997553866222003658048637896261849 --output C:/Users/41077/.stm32cubemx/spin_output
+Created date          : 2026-10-24 17:53:35
+Parameters            : generate --target stm32h7 --name spin -m D:/gitprogram/wheel_leg_2026/wheel_leg_2025--4/RL_policy/gas600_spin_heightwave75_posture_model_33700.onnx --compression none --verbosity 1 --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace1571308754523002423140797815331205 --output C:/Users/41077/.stm32cubemx/spin_output
 
 Exec/report summary (generate)
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -11,7 +11,7 @@ compression        :   none
 options            :   allocate-inputs, allocate-outputs                                                                            
 optimization       :   balanced                                                                                                     
 target/series      :   stm32h7                                                                                                      
-workspace dir      :   C:\Users\41077\AppData\Local\Temp\mxAI_workspace997553866222003658048637896261849                            
+workspace dir      :   C:\Users\41077\AppData\Local\Temp\mxAI_workspace1571308754523002423140797815331205                           
 output dir         :   C:\Users\41077\.stm32cubemx\spin_output                                                                      
 model_fmt          :   float                                                                                                        
 model_name         :   gas600_spin_heightwave75_posture_model_33700                                                                 

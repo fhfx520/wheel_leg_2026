@@ -744,7 +744,7 @@ STMicroelectronics.X-CUBE-AI.10.2.0.ModelFlashOccupation-65ba9167f52b88024247316
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelFlashOccupation-80c5cdd33a7f4837fd7233aeb24736476d23b4e0544a3459cdf080129d69a9f9=169708
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelFlashOccupation-c3c6633614c724179bd6b721c81779c24b59d2c057c81e06f8ae10d8ed7f170e=169708
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelFlashOccupation-de366b8e2171cedd93639f054f50b89032c0165d6df4e9647bc5acc9507e1015=169708
-STMicroelectronics.X-CUBE-AI.10.2.0.ModelHashList=de366b8e2171cedd93639f054f50b89032c0165d6df4e9647bc5acc9507e1015;65ba9167f52b88024247316d1f8d2e08e495c090d91ae9748d6f74e10628f11b
+STMicroelectronics.X-CUBE-AI.10.2.0.ModelHashList=de366b8e2171cedd93639f054f50b89032c0165d6df4e9647bc5acc9507e1015;65ba9167f52b88024247316d1f8d2e08e495c090d91ae9748d6f74e10628f11b;45539428eee8df40591f9f2b829c4492f943fdc5479025cbd30707125d2c6ba7
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelKind-2db4c4df6f09b59ac1476fcc4dfdf56c9d93ec67dab5fd40cdbe81a66920bd53=ONNX
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelKind-45539428eee8df40591f9f2b829c4492f943fdc5479025cbd30707125d2c6ba7=ONNX
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelKind-65ba9167f52b88024247316d1f8d2e08e495c090d91ae9748d6f74e10628f11b=ONNX
@@ -763,7 +763,7 @@ STMicroelectronics.X-CUBE-AI.10.2.0.ModelName-65ba9167f52b88024247316d1f8d2e08e4
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelName-80c5cdd33a7f4837fd7233aeb24736476d23b4e0544a3459cdf080129d69a9f9=spin
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelName-c3c6633614c724179bd6b721c81779c24b59d2c057c81e06f8ae10d8ed7f170e=spin
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelName-de366b8e2171cedd93639f054f50b89032c0165d6df4e9647bc5acc9507e1015=upstairs
-STMicroelectronics.X-CUBE-AI.10.2.0.ModelNameList=upstairs,jump
+STMicroelectronics.X-CUBE-AI.10.2.0.ModelNameList=upstairs,jump,spin
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelRamOccupation-2db4c4df6f09b59ac1476fcc4dfdf56c9d93ec67dab5fd40cdbe81a66920bd53=5044
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelRamOccupation-45539428eee8df40591f9f2b829c4492f943fdc5479025cbd30707125d2c6ba7=5044
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelRamOccupation-65ba9167f52b88024247316d1f8d2e08e495c090d91ae9748d6f74e10628f11b=5044
@@ -772,7 +772,7 @@ STMicroelectronics.X-CUBE-AI.10.2.0.ModelRamOccupation-c3c6633614c724179bd6b721c
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelRamOccupation-de366b8e2171cedd93639f054f50b89032c0165d6df4e9647bc5acc9507e1015=5044
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelStructureFile-2db4c4df6f09b59ac1476fcc4dfdf56c9d93ec67dab5fd40cdbe81a66920bd53=D\:\\gitprogram\\wheel_leg_2026\\wheel_leg_2025--4\\RL_policy\\gas600_spin_heightwave75_posture_model_33700.onnx
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelStructureFile-45539428eee8df40591f9f2b829c4492f943fdc5479025cbd30707125d2c6ba7=D\:\\gitprogram\\wheel_leg_2026\\wheel_leg_2025--4\\RL_policy\\gas600_spin_heightwave75_posture_model_33700.onnx
-STMicroelectronics.X-CUBE-AI.10.2.0.ModelStructureFile-65ba9167f52b88024247316d1f8d2e08e495c090d91ae9748d6f74e10628f11b=D\:\\gitprogram\\wheel_leg_2026\\wheel_leg_2025--4\\RL_policy\\gas600_jump_model_2500_pd40_kd1p5.onnx
+STMicroelectronics.X-CUBE-AI.10.2.0.ModelStructureFile-65ba9167f52b88024247316d1f8d2e08e495c090d91ae9748d6f74e10628f11b=D\:\\gitprogram\\wheel_leg_2026\\wheel_leg_2025--4\\RL_policy\\gas600_jump_model_3400_pd40_kd1p5.onnx
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelStructureFile-80c5cdd33a7f4837fd7233aeb24736476d23b4e0544a3459cdf080129d69a9f9=D\:\\gitprogram\\wheel_leg_2026\\wheel_leg_2025--4\\RL_policy\\gas600_spin_heightwave75_posture_model_33700.onnx
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelStructureFile-c3c6633614c724179bd6b721c81779c24b59d2c057c81e06f8ae10d8ed7f170e=D\:\\gitprogram\\wheel_leg_2026\\wheel_leg_2025--4\\RL_policy\\gas600_spin_heightwave75_posture_model_33700.onnx
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelStructureFile-de366b8e2171cedd93639f054f50b89032c0165d6df4e9647bc5acc9507e1015=D\:\\gitprogram\\wheel_leg_2026\\wheel_leg_2025--4\\RL_policy\\gas600_flat_accel80_model_31750.onnx
@@ -784,7 +784,7 @@ STMicroelectronics.X-CUBE-AI.10.2.0.ModelType-c3c6633614c724179bd6b721c81779c24b
 STMicroelectronics.X-CUBE-AI.10.2.0.ModelType-de366b8e2171cedd93639f054f50b89032c0165d6df4e9647bc5acc9507e1015=STM32Cube.AI MCU runtime
 STMicroelectronics.X-CUBE-AI.10.2.0.ReadyForCodeGeneration=true
 STMicroelectronics.X-CUBE-AI.10.2.0.StackSize=0x3000
-STMicroelectronics.X-CUBE-AI.10.2.0.WorkingBufferStartAddrList=0xFFFFFFFF,0xFFFFFFFF
+STMicroelectronics.X-CUBE-AI.10.2.0.WorkingBufferStartAddrList=0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF
 STMicroelectronics.X-CUBE-AI.10.2.0.XAaCUBEAaAICcArtificialOoIntelligenceJjCore=true
 STMicroelectronics.X-CUBE-AI.10.2.0.copyWeightToRam=false
 STMicroelectronics.X-CUBE-AI.10.2.0.copyWeightToRam-2db4c4df6f09b59ac1476fcc4dfdf56c9d93ec67dab5fd40cdbe81a66920bd53=false

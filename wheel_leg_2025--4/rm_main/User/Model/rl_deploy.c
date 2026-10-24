@@ -84,11 +84,11 @@ extern kalman_filter_t tfmini_fn[2];
 #define RL_DEPLOY_GAS_CROUCH_RIGHT_K       0.0f
 
 //active和complete的过程的气弹簧力（T）和其他不同（T*L）
-#define RL_DEPLOY_GAS_JUMP_LEFT_K          -400.0f
-#define RL_DEPLOY_GAS_JUMP_RIGHT_K         -400.0f
+#define RL_DEPLOY_GAS_JUMP_LEFT_K         -2500.0f 
+#define RL_DEPLOY_GAS_JUMP_RIGHT_K        -2500.0f 
 
-#define RL_DEPLOY_GAS_COMPLETE_LEFT_K     0.0f
-#define RL_DEPLOY_GAS_COMPLETE_RIGHT_K    0.0f 
+#define RL_DEPLOY_GAS_COMPLETE_LEFT_K      400.0f
+#define RL_DEPLOY_GAS_COMPLETE_RIGHT_K     400.0f
 
 /* Compensation used after switching back to Upstairs. */
 #define RL_DEPLOY_GAS_RECOVERY_LEFT_K     0.0f
@@ -399,7 +399,7 @@ static void rl_update_remote_model_selection(void)
              * The old active-cycle limit remains as a safety timeout so a bad
              * sensor/geometry value cannot leave Jump active indefinitely.
              */
-            if ((rl_left_leg.l0 > RL_DEPLOY_JUMP_COMPLETE_LEG_LENGTH) ||
+            if ((rl_left_leg.l0 > RL_DEPLOY_JUMP_COMPLETE_LEG_LENGTH) || (rl_right_leg.l0 > RL_DEPLOY_JUMP_COMPLETE_LEG_LENGTH) ||
                 (rl_remote_jump_cycles >= RL_DEPLOY_JUMP_ACTIVE_CYCLES))
             {
                 rl_remote_jump_phase = RL_DEPLOY_JUMP_COMPLETE;

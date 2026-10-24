@@ -800,44 +800,44 @@
   ],
   "environment": {
     "generated_model": {
-      "generated_time": "2026-10-24T01:56:35+0800",
+      "generated_time": "2026-10-24T17:52:45+0800",
       "model_files": [
         {
           "name": "upstairs_data_params.h",
-          "signature": "0xea82eceb8df9711deef08ec66c4802f3"
+          "signature": "0x33cc58a11c7901c0c92be41b1f984e73"
         },
         {
           "name": "upstairs_data_params.c",
-          "signature": "0xc05da2fcb0f27af85252707c3ca55bc7"
+          "signature": "0x13ca58178b8d187734e1d9eaa6303c93"
         },
         {
           "name": "upstairs_data.h",
-          "signature": "0x85634c106a7989894adac9f50e221f08"
+          "signature": "0xca52f9bfd53d43b3a01901ad8d197513"
         },
         {
           "name": "upstairs_data.c",
-          "signature": "0x6d5ea5348e49f4c30214815ad9d9ae47"
+          "signature": "0x70e85e8612c0cc46a1f71b0fc39b2a5b"
         },
         {
           "name": "upstairs_config.h",
-          "signature": "0x82ae4b12bbf22f5d8943d5545317c4d6"
+          "signature": "0xec8710d8a3a0708b9eff88ac22be2651"
         },
         {
           "name": "upstairs.h",
-          "signature": "0x26aa2f320945fe4f33ddbddc379ba881"
+          "signature": "0xeae6c933f8dc70d38405019b80d39d73"
         },
         {
           "name": "upstairs.c",
-          "signature": "0x268258113c78b31bd39668fe6789a5b8"
+          "signature": "0xa74ab24b5f1845717a03400bd01d70c2"
         }
       ],
       "name": "upstairs"
     },
-    "network_signature": "0x012ca9a2c0872d5c",
+    "network_signature": "0xf1caf4a80e8d32c6",
     "test_name": "",
     "tools": [
       {
-        "arguments": "generate --target stm32h7 --name upstairs -m D:/gitprogram/wheel_leg_2026/wheel_leg_2025--4/RL_policy/gas600_flat_accel80_model_31750.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace9970756356910010386763744107273591 --output C:/Users/41077/.stm32cubemx/upstairs_output",
+        "arguments": "generate --target stm32h7 --name upstairs -m D:/gitprogram/wheel_leg_2026/wheel_leg_2025--4/RL_policy/gas600_flat_accel80_model_31750.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace15707952041420017925645405895201931 --output C:/Users/41077/.stm32cubemx/upstairs_output",
         "environment": [
           "STATS_TYPE=X-CUBE-AI"
         ],
