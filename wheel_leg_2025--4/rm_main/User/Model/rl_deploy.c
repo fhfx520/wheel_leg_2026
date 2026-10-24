@@ -47,7 +47,7 @@ extern kalman_filter_t tfmini_fn[2];
 #define RL_DEPLOY_AUTO_JUMP_SPEED_ENABLE   0U
 #define RL_DEPLOY_AUTO_JUMP_SPEED         (-2.0f)
 #define RL_DEPLOY_AUTO_JUMP_TOF_ENABLE     1U
-#define RL_DEPLOY_AUTO_JUMP_TOF_DISTANCE   0.85f
+#define RL_DEPLOY_AUTO_JUMP_TOF_DISTANCE   0.90f
 #define RL_DEPLOY_AUTO_JUMP_TOF_MIN_CYCLES 400U
 
 #define RL_DEPLOY_PI                      3.14159265358979323846f
