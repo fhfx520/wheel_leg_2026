@@ -286,7 +286,6 @@ static void chassis_init(void)
 	
 	#ifdef AI_CONTROL
     RLDeploy_Init();
-    RLDeploy_ResetPositionHold();
 	#endif
 	
     FGT_sin_init (&FGT_sin_chassis,2,0,6000,7.0f,0,7.0f,-0.0f);
@@ -1139,15 +1138,7 @@ static void chassis_data_output(void)
 
 void chassis_control(void)
 {
-    if (wlr.ctrl_mode == 1)
-    {
-        RLDeploy_Step500Hz();
-    }
-    else
-    {
-        RLDeploy_ResetPositionHold();
-        wlr_control();
-    }
+	return (wlr.ctrl_mode == 1 ? RLDeploy_Step500Hz() : wlr_control());
 }
 
 void chassis_set_container(void)

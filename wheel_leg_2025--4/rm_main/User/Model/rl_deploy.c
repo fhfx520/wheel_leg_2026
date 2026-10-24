@@ -71,10 +71,6 @@ extern kalman_filter_t tfmini_fn[2];
 #define RL_DEPLOY_WHEEL_TORQUE_LIMIT      10.0f
 #define RL_DEPLOY_YAW_COMMAND_LPF_ALPHA   0.20f
 #define RL_DEPLOY_HEADING_SWITCH_LIMIT    0.80f
-
-/* Wheel odometry and stop-position control at 500 Hz. */
-#define RL_DEPLOY_WHEEL_RADIUS              0.055f /* m */
-#define RL_DEPLOY_POSITION_HOLD_SPEED_STEP   0.001f /* 0.5 m/s^2 at 500 Hz */
 //#define RL_DEPLOY_LEFT_GAS_SPRING_K       520.1f 
 //#define RL_DEPLOY_RIGHT_GAS_SPRING_K      520.1f
 /* These are compensation coefficients (approximately N/m), not raw force. */
@@ -150,7 +146,6 @@ typedef enum
 } RLDeployJumpPhase_t;
 
 RLDeployDebug_t rl_deploy_debug;
-float rl_position_hold_kp = 0.0f;
 volatile RLPolicyModel_t rl_deploy_model_select = RL_POLICY_MODEL_UPSTAIRS;
 
 static uint8_t rl_deploy_initialized = 0U;
@@ -168,7 +163,6 @@ static uint8_t  rl_spin_decel_active  = 0U;
 static ramp_t   rl_spin_decel_ramp;
 static ChassisState_e rl_prev_chassis = CHASSIS_STOP;
 static float rl_yaw_command_filtered = 0.0f;
-static float rl_velocity_command = 0.0f;
 static float rl_heading_yaw_error_500hz = 0.0f;
 static uint8_t rl_heading_switch_active_500hz = 0U;
 RLDeployLegState_t rl_left_leg;
@@ -637,7 +631,6 @@ static void rl_clear_policy_runtime(void)
     rl_deploy_debug.history_initialized = 0U;
     rl_inference_divider = 0U;
     rl_yaw_command_filtered = 0.0f;
-    RLDeploy_ResetPositionHold();
 }
 
 static void rl_enter_numeric_fault(RLDeployNumericFaultStage_t stage)
@@ -929,57 +922,6 @@ static void rl_update_heading_switch_500hz(void)
 //	}
 }
 
-void RLDeploy_ResetPositionHold(void)
-{
-    rl_velocity_command = 0.0f;
-    rl_deploy_debug.position_hold_ref = 0.0f;
-    rl_deploy_debug.position_hold_error = 0.0f;
-    rl_deploy_debug.position_hold_velocity = 0.0f;
-    rl_deploy_debug.position_hold_active = 0U;
-}
-
-static void rl_update_position_hold_500hz(void)
-{
-    const ChassisState_e state = g_robot_ctx.output.chassis;
-    const float position = (-driver_motor[0].position + driver_motor[1].position) *
-                           RL_DEPLOY_WHEEL_RADIUS * 0.5f;
-    float velocity_ref = ((state == CHASSIS_FIGHT) || (state == CHASSIS_LOW_SPIN)) ?
-                         chassis.output.vy : rl_clip(chassis.output.vx, 2.0f);
-    float velocity_target;
-
-    if (rotate_stop_flag) velocity_ref = 0.0f;
-    rl_deploy_debug.position_hold_fdb = position;
-
-    if (!isfinite(position) || !isfinite(velocity_ref) ||
-        !g_robot_ctx.is_online || rl_deploy_debug.numeric_fault ||
-        (fabsf(velocity_ref) >= 1.0e-3f) ||
-        (rl_active_model != RL_POLICY_MODEL_UPSTAIRS) ||
-        ((state != CHASSIS_LOW) && (state != CHASSIS_HIGH) && (state != CHASSIS_FIGHT)) ||
-        (rl_keyboard_jump_phase != RL_DEPLOY_JUMP_IDLE) ||
-        (rl_remote_jump_phase != RL_DEPLOY_JUMP_IDLE) ||
-        rotate_ramp_flag || rotate_stop_flag)
-    {
-        RLDeploy_ResetPositionHold();
-        rl_velocity_command = velocity_ref;
-        return;
-    }
-
-    if (!rl_deploy_debug.position_hold_active)
-    {
-        rl_deploy_debug.position_hold_ref = position;
-        rl_deploy_debug.position_hold_active = 1U;
-    }
-
-    rl_deploy_debug.position_hold_error =
-        rl_deploy_debug.position_hold_ref - position;
-    velocity_target = rl_clip(rl_position_hold_kp * rl_deploy_debug.position_hold_error,
-                              0.3f);
-    rl_deploy_debug.position_hold_velocity += rl_clip(
-        velocity_target - rl_deploy_debug.position_hold_velocity,
-        RL_DEPLOY_POSITION_HOLD_SPEED_STEP);
-    rl_velocity_command = rl_deploy_debug.position_hold_velocity;
-}
-
 static void rl_build_observation(void)
 {
 	const RLDeployModelParams_t *params = rl_get_model_params();
@@ -994,7 +936,7 @@ static void rl_build_observation(void)
     uint32_t i;
 	
     rl_deploy_debug.command[0] =
-        rl_velocity_command * params->command_scale[0];
+	(wlr.v_ref) * params->command_scale[0];
 
 #if RL_DEPLOY_AUTO_JUMP_SPEED_ENABLE
     /* In automatic mode use the same forward speed used by the released
@@ -1322,7 +1264,6 @@ void RLDeploy_Init(void)
     }
 
     memset(&rl_deploy_debug, 0, sizeof(rl_deploy_debug));
-    RLDeploy_ResetPositionHold();
     if (rl_model_is_valid(rl_deploy_model_select))
     {
         rl_active_model = rl_deploy_model_select;
@@ -1393,8 +1334,6 @@ void RLDeploy_Step500Hz(void)
         rl_enter_numeric_fault(RL_DEPLOY_NUMERIC_FAULT_IMU_STATE);
         return;
     }
-
-    rl_update_position_hold_500hz();
 
     ++rl_inference_divider;
     if (rl_inference_divider < RL_DEPLOY_INFERENCE_DIVIDER)
