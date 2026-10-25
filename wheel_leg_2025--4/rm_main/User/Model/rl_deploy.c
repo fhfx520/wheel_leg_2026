@@ -47,7 +47,7 @@ extern kalman_filter_t tfmini_fn[2];
 #define RL_DEPLOY_AUTO_JUMP_SPEED_ENABLE   0U
 #define RL_DEPLOY_AUTO_JUMP_SPEED         (-2.0f)
 #define RL_DEPLOY_AUTO_JUMP_TOF_ENABLE     1U
-#define RL_DEPLOY_AUTO_JUMP_TOF_DISTANCE   0.75f
+#define RL_DEPLOY_AUTO_JUMP_TOF_DISTANCE   0.80f
 #define RL_DEPLOY_AUTO_JUMP_TOF_MIN_CYCLES 400U
 
 #define RL_DEPLOY_PI                      3.14159265358979323846f
@@ -75,9 +75,9 @@ extern kalman_filter_t tfmini_fn[2];
 //#define RL_DEPLOY_RIGHT_GAS_SPRING_K      520.1f
 /* These are compensation coefficients (approximately N/m), not raw force. */
 #define RL_DEPLOY_GAS_NORMAL_LEFT_K        0.0f
-#define RL_DEPLOY_GAS_NORMAL_RIGHT_K       0.0f
-#define RL_DEPLOY_GAS_CROUCH_LEFT_K        600.0f
-#define RL_DEPLOY_GAS_CROUCH_RIGHT_K       600.0f
+#define RL_DEPLOY_GAS_NORMAL_RIGHT_K       0.0f 
+#define RL_DEPLOY_GAS_CROUCH_LEFT_K        0.0f
+#define RL_DEPLOY_GAS_CROUCH_RIGHT_K       0.0f
 
 //active和complete的过程的气弹簧力（T）和其他不同（T*L）
 #define RL_DEPLOY_GAS_JUMP_LEFT_K         -2500.0f 
@@ -1001,6 +1001,12 @@ static void rl_build_observation(void)
              (rl_remote_jump_phase == RL_DEPLOY_JUMP_CROUCH) ||
              (g_robot_ctx.output.chassis == CHASSIS_ASCEND))
     {
+		if (((wlr.side[0].Front_dis_fdb + wlr.side[1].Front_dis_fdb) * 0.5f) <
+                     (RL_DEPLOY_AUTO_JUMP_TOF_DISTANCE + 0.2f))
+        {
+			rl_deploy_debug.command[0] =
+				(wlr.v_ref + 0.75f) * params->command_scale[0];
+		}	
         rl_deploy_debug.command[2] =
             RL_DEPLOY_JUMP_CROUCH_HEIGHT * params->command_scale[2];
     }
@@ -1012,7 +1018,7 @@ static void rl_build_observation(void)
     {
 		//模型加入气弹簧之后感觉这个可以改掉
 		if(wlr.high_set < 0.12f)
-			wlr.high_set = 0.12f;
+			wlr.high_set = 0.12f; 
 		else if(wlr.high_set > 0.30f)
 			wlr.high_set = 0.30f;
 

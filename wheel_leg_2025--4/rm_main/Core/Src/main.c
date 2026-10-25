@@ -77,7 +77,7 @@ void USB_Reset(void);
   * @retval int
   */
 int main(void)
- {
+{
 
   /* USER CODE BEGIN 1 */
 
@@ -216,10 +216,10 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-
+ 
   /** Enables the Clock Security System
   */
-  HAL_RCC_EnableCSS();
+//  HAL_RCC_EnableCSS();
 }
 
 /**
