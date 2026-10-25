@@ -31,7 +31,7 @@ extern kalman_filter_t tfmini_fn[2];
 #define RL_DEPLOY_JUMP_CROUCH_HEIGHT       0.12f
 #define RL_DEPLOY_JUMP_ACTIVE_HEIGHT       0.16f
 #define RL_DEPLOY_JUMP_COMPLETE_HEIGHT     0.18f
-#define RL_DEPLOY_JUMP_RECOVERY_HEIGHT     0.24f
+#define RL_DEPLOY_JUMP_RECOVERY_HEIGHT     0.22f
 #define RL_DEPLOY_NORMAL_HEIGHT            0.16f
 
 /*
@@ -47,7 +47,7 @@ extern kalman_filter_t tfmini_fn[2];
 #define RL_DEPLOY_AUTO_JUMP_SPEED_ENABLE   0U
 #define RL_DEPLOY_AUTO_JUMP_SPEED         (-2.0f)
 #define RL_DEPLOY_AUTO_JUMP_TOF_ENABLE     1U
-#define RL_DEPLOY_AUTO_JUMP_TOF_DISTANCE   0.90f
+#define RL_DEPLOY_AUTO_JUMP_TOF_DISTANCE   0.75f
 #define RL_DEPLOY_AUTO_JUMP_TOF_MIN_CYCLES 400U
 
 #define RL_DEPLOY_PI                      3.14159265358979323846f
@@ -76,8 +76,8 @@ extern kalman_filter_t tfmini_fn[2];
 /* These are compensation coefficients (approximately N/m), not raw force. */
 #define RL_DEPLOY_GAS_NORMAL_LEFT_K        0.0f
 #define RL_DEPLOY_GAS_NORMAL_RIGHT_K       0.0f
-#define RL_DEPLOY_GAS_CROUCH_LEFT_K        200.0f
-#define RL_DEPLOY_GAS_CROUCH_RIGHT_K       200.0f
+#define RL_DEPLOY_GAS_CROUCH_LEFT_K        600.0f
+#define RL_DEPLOY_GAS_CROUCH_RIGHT_K       600.0f
 
 //active和complete的过程的气弹簧力（T）和其他不同（T*L）
 #define RL_DEPLOY_GAS_JUMP_LEFT_K         -2500.0f 
@@ -93,7 +93,7 @@ extern kalman_filter_t tfmini_fn[2];
 static float rl_deploy_left_gas_limit = RL_DEPLOY_GAS_NORMAL_LEFT_K;
 static float rl_deploy_right_gas_limit = RL_DEPLOY_GAS_NORMAL_RIGHT_K;
 float rl_yaw_ref = (float)CHASSIS_YAW_OFFSET / 8192 * 2 * PI;
-
+ 
 enum
 {
     RL_DOF_LF0 = 0,
@@ -980,6 +980,7 @@ static void rl_build_observation(void)
         (rl_remote_jump_phase == RL_DEPLOY_JUMP_ACTIVE))
     {
 		rl_deploy_debug.command[0] = 0;
+		rl_deploy_debug.command[1] = 0;
         rl_deploy_debug.command[2] =
             RL_DEPLOY_JUMP_ACTIVE_HEIGHT * params->command_scale[2];
     }
