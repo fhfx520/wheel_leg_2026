@@ -5,7 +5,6 @@
 "rm_main\dma.o"
 "rm_main\fdcan.o"
 "rm_main\iwdg.o"
-"rm_main\memorymap.o"
 "rm_main\rng.o"
 "rm_main\spi.o"
 "rm_main\tim.o"
@@ -66,6 +65,7 @@
 "rm_main\status_log.o"
 "rm_main\fault_log_port.o"
 "rm_main\log.o"
+"rm_main\spi_log.o"
 "rm_main\system_stm32h7xx.o"
 "rm_main\stm32h7xx_hal_tim.o"
 "rm_main\stm32h7xx_hal_tim_ex.o"
@@ -154,7 +154,7 @@
 "rm_main\transformfunctions.o"
 "rm_main\transformfunctionsf16.o"
 "rm_main\windowfunctions.o"
---library_type=microlib --strict --scatter "..\User\Log\fault_noinit.sct"
+--library_type=microlib --strict --scatter "rm_main.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
 --list ".\rm_main\rm_main.map" -o rm_main\rm_main.axf

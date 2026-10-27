@@ -8,11 +8,11 @@
 #include "fault_log.h"
 #include "drv_dji_motor.h"
 #include "drv_dm_motor.h"
+#include "drv_lk_motor.h"
 #include "gimbal_task.h"
 #include "prot_imu.h"
-#include "usbd_cdc_if.h"
+#include "spi_log.h"
 #include <string.h>
-#include "drv_lk_motor.h"
 
 extern osThreadId CommTaskHandle;
 extern osThreadId ModeSwitchTaskHandle;
@@ -141,17 +141,17 @@ static void log_snapshot(uint8_t channel, uint32_t *w)
         w[14] = (uint32_t)(g_log_task_diag.late_count);
         w[15] = (uint32_t)(g_log_task_diag.catchup_count);
         w[16] = (uint32_t)(g_log_task_diag.max_run_ms);
-        w[17] = (uint32_t)(cdc_tx_pending_count);
-        w[18] = (uint32_t)(cdc_tx_inflight);
-        w[19] = (uint32_t)(cdc_tx_queue_overflow_count);
-        w[20] = (uint32_t)(g_cdc_tx_diag.accepted);
-        w[21] = (uint32_t)(g_cdc_tx_diag.completed);
-        w[22] = (uint32_t)(g_cdc_tx_diag.started);
-        w[23] = (uint32_t)(g_cdc_tx_diag.accepted_bytes);
-        w[24] = (uint32_t)(g_cdc_tx_diag.completed_bytes);
-        w[25] = (uint32_t)(g_cdc_tx_diag.buffered);
-        w[26] = (uint32_t)(g_cdc_tx_diag.queue_high_water);
-        w[27] = (uint32_t)(g_cdc_tx_diag.start_failed);
+        w[17] = (uint32_t)(spi_tx_pending_count);
+        w[18] = (uint32_t)(spi_tx_inflight);
+        w[19] = (uint32_t)(spi_tx_queue_overflow_count);
+        w[20] = (uint32_t)(g_spi_tx_diag.accepted);
+        w[21] = (uint32_t)(g_spi_tx_diag.completed);
+        w[22] = (uint32_t)(g_spi_tx_diag.started);
+        w[23] = (uint32_t)(g_spi_tx_diag.accepted_bytes);
+        w[24] = (uint32_t)(g_spi_tx_diag.completed_bytes);
+        w[25] = (uint32_t)(g_spi_tx_diag.buffered);
+        w[26] = (uint32_t)(g_spi_tx_diag.queue_high_water);
+        w[27] = (uint32_t)(g_spi_tx_diag.start_failed);
         w[28] = (uint32_t)(g_log_tx_diag.format_truncated);
         w[29] = (uint32_t)(g_log_tx_diag.format_error);
         w[30] = (uint32_t)(g_log_tx_diag.last_line_bytes);
@@ -362,7 +362,6 @@ static void log_snapshot(uint8_t channel, uint32_t *w)
         w[21] = (uint32_t)(trigger_motor.tx_current);
         w[22] = (uint32_t)(trigger_motor.send_cnt);
         w[23] = (uint32_t)(trigger_motor.receive_cnt);
-		
         w[24] = (uint32_t)(yaw_motor.online);
         w[25] = (uint32_t)(yaw_motor.state);
         w[26] = (uint32_t)(yaw_motor.ecd);
@@ -373,7 +372,7 @@ static void log_snapshot(uint8_t channel, uint32_t *w)
         w[31] = (uint32_t)(yaw_motor.receive_cnt);
         break;
     case 8U: /* dm：索引定义见压力测试说明。 */
-		for(uint8_t i = 0;i < 4;i++)
+        for(uint8_t i = 0;i < 4;i++)
 		{
 			w[i*8+0] = (uint32_t)(log_float_bits(joint_motor[i].position));
 			w[i*8+1] = (uint32_t)(log_float_bits(joint_motor[i].velocity));
@@ -441,7 +440,7 @@ static void log_snapshot(uint8_t channel, uint32_t *w)
     w[47] = DWT->FOLDCNT;
 }
 
-/* 保留 tick 在行首，兼容 F405 的跨 USB 包行解析。
+/* 保留 tick 在行首，沿用 F405 日志文本格式。
  * 一条日志包含 48 个固定宽度数据字，无填充字符串。 */
 static void log_send_snapshot(uint8_t channel, uint32_t tick, uint32_t sequence)
 {
@@ -468,22 +467,25 @@ static void log_send_snapshot(uint8_t channel, uint32_t tick, uint32_t sequence)
 
 void log_task(void const *argument)
 {
+	SPI_LogInit();
+	
+	osDelay(3000);//受硬件限制，当前从机无法告知主机SPI已经准备就绪，这里采用当前情况下最简单粗暴的方法，长延时，但无法解决log单独复位的问题
     uint32_t wake_time = osKernelSysTick();
     uint8_t channel = 0U;
     uint8_t align_wake_time = 1U;
     (void)argument;
-
+    
+	SPI_LogSetReceiverReady(1U);//假设1s后log已就绪，设为1，开启SPI传输
     for (;;) {
         uint32_t tick;
         /* 异常中只读取此心跳，不调用 RTOS 获取时间。 */
         FaultLog_Heartbeat(osKernelSysTick());
-        LogLinkService_HS();
-        CDC_TxService_HS();
-        /* 测试请求必须在握手/补报等待分支前处理，USB 卡住时仍可手动复现。 */
+        SPI_LogService();
+        /* 测试请求须在就绪及补报等待分支前处理，SPI 卡住时仍可手动复现。 */
         FaultLog_TestService(osKernelSysTick());
-        if (!g_log_link_ready) {
+        if (!g_spi_log_link_ready) {
             /* 等待期间不生成日志、不推进 seq/通道，也不补跑等待时间。 */
-            g_log_link_diag.waiting_loops++;
+            g_spi_log_link_diag.waiting_loops++;
             wake_time = osKernelSysTick();
             g_log_task_diag.last_tick = 0U;
             align_wake_time = 1U;
@@ -500,13 +502,13 @@ void log_task(void const *argument)
         }
         tick = osKernelSysTick();
         if (align_wake_time) {
-            /* 握手等待结束后，从当前 tick 开始新的周期，避免首次发送追赶。 */
+            /* 就绪等待结束后，从当前 tick 开始新的周期，避免首次发送追赶。 */
             wake_time = tick;
             align_wake_time = 0U;
         }
         uint32_t start_ms = HAL_GetTick();
         uint32_t run_ms;
-        CDC_TxService_HS();
+        SPI_LogService();
         if (g_log_task_diag.last_tick != 0U) {
             uint32_t gap = tick - g_log_task_diag.last_tick;
             if (gap > g_log_task_diag.max_gap_ms) g_log_task_diag.max_gap_ms = gap;

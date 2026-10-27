@@ -1,35 +1,35 @@
 ST Edge AI Core v2.2.0-20266 2adc00962
-Created date          : 2026-10-18 16:48:13
-Parameters            : generate --target stm32h7 --name spin -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/gas600_spin_heightwave75_posture_model_33700.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace615188445330016975799169036950559 --output C:/Users/41077/.stm32cubemx/spin_output
+Created date          : 2026-10-26 02:45:28
+Parameters            : generate --target stm32h7 --name spin -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/10_spin_65000.onnx --compression none --verbosity 1 --workspace C:/Users/25328/AppData/Local/Temp/mxAI_workspace17198720437960013644292594057158416 --output C:/Users/25328/.stm32cubemx/spin_output
 
 Exec/report summary (generate)
-----------------------------------------------------------------------------------------------------------------------------
-model file         :   D:\RM\wheel_leg_2026\wheel_leg_2025--4\RL_policy\gas600_spin_heightwave75_posture_model_33700.onnx   
-type               :   onnx                                                                                                 
-c_name             :   spin                                                                                                 
-compression        :   none                                                                                                 
-options            :   allocate-inputs, allocate-outputs                                                                    
-optimization       :   time                                                                                                 
-target/series      :   stm32h7                                                                                              
-workspace dir      :   C:\Users\41077\AppData\Local\Temp\mxAI_workspace615188445330016975799169036950559                    
-output dir         :   C:\Users\41077\.stm32cubemx\spin_output                                                              
-model_fmt          :   float                                                                                                
-model_name         :   gas600_spin_heightwave75_posture_model_33700                                                         
-model_hash         :   0x85689faac4997bc08bddbb27b50f55bc                                                                   
-params #           :   38,825 items (151.66 KiB)                                                                            
-----------------------------------------------------------------------------------------------------------------------------
-input 1/2          :   'obs', f32(1x25), 100 Bytes, activations                                                             
-input 2/2          :   'obs_history', f32(1x125), 500 Bytes, activations                                                    
-inputs (total)     :   600 Bytes                                                                                            
-output 1/1         :   'actions', f32(1x6), 24 Bytes, activations                                                           
-macc               :   43,401                                                                                               
-weights (ro)       :   155,300 B (151.66 KiB) (1 segment)                                                                   
-activations (rw)   :   1,112 B (1.09 KiB) (1 segment) *                                                                     
-ram (total)        :   1,112 B (1.09 KiB) = 1,112 + 0 + 0                                                                   
-----------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------
+model file         :   D:\RM\wheel_leg_2026\wheel_leg_2025--4\RL_policy\10_spin_65000.onnx                   
+type               :   onnx                                                                                  
+c_name             :   spin                                                                                  
+compression        :   none                                                                                  
+options            :   allocate-inputs, allocate-outputs                                                     
+optimization       :   balanced                                                                              
+target/series      :   stm32h7                                                                               
+workspace dir      :   C:\Users\25328\AppData\Local\Temp\mxAI_workspace17198720437960013644292594057158416   
+output dir         :   C:\Users\25328\.stm32cubemx\spin_output                                               
+model_fmt          :   float                                                                                 
+model_name         :   node_10_spin_65000                                                                    
+model_hash         :   0x5970450ff555d1084add7fa5d8185ce7                                                    
+params #           :   38,825 items (151.66 KiB)                                                             
+-------------------------------------------------------------------------------------------------------------
+input 1/2          :   'obs', f32(1x25), 100 Bytes, activations                                              
+input 2/2          :   'obs_history', f32(1x125), 500 Bytes, activations                                     
+inputs (total)     :   600 Bytes                                                                             
+output 1/1         :   'actions', f32(1x6), 24 Bytes, activations                                            
+macc               :   43,401                                                                                
+weights (ro)       :   155,300 B (151.66 KiB) (1 segment)                                                    
+activations (rw)   :   1,112 B (1.09 KiB) (1 segment) *                                                      
+ram (total)        :   1,112 B (1.09 KiB) = 1,112 + 0 + 0                                                    
+-------------------------------------------------------------------------------------------------------------
 (*) 'input'/'output' buffers are allocated in the activations buffer
 
-Model name - gas600_spin_heightwave75_posture_model_33700
+Model name - node_10_spin_65000
 ------ ---------------------------------------------------- --------------- --------------- -------- -------------------------------- --- --------------- ------------------ ------------------- 
 m_id   layer (type,original)                                oshape          param/size          macc                     connected to   | c_size          c_macc             c_type              
 ------ ---------------------------------------------------- --------------- --------------- -------- -------------------------------- --- --------------- ------------------ ------------------- 
@@ -104,7 +104,7 @@ model/c-model: macc=43,817/43,401 -416(-0.9%) weights=155,300/155,300  activatio
 
 Generated C-graph summary
 ------------------------------------------------------------------------------------------------------------------------
-model name            : gas600_spin_heightwave75_posture_model_33700
+model name            : node_10_spin_65000
 c-name                : spin
 c-node #              : 13
 c-array #             : 29
@@ -290,10 +290,10 @@ macc=43,401 weights=155,300 act=1,112 ram_io=0
 
 Generated files (7)
 ------------------------------------------------------------ 
-C:\Users\41077\.stm32cubemx\spin_output\spin_data_params.h   
-C:\Users\41077\.stm32cubemx\spin_output\spin_data_params.c   
-C:\Users\41077\.stm32cubemx\spin_output\spin_data.h          
-C:\Users\41077\.stm32cubemx\spin_output\spin_data.c          
-C:\Users\41077\.stm32cubemx\spin_output\spin_config.h        
-C:\Users\41077\.stm32cubemx\spin_output\spin.h               
-C:\Users\41077\.stm32cubemx\spin_output\spin.c               
+C:\Users\25328\.stm32cubemx\spin_output\spin_data_params.h   
+C:\Users\25328\.stm32cubemx\spin_output\spin_data_params.c   
+C:\Users\25328\.stm32cubemx\spin_output\spin_data.h          
+C:\Users\25328\.stm32cubemx\spin_output\spin_data.c          
+C:\Users\25328\.stm32cubemx\spin_output\spin_config.h        
+C:\Users\25328\.stm32cubemx\spin_output\spin.h               
+C:\Users\25328\.stm32cubemx\spin_output\spin.c               

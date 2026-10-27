@@ -22,7 +22,6 @@
 #include "cmsis_os.h"
 #include "dma.h"
 #include "fdcan.h"
-#include "memorymap.h"
 #include "rng.h"
 #include "spi.h"
 #include "tim.h"
@@ -125,7 +124,6 @@ int main(void)
   MX_USART10_UART_Init();
   MX_FDCAN1_Init();
   MX_FDCAN2_Init();
-  MX_TIM3_Init();
   MX_SPI1_Init();
   MX_USART3_UART_Init();
   MX_UART4_Init();

@@ -9,11 +9,11 @@
 #define STATUS_LOG_WARN_PERIOD_MS 1000U
 #endif
 
-/* One owning status task. Initialize once at that task's startup. */
+/* 仅由一个状态任务管理，在该任务启动时初始化一次。 */
 void StatusLog_Init(uint32_t startup_tick);
-/* Times are milliseconds: now is RTOS time; now_hal/last_rx_hal are HAL time.
- * active=0 ignores an unregistered/unused module; online!=0 means healthy.
- * This observes existing decisions; it does not implement timeout detection. */
+/* 时间单位为毫秒，now 使用 RTOS 时间，now_hal/last_rx_hal 使用 HAL 时间。
+ * active 为 0 时忽略未注册或未使用的模块，online 非 0 表示在线。
+ * 本接口只观察已有判定结果，不负责实现超时检测。 */
 void StatusLog_Observe(log_module_t module, uint8_t active, uint8_t online,
                        uint32_t last_rx_hal, uint32_t can_index,
                        uint32_t can_id, uint32_t now, uint32_t now_hal);

@@ -4,6 +4,7 @@
 #include "string.h"
 #include "stdarg.h"  // 包含标准可变参数宏的头文件
 #include "stdint.h"
+#include "spi_log.h"
 
 enum 
 {
@@ -14,7 +15,7 @@ enum
     LOG_LEVEL_NUM
 };
 
-/* Debugger-only counters; no extra log traffic. Counts reset on MCU reset. */
+/* 仅供调试器查看的统计，不额外发送日志，MCU 复位后清零。 */
 typedef struct {
     uint32_t attempts, accepted, busy, failed;
     uint32_t attempted_bytes, accepted_bytes;
@@ -48,7 +49,7 @@ typedef struct {
 
 typedef struct {
     uint32_t posted, sent, queue_full, invalid, not_initialized;
-    uint32_t pending, high_water, usb_retry;
+    uint32_t pending, high_water, tx_retry;
 } log_event_diag_t;
 extern volatile log_event_diag_t g_log_event_diag;
 

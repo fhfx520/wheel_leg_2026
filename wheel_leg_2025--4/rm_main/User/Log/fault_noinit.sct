@@ -1,8 +1,8 @@
 #! armclang -E --target=arm-arm-none-eabi -mcpu=cortex-m7 -xc
 #include "fault_log_config.h"
+#include "spi_log_config.h"
 #include "../Support/usb_dma_memory.h"
-; Select the fault UNINIT region with the same configuration used by C.
-; Keep the original ordinary IRAM1 limit to avoid moving unrelated data.
+/* H723：保留故障现场，并为 SPI DMA 分配独立的 AXI SRAM。 */
 LR_IROM1 0x08000000 0x00100000 {
   ER_IROM1 0x08000000 0x00100000 {
     *.o (RESET, +First)
@@ -20,7 +20,11 @@ LR_IROM1 0x08000000 0x00100000 {
 #endif
     * (.bss.noinit.fault_*)
   }
-  ; USB DMA buffers must stay in this dedicated MPU region.
+  RW_LOG_SPI_DMA LOG_SPI_DMA_BASE LOG_SPI_DMA_BYTES {
+    spi_log.o (.bss.spi_log_dma)
+  }
+#if USB_DMA_PROTECTED_REQUIRED
+  /* SPI 日志与其他 USB DMA 业务并存时，USB 使用独立非缓存区。 */
   RW_USB_DMA USB_DMA_REGION_BASE USB_DMA_REGION_BYTES {
     usbd_conf.o (+RW +ZI)
     usb_device.o (+RW +ZI)
@@ -29,6 +33,17 @@ LR_IROM1 0x08000000 0x00100000 {
     usbd_cdc_if.o (.bss.UserRxBufferHS, .bss.UserTxBufferHS)
   }
   RW_IRAM2 0x24000000 (USB_DMA_REGION_BASE - 0x24000000) {
+#else
+  RW_IRAM2 0x24000000 (LOG_SPI_DMA_BASE - 0x24000000) {
+#endif
+#if DMA_MEMORY_USB_DMA_ENABLED && !USB_DMA_PROTECTED_REQUIRED
+    /* 无须非缓存 MPU 区时仍将 USB DMA 数据明确放入 AXI SRAM。 */
+    usbd_conf.o (+RW +ZI)
+    usb_device.o (+RW +ZI)
+    usbd_desc.o (+RW +ZI)
+    usbd_cdc.o (+RW +ZI)
+    usbd_cdc_if.o (.bss.UserRxBufferHS, .bss.UserTxBufferHS)
+#endif
     .ANY (+RW +ZI)
   }
 }

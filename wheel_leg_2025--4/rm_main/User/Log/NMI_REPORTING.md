@@ -1,3 +1,5 @@
+> SPI 版本说明：本文保留原有故障或告警接入细节；涉及 USB 握手、CDC 队列及返回值的部分，统一以本目录 README.md 中的 SPI DMA 接口和显式接收就绪控制为准。
+
 # NMI 时钟现场与复位后回报
 
 适用 STM32H723 / ArmClang 6。本增量沿用已有 FaultLog_BootInit、FaultLog_Service 和 IWDG 复位回报流程，不增加任务。

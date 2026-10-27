@@ -29,11 +29,11 @@ static void nmi_commit(void)
     g_nmi_record.context.magic = NMI_LOG_MAGIC;
     __DSB();
 #if FAULT_LOG_TEST_IRAM1
-    /* Readback makes DTCM writes effective before watchdog reset. */
+    /* 读回 DTCM 数据，确保看门狗复位前写入已经生效。 */
     for (i = 0U; i < sizeof(g_nmi_record) / 4U; ++i)
         (void)((const volatile uint32_t *)&g_nmi_record)[i];
 #else
-    /* Whole ECC words for the final header writes; AXI cache policy is external. */
+    /* 最后按完整 ECC 字写入头部，AXI 保留区的缓存策略须另行配置。 */
     typedef uint64_t nmi_ecc_word_t __attribute__((may_alias));
     volatile nmi_ecc_word_t *h = (volatile nmi_ecc_word_t *)(uintptr_t)&g_nmi_record;
     nmi_ecc_word_t value;
@@ -79,8 +79,8 @@ void NmiLog_BootInit(uint32_t reset)
     }
 }
 
-/* No HAL RCC handler: capture CSS flags before any write-to-clear operation.
- * CSS hardware may already have switched the clock when this code runs. */
+/* 不调用 HAL RCC 处理函数，在任何写清除操作前保存 CSS 标志。
+ * 执行到此处时，CSS 硬件可能已经切换了系统时钟。 */
 __attribute__((noinline, noreturn))
 void NmiLog_Capture(uint32_t msp, uint32_t psp, uint32_t exc_return,
                     const uint32_t *entry_regs)
@@ -115,8 +115,8 @@ void NmiLog_Capture(uint32_t msp, uint32_t psp, uint32_t exc_return,
     g_nmi_record.context.version = NMI_LOG_VERSION;
     g_nmi_record.context.size = sizeof(g_nmi_record);
     nmi_commit();
-    /* Fatal policy matches the previous NMI handler. IWDG must be enabled
-     * for automatic reset/replay; no RTOS, USB, printf or watchdog refresh. */
+    /* 沿用原 NMI 致命故障策略，须开启 IWDG 才能自动复位并补报。
+     * 此处不调用 RTOS、SPI、printf，也不刷新看门狗。 */
     for (;;) __NOP();
 }
 #ifndef FAULT_LOG_NATIVE_TEST

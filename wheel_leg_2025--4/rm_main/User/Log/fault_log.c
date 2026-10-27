@@ -4,8 +4,8 @@
 #include "nmi_log.h"
 #include <stddef.h>
 
-/* fault_noinit.sct reserves 4KB for both fault/NMI records and stacks.
- * DTCM is non-cacheable. AXI retention still needs its own cache policy. */
+/* fault_noinit.sct 为普通故障及 NMI 的记录和应急栈预留 4 KB。
+ * DTCM 不经过缓存，AXI 保留区仍须单独配置缓存策略。 */
 __attribute__((section(".bss.noinit.fault_record"), aligned(8), used))
 volatile fault_record_t g_fault_record;
 __attribute__((section(".bss.noinit.fault_stack"), aligned(8), used))
@@ -72,10 +72,9 @@ static uint8_t fault_valid(const volatile fault_record_t *record)
 }
 
 #if !FAULT_LOG_TEST_IRAM1
-/* AXI SRAM ECC word is 64 bits. Flush the two aligned header words by
- * reading and writing the same complete word, per ST SRAM retention FAQ.
- * Flush size/checksum first, then magic/version (the final commit word).
- * may_alias permits this deliberate whole-word access to the uint32_t fields. */
+/* AXI SRAM 的 ECC 字宽为 64 位，按 ST 保留区说明读回并重写完整头部字。
+ * 先处理 size/checksum，再处理作为最终提交标记的 magic/version。
+ * may_alias 允许对 uint32_t 字段进行此处的完整 64 位字访问。 */
 typedef uint64_t fault_ecc_word_t __attribute__((may_alias));
 typedef char fault_header_layout_check[
     (offsetof(fault_record_t, magic) == 0U &&
@@ -87,9 +86,9 @@ typedef char fault_header_layout_check[
 static void fault_flush_record(void)
 {
 #if FAULT_LOG_TEST_IRAM1
-    /* RM0468: read back programmed DTCM/ITCM data to make writes effective.
-     * Read every word, including the final checksum and magic writes.
-     * volatile guarantees actual loads even though their values are unused. */
+    /* 按 RM0468 要求读回 DTCM/ITCM 数据，确保写入生效。
+     * 逐字读回，包括最后写入的 checksum 和 magic；
+     * volatile 保证即使不使用读出值，也会实际执行读取。 */
     const volatile uint32_t *words = (const volatile uint32_t *)&g_fault_record;
     uint32_t i;
     for (i = 0U; i < sizeof(g_fault_record) / sizeof(uint32_t); ++i)
@@ -189,7 +188,7 @@ static uint8_t fault_frame_address(uint32_t sp, uint32_t exc_return, uint32_t cf
     return 1U;
 }
 
-/* No static scratch state: NMI may interrupt a fault snapshot. */
+/* 不使用静态临时状态，避免 NMI 打断故障采样时相互覆盖。 */
 void FaultLog_SaveContext(volatile fault_record_t *record, uint32_t count,
                          uint32_t msp, uint32_t psp, uint32_t exc_return,
                          const uint32_t *entry_regs)
@@ -233,7 +232,7 @@ void FaultLog_SaveContext(volatile fault_record_t *record, uint32_t count,
     }
 }
 
-/* Fault and NMI have separate records and separate emergency stacks. */
+/* 普通故障和 NMI 分别使用独立记录及应急栈。 */
 __attribute__((noinline, noreturn))
 void FaultLog_Capture(uint32_t msp, uint32_t psp, uint32_t exc_return,
                       const uint32_t *entry_regs)
@@ -242,9 +241,9 @@ void FaultLog_Capture(uint32_t msp, uint32_t psp, uint32_t exc_return,
     FaultLog_SaveContext(&g_fault_record, next_fault_count, msp, psp,
                          exc_return, entry_regs);
     fault_commit();
-    /* Retained-memory readback is performed inside fault_commit(). */
+    /* 保留区数据的读回确认在 fault_commit() 内完成。 */
     /* 现场已提交到保留区，停留在异常上下文且不喂狗，等待 IWDG 复位。
-     * 不请求软件复位，不调用 RTOS、USB 或任何可能喂狗的系统服务。 */
+     * 不请求软件复位，不调用 RTOS、SPI 或任何可能喂狗的系统服务。 */
     __DSB();
     for (;;) __NOP();
 }
@@ -365,7 +364,7 @@ void FaultLog_TestService(uint32_t tick)
         if (elapsed < FAULT_LOG_TEST_DELAY_MS) {
             g_fault_test_remaining_ms = FAULT_LOG_TEST_DELAY_MS - elapsed;
         } else {
-            /* 手动请求允许重复注入，也允许在 USB 卡住或补报等待时注入。 */
+            /* 手动请求允许重复注入，也允许在 SPI 卡住或补报等待时注入。 */
             g_fault_test_state = 2U;
             g_fault_test_remaining_ms = 0U;
             fault_test_inject();

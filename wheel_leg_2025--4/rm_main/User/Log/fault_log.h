@@ -6,7 +6,7 @@
 
 /* 周期故障测试：每次重启，链路就绪且补报完成后等待10秒再注入。
  * 正常固件设为0；故障间隔还包含IWDG复位及启动/补报耗时。 */
-/* FAULT_LOG_ENABLE_TEST is configured in fault_log_config.h. */
+/* FAULT_LOG_ENABLE_TEST 在 fault_log_config.h 中配置。 */
 
 #define FAULT_LOG_TEST_DELAY_MS 10000U
 #define FAULT_LOG_MAGIC 0x48464C47UL
@@ -29,13 +29,13 @@ typedef struct {
 extern volatile fault_record_t g_fault_record;
 extern volatile fault_log_diag_t g_fault_log_diag;
 
-/* Shared read-only CPU snapshot routine used by separate fault/NMI records. */
+/* 普通故障和 NMI 使用独立记录，共用只读 CPU 现场采样函数。 */
 void FaultLog_SaveContext(volatile fault_record_t *record, uint32_t count,
                          uint32_t msp, uint32_t psp, uint32_t exc_return,
                          const uint32_t *entry_regs);
 extern volatile uint32_t g_fault_capture_active;
 
-/* main 最早期调用；异常处理本身不依赖 HAL、RTOS 或 USB。 */
+/* main 最早期调用；异常处理本身不依赖 HAL、RTOS 或 SPI。 */
 void FaultLog_BootInit(void);
 void FaultLog_Heartbeat(uint32_t tick);
 /* 返回 1 表示故障补报尚未结束，debug_task 暂缓普通日志。 */

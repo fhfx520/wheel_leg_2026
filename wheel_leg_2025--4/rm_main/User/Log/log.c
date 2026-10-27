@@ -1,8 +1,8 @@
 #include "log.h"
 #include "stdio.h"
 #include "FreeRTOS.h"
-#include "usbd_cdc_if.h"
-#include "usb_device.h"
+#include "spi_log.h"
+
 #include "cmsis_os.h"
 #include "queue.h"
 #include "task.h"
@@ -12,7 +12,7 @@ volatile log_tx_diag_t g_log_tx_diag;
 uint8_t sys_printf(uint8_t level, const char *tag, const char *fmt, ...)
 {
     if (level >= LOG_LEVEL_NUM || level >= LEVEL_SET || fmt == NULL)
-        return USBD_FAIL;
+        return LOG_SPI_FAIL;
     size_t len;
     char buf[LOG_FORMAT_BUFFER_SIZE];
     int off = 0;
@@ -23,7 +23,7 @@ uint8_t sys_printf(uint8_t level, const char *tag, const char *fmt, ...)
 
 	off = snprintf(buf, sizeof(buf), "%s",log_tag);
     if (off < 0 || off >= (int)sizeof(buf))
-        return USBD_FAIL;
+        return LOG_SPI_FAIL;
     
     va_list args;
     va_start(args, fmt);
@@ -31,7 +31,7 @@ uint8_t sys_printf(uint8_t level, const char *tag, const char *fmt, ...)
     va_end(args);
 	len = strlen(buf);
 	
-    /* CDC 将日志复制进 FIFO，OK 表示入队成功。 */
+    /* SPI 将日志复制进发送队列，OK 表示入队成功。 */
     if (format_len < 0) g_log_tx_diag.format_error++;
     else if ((size_t)format_len >= sizeof(buf) - (size_t)off)
         g_log_tx_diag.format_truncated++;
@@ -40,9 +40,9 @@ uint8_t sys_printf(uint8_t level, const char *tag, const char *fmt, ...)
     tx_tick = osKernelSysTick();
     g_log_tx_diag.attempts++;
     g_log_tx_diag.attempted_bytes += (uint32_t)len;
-    tx_status = CDC_Transmit_HS((uint8_t*)buf, len);
+    tx_status = SPI_LogTransmit((uint8_t*)buf, len);
     g_log_tx_diag.last_status = tx_status;
-    if (tx_status == USBD_OK) {
+    if (tx_status == LOG_SPI_OK) {
         uint32_t gap = tx_tick - g_log_tx_diag.last_accepted_tick;
         if ((g_log_tx_diag.accepted != 0U) && (gap > g_log_tx_diag.max_accepted_gap_ms))
             g_log_tx_diag.max_accepted_gap_ms = gap;
@@ -51,7 +51,7 @@ uint8_t sys_printf(uint8_t level, const char *tag, const char *fmt, ...)
         g_log_tx_diag.last_accepted_tick = tx_tick;
         g_log_tx_diag.failure_streak = 0U;
     } else {
-        if (tx_status == USBD_BUSY) g_log_tx_diag.busy++;
+        if (tx_status == LOG_SPI_BUSY) g_log_tx_diag.busy++;
         else g_log_tx_diag.failed++;
         uint32_t failure_slot = g_log_tx_diag.failure_history_next % 8U;
         g_log_tx_diag.failure_tick[failure_slot] = tx_tick;
@@ -117,9 +117,9 @@ void LogEvent_Service(void)
     };
     log_event_t event;
     uint8_t result;
-    if ((log_event_queue == NULL) || !g_log_link_ready)
+    if ((log_event_queue == NULL) || !g_spi_log_link_ready)
         return;
-    /* 每周期最多发送一条告警，限制格式化开销；USB 忙时保留队头下次重试。 */
+    /* 每周期最多发送一条告警，限制格式化开销；SPI 忙时保留队头下次重试。 */
     if (xQueuePeek(log_event_queue, &event, 0U) != pdPASS)
         return;
     if (event.kind == LOG_EVENT_RECOVERED) {
@@ -132,13 +132,13 @@ void LogEvent_Service(void)
             (unsigned long)event.offline_ms, (unsigned long)event.can_index, (unsigned long)event.can_id);
     }
     taskENTER_CRITICAL();
-    if (result == USBD_OK) {
+    if (result == LOG_SPI_OK) {
         /* 只有本任务消费，发送期间其他任务只能在队尾追加。 */
         (void)xQueueReceive(log_event_queue, &event, 0U);
         g_log_event_diag.sent++;
         g_log_event_diag.pending = (uint32_t)uxQueueMessagesWaiting(log_event_queue);
     } else {
-        g_log_event_diag.usb_retry++;
+        g_log_event_diag.tx_retry++;
     }
     taskEXIT_CRITICAL();
 }

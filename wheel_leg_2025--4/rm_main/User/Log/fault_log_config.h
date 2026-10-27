@@ -1,11 +1,11 @@
 #ifndef FAULT_LOG_CONFIG_H
 #define FAULT_LOG_CONFIG_H
 
-/* Shared by C and the preprocessed scatter file. Edit here, not in C-only
- * compiler defines: 1 = IRAM1/DTCM, 0 = IRAM2/AXI SRAM. Rebuild after changing. */
+/* C 源码与预处理链接脚本共用此配置，不要仅通过 C 编译宏修改。
+ * 1 表示 IRAM1/DTCM，0 表示 IRAM2/AXI SRAM，修改后须重新构建。 */
 #define FAULT_LOG_TEST_IRAM1 1
 
-/* Distribution default: real faults only. Set to 1 for repeated injection. */
+/* 发布版默认只捕获真实故障；设为 1 可启用重复故障注入。 */
 #ifndef FAULT_LOG_ENABLE_TEST
 #define FAULT_LOG_ENABLE_TEST 0
     #if FAULT_LOG_ENABLE_TEST == 1

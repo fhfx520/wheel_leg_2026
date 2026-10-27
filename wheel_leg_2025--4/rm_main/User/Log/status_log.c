@@ -1,7 +1,7 @@
 #include "status_log.h"
 #include <string.h>
 
-/* Extracted from rm_main_gimbal status_task; no application driver dependency. */
+/* 提取自云台状态任务，不依赖具体业务驱动。 */
 typedef struct {
     uint32_t offline_since, last_warn_tick;
     uint8_t offline, warned, recovery_pending;

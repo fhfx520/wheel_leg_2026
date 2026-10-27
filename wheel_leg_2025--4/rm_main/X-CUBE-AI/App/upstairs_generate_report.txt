@@ -1,6 +1,6 @@
 ST Edge AI Core v2.2.0-20266 2adc00962
-Created date          : 2026-10-18 16:46:58
-Parameters            : generate --target stm32h7 --name upstairs -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/gas600_flat_accel_model_28200.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace60768512017008545952584484716354 --output C:/Users/41077/.stm32cubemx/upstairs_output
+Created date          : 2026-10-26 02:43:35
+Parameters            : generate --target stm32h7 --name upstairs -m D:/RM/wheel_leg_2026/wheel_leg_2025--4/RL_policy/gas600_flat_accel_model_28200.onnx --compression none --verbosity 1 -O time --workspace C:/Users/25328/AppData/Local/Temp/mxAI_workspace1718738826070007211912238048232778 --output C:/Users/25328/.stm32cubemx/upstairs_output
 
 Exec/report summary (generate)
 -------------------------------------------------------------------------------------------------------------
@@ -11,8 +11,8 @@ compression        :   none
 options            :   allocate-inputs, allocate-outputs                                                     
 optimization       :   time                                                                                  
 target/series      :   stm32h7                                                                               
-workspace dir      :   C:\Users\41077\AppData\Local\Temp\mxAI_workspace60768512017008545952584484716354      
-output dir         :   C:\Users\41077\.stm32cubemx\upstairs_output                                           
+workspace dir      :   C:\Users\25328\AppData\Local\Temp\mxAI_workspace1718738826070007211912238048232778    
+output dir         :   C:\Users\25328\.stm32cubemx\upstairs_output                                           
 model_fmt          :   float                                                                                 
 model_name         :   gas600_flat_accel_model_28200                                                         
 model_hash         :   0x41842a1f08e9a8ce3464f5d66a992123                                                    
@@ -290,10 +290,10 @@ macc=43,401 weights=155,300 act=1,112 ram_io=0
 
 Generated files (7)
 -------------------------------------------------------------------- 
-C:\Users\41077\.stm32cubemx\upstairs_output\upstairs_data_params.h   
-C:\Users\41077\.stm32cubemx\upstairs_output\upstairs_data_params.c   
-C:\Users\41077\.stm32cubemx\upstairs_output\upstairs_data.h          
-C:\Users\41077\.stm32cubemx\upstairs_output\upstairs_data.c          
-C:\Users\41077\.stm32cubemx\upstairs_output\upstairs_config.h        
-C:\Users\41077\.stm32cubemx\upstairs_output\upstairs.h               
-C:\Users\41077\.stm32cubemx\upstairs_output\upstairs.c               
+C:\Users\25328\.stm32cubemx\upstairs_output\upstairs_data_params.h   
+C:\Users\25328\.stm32cubemx\upstairs_output\upstairs_data_params.c   
+C:\Users\25328\.stm32cubemx\upstairs_output\upstairs_data.h          
+C:\Users\25328\.stm32cubemx\upstairs_output\upstairs_data.c          
+C:\Users\25328\.stm32cubemx\upstairs_output\upstairs_config.h        
+C:\Users\25328\.stm32cubemx\upstairs_output\upstairs.h               
+C:\Users\25328\.stm32cubemx\upstairs_output\upstairs.c               

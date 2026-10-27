@@ -15,7 +15,7 @@ typedef struct {
     uint32_t rcc_pll3divr, rcc_pll3fracr, rcc_d2ccip2r;
     uint32_t scb_ccr, interrupted_capture;
 } nmi_record_t;
-/* Both records, both stacks, alignment and optional test latch fit 4KB. */
+/* 两份记录、两个应急栈、对齐及可选测试标记合计不超过 4 KB。 */
 typedef char nmi_retained_size_check[
     (sizeof(nmi_record_t) + sizeof(fault_record_t) + NMI_LOG_STACK_BYTES +
      FAULT_LOG_STACK_BYTES + 32U <= 4096U) ? 1 : -1];
@@ -27,12 +27,12 @@ typedef struct {
 } nmi_log_diag_t;
 extern volatile nmi_record_t g_nmi_record;
 extern volatile nmi_log_diag_t g_nmi_log_diag;
-/* Called by the fault framework, not separately by application tasks. */
+/* 由故障框架调用，应用任务无需单独调用。 */
 void NmiLog_BootInit(uint32_t reset);
 uint8_t NmiLog_Service(void);
 void NmiLog_TestService(void);
 #if FAULT_LOG_ENABLE_TEST
-/* Watch: write 1, consumed in log_task, then pend NMI without changing clocks. */
+/* 调试器写 1 后，由日志任务消费请求并挂起 NMI，不改变时钟。 */
 extern volatile uint32_t g_nmi_test_request;
 void NmiLog_TestTrigger(void);
 #endif
