@@ -27,11 +27,11 @@
 #define TRIGGER_PERIOD2     250//40 55->18Hz  
 
 /*-----------------------------chassis---------------------------*/
-
+ 
 #define SUPERCAP_CHAGER_VOLAGE    23.6f
 #define SUPERCAP_DISCHAGER_VOLAGE	13.5f //超级电容放电电压下限
 
-#define CHASSIS_YAW_OFFSET  6045 		//7427
+#define CHASSIS_YAW_OFFSET  1902 		//7427
 #define CHASSIS_YAW_FIGHT   ((CHASSIS_YAW_OFFSET + 8192/4) % 8192)
 #define CHASSIS_ROTATE_SPEED  			12.0f //rad/s --- 7.5
 #define CHASSIS_ROTATE_DIRECTION		(1.0f)

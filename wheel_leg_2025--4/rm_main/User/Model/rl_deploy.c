@@ -173,6 +173,7 @@ extern uint8_t rotate_stop_flag;
 
 //铝管歪难以维修，增加imu pitch偏置
 float pit_imu_offset = 0.0126602622f; 
+float jump_pit_imu_offset = 0.1f; 
 
 static const RLDeployModelParams_t rl_model_params[] = {
     /* Upstairs / MiniRecover */
@@ -873,8 +874,18 @@ static uint8_t rl_imu_state_is_valid(void)
 
 static void rl_update_projected_gravity(void)
 {
+    if ((rl_keyboard_jump_phase == RL_DEPLOY_JUMP_ACTIVE) ||
+        (rl_remote_jump_phase == RL_DEPLOY_JUMP_ACTIVE))
+    {
+		jump_pit_imu_offset = 0.2f;
+	}
+	else
+	{
+		jump_pit_imu_offset = 0.0f;
+	}
+	
     const float roll = chassis_imu.rol;
-    const float pitch = -(chassis_imu.pit + pit_imu_offset);
+    const float pitch = -(chassis_imu.pit + pit_imu_offset + jump_pit_imu_offset);
     const float sin_roll = sinf(roll);
     const float cos_roll = cosf(roll);
     const float sin_pitch = sinf(pitch);
@@ -1005,14 +1016,14 @@ static void rl_build_observation(void)
                      (RL_DEPLOY_AUTO_JUMP_TOF_DISTANCE + 0.2f))
         {
 			rl_deploy_debug.command[0] =
-				(wlr.v_ref + 0.75f) * params->command_scale[0];
+				(wlr.v_ref + 0.1f) * params->command_scale[0];
 		}	
         rl_deploy_debug.command[2] =
             RL_DEPLOY_JUMP_CROUCH_HEIGHT * params->command_scale[2];
     }
 	else if (g_robot_ctx.output.chassis == CHASSIS_LOW) 
     {
-        rl_deploy_debug.command[2] = 0.16f * params->command_scale[2];
+        rl_deploy_debug.command[2] = 0.14 vf * params->command_scale[2];
     }
 	else if (g_robot_ctx.output.chassis == CHASSIS_LOW_SPIN)
     {

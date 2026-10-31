@@ -87,7 +87,7 @@ static ShootState_e get_kb_shoot_mode(void) {
 #define KEY_V     (1<<14)
 #define KEY_B     (1<<15)
 
-#define TORQUE_SOURCE_CH1_TRIGGER 500
+#define TORQUE_SOURCE_CH1_TRIGGER 300 
 
 // =========================================================================
 // REMOTE 模式子状态机
