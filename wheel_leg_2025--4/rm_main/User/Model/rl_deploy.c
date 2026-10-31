@@ -981,7 +981,7 @@ static void rl_build_observation(void)
     rl_yaw_command_filtered += RL_DEPLOY_YAW_COMMAND_LPF_ALPHA *
         (yaw_command_raw - rl_yaw_command_filtered);
 	
-	data_limit(&rl_yaw_command_filtered,-6.0f,6.0f);//限制旋转速度输入，避免超量程
+	data_limit(&rl_yaw_command_filtered,-3.0f,3.0f);//限制旋转速度输入，避免超量程
 	
 	    
     rl_deploy_debug.command[1] =
@@ -1023,7 +1023,7 @@ static void rl_build_observation(void)
     }
 	else if (g_robot_ctx.output.chassis == CHASSIS_LOW) 
     {
-        rl_deploy_debug.command[2] = 0.14 vf * params->command_scale[2];
+        rl_deploy_debug.command[2] = 0.14f * params->command_scale[2];
     }
 	else if (g_robot_ctx.output.chassis == CHASSIS_LOW_SPIN)
     {
