@@ -1,6 +1,6 @@
 ST Edge AI Core v2.2.0-20266 2adc00962
-Created date          : 2026-10-24 17:53:12
-Parameters            : generate --target stm32h7 --name jump -m D:/gitprogram/wheel_leg_2026/wheel_leg_2025--4/RL_policy/gas600_jump_model_3400_pd40_kd1p5.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace157106178543200824384263831997836 --output C:/Users/41077/.stm32cubemx/jump_output
+Created date          : 2026-11-02 00:11:35
+Parameters            : generate --target stm32h7 --name jump -m D:/gitprogram/wheel_leg_2026/wheel_leg_2025--4/RL_policy/gas600_jump_model_3400_pd40_kd1p5.onnx --compression none --verbosity 1 -O time --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace18056365956170010454544993578506821 --output C:/Users/41077/.stm32cubemx/jump_output
 
 Exec/report summary (generate)
 -------------------------------------------------------------------------------------------------------------------------
@@ -11,7 +11,7 @@ compression        :   none
 options            :   allocate-inputs, allocate-outputs                                                                 
 optimization       :   time                                                                                              
 target/series      :   stm32h7                                                                                           
-workspace dir      :   C:\Users\41077\AppData\Local\Temp\mxAI_workspace157106178543200824384263831997836                 
+workspace dir      :   C:\Users\41077\AppData\Local\Temp\mxAI_workspace18056365956170010454544993578506821               
 output dir         :   C:\Users\41077\.stm32cubemx\jump_output                                                           
 model_fmt          :   float                                                                                             
 model_name         :   gas600_jump_model_3400_pd40_kd1p5                                                                 

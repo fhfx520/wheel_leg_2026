@@ -800,44 +800,44 @@
   ],
   "environment": {
     "generated_model": {
-      "generated_time": "2026-10-24T17:53:34+0800",
+      "generated_time": "2026-11-02T00:12:01+0800",
       "model_files": [
         {
           "name": "spin_data_params.h",
-          "signature": "0x30845bd499f65bdcbd93608a3ae6ea00"
+          "signature": "0x11d326193eefeccbb1739e56f6317ffa"
         },
         {
           "name": "spin_data_params.c",
-          "signature": "0xd5c8b640380a1b661b138c48ccd204a3"
+          "signature": "0x6bcacc1d5466f60264cc8e6579d4b428"
         },
         {
           "name": "spin_data.h",
-          "signature": "0xf8ec88f196311e8f4622b5894d6c2072"
+          "signature": "0x1691933cfb8ad32a2618f4c045943729"
         },
         {
           "name": "spin_data.c",
-          "signature": "0x2dcc1076e606a610b615174127b7db51"
+          "signature": "0x6912f9a0ccfea877af12ffa72561e9a9"
         },
         {
           "name": "spin_config.h",
-          "signature": "0xc639beb97054486b7d57ac05e381ae73"
+          "signature": "0x053c87063963bb321a2bd8abf4b6a91a"
         },
         {
           "name": "spin.h",
-          "signature": "0x7ae15f65d1f490ba933766c7577ae3d1"
+          "signature": "0xb4e7d610a7763977c20e592777377b23"
         },
         {
           "name": "spin.c",
-          "signature": "0x63fd48209727361c6abfa91f7c9c2825"
+          "signature": "0xad7ed59bc3307ad9019807e1cf8a3202"
         }
       ],
       "name": "spin"
     },
-    "network_signature": "0x5cb4ee6328b316bf",
+    "network_signature": "0x3747766569da6b49",
     "test_name": "",
     "tools": [
       {
-        "arguments": "generate --target stm32h7 --name spin -m D:/gitprogram/wheel_leg_2026/wheel_leg_2025--4/RL_policy/gas600_spin_heightwave75_posture_model_33700.onnx --compression none --verbosity 1 --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace1571308754523002423140797815331205 --output C:/Users/41077/.stm32cubemx/spin_output",
+        "arguments": "generate --target stm32h7 --name spin -m D:/gitprogram/wheel_leg_2026/wheel_leg_2025--4/RL_policy/gas600_spin_heightwave75_posture_model_33700.onnx --compression none --verbosity 1 --workspace C:/Users/41077/AppData/Local/Temp/mxAI_workspace1805913958385007227857504173523175 --output C:/Users/41077/.stm32cubemx/spin_output",
         "environment": [
           "STATS_TYPE=X-CUBE-AI"
         ],
