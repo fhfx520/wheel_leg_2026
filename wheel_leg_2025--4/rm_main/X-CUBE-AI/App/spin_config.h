@@ -3,7 +3,7 @@
   ******************************************************************************
   * @file    spin_config.h
   * @author  AST Embedded Analytics Research Platform
-  * @date    2026-11-02T00:12:01+0800
+  * @date    2026-11-06T06:24:19+0800
   * @brief   AI Tool Automatic Code Generator for Custom Layers Implementation
   ******************************************************************************
   * @attention
