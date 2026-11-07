@@ -112,14 +112,14 @@ void can_comm_init(void)
     can_tx_message.MessageMarker = 0;
 	//fdcan tx_message config
 	fdcan_tx_message.IdType = FDCAN_STANDARD_ID;  
-    fdcan_tx_message.TxFrameType = FDCAN_DATA_FRAME;
+     fdcan_tx_message.TxFrameType = FDCAN_DATA_FRAME;
     fdcan_tx_message.DataLength = FDCAN_DLC_BYTES_64;
     fdcan_tx_message.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
     fdcan_tx_message.BitRateSwitch = FDCAN_BRS_ON;
     fdcan_tx_message.FDFormat = FDCAN_FD_CAN;
     fdcan_tx_message.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
     fdcan_tx_message.MessageMarker = 0;
-	
+	 
     //driver init 0.01993943
 //	dm_motor_init(&joint_motor[0], CAN_CHANNEL_1, JOINT_LB_CMD_ID, 2.91959381f, JOINT_LB_REC_ID);//LB -0.27579996 -0.313300014 4.4036479
 //	dm_motor_init(&joint_motor[1], CAN_CHANNEL_1, JOINT_LS_CMD_ID, 0.371440589f, JOINT_LS_REC_ID);//LS 0.564670026 5.52884054 3.90108585
