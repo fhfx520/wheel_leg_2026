@@ -30,7 +30,7 @@
 #define row_debug 2 * 10
 #define DEBUG_TEXT_LOG_DIV       2u
 #define DEBUG_TEXT_LOG_SLOT_NUM  22u
-uint8_t debug_wave = 14;
+uint8_t debug_wave = 15;
 uint8_t debug_text_log_enable = 0;
 float test_hex = 1;
 extern FGT_sin_t FGT_sin_chassis;
@@ -567,7 +567,7 @@ void log_scope_data_pkg(void)
             log_scope_get_data(tlm.gnd_roll_fdb);
             break;
 		}        
-	case 7: { /* 激光 */
+		case 7: { /* 激光 */
             log_scope_get_data(wlr.side[0].Front_dis_fdb);
 			log_scope_get_data(wlr.side[0].Front_dis_kal);
 			log_scope_get_data(wlr.sky_flag);
@@ -578,7 +578,7 @@ void log_scope_data_pkg(void)
 			log_scope_get_data(supercap.power);
             break;
 		}
-	case 8: { /* 拨盘 */
+		case 8: { /* 拨盘 */
             log_scope_get_data(shoot.trigger_ecd.ref);
             log_scope_get_data(shoot.trigger_ecd.fdb);
 //		
@@ -600,110 +600,122 @@ void log_scope_data_pkg(void)
 
             break;
 		}
-	case 9:
-	{
-//		log_scope_get_data(chassis_imu.rol);
-//		log_scope_get_data(tlm.l_ref[0]);
-//		log_scope_get_data(tlm.l_ref[1]);
-//		log_scope_get_data(tlm.l_fdb[0]);
-//		log_scope_get_data(tlm.l_fdb[1]);
-//		log_scope_get_data(wlr.roll_offs);
-		log_scope_get_data(shoot_data.initial_speed);
-		log_scope_get_data(shoot.trigger_ecd.fdb);
-		log_scope_get_data(shoot.trigger_ecd.ref);
-		break;
-	}
-	case 10://超电调试
-	{
-		log_scope_get_data(supercap.volage);
-		log_scope_get_data(supercap.power_mode);
-		log_scope_get_data(supercap.state.cap_v_over);
-		log_scope_get_data(supercap.state.cap_v_low);
-		log_scope_get_data(supercap.state.chassis_i_over);
-		log_scope_get_data(supercap.state.judge_msg_miss);
-		log_scope_get_data(supercap.current);
-		log_scope_get_data(supercap.state.bat_v_over);
-//		log_scope_get_data(driver_motor[0].tx_current);
-//		log_scope_get_data(driver_motor[1].tx_current);
-//		log_scope_get_data(wlr.stair_flag);
-		break;
-	}
-	case 11: /* RL shadow: 6 actions + 6 final motor torques + 4 status values */
-	{
-		log_scope_get_data(rl_deploy_debug.actions[0]);
-		log_scope_get_data(rl_deploy_debug.actions[1]);
-		log_scope_get_data(rl_deploy_debug.actions[2]);
-		log_scope_get_data(rl_deploy_debug.actions[3]);
-		log_scope_get_data(rl_deploy_debug.actions[4]);
-		log_scope_get_data(rl_deploy_debug.actions[5]);
-		log_scope_get_data(rl_deploy_debug.tau_motor_shadow[0]);
-		log_scope_get_data(rl_deploy_debug.tau_motor_shadow[1]);
-		log_scope_get_data(rl_deploy_debug.tau_motor_shadow[2]);
-		log_scope_get_data(rl_deploy_debug.tau_motor_shadow[3]);
-		log_scope_get_data(rl_deploy_debug.tau_motor_shadow[4]);
-		log_scope_get_data(rl_deploy_debug.tau_motor_shadow[5]);
-		log_scope_get_data((float)rl_deploy_debug.inference_ok);
-		log_scope_get_data((float)rl_deploy_debug.policy_ready);
-		log_scope_get_data((float)rl_deploy_debug.last_inference_us);
-		log_scope_get_data((float)rl_deploy_debug.inference_fail_count);
-		break;
-	}
-	case 12: /* RL mapping: 6 virtual + 6 raw motor torques + 4 Jacobian values */
-	{
-		log_scope_get_data(rl_deploy_debug.tau_virtual[0]);
-		log_scope_get_data(rl_deploy_debug.tau_virtual[1]);
-		log_scope_get_data(rl_deploy_debug.tau_virtual[2]);
-		log_scope_get_data(rl_deploy_debug.tau_virtual[3]);
-		log_scope_get_data(rl_deploy_debug.tau_virtual[4]);
-		log_scope_get_data(rl_deploy_debug.tau_virtual[5]);
-		log_scope_get_data(rl_deploy_debug.tau_motor_raw[0]);
-		log_scope_get_data(rl_deploy_debug.tau_motor_raw[1]);
-		log_scope_get_data(rl_deploy_debug.tau_motor_raw[2]);
-		log_scope_get_data(rl_deploy_debug.tau_motor_raw[3]);
-		log_scope_get_data(rl_deploy_debug.tau_motor_raw[4]);
-		log_scope_get_data(rl_deploy_debug.tau_motor_raw[5]);
-		log_scope_get_data(rl_deploy_debug.leg_jacobian[0]);
-		log_scope_get_data(rl_deploy_debug.leg_jacobian[1]);
-		log_scope_get_data(rl_deploy_debug.leg_jacobian[2]);
-		log_scope_get_data(rl_deploy_debug.leg_jacobian[3]);
-		break;
-	}
-	case 13: /* RL mapping: 6 virtual + 6 raw motor torques + 4 Jacobian values */
-	{
-//		log_scope_get_data(rl_deploy_debug.q[0]);
-//		log_scope_get_data(rl_deploy_debug.q[1]);
-//		log_scope_get_data(rl_deploy_debug.q[3]);
-//		log_scope_get_data(rl_deploy_debug.q[4]);
-//		log_scope_get_data(rl_deploy_debug.target_q[0]);
-//		log_scope_get_data(rl_deploy_debug.target_q[1]);
-//		log_scope_get_data(rl_deploy_debug.target_q[3]);
-//		log_scope_get_data(rl_deploy_debug.target_q[4]);
-		log_scope_get_data(joint_motor[0].torque);
-		log_scope_get_data(joint_motor[1].torque);
-		log_scope_get_data(joint_motor[2].torque);
-		log_scope_get_data(joint_motor[3].torque);
-		log_scope_get_data(vmc[0].F_fdb.e.Fy_fdb);
-		log_scope_get_data(vmc[1].F_fdb.e.Fy_fdb);
-		break;
-	}
-	case 14: /* RL numeric fault diagnostics */
-	{
-		log_scope_get_data((float)rl_deploy_debug.command[0]);
-		log_scope_get_data((float)rl_deploy_debug.command[1]);
-		log_scope_get_data((float)rl_deploy_debug.command[2]);
-		log_scope_get_data((float)wlr.high_set);
-		log_scope_get_data((float)wlr.wz_fdb);
-		log_scope_get_data((float)rl_deploy_debug.policy_ready);
-		log_scope_get_data((float)rl_deploy_debug.inference_fail_count);
-		log_scope_get_data((float)rl_deploy_debug.last_inference_us);
-		log_scope_get_data((float)rl_deploy_debug.force_map_valid[0]);
-		log_scope_get_data((float)rl_deploy_debug.force_map_valid[1]);
-		log_scope_get_data(rl_deploy_debug.force_map_det[0]);
-		log_scope_get_data(rl_deploy_debug.force_map_det[1]);
-		log_scope_get_data(rl_deploy_debug.leg_length[0]);
-		log_scope_get_data(rl_deploy_debug.leg_length[1]);
-		break;
-	}
+		case 9:
+		{
+//			log_scope_get_data(chassis_imu.rol);
+//			log_scope_get_data(tlm.l_ref[0]);
+//			log_scope_get_data(tlm.l_ref[1]);
+//			log_scope_get_data(tlm.l_fdb[0]);
+//			log_scope_get_data(tlm.l_fdb[1]);
+//			log_scope_get_data(wlr.roll_offs);
+			log_scope_get_data(shoot_data.initial_speed);
+			log_scope_get_data(shoot.trigger_ecd.fdb);
+			log_scope_get_data(shoot.trigger_ecd.ref);
+			break;
+		}
+		case 10://超电调试
+		{
+			log_scope_get_data(supercap.volage);
+			log_scope_get_data(supercap.power_mode);
+			log_scope_get_data(supercap.state.cap_v_over);
+			log_scope_get_data(supercap.state.cap_v_low);
+			log_scope_get_data(supercap.state.chassis_i_over);
+			log_scope_get_data(supercap.state.judge_msg_miss);
+			log_scope_get_data(supercap.current);
+			log_scope_get_data(supercap.state.bat_v_over);
+//			log_scope_get_data(driver_motor[0].tx_current);
+//			log_scope_get_data(driver_motor[1].tx_current);
+//			log_scope_get_data(wlr.stair_flag);
+			break;
+		}
+		case 11: /* RL shadow: 6 actions + 6 final motor torques + 4 status values */
+		{
+			log_scope_get_data(rl_deploy_debug.actions[0]);
+			log_scope_get_data(rl_deploy_debug.actions[1]);
+			log_scope_get_data(rl_deploy_debug.actions[2]);
+			log_scope_get_data(rl_deploy_debug.actions[3]);
+			log_scope_get_data(rl_deploy_debug.actions[4]);
+			log_scope_get_data(rl_deploy_debug.actions[5]);
+			log_scope_get_data(rl_deploy_debug.tau_motor_shadow[0]);
+			log_scope_get_data(rl_deploy_debug.tau_motor_shadow[1]);
+			log_scope_get_data(rl_deploy_debug.tau_motor_shadow[2]);
+			log_scope_get_data(rl_deploy_debug.tau_motor_shadow[3]);
+			log_scope_get_data(rl_deploy_debug.tau_motor_shadow[4]);
+			log_scope_get_data(rl_deploy_debug.tau_motor_shadow[5]);
+			log_scope_get_data((float)rl_deploy_debug.inference_ok);
+			log_scope_get_data((float)rl_deploy_debug.policy_ready);
+			log_scope_get_data((float)rl_deploy_debug.last_inference_us);
+			log_scope_get_data((float)rl_deploy_debug.inference_fail_count);
+			break;
+		}
+		case 12: /* RL mapping: 6 virtual + 6 raw motor torques + 4 Jacobian values */
+		{
+			log_scope_get_data(rl_deploy_debug.tau_virtual[0]);
+			log_scope_get_data(rl_deploy_debug.tau_virtual[1]);
+			log_scope_get_data(rl_deploy_debug.tau_virtual[2]);
+			log_scope_get_data(rl_deploy_debug.tau_virtual[3]);
+			log_scope_get_data(rl_deploy_debug.tau_virtual[4]);
+			log_scope_get_data(rl_deploy_debug.tau_virtual[5]);
+			log_scope_get_data(rl_deploy_debug.tau_motor_raw[0]);
+			log_scope_get_data(rl_deploy_debug.tau_motor_raw[1]);
+			log_scope_get_data(rl_deploy_debug.tau_motor_raw[2]);
+			log_scope_get_data(rl_deploy_debug.tau_motor_raw[3]);
+			log_scope_get_data(rl_deploy_debug.tau_motor_raw[4]);
+			log_scope_get_data(rl_deploy_debug.tau_motor_raw[5]);
+			log_scope_get_data(rl_deploy_debug.leg_jacobian[0]);
+			log_scope_get_data(rl_deploy_debug.leg_jacobian[1]);
+			log_scope_get_data(rl_deploy_debug.leg_jacobian[2]);
+			log_scope_get_data(rl_deploy_debug.leg_jacobian[3]);
+			break;
+		}
+		case 13: /* RL mapping: 6 virtual + 6 raw motor torques + 4 Jacobian values */
+		{
+//			log_scope_get_data(rl_deploy_debug.q[0]);
+//			log_scope_get_data(rl_deploy_debug.q[1]);
+//			log_scope_get_data(rl_deploy_debug.q[3]);
+//			log_scope_get_data(rl_deploy_debug.q[4]);
+//			log_scope_get_data(rl_deploy_debug.target_q[0]);
+//			log_scope_get_data(rl_deploy_debug.target_q[1]);
+//			log_scope_get_data(rl_deploy_debug.target_q[3]);
+//			log_scope_get_data(rl_deploy_debug.target_q[4]);
+			log_scope_get_data(joint_motor[0].torque);
+			log_scope_get_data(joint_motor[1].torque);
+			log_scope_get_data(joint_motor[2].torque);
+			log_scope_get_data(joint_motor[3].torque);
+			log_scope_get_data(vmc[0].F_fdb.e.Fy_fdb);
+			log_scope_get_data(vmc[1].F_fdb.e.Fy_fdb);
+			break;
+		}
+		case 14: /* RL numeric fault diagnostics */
+		{
+			log_scope_get_data((float)rl_deploy_debug.command[0]);
+			log_scope_get_data((float)rl_deploy_debug.command[1]);
+			log_scope_get_data((float)rl_deploy_debug.command[2]);
+			log_scope_get_data((float)wlr.high_set);
+			log_scope_get_data((float)wlr.wz_fdb);
+			log_scope_get_data((float)rl_deploy_debug.policy_ready);
+			log_scope_get_data((float)rl_deploy_debug.inference_fail_count);
+			log_scope_get_data((float)rl_deploy_debug.last_inference_us);
+			log_scope_get_data((float)rl_deploy_debug.force_map_valid[0]);
+			log_scope_get_data((float)rl_deploy_debug.force_map_valid[1]);
+			log_scope_get_data(rl_deploy_debug.force_map_det[0]);
+			log_scope_get_data(rl_deploy_debug.force_map_det[1]);
+			log_scope_get_data(rl_deploy_debug.leg_length[0]);
+			log_scope_get_data(rl_deploy_debug.leg_length[1]);
+			break;
+		}
+		case 15: /* 离线 */
+		{
+			log_scope_get_data(driver_motor[0].online);
+			log_scope_get_data(driver_motor[1].online);
+			log_scope_get_data(joint_motor[0].online);
+			log_scope_get_data(joint_motor[1].online);
+			log_scope_get_data(joint_motor[2].online);
+			log_scope_get_data(joint_motor[3].online);
+			log_scope_get_data(driver_motor[0].state);
+
+			break;
+		}
 	}
 }
 /* 串口上位机数据发送任务 */
