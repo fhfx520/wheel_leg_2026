@@ -58,7 +58,7 @@ const float LegLengthParam_five[5] = {0.21f, 0.25f, 0.25f, 0.21f, 0.0f};
 
 const float mb = 22.75f , ml = 2.09f, mw = 0.715f;//机体质量 腿部质量 轮子质量 
 const float BodyWidth = 0.48f;//两轮间距
-const float WheelRadius = 0.055f;//0.075f//轮子半径 气胎
+const float WheelRadius = 0.060f;//26赛季0.055f//0.075f//轮子半径 气胎
 const float LegLengthMax = 0.34f, LegLengthMin = 0.11f;
 
 const float LegLengthHighFly = 0.28f; //长腿腿长腾空 0.28

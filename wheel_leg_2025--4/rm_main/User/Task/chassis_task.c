@@ -248,7 +248,9 @@ static void Fusion_Vel_Acc_Init(void)
 void Fusion_Vel_Acc_Test(void)
 {
     kal_fusion_vel.measured_vector[0] = wlr.s_fdb;
-    kal_fusion_vel.measured_vector[1] = (-driver_motor[0].velocity + driver_motor[1].velocity) * 0.055f / 2.0f;
+//    kal_fusion_vel.measured_vector[1] = (-driver_motor[0].velocity + driver_motor[1].velocity) * 0.055f / 2.0f;
+	kal_fusion_vel.measured_vector[1] = (-driver_motor[0].velocity + driver_motor[1].velocity) * 0.060f / 2.0f;
+
     kal_fusion_vel.control_vector[0] = chassis_imu.ax;
     kalman_filter_update(&kal_fusion_vel);
 }
